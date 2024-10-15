@@ -1,23 +1,14 @@
 
 import Link from 'next/link';
+
 import React, { FC } from 'react';
+
+import { CardsSchema } from '../Schema';
 
 interface MenuButtonProps {
   open: boolean; 
-  cards: cards;
-}   
-
-interface card {
-  path: string;
-  icon: React.ReactNode;
-  roles: string[];
-  description: string;
-  title: string;
-}
- 
-interface cards {
-  [key: string]: card[];
-}
+  cards: CardsSchema;
+} 
 
 const Menu: FC<MenuButtonProps> = ({ open, cards }) => { 
 
@@ -45,8 +36,7 @@ const Menu: FC<MenuButtonProps> = ({ open, cards }) => {
             </div> 
           )
         )
-      })} 
-      
+      })}  
     </div>
   )
 }

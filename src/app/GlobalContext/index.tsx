@@ -1,32 +1,15 @@
 'use client'
 
 import { createContext, useState, useContext, useEffect } from "react";
- 
 
-interface card {
-    path: string;
-    icon: JSX.Element;
-    roles: string[];
-    description: string;
-    title: string;
-}
-   
-interface cards {
-    [key: string]: card[];
-}
+import { CardsSchema, UserDataSchema } from "../Schema";
 
-interface userDataProps {
-    _id: string;
-    name: string;
-    email: string;
-    number: string;
-}
   
 interface AppContextProps {
-    userData: userDataProps;
-    setUserData: (data: userDataProps) => void;
+    userData: UserDataSchema;
+    setUserData: (data: UserDataSchema) => void;
     sampleText: string; 
-    cards: cards;
+    cards: CardsSchema;
 }
    
 const AppContext = createContext<AppContextProps>({
@@ -46,7 +29,7 @@ export default function ContextProvider({children} : {
     children: React.ReactNode;
 }) {
 
-    const [ userData, setUserData ] = useState<userDataProps>({
+    const [ userData, setUserData ] = useState<UserDataSchema>({
         _id: '',
         name: '',
         email: '',
@@ -55,7 +38,7 @@ export default function ContextProvider({children} : {
 
     const [ sampleText ] = useState<string>(""); 
  
-    const [ cards, setCards ] = useState<cards>({}); 
+    const [ cards, setCards ] = useState<CardsSchema>({}); 
 
     useEffect(() => {
         setCards(
