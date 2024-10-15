@@ -21,8 +21,7 @@ interface userDataProps {
     email: string;
     number: string;
 }
- 
-// Define the shape of the context
+  
 interface AppContextProps {
     userData: userDataProps;
     setUserData: (data: userDataProps) => void;
@@ -53,7 +52,7 @@ export default function ContextProvider({children} : {
         email: '',
         number: '',
     }); 
-    
+
     const [ sampleText ] = useState<string>(""); 
  
     const [ cards, setCards ] = useState<cards>({}); 
