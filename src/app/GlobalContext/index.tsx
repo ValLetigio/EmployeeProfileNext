@@ -62,7 +62,7 @@ export default function ContextProvider({children} : {
             { 
                 "Employee": [
                     {
-                    path: '/CreateEmployee',
+                    path: '/Employee/Create',
                     title: 'Create Employee',
                     description: 'Create a new Employee Record',
                     icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -71,7 +71,7 @@ export default function ContextProvider({children} : {
                     roles: [], 
                     },
                     {
-                    path: '/UpdateEmployee',
+                    path: '/Employee/Update',
                     title: 'Update Employee',
                     description: 'Update an Employee',
                     icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -81,7 +81,7 @@ export default function ContextProvider({children} : {
                     roles: [], 
                     },
                     {
-                    path: '/DeleteEmployee',
+                    path: '/Employee/Delete',
                     title: 'Delete Employee',
                     description: 'Delete an Employee',
                     icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -92,7 +92,7 @@ export default function ContextProvider({children} : {
                 ],
                 "Offense": [
                     {
-                    path: '/CreateOffense',
+                    path: '/Offense/Create',
                     title: 'Create Offense',
                     description: 'Create an Offense', 
                     icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -101,7 +101,7 @@ export default function ContextProvider({children} : {
                     roles: [], 
                     },
                     {
-                    path: '/UpdateOffense',
+                    path: '/Offense/Update',
                     title: 'Update Offense',
                     description: 'Update an Offense',
                     icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -110,7 +110,7 @@ export default function ContextProvider({children} : {
                     roles: [], 
                     },
                     {
-                    path: '/DeleteOffense',
+                    path: '/Offense/Delete',
                     title: 'Delete Offense',
                     description: 'Delete an Offense', 
                     icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -121,7 +121,7 @@ export default function ContextProvider({children} : {
                 ],
                 "Memorandum": [
                     {
-                    path: '/CreateMemorandum',
+                    path: '/Memorandum/Create',
                     title: 'Create Memorandum',
                     description: 'Create a Memorandum',
                     icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -130,7 +130,7 @@ export default function ContextProvider({children} : {
                     roles: [], 
                     },
                     {
-                    path: '/SubmitMemorandum',
+                    path: '/Memorandum/Submit',
                     title: 'Submit Memorandum',
                     description: 'Submit a Memorandum',
                     icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -139,7 +139,7 @@ export default function ContextProvider({children} : {
                     roles: [], 
                     },
                     {
-                    path: '/DeleteMemorandum',
+                    path: '/Memorandum/Delete',
                     title: 'Delete Memorandum',
                     description: 'Delete a Memorandum',
                     icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
