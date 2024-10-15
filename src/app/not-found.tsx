@@ -1,4 +1,3 @@
-// app/not-found.tsx
 import Link from 'next/link';
 
 export default function NotFound() {
@@ -13,7 +12,7 @@ export default function NotFound() {
 
       <h1 className="text-4xl font-bold my-4">404 - Page Not Found</h1>
 
-      <p className="text-lg mb-6">Sorry, the page you're looking for doesn't exist.</p>
+      <p className="text-lg mb-6">Sorry, the page you are looking for does not exist.</p>
       <Link href="/" className='link link-info'>
         Go back to Home
       </Link>
