@@ -1,12 +1,18 @@
-import React from "react";
+import React, { FC } from "react";
 
 import Link from "next/link";
 
-const DashboardButton = () => {
+interface DashboardButtonProps {
+  pathname: string;
+}
+
+const DashboardButton: FC<DashboardButtonProps> = ({pathname}) => {
   return (
     <Link href={"/Dashboard"}
-      className={` tooltip tooltip-top text-gray-400 backdrop-blur-xl shadow-md shadow-gray-400
-        p-3 border rounded-full hover:border-blue-500 hover:text-blue-500 
+      className={` ${pathname == '/Dashboard' ? "bg-blue-500 text-white" : "border-gray-400 text-gray-400  hover:border-blue-500 hover:text-blue-500"}
+        tooltip tooltip-top 
+        backdrop-blur-xl shadow-md shadow-gray-400
+        p-3 border rounded-full
       `} data-tip="Dashboard"
     >
       <svg

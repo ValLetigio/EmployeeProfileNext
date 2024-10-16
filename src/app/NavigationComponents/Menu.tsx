@@ -1,16 +1,19 @@
 
-import Link from 'next/link';
-
 import React, { FC } from 'react';
 
+import Link from 'next/link';
+ 
 import { CardsSchema } from '../Schema';
 
 interface MenuButtonProps {
   open: boolean; 
   cards: CardsSchema;
+  pathname: string;
 } 
 
-const Menu: FC<MenuButtonProps> = ({ open, cards }) => { 
+const Menu: FC<MenuButtonProps> = ({ open, cards, pathname }) => { 
+
+  
 
   return (
     <div 
@@ -22,19 +25,24 @@ const Menu: FC<MenuButtonProps> = ({ open, cards }) => {
     >
       {Object.keys(cards).map((key : string) => {
         return (
-          cards[key].map((card, index) =>  
-            <div className='h-14 w-14 md:h-16 md:w-16 text-xl ' key={`${key} ${index}`}>
-              <Link href={card.path}
-                className={` tooltip tooltip-top
-                  text-gray-400 hover:border-blue-500 hover:text-blue-500 bg-white/85 
-                  w-full h-full border rounded-full shadow-md shadow-gray-400
-                  flex items-center justify-center 
-                `} data-tip={card.title}
-              >
-                {card.icon}
-              </Link>
-            </div> 
-          )
+          cards[key].map((card, index) =>  {
+            const isActive = pathname.startsWith(card.path)
+            return (
+              <div className='h-14 w-14 md:h-16 md:w-16 text-xl ' key={`${key} ${index}`}>
+                <Link href={card.path}
+                  className={` tooltip tooltip-top 
+                    ${isActive? 'border-blue-500 bg-blue-500 text-white' 
+                      : 'border-gray-400 bg-white/85 text-gray-400  '
+                    } 
+                    w-full h-full border rounded-full shadow-md shadow-gray-400
+                    flex items-center justify-center 
+                  `} data-tip={card.title}
+                >
+                  {card.icon}
+                </Link>
+              </div> 
+            )
+          })
         )
       })}  
     </div>

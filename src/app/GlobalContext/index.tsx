@@ -2,7 +2,9 @@
 
 import { createContext, useState, useContext, useEffect } from "react";
 
-import { CardsSchema, UserDataSchema } from "../Schema";
+import { usePathname } from 'next/navigation';
+
+import { CardsSchema, UserDataSchema } from "../Schema"; 
 
   
 interface AppContextProps {
@@ -10,6 +12,7 @@ interface AppContextProps {
     setUserData: (data: UserDataSchema) => void;
     sampleText: string; 
     cards: CardsSchema;
+    pathname: string;
 }
    
 const AppContext = createContext<AppContextProps>({
@@ -21,13 +24,16 @@ const AppContext = createContext<AppContextProps>({
     },
     setUserData: () => {},
     sampleText: "",
-    cards: {}
+    cards: {},
+    pathname: ''
 });
 
 
 export default function ContextProvider({children} : {
     children: React.ReactNode;
 }) {
+
+    const pathname = usePathname();  
 
     const [ userData, setUserData ] = useState<UserDataSchema>({
         _id: '',
@@ -139,7 +145,7 @@ export default function ContextProvider({children} : {
         userData, 
         setUserData,
         sampleText,  
-        cards
+        cards, pathname
     };
 
     return (

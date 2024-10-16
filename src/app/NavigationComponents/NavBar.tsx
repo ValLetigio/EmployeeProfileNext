@@ -12,7 +12,7 @@ import { useAppContext } from "../GlobalContext";
 function NavBar() {
   const [showMenu, setShowMenu] = useState(false);
 
-  const { cards } = useAppContext();
+  const { cards, pathname } = useAppContext();
 
   return (
     <div
@@ -24,16 +24,16 @@ function NavBar() {
     >
       
       {/* home button */}
-      <HomeButton />
+      <HomeButton pathname={pathname}/>
 
       {/* menu button */}
       <MenuButton setOpen={setShowMenu} open={showMenu} />
 
       {/* Menu */}  
-      <Menu open={showMenu} cards={cards}/>   
+      <Menu open={showMenu} cards={cards} pathname={pathname}/>   
 
       {/* dashboard button */}
-      <DashboardButton />
+      <DashboardButton pathname={pathname}/>
     </div>
   );
 }
