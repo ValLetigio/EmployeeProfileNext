@@ -1,4 +1,3 @@
-
 import "./globals.css";
 
 export const metadata = {
@@ -6,8 +5,14 @@ export const metadata = {
   description: 'Page Description',
 }
 
+import { getServerSession } from "next-auth";
+import { options } from "/api/auth/[...nextauth]/options";
+  const session = await getServerSession(options);
+
 
 export default function Home() {
+  const user = await getUserSession();
+
   return (
     <>
       <div className={` h-screen w-full flex items-center justify-center `} > 
