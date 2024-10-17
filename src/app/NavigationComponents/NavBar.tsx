@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Menu from "./Menu";
 import MenuButton from "./MenuButton";
@@ -9,10 +9,13 @@ import DashboardButton from "./DashboardButton";
 
 import { useAppContext } from "../GlobalContext";
 
-function NavBar() {
+import { signOut } from "next-auth/react"; 
+
+function NavBar() { 
+
   const [showMenu, setShowMenu] = useState(false);
 
-  const { cards, pathname } = useAppContext();
+  const { cards, pathname } = useAppContext(); 
 
   return (
     <div
@@ -34,6 +37,9 @@ function NavBar() {
 
       {/* dashboard button */}
       <DashboardButton pathname={pathname}/>
+
+      {/* logout */}
+      <button onClick={()=>signOut()}>logout</button>
     </div>
   );
 }

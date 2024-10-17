@@ -19,3 +19,11 @@ export interface UserDataSchema {
     email: string;
     number: string;
 }
+
+
+
+export interface UserDataFromGoogleSchema {
+    image: string;
+    name: string;
+    email: string; 
+}

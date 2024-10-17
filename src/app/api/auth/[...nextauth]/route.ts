@@ -19,7 +19,7 @@ const authOption:  NextAuthOptions = {
             if (!profile?.email) {
                 throw new Error('No Profile Found');
             }
-            console.log("Logged in", profile)
+            console.log(`${profile?.name} Logged in`, profile)
             return true;
         }
     }
