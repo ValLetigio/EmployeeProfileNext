@@ -1,36 +1,35 @@
-'use client'
+'use client'; 
 
-import { SessionProvider } from "next-auth/react"; 
+import { SessionProvider } from "next-auth/react";  
 
-import { Session } from "next-auth";  
+import "./globals.css"; 
 
-import "./globals.css";
-import { Poppins } from "next/font/google";
-
-import NavBar from "./NavigationComponents/NavBar"; 
 import ContextProvider from "./GlobalContext/index"; 
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-poppins",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+import NavBar from "./NavigationComponents/NavBar"; 
+import ProfileMenu from "./ProfileMenuComponents/ProfileMenu";
+
+import { Poppins } from "next/font/google"; 
+const poppins = Poppins({ 
+  subsets: ["latin"], display: "swap", variable: "--font-poppins", 
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], 
 }); 
 
-export default function RootLayout({
-  children,
+export default function RootLayout({ 
+  children, 
   session, 
-}: Readonly<{
-  children: React.ReactNode;
-  session: Session; 
+}: Readonly<{ 
+  children: React.ReactNode; 
+  session: never; 
 }>) {
   return (
     <html lang="en">
-      <body className={` ${poppins.variable} overflow-x-clip antialiased`}>
-        <SessionProvider session={session}> 
+      <body className={` ${poppins.variable} overflow-x-clip `}>
+        <SessionProvider session={session}>
           <ContextProvider>
-            {children} 
-            <NavBar /> 
+            <ProfileMenu/>
+            {children}
+            <NavBar/>
           </ContextProvider>
         </SessionProvider>
       </body>

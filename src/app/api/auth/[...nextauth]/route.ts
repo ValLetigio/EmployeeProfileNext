@@ -4,6 +4,8 @@ import GoogleProvider from 'next-auth/providers/google';
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "461642110506-kg29ub68i80jtremtbvt899otcagmg33.apps.googleusercontent.com";
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "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";
 
+const SECRET = process.env.SECRET || "SECRET";
+
 const authOption:  NextAuthOptions = {
     session: {
         strategy: 'jwt',
@@ -22,7 +24,8 @@ const authOption:  NextAuthOptions = {
             console.log(`${profile?.name} Logged in`, profile)
             return true;
         }
-    }
+    },
+    secret: SECRET,
 }
 
 const handler = NextAuth(authOption);
