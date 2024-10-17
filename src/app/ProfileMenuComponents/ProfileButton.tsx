@@ -22,7 +22,7 @@ const ProfileButton: FC<ProfileButtonProps> = ({ userData, handleMenuClick, show
     >
       <Image 
         className={` 
-            ${showMenu ? " border-blue-500 " : " border-transparent hover:border-blue-300  "}
+            ${showMenu ? " border-blue-500 " : " border-transparent hover:border-blue-200  "}
             border-4 w-full h-full  rounded-full duration-300 shadow-md shadow-gray-400  
         `}  width={24} height={24} 
           src={userData?.image} alt={userData?.name} 

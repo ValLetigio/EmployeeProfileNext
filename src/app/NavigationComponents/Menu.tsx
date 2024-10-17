@@ -32,7 +32,7 @@ const Menu: FC<MenuButtonProps> = ({ open, cards, pathname }) => {
                 <Link href={card.path}
                   className={` tooltip tooltip-top 
                     ${isActive? 'border-blue-500 bg-blue-500 text-white' 
-                      : 'border-gray-400 bg-white/85 text-gray-400  '
+                      : 'border-gray-400 bg-white/85 text-gray-400 hover:border-blue-500 hover:text-blue-500 '
                     } 
                     w-full h-full border rounded-full shadow-md shadow-gray-400
                     flex items-center justify-center 
