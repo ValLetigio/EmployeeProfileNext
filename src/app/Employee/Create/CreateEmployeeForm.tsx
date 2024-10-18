@@ -1,8 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
-
-import Image from 'next/image'
+import React, { useState } from 'react' 
 
 const CreateEmployeeForm = () => {
 
@@ -21,7 +19,11 @@ const CreateEmployeeForm = () => {
 
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault() 
+
         const form = e.target as HTMLFormElement; 
+
+        console.log('formData:', formData)
+        // console.log('form:', form)
 
         form.reset()
         setFormData({
@@ -57,7 +59,7 @@ const CreateEmployeeForm = () => {
                 })
             }
         }
-    } 
+    }
 
   return (
     <form className={` w-full min-h-full bg-white/90 flex flex-col justify-start px-4 py-6 md:px-8 gap-8 md:gap-5 `}
@@ -74,6 +76,7 @@ const CreateEmployeeForm = () => {
                 onChange={handleInputChange}/>
         </label>
 
+
         {/* address */} 
         <textarea className="textarea textarea-bordered" placeholder="Address" id='address'
             onChange={
@@ -81,6 +84,7 @@ const CreateEmployeeForm = () => {
                     setFormData({ ...formData, address: e.target.value })
                 }}> 
         </textarea>
+
 
         {/* Phone Number */}
         <label className="input input-bordered flex items-center gap-2">
@@ -95,39 +99,32 @@ const CreateEmployeeForm = () => {
                 onChange={handleInputChange}/>
         </label>
 
-        {/* photoOfPerson resume bioData */}  
+
+        {/* photoOfPerson, resume, bioData */}  
         <div className='flex flex-wrap gap-3 md:gap-2 justify-between w-full '>
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
-                <div className='flex items-center mb-1 gap-1 relative'>Photo Of Person 
-                    <Image src={formData?.photoOfPerson} width={32} height={11} alt=" " 
-                        className={` ${formData?.photoOfPerson&&" hover:fixed hover:w-[40vw] hover:z-50 " 
-                            } p-0.5 border absolute right-1/2 left-1/2 translate-x-[-50%] `} /> 
+                <div className='flex items-center mb-1 gap-1 relative'>Photo Of Person    
                 </div>
-                <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*' required 
+                <input type="file" className="file-input file-input-bordered sw-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*' required 
                     onChange={handleFileChange}/>
             </label>
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex items-center mb-1 gap-1 relative '>Resume 
-                    <Image src={formData?.resumePhotosList} width={32} height={11} alt=" " 
-                        className={`${formData?.resumePhotosList&&" hover:fixed hover:right-1/2 hover:left-1/2 hover:translate-x-[-50%] hover:w-[40vw] hover:z-50 " 
-                        } p-0.5 border right-0 absolute`} />
+                <div className='flex items-center mb-1 gap-1 relative '>Resume  
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='resumePhotosList' accept='image/*' 
                     onChange={handleFileChange}/>
             </label>
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex items-center mb-1 gap-1 relative'>Bio Data
-                    <Image src={formData?.biodataPhotosList} width={32} height={11} alt=" " 
-                        className={`${formData?.biodataPhotosList&&" hover:fixed hover:right-1/2 hover:left-1/2 hover:translate-x-[-50%] hover:w-[40vw] hover:z-50 " 
-                            } p-0.5 border right-0 absolute`} />
+                <div className='flex items-center mb-1 gap-1  '>Bio Data  
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
                     onChange={handleFileChange}/>
             </label>
         </div> 
+
 
         {/* E-mail */}
         <label className="input input-bordered flex items-center gap-2">
@@ -139,12 +136,14 @@ const CreateEmployeeForm = () => {
                 onChange={handleInputChange}/>
         </label>
 
+
         {/* date */}
         <label className="flex flex-col items-start gap-2 text-sm">
             Date Joined
             <input type="date" className="grow input input-bordered w-full" placeholder="Date Joined" id='dateJoined' 
                 onChange={handleInputChange}/>
-        </label> 
+        </label>  
+
 
         {/* company */}
         <label className="input input-bordered flex items-center gap-2">
@@ -155,18 +154,21 @@ const CreateEmployeeForm = () => {
                 onChange={handleInputChange}/>
         </label>
 
+
         {/* isRegular */}
         <label className="label cursor-pointer flex justify-start gap-2 w-max">
             <span className="label-text text-base">Is Regular?</span>
             <input type="checkbox" defaultChecked className="checkbox" required id='isRegular'   
                 onChange={(e)=>setFormData({...formData, isRegular:e.target.checked})}/>
-        </label>
+        </label> 
+
 
         {/* submit */}
         <button 
             className='btn bg-blue-500 text-white w-full place-self-start my-6' 
             type='submit'
         >Create</button>
+
       
     </form>
   )
