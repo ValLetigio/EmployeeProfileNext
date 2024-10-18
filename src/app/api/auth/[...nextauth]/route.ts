@@ -19,11 +19,12 @@ const authOption:  NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async signIn({profile}){
+        async signIn({account, profile}){
             if (!profile?.email) {
                 throw new Error('No Profile Found');
             }
             console.log(`${profile?.name} Logged in`, profile)
+            console.log(`Account Info:`, account)
             return true;
         }
     },

@@ -19,7 +19,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
     <div 
       className={` ${showMenu ? "scale-100" : "scale-0"} duration-300 origin-top-right
         absolute top-[86px] right-0 shadow-md shadow-gray-400 border backdrop-blur-sm 
-        w-[90vw] md:w-[330px] max-h-[70vh] rounded-2xl z-50
+        w-[96vw] md:w-[330px] max-h-[70vh] rounded-2xl z-50
         flex flex-col pb-8
       `}
     > 

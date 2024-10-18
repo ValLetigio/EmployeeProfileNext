@@ -20,7 +20,7 @@ const ProfileMenu = () => {
   return (
     <div 
       className={` ${userData?.email? "scale-100" : "scale-0"}
-        fixed top-4 right-4 h-16 w-16 duration-300 z-50
+        fixed top-2 right-2 md:top-4 md:right-4 h-16 w-16 duration-300 z-50
       `} 
     > 
       <ProfileButton userData={userData} handleMenuClick={handleMenuClick} showMenu={showMenu}/>
