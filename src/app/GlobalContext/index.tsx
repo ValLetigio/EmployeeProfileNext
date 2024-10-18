@@ -2,7 +2,7 @@
 
 import { createContext, useState, useContext, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { CardsSchema, UserDataFromGoogleSchema } from '../Schema';
+import { CardsSchema, UserDataFromGoogleSchema, ToastOptionsSchema } from '../Schema';
 import { useSession } from 'next-auth/react';
 
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,8 @@ interface AppContextProps {
   sampleText: string;
   cards: CardsSchema;
   pathname: string;
+  toastOptions: ToastOptionsSchema;
+  setToastOptions: (data: ToastOptionsSchema) => void;
 }
 
 // Create the default context with proper types and default values
@@ -27,6 +29,8 @@ const AppContext = createContext<AppContextProps>({
   sampleText: '',
   cards: {},
   pathname: '',
+  toastOptions: {open: false, message: '', type: '', timer: 0},
+  setToastOptions: () => {},
 });
 
 export default function ContextProvider({
@@ -47,6 +51,8 @@ export default function ContextProvider({
 
   const [sampleText] = useState<string>('');
   const [cards, setCards] = useState<CardsSchema>({});
+
+  const [toastOptions, setToastOptions] = useState({open:false, message: '', type: '', timer: 0});
 
   useEffect(() => {
     setCards(
@@ -152,6 +158,7 @@ export default function ContextProvider({
         name: name || '',
         email: email || '',
       }); 
+      setToastOptions({open:true, message: `Welcome ${name}`, type: 'success', timer: 5});
     } 
 
     if (status === 'unauthenticated') {
@@ -166,6 +173,7 @@ export default function ContextProvider({
     sampleText,
     cards,
     pathname,
+    toastOptions, setToastOptions
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

@@ -8,8 +8,10 @@ import ContextProvider from "./GlobalContext/index";
 
 import NavBar from "./NavigationComponents/NavBar"; 
 import ProfileMenu from "./ProfileMenuComponents/ProfileMenu";
+import Toast from "./toast";
 
 import { Poppins } from "next/font/google"; 
+
 const poppins = Poppins({ 
   subsets: ["latin"], display: "swap", variable: "--font-poppins", 
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], 
@@ -30,6 +32,7 @@ export default function RootLayout({
             <ProfileMenu/>
             {children}
             <NavBar/>
+            <Toast />
           </ContextProvider>
         </SessionProvider>
       </body>

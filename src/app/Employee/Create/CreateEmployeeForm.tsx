@@ -2,7 +2,13 @@
 
 import React, { useState } from 'react' 
 
+import { useAppContext } from '@/app/GlobalContext'
+
+import { EmployeeFormDataSchema } from '@/app/Schema'
+
 const CreateEmployeeForm = () => {
+
+    const { setToastOptions } = useAppContext()
 
     const [ formData, setFormData ] = useState({
         name: '',
@@ -18,26 +24,36 @@ const CreateEmployeeForm = () => {
     })
 
     const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault() 
+        e.preventDefault()  
+        try{
+            const form = e.target as HTMLFormElement;  
+            console.log('formData:', formData)  
 
-        const form = e.target as HTMLFormElement; 
+            form.reset()
+            setFormData({
+                name: '',
+                address: '',
+                phoneNumber: '',
+                photoOfPerson: '',
+                resumePhotosList: '',
+                biodataPhotosList: '',
+                email: '',
+                dateJoined: '',
+                company: '',
+                isRegular: false
+            }) 
+        }catch(e:any){
+            console.error('Error creating employee:', e);
 
-        console.log('formData:', formData)
-        // console.log('form:', form)
-
-        form.reset()
-        setFormData({
-            name: '',
-            address: '',
-            phoneNumber: '',
-            photoOfPerson: '',
-            resumePhotosList: '',
-            biodataPhotosList: '',
-            email: '',
-            dateJoined: '',
-            company: '',
-            isRegular: false
-        })
+            let errorMessage = 'An error occurred';  
+         
+            if (e instanceof Error) {
+                errorMessage = e.message; 
+            }
+        
+            console.error('Error creating employee:', e)
+            setToastOptions({ open: true, message: e.message || "Error", type: 'error', timer: 5 });
+        }  
     }
 
     const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +78,7 @@ const CreateEmployeeForm = () => {
     }
 
   return (
-    <form className={` w-full min-h-full bg-white/90 flex flex-col justify-start px-4 py-6 md:px-8 gap-8 md:gap-5 `}
+    <form className={` form-style `}
         onSubmit={(e)=>handleSubmit(e)}
     >
         <h2 className='font-semibold'>Employee Registry</h2>
@@ -118,7 +134,7 @@ const CreateEmployeeForm = () => {
             </label>
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex items-center mb-1 gap-1  '>Bio Data  
+                <div className='flex items-center mb-1 gap-1  '>Bio Data 
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
                     onChange={handleFileChange}/>
@@ -148,7 +164,9 @@ const CreateEmployeeForm = () => {
         {/* company */}
         <label className="input input-bordered flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-gray-500">
-                <path fillRule="evenodd" d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z" clipRule="evenodd" />
+                <path 
+                    fillRule="evenodd" 
+                    d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z" clipRule="evenodd" />
             </svg> 
             <input type="text" className="grow" placeholder="Company" required id='company' 
                 onChange={handleInputChange}/>

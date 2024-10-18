@@ -24,7 +24,7 @@ const ProfileMenu = () => {
       `} 
     > 
       <ProfileButton userData={userData} handleMenuClick={handleMenuClick} showMenu={showMenu}/>
-      <ProfilePopUp userData={userData} showMenu={showMenu}/>
+      <ProfilePopUp userData={userData} showMenu={showMenu} />
     </div>
   )
 }

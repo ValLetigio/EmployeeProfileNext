@@ -27,3 +27,25 @@ export interface UserDataFromGoogleSchema {
     name: string;
     email: string; 
 }
+
+
+export interface ToastOptionsSchema {
+    open: boolean;
+    message: string;
+    type: string; 
+    timer: number;
+}
+
+
+export interface EmployeeFormDataSchema {
+    name: string,
+    address: string,
+    phoneNumber: string,
+    photoOfPerson: string,
+    resumePhotosList: string,
+    biodataPhotosList: string,
+    email: string,
+    dateJoined: string,
+    company: string,
+    isRegular: boolean
+}

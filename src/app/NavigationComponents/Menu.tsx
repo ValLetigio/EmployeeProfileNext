@@ -12,8 +12,6 @@ interface MenuButtonProps {
 } 
 
 const Menu: FC<MenuButtonProps> = ({ open, cards, pathname }) => { 
- 
-  
 
   return (
     <div 
