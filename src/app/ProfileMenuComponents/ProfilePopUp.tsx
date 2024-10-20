@@ -22,13 +22,17 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
 
   return (
     <div 
+      data-theme="forest"
       className={` ${showMenu ? "scale-100" : "scale-0"} duration-300 origin-top-right
         absolute top-[86px] right-0 shadow-md shadow-gray-400 border backdrop-blur-sm 
         w-[96vw] md:w-[330px] max-h-[70vh] rounded-2xl z-50
         flex flex-col pb-8
       `}
     > 
-      <div className='flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-gray-100 ' >
+      <div
+        className='flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl ' 
+        data-theme="synthwave" 
+        >
         <Image src={userData?.image} width={100} height={100} className='rounded-lg' alt="userImage" />
         <h1 className='text-xl font-semibold mt-5'>{userData.name}</h1>
         <p className='text-sm mt-2 select-all italic'>{userData.email}</p> 
