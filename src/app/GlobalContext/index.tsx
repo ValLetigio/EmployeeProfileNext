@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { createContext, useState, useContext, useEffect } from 'react';
@@ -6,6 +7,8 @@ import { CardsSchema, UserDataFromGoogleSchema } from '../Schema';
 import { useSession } from 'next-auth/react';
 
 import { useRouter } from 'next/navigation';
+
+import ServerRequests from '../api/ServerRequests';
 
 // Define the properties of the context
 interface AppContextProps {
@@ -19,8 +22,15 @@ interface AppContextProps {
 // Create the default context with proper types and default values
 const AppContext = createContext<AppContextProps>({
   userData: {
-    name: '',
+    _id: '',
+    _version: 0,
+    roles: [],
+    userSettings: {},
+    access: {},
+    createdAt: {},
+    isApproved: false,
     email: '',
+    displayName: '',
     image: '',
   },
   setUserData: () => {},
@@ -37,11 +47,19 @@ export default function ContextProvider({
   const pathname = usePathname();
   const { data: session, status } = useSession(); 
   const router = useRouter();
+  const serverRequests = new ServerRequests(false);
 
   // User state initialized with an empty user object
   const [userData, setUserData] = useState<UserDataFromGoogleSchema>({
-    name: '',
+    _id: '',
+    _version: 0,
+    roles: [],
+    userSettings: {},
+    access: {},
+    createdAt: {},
+    isApproved: false,
     email: '',
+    displayName: '',
     image: '',
   });
 
@@ -146,18 +164,34 @@ export default function ContextProvider({
 
   useEffect(() => {
     if (session?.user) {
-      const { name, email, image } = session.user;
+      const { name: displayName, email, image } = session.user;
+      const _id = '';
+      const _version = 0;
+      const roles: string[] = [];
+      const userSettings = {};
+      const access = {};
+      const createdAt = {};
+      const isApproved = false;
       setUserData({
         image: image || '',
-        name: name || '',
+        _id: _id || '',
+        _version: _version || 0,
+        roles: roles || [],
+        userSettings: userSettings || {},
+        access: access || {},
+        createdAt: createdAt || {},
+        isApproved: isApproved || false,
         email: email || '',
-      }); 
+        displayName: displayName || '',
+      });
+    
+
     } 
 
     if (status === 'unauthenticated') {
       router.push('/api/auth/signin');
     }
-  }, [session]);
+  }, [router, session, status]);
 
   // Define the global values to be shared across the context
   const globals = {
