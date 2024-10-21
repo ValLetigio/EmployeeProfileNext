@@ -11,8 +11,6 @@ def createUserObject(userId, email='test@gmail.com', roles=[]):
         '_id': userId,
         '_version': 0,
         'roles': roles,
-        'userSettings': {},
-        'access': {},
         'createdAt': datetime.datetime.now(),
         'isApproved': True,
         'email': email,
@@ -79,13 +77,13 @@ def test_user_login():
 def test_add_role_and_remove_role():
     try:
         user = UserActions(userObject)
-        userCreated = user.createUserAction('id2')
+        userCreated = user.createFirstUserAction('id2')
 
         users = user.readCollection('User')
 
         assert len(users) == 1
 
-        addRole = user.addRoleAction(users[0], 'canCreateMemo')
+        addRole = user.addRoleAction(users[0], 'Memo', 'canCreateMemo')
 
         assert addRole[0]['roles'][1] == 'canCreateMemo'
         userWithRole = db.read({'_id':users[0]['_id']},'User',findOne=True)
@@ -98,7 +96,7 @@ def test_add_role_and_remove_role():
 
         assert len(users) == 2
 
-        removeRole = user.removeRoleAction(users[1],'user')
+        removeRole = user.removeRoleAction(users[1],'Memo', 'canCreateMemo')
 
         assert len(removeRole[0]['roles']) == 0
         user = db.read({'_id':users[1]['_id']},'User',findOne=True)

@@ -7,23 +7,80 @@ db = mongoDb()
 
 class Roles:
     def __init__(self):
+        # self.roles = {
+        #     'user': 'can login to the system',
+        #     'canCreateMemo': 'can create a memo',
+        #     'canDeleteMemo': 'can delete a memo',
+        #     'canSubmitMemo': 'can submit a memo',
+        #     'canCreateEmployee': 'can create an employee',
+        #     'canUpdateEmployee': 'can update an employee',
+        #     'canCreateOffense': 'can create an offense',
+        #     'canDeleteOffense': 'can delete an offense',
+        #     'canUpdateOffense': 'can update an offense',
+        # }
         self.roles = {
-            'user': 'can login to the system',
-            'canCreateMemo': 'can create a memo',
-            'canDeleteMemo': 'can delete a memo',
-            'canSubmitMemo': 'can submit a memo',
-            'canCreateEmployee': 'can create an employee',
-            'canUpdateEmployee': 'can update an employee',
-            'canCreateOffense': 'can create an offense',
-            'canDeleteOffense': 'can delete an offense',
-            'canUpdateOffense': 'can update an offense',
-        }
+        'User' : [
+            {
+                'name':'canUpdateRole',
+                'description': 'can update a role of a user'
+            }
+        ],
+        'Memo' : [
+            {
+                'name':'canCreateMemo',
+                'description':'can create a memo'
+            },
+            {
+                'name':'canDeleteMemo',
+                'description':'can delete a memo'
+            },
+            {
+                'name':'canSubmitMemo',
+                'description':'can submit a memo'
+            }
+        ],
+        'Employee' : [
+            {
+                'name':'canCreateEmployee',
+                'description':'can create an employee'
+            },
+            {
+                'name':'canUpdateEmployee',
+                'description':'can update an employee'
+            }
+        ],
+        'Offense' : [
+            {
+                'name':'canCreateOffense',
+                'description':'can create an offense'
+            },
+            {
+                'name':'canDeleteOffense',
+                'description':'can delete an offense'
+            },
+            {
+                'name':'canUpdateOffense',
+                'description':'can update an offense'
+            }
+        ]
+    }
 
     def getAllRoles(self):
         return self.roles
 
     def getAllRoleNames(self):
         return list(self.roles.keys())
+    
+    def getAllRolesWithPermissions(self):
+        user_permissions = {}
+        
+        # Loop through each role and its permissions
+        for role, permissions in self.roles.items():
+            user_permissions[role] = []
+            for permission in permissions:
+                user_permissions[role].append(permission)
+        
+        return user_permissions
 class User:
     def __init__(self, data):
 
@@ -34,8 +91,6 @@ class User:
         validateParameterData(
             data, {
                 '_id': (str, type(None)),
-                'userSettings': dict,
-                'access': dict,
                 'createdAt': datetime.datetime,
                 'isApproved': bool,
                 'displayName': str,
@@ -45,8 +100,6 @@ class User:
             }, self.__class__.__name__)
 
         self._id = getDictionaryOrObjectValue(data, '_id')
-        self.userSettings = getDictionaryOrObjectValue(data, 'userSettings')
-        self.access = getDictionaryOrObjectValue(data, 'access')
         self.createdAt = getDictionaryOrObjectValue(data, 'createdAt')
         self.isApproved = getDictionaryOrObjectValue(data, 'isApproved')
         self.displayName = getDictionaryOrObjectValue(data, 'displayName')
@@ -57,8 +110,6 @@ class User:
     def to_dict(self):
         return {
             '_id': self._id,
-            'userSettings': self.userSettings,
-            'access': self.access,
             'createdAt': self.createdAt,
             'isApproved': self.isApproved,
             'displayName': self.displayName,
@@ -105,9 +156,7 @@ class User:
         data = {
             '_id': firebaseUserUid,
             '_version': self._version,
-            'roles': Roles().getAllRoleNames(),
-            'userSettings': self.userSettings,
-            'access': self.access,
+            'roles': Roles().getAllRolesWithPermissions(),
             'createdAt': datetime.datetime.now(datetime.timezone.utc),
             'isApproved': self.isApproved,
             'displayName': self.displayName,
@@ -131,8 +180,6 @@ class User:
             '_id': firebaseUserUid,
             '_version': self._version,
             'roles': self.roles,
-            'userSettings': self.userSettings,
-            'access': self.access,
             'createdAt': datetime.datetime.now(datetime.timezone.utc),
             'isApproved': self.isApproved,
             'displayName': self.displayName,
@@ -143,30 +190,59 @@ class User:
         return data
 
     # create a function that will add a role to a user
-    def addRole(self, userToEdit, roleToAdd):
-        try:
-            if roleToAdd not in Roles().getAllRoleNames():
-                raise ValueError('Role does not exist')
-            
-            roles = userToEdit['roles']
-            roles.append(roleToAdd)
-            return userToEdit
+    def addRole(self, user, category, roleToAdd):
+        # Fetch roles for the given category
+        category_roles = user.get('category_roles', {})
+        
+        # Debugging: print roles in the category to inspect
+        print(f"Roles in category {category}: {category_roles}")
 
-        except Exception as e:
-            print(e)
+        # Get the roles in the specific category (this looks like it's a list of dictionaries)
+        roles_in_category = user.get('roles', {}).get(category, [])
+
+        # Check if the role exists by checking the 'name' field in each dictionary within roles_in_category
+        role_exists = any(role['name'] == roleToAdd for role in roles_in_category)
+
+        # Raise error if role doesn't exist
+        if not role_exists:
+            raise ValueError(f'Role {roleToAdd} does not exist in category {category}')
+        
+        # Check if role is already assigned to the user in that category
+        if any(role['name'] == roleToAdd for role in roles_in_category):
+            print(f"User already has role {roleToAdd} in category {category}")
+        else:
+            # Add role to the user's roles in that category
+            roles_in_category.append({'name': roleToAdd, 'description': 'Role description here'})
+            print(f"Added role {roleToAdd} to category {category}")
+
+        # Update user's roles in that category
+        user['roles'][category] = roles_in_category
+        return user
+
 
     # create a function that will remove a role from a user
-    def removeRole(self, userToEdit, roleToRemove):
-        try:
-            if roleToRemove not in self.roles:
-                raise ValueError('Role does not exist')
+    def removeRole(self, user, category, roleToRemove):
+        # Fetch roles for the given category
+        category_roles = user.get('category_roles', {})
 
-            roles = userToEdit['roles']
+        # Debugging: print roles in the category to inspect
+        print(f"Roles in category {category}: {category_roles}")
 
-            roles.remove(roleToRemove)
-            return userToEdit
-        except Exception as e:
-            print(e)
+        # Get the roles in the specific category (this looks like it's a list of dictionaries)
+        roles_in_category = user.get('roles', {}).get(category, [])
+
+        # Check if the role exists by checking the 'name' field in each dictionary within roles_in_category
+        role_exists = any(role['name'] == roleToRemove for role in roles_in_category)
+
+        # Raise error if role doesn't exist
+        if not role_exists:
+            raise ValueError(f'Role {roleToRemove} does not exist in category {category}')
+
+        # Remove the role from the user's roles in that category
+        user['roles'][category] = [role for role in roles_in_category if role['name'] != roleToRemove]
+        print(f"Removed role {roleToRemove} from category {category}")
+
+        return user
 
     def validate_email(self, email):
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -188,22 +264,22 @@ class UserActions(User):
         data = db.create(user, 'User')
         return data
 
-    def addRoleAction(self, userToEdit, roleToAdd):
+    def addRoleAction(self, userToEdit, category, roleToAdd):
         user = db.read({'_id': userToEdit['_id']}, 'User')
         if len(user) == 0:
             raise ValueError('User does not exist')
 
-        data = self.addRole(user[0], roleToAdd)
+        data = self.addRole(user[0], category, roleToAdd)
         data = db.update({'_id': data['_id'], '_version': data['_version']}, {'roles': data['roles']}, 'User')
         return data
 
 
-    def removeRoleAction(self, userToEdit ,roleToRemove):
+    def removeRoleAction(self, userToEdit, category, roleToRemove):
         user = db.read({'_id': userToEdit['_id']}, 'User')
         if len(user) == 0:
             raise ValueError('User does not exist')
 
-        data = self.removeRole(user[0] ,roleToRemove)
+        data = self.removeRole(user[0], category, roleToRemove)
         data = db.update({'_id': data['_id'], '_version': data['_version']}, {'roles': data['roles']}, 'User')
         return data
 

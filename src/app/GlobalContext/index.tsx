@@ -25,8 +25,6 @@ const AppContext = createContext<AppContextProps>({
     _id: '',
     _version: 0,
     roles: [],
-    userSettings: {},
-    access: {},
     createdAt: {},
     isApproved: false,
     email: '',
@@ -54,8 +52,6 @@ export default function ContextProvider({
     _id: '',
     _version: 0,
     roles: [],
-    userSettings: {},
-    access: {},
     createdAt: {},
     isApproved: false,
     email: '',
@@ -168,8 +164,6 @@ export default function ContextProvider({
       const _id = '';
       const _version = 0;
       const roles: string[] = [];
-      const userSettings = {};
-      const access = {};
       const createdAt = {};
       const isApproved = false;
       setUserData({
@@ -177,8 +171,6 @@ export default function ContextProvider({
         _id: _id || '',
         _version: _version || 0,
         roles: roles || [],
-        userSettings: userSettings || {},
-        access: access || {},
         createdAt: createdAt || {},
         isApproved: isApproved || false,
         email: email || '',

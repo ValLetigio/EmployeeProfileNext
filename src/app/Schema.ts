@@ -27,8 +27,6 @@ export interface UserDataFromGoogleSchema {
     _id: string;
     _version: number;
     roles: string[];
-    userSettings: object;
-    access: object;
     createdAt: object;
     isApproved: boolean;
     email: string;
