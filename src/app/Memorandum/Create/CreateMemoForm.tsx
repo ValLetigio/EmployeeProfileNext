@@ -28,17 +28,9 @@ const CreateMemoForm = () => {
             Employee: {name:""},
             description: '',
           }) 
-      }catch(e:any){
-          console.error('Error creating employee:', e);
-  
-          let errorMessage = 'An error occurred';  
-       
-          if (e instanceof Error) {
-              errorMessage = e.message; 
-          }
-      
-          console.error('Error creating employee:', e)
-          setToastOptions({ open: true, message: e.message || "Error", type: 'error', timer: 5 });
+      }catch(e:unknown){ 
+        console.error('Error creating employee:', e)
+        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
       }  
   }
   

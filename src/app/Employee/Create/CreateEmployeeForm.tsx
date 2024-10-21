@@ -2,9 +2,7 @@
 
 import React, { useState } from 'react' 
 
-import { useAppContext } from '@/app/GlobalContext'
-
-import { EmployeeFormDataSchema } from '@/app/Schema'
+import { useAppContext } from '@/app/GlobalContext' 
 
 const CreateEmployeeForm = () => {
 
@@ -44,17 +42,9 @@ const CreateEmployeeForm = () => {
             }) 
 
             
-        }catch(e:any){
-            console.error('Error creating employee:', e);
-
-            let errorMessage = 'An error occurred';  
-         
-            if (e instanceof Error) {
-                errorMessage = e.message; 
-            }
-        
+        }catch(e:unknown){  
             console.error('Error creating employee:', e)
-            setToastOptions({ open: true, message: e.message || "Error", type: 'error', timer: 5 });
+            setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
         }  
     }
 
