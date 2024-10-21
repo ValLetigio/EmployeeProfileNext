@@ -36,14 +36,14 @@ const Toast = () => {
     };   
 
     return (
-        <div className={`${toastOptions?.open ? 'toast-start' : 'hidden'} toast`}>
-            <div className={`alert-${toastOptions?.type} max-w-[30vw] alert text-white text-wrap px-5 rounded-none`}
+        <div className={`${toastOptions?.open ? 'toast-top toast-center lg:toast-start lg:toast-bottom' : 'hidden'} toast z-[100]`}>
+            <div className={` alert-${toastOptions?.type} max-w-[50vw] lg:max-w-[30vw] alert text-white text-wrap px-5 rounded-none`}
                 onClick={() => closeToast()}>
                 <span className='break-words'>{toastOptions?.message}</span>
             </div>
             
             <progress 
-                className={`progress w-full rounded-none progress-${toastOptions?.type}`} 
+                className={`progress w-full rounded-none progress-${toastOptions?.type} `} 
                 value={(timer / toastOptions?.timer) * 100} 
                 max={100} 
             /> 

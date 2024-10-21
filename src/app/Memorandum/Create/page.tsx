@@ -5,7 +5,7 @@ import CreateMemoForm from './CreateMemoForm'
 const page = () => {
   return (
     <div className='w-screen h-screen flex items-center justify-center '> 
-      {/* CreateEmployeeForm container */}
+      {/* CreateMemoForm container */}
       <div className={` form-container `} >
         <CreateMemoForm/>
       </div>

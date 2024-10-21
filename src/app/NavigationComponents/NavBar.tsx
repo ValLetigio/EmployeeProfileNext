@@ -32,7 +32,7 @@ function NavBar() {
       <MenuButton setOpen={setShowMenu} open={showMenu} />
 
       {/* Menu */}  
-      {userData?.email ? <Menu open={showMenu} cards={cards} pathname={pathname}/> : null} 
+      {userData?.email ? <Menu open={showMenu} cards={cards} pathname={pathname} setOpen={setShowMenu}/> : null} 
 
       {/* dashboard button */}
       <DashboardButton pathname={pathname}/> 

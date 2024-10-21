@@ -9,9 +9,10 @@ interface MenuButtonProps {
   open: boolean; 
   cards: CardsSchema;
   pathname: string;
+  setOpen: (open: boolean) => void;
 } 
 
-const Menu: FC<MenuButtonProps> = ({ open, cards, pathname }) => { 
+const Menu: FC<MenuButtonProps> = ({ open, cards, pathname, setOpen }) => { 
 
   return (
     <div 
@@ -35,6 +36,7 @@ const Menu: FC<MenuButtonProps> = ({ open, cards, pathname }) => {
                     w-full h-full border rounded-full shadow-md shadow-gray-400
                     flex items-center justify-center 
                   `} data-tip={card.title}
+                  onClick={()=>setOpen(false)}
                 >
                   {card.icon}
                 </Link>

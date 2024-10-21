@@ -42,6 +42,8 @@ const CreateEmployeeForm = () => {
                 company: '',
                 isRegular: false
             }) 
+
+            
         }catch(e:any){
             console.error('Error creating employee:', e);
 
