@@ -17,10 +17,9 @@ def createUserObject(userId, email='test@gmail.com', roles=[]):
         'displayName': 'testDisplayName',
     }
 
-userObject = createUserObject(None, 'superAdmin@gmail.com',
-                              Roles().getAllRoleNames())
+userObject = createUserObject(None, 'superAdmin@gmail.com')
 
-userObject2 = createUserObject(None, 'user@gmail.com', ['user'])
+userObject2 = createUserObject(None, 'user@gmail.com')
 
 offenseObject = {
     '_id': None,
@@ -76,31 +75,38 @@ def test_user_login():
 
 def test_add_role_and_remove_role():
     try:
+        # create first user
         user = UserActions(userObject)
-        userCreated = user.createFirstUserAction('id2')
+        firstUser = user.createFirstUserAction('id1')
 
-        users = user.readCollection('User')
 
-        assert len(users) == 1
+        user2 = UserActions(userObject)
+        userCreated = user2.createUserAction('id2')
 
-        addRole = user.addRoleAction(users[0], 'Memo', 'canCreateMemo')
-
-        assert addRole[0]['roles'][1] == 'canCreateMemo'
-        userWithRole = db.read({'_id':users[0]['_id']},'User',findOne=True)
-        assert 'canCreateMemo' in userWithRole['roles']
-
-        user = UserActions(userObject2)
-        userCreated = user.createUserAction('id3')
-
-        users = user.readCollection('User')
+        users = user2.readCollection('User')
 
         assert len(users) == 2
 
-        removeRole = user.removeRoleAction(users[1],'Memo', 'canCreateMemo')
+        addRole = user.addRoleAction(users[1], 'Memo', 'canCreateMemo')
 
-        assert len(removeRole[0]['roles']) == 0
+        addRole2 = user.addRoleAction(users[1], 'Memo', 'canDeleteMemo')
+
+        assert addRole[0]['roles']['Memo'][0] == 'canCreateMemo'
+        userWithRole = db.read({'_id':users[0]['_id']},'User',findOne=True)
+        assert 'canCreateMemo' in userWithRole['roles']['Memo']
+
+        user3 = UserActions(userObject2)
+        userCreated = user3.createUserAction('id3')
+
+        users = user3.readCollection('User')
+
+        assert len(users) == 3
+
+        removeRole = user3.removeRoleAction(users[1],'Memo', 'canCreateMemo')
+
+        assert len(removeRole[0]['roles']['Memo']) == 1
         user = db.read({'_id':users[1]['_id']},'User',findOne=True)
-        assert 'user' not in user['roles']
+        assert 'canCreateMemo' not in user['roles']['Memo']
     finally:
         db.delete({},'User')
         pass
@@ -108,9 +114,9 @@ def test_add_role_and_remove_role():
 def test_create_offense_employee_memo():
     try:
         user = UserActions(userObject)
-        userCreated = user.createUserAction('id4')
+        userCreated = user.createFirstUserAction('id4')
 
-        offense = user.createOffenseAction(offenseObject)
+        offense = user.createOffenseAction(userCreated, offenseObject)
 
         offenses = user.readCollection('Offense')
 
@@ -121,7 +127,7 @@ def test_create_offense_employee_memo():
         assert getOffense['remedialActions'][0] == offense['remedialActions'][0]
 
         # create employee
-        employee = user.createEmployeeAction(employeeObject)
+        employee = user.createEmployeeAction(userCreated, employeeObject)
 
         employees = user.readCollection('Employee')
 
@@ -130,7 +136,7 @@ def test_create_offense_employee_memo():
         assert getEmployee['name'] == employee['name']
 
         # create memo
-        memo = user.createMemoAction(memoObject)
+        memo = user.createMemoAction(userCreated, memoObject)
 
         memos = user.readCollection('Memo')
 
@@ -139,16 +145,16 @@ def test_create_offense_employee_memo():
         assert getMemo['subject'] == memo['subject']
 
         # create another memo
-        memo2 = user.createMemoAction(memoObject)
+        memo2 = user.createMemoAction(userCreated, memoObject)
 
         memos = user.readCollection('Memo')
 
         # create another memo then submit it
-        memo3 = user.createMemoAction(memoObject)
+        memo3 = user.createMemoAction(user, memoObject)
 
         reason = 'Reason for submission'
 
-        submitMemo = user.submitMemoAction(memo3, reason)
+        submitMemo = user.submitMemoAction(userCreated, memo3, reason)
 
         getMemo = db.read({'_id':submitMemo[0]['_id']},'Memo',findOne=True)
 
@@ -156,11 +162,11 @@ def test_create_offense_employee_memo():
 
         memos = user.readCollection('Memo')
 
-        memo4 = user.createMemoAction(memoObject)
+        memo4 = user.createMemoAction(userCreated, memoObject)
 
         reason = 'Reason for submission'
 
-        submitMemo = user.submitMemoAction(memo4, reason)
+        submitMemo = user.submitMemoAction(userCreated, memo4, reason)
 
         getMemo = db.read({'_id':submitMemo[0]['_id']},'Memo',findOne=True)
 

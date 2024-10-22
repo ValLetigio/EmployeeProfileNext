@@ -19,67 +19,63 @@ class Roles:
         #     'canUpdateOffense': 'can update an offense',
         # }
         self.roles = {
-        'User' : [
-            {
-                'name':'canUpdateRole',
-                'description': 'can update a role of a user'
+        'User' : {
+            'canUpdateUser' :{
+                'description':'can update a user'
             }
-        ],
-        'Memo' : [
-            {
-                'name':'canCreateMemo',
-                'description':'can create a memo'
-            },
-            {
-                'name':'canDeleteMemo',
+        },
+        'Memo' : {
+            'canDeleteMemo' :{
                 'description':'can delete a memo'
             },
-            {
-                'name':'canSubmitMemo',
+            'canSubmitMemo' :{
                 'description':'can submit a memo'
-            }
-        ],
-        'Employee' : [
-            {
-                'name':'canCreateEmployee',
+            },
+            'canCreateMemo' :{
+                'description':'can create a memo'
+            },
+        },
+        'Employee' : {
+            'canCreateEmployee' :{
                 'description':'can create an employee'
             },
-            {
-                'name':'canUpdateEmployee',
+            'canUpdateEmployee' :{
                 'description':'can update an employee'
-            }
-        ],
-        'Offense' : [
-            {
-                'name':'canCreateOffense',
+            },
+        },
+        'Offense' : {
+            'canCreateOffense' :{
                 'description':'can create an offense'
             },
-            {
-                'name':'canDeleteOffense',
+            'canDeleteOffense' :{
                 'description':'can delete an offense'
             },
-            {
-                'name':'canUpdateOffense',
+            'canUpdateOffense' :{
                 'description':'can update an offense'
-            }
-        ]
+            },
+        }
     }
 
     def getAllRoles(self):
         return self.roles
-
-    def getAllRoleNames(self):
-        return list(self.roles.keys())
     
     def getAllRolesWithPermissions(self):
         user_permissions = {}
-        
+
         # Loop through each role and its permissions
         for role, permissions in self.roles.items():
             user_permissions[role] = []
             for permission in permissions:
                 user_permissions[role].append(permission)
-        
+
+        return user_permissions
+    
+    def getAllRolesWithoutPermissions(self):
+        user_permissions = {}
+
+        for role, permissions in self.roles.items():
+            user_permissions[role] = []
+
         return user_permissions
 class User:
     def __init__(self, data):
@@ -179,7 +175,7 @@ class User:
         data = {
             '_id': firebaseUserUid,
             '_version': self._version,
-            'roles': self.roles,
+            'roles': Roles().getAllRolesWithoutPermissions(),
             'createdAt': datetime.datetime.now(datetime.timezone.utc),
             'isApproved': self.isApproved,
             'displayName': self.displayName,
@@ -191,55 +187,23 @@ class User:
 
     # create a function that will add a role to a user
     def addRole(self, user, category, roleToAdd):
-        # Fetch roles for the given category
-        category_roles = user.get('category_roles', {})
-        
-        # Debugging: print roles in the category to inspect
-        print(f"Roles in category {category}: {category_roles}")
-
-        # Get the roles in the specific category (this looks like it's a list of dictionaries)
-        roles_in_category = user.get('roles', {}).get(category, [])
-
-        # Check if the role exists by checking the 'name' field in each dictionary within roles_in_category
-        role_exists = any(role['name'] == roleToAdd for role in roles_in_category)
-
-        # Raise error if role doesn't exist
-        if not role_exists:
+        if roleToAdd not in Roles().getAllRoles()[category]:
             raise ValueError(f'Role {roleToAdd} does not exist in category {category}')
-        
-        # Check if role is already assigned to the user in that category
-        if any(role['name'] == roleToAdd for role in roles_in_category):
-            print(f"User already has role {roleToAdd} in category {category}")
-        else:
-            # Add role to the user's roles in that category
-            roles_in_category.append({'name': roleToAdd, 'description': 'Role description here'})
-            print(f"Added role {roleToAdd} to category {category}")
 
-        # Update user's roles in that category
-        user['roles'][category] = roles_in_category
+        # add the role to the user's roles in that category
+        user['roles'][category].append(roleToAdd)
+        print(f"Added role {roleToAdd} to category {category}")
+
         return user
 
 
     # create a function that will remove a role from a user
     def removeRole(self, user, category, roleToRemove):
-        # Fetch roles for the given category
-        category_roles = user.get('category_roles', {})
-
-        # Debugging: print roles in the category to inspect
-        print(f"Roles in category {category}: {category_roles}")
-
-        # Get the roles in the specific category (this looks like it's a list of dictionaries)
-        roles_in_category = user.get('roles', {}).get(category, [])
-
-        # Check if the role exists by checking the 'name' field in each dictionary within roles_in_category
-        role_exists = any(role['name'] == roleToRemove for role in roles_in_category)
-
-        # Raise error if role doesn't exist
-        if not role_exists:
+        if roleToRemove not in user['roles'][category]:
             raise ValueError(f'Role {roleToRemove} does not exist in category {category}')
 
-        # Remove the role from the user's roles in that category
-        user['roles'][category] = [role for role in roles_in_category if role['name'] != roleToRemove]
+        # remove the role from the user's roles in that category
+        user['roles'][category].remove(roleToRemove)
         print(f"Removed role {roleToRemove} from category {category}")
 
         return user
@@ -286,44 +250,44 @@ class UserActions(User):
     def readCollection(self, collection_name):
         return db.read({}, collection_name)
 
-    def createEmployeeAction(self, data):
+    def createEmployeeAction(self, user, data):
         employee = Employee(data)
-        res = employee.createEmployee(self)
+        res = employee.createEmployee(user)
         return db.create(res, 'Employee')
 
-    def updateEmployeeAction(self, data, dataToUpdate):
+    def updateEmployeeAction(self, user, data, dataToUpdate):
         employee = Employee(data)
-        res = employee.updateEmployee(self, dataToUpdate)
+        res = employee.updateEmployee(user, dataToUpdate)
         return db.update({'_id': res['_id']}, res, 'Employee')
 
-    def createOffenseAction(self, data):
+    def createOffenseAction(self, user, data):
         offense = Offense(data)
-        res = offense.createOffense(self)
+        res = offense.createOffense(user)
         return db.create(res, 'Offense')
 
-    def updateOffenseAction(self, data, dataToUpdate):
+    def updateOffenseAction(self, user, data, dataToUpdate):
         offense = Offense(data)
-        res = offense.updateOffense(self, dataToUpdate)
+        res = offense.updateOffense( user, dataToUpdate)
         return db.update({'_id': res['_id']}, res, 'Offense')
 
-    def deleteOffenseAction(self, data):
+    def deleteOffenseAction(self, user, data):
         offense = Offense(data)
-        res = offense.deleteOffense(self)
+        res = offense.deleteOffense(user)
         return db.delete(res, 'Offense')
 
-    def createMemoAction(self, data):
+    def createMemoAction(self, user, data):
         memo = Memo(data)
-        res = memo.createMemo(self)
+        res = memo.createMemo(user)
         return db.create(res, 'Memo')
 
-    def deleteMemoAction(self, data):
+    def deleteMemoAction(self, user, data):
         memo = Memo(data)
-        res = memo.deleteMemo(self)
+        res = memo.deleteMemo(user)
         return db.delete(res, 'Memo')
 
-    def submitMemoAction(self, data, reason):
+    def submitMemoAction(self, user, data, reason):
         memo = Memo(data)
-        res = memo.submitMemo(self, reason)
+        res = memo.submitMemo(user, reason)
         return db.update({'_id': res['_id']}, res, 'Memo')
 
 
@@ -386,7 +350,7 @@ class Memo:
         return len(specificOffenseMemos)
 
     def createMemo(self, user):
-        if 'canCreateMemo' not in user.roles:
+        if 'canCreateMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to create a memo')
 
         pastOffenses = self._countPastOffenses(self.Employee._id, self.MemoCode._id)
@@ -398,7 +362,7 @@ class Memo:
         return self.to_dict()
 
     def deleteMemo(self, user):
-        if 'canDeleteMemo' not in user.roles:
+        if 'canDeleteMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to delete a memo')
         if self.submitted:
             raise ValueError('Memo has already been submitted')
@@ -406,7 +370,7 @@ class Memo:
         return self.to_dict()
 
     def submitMemo(self, user,reason):
-        if 'canSubmitMemo' not in user.roles:
+        if 'canSubmitMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to submit a memo')
         if self.submitted:
             raise ValueError('Memo has already been submitted')
@@ -479,13 +443,13 @@ class Employee:
         }
 
     def createEmployee(self, user):
-        if 'canCreateEmployee' not in user.roles:
+        if 'canCreateEmployee' not in user['roles']['Employee']:
             raise ValueError('User does not have permission to create an employee')
         self._id = generateRandomString()
         return self.to_dict()
 
     def updateEmployee(self, user, dataToUpdate):
-        if 'canUpdateEmployee' not in user.roles:
+        if 'canUpdateEmployee' not in user['roles']['Employee']:
             raise ValueError('User does not have permission to update an employee')
         
         newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
@@ -520,19 +484,19 @@ class Offense:
         }
 
     def createOffense(self, user):
-        if 'canCreateOffense' not in user.roles:
+        if 'canCreateOffense' not in user['roles']['Offense']:
             raise ValueError('User does not have permission to create an offense')
         self._id = generateRandomString()
         return self.to_dict()
 
     def updateOffense(self, user, dataToUpdate):
-        if 'canUpdateOffense' not in user.roles:
+        if 'canUpdateOffense' not in user['roles']['Offense']:
             raise ValueError('User does not have permission to update an offense')
 
         newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
         return newData
 
     def deleteOffense(self, user):
-        if 'canDeleteOffense' not in user.roles:
+        if 'canDeleteOffense' not in user['roles']['Offense']:
             raise ValueError('User does not have permission to delete an offense')
         return self.to_dict()
