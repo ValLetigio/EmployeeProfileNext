@@ -164,7 +164,7 @@ export default function ContextProvider({
     if (status === 'unauthenticated') {
       router.push('/api/auth/signin');
     }
-  }, [session]);
+  }, [session, status, router]);
 
   // Define the global values to be shared across the context
   const globals = {

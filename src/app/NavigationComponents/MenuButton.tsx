@@ -10,9 +10,9 @@ const MenuButton: FC<MenuButtonProps> = ({ setOpen, open }) => {
     <button
       className={`${
         open
-          ? "-translate-y-[50%] border-gray-700"
-          : " md:tooltip"
-      } p-5 border-4 rounded-full duration-300 tooltip-top shadow-md shadow-gray-400 bg-gray-700 text-white`}
+          ? "-translate-y-[50%] border-blue-500 text-blue-500"
+          : " md:tooltip border-gray-700 text-white hover:text-blue-500"
+      } p-5 border-4 rounded-full duration-300 tooltip-top shadow-md shadow-gray-400 bg-gray-700 `}
       onClick={() => setOpen(!open)}  data-tip="Menu"
     >
       <svg

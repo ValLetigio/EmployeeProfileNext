@@ -44,7 +44,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, setToastOptio
       > 
         {[1,2,3,4,5].map((item, index) => (
           <button
-            key={index} onClick={()=>setToastOptions({open: true, message: `Option ${item} clicked`, type: 'info', timer: 3})}
+            key={index} onClick={()=>setToastOptions({open: true, message: `Option ${item} clicked`, type: 'info', timer: item})}
             className=' w-3/4 h-12 border-gray-300 hover:bg-blue-400 hover:text-white first:rounded-t-2xl' 
           >   
             <p className=' font-semibold'>Option {item}</p>
