@@ -105,12 +105,14 @@ const CreateEmployeeForm = () => {
             <select className="select select-bordered w-full " id='Employee' onChange={(e)=>setSelectedEmployee({...selectedEmployee, name: JSON.parse(e.target.value)})}>
                 <option disabled selected>Select Employee</option>
                 {[{name:'John Doe'},{name:'Jane Doe'},{name:'John Smith'}, {name:''}].map((employee, index) => (
-                    <option key={index} value={JSON.stringify(employee.name)} >{employee.name}</option>
+                    <option key={index} value={JSON.stringify(employee.name)} >{employee.name?employee.name:"Clear"}</option>
                 ))}
             </select>
         </div>
 
-        <label className='w-full text-center my-9 text-red-400 font-semibold tracking-widest' htmlFor='Employee' hidden={!disable}>Select Employee First</label>
+        <label 
+            className=" text-center my-9 text-red-400 tracking-widest select-none"
+            htmlFor='Employee' hidden={!disable}> Select an Employee First </label>
 
         <div className='my-5 w-full border-b border-dashed border-gray-400' hidden={disable}/>
 
