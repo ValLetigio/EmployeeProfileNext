@@ -2,7 +2,7 @@
 
 import React, { FC } from 'react'
 
-import { UserDataFromGoogleSchema } from '../Schema' 
+import { UserDataFromGoogleSchema, ToastOptionsSchema } from '../Schema' 
 
 import { signOut } from 'next-auth/react'
 
@@ -11,10 +11,11 @@ import Image from 'next/image'
 export interface ProfilePopUpProps {
   userData: UserDataFromGoogleSchema, 
   showMenu: boolean, 
+  setToastOptions: (data: ToastOptionsSchema) => void
 }
 
 
-const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {  
+const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, setToastOptions }) => {  
 
   const handleSignOut = async () => { 
     signOut()
@@ -29,8 +30,8 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
       `}
     > 
       <div
-        className='flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-gray-100'  
-      >
+        className='flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-gray-200'  
+        >
         <Image src={userData?.image} width={100} height={100} className='rounded-lg' alt="userImage" />
         <h1 className='text-xl font-semibold mt-5'>{userData.name}</h1>
         <p className='text-sm mt-2 select-all italic'>{userData.email}</p> 
@@ -43,9 +44,9 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
       > 
         {[1,2,3,4,5].map((item, index) => (
           <button
-            key={index}
+            key={index} onClick={()=>setToastOptions({open: true, message: `Option ${item} clicked`, type: 'info', timer: 3})}
             className=' w-3/4 h-12 border-gray-300 hover:bg-blue-400 hover:text-white first:rounded-t-2xl' 
-          >
+          >   
             <p className=' font-semibold'>Option {item}</p>
           </button>
         ))}

@@ -9,7 +9,7 @@ import ProfilePopUp from './ProfilePopUp';
 
 const ProfileMenu = () => {
 
-  const { userData } = useAppContext(); 
+  const { userData, setToastOptions } = useAppContext(); 
 
   const [ showMenu, setShowMenu ] = useState(false);
 
@@ -24,7 +24,7 @@ const ProfileMenu = () => {
       `} 
     > 
       <ProfileButton userData={userData} handleMenuClick={handleMenuClick} showMenu={showMenu}/>
-      <ProfilePopUp userData={userData} showMenu={showMenu} />
+      <ProfilePopUp userData={userData} showMenu={showMenu} setToastOptions={setToastOptions}/>
     </div>
   )
 }

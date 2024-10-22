@@ -9,8 +9,7 @@ export const metadata = {
 const page = () => { 
 
   return (
-    <div 
-      data-theme="synthwave"
+    <div  
      className='h-screen w-full flex justify-center items-center'>
       Dashboard    
     </div>
