@@ -56,7 +56,7 @@ memoObject = {
     'submitted': False,
     'description': 'description',
     'date': datetime.datetime.now(),
-    'reason': 'reason',
+    'reason': None,
     '_version': 0
 }
 
@@ -72,6 +72,20 @@ def test_user_login():
     finally:
         db.delete({},'User')
         pass
+
+def test_duplicate_user_creation():
+    try:
+        user = UserActions(userObject)
+        user.createFirstUserAction('id1')
+
+        users = user.readCollection('User')
+
+        assert len(users) == 1
+
+        with pytest.raises(ValueError, match='Cannot create first user. First user already exist in the system.'):
+            user.createFirstUserAction('id1')
+    finally:
+        db.delete({}, 'User')
 
 def test_add_role_and_remove_role():
     try:
@@ -90,6 +104,12 @@ def test_add_role_and_remove_role():
         addRole = user.addRoleAction(users[1], 'Memo', 'canCreateMemo')
 
         addRole2 = user.addRoleAction(users[1], 'Memo', 'canDeleteMemo')
+
+        with pytest.raises(ValueError, match='Role already exists'):
+            addRole3 = user.addRoleAction(users[1], 'Memo', 'canCreateMemo')
+
+        with pytest.raises(ValueError, match='Role does not exist in category'):
+            addRole4 = user.addRoleAction(users[1], 'Memo', 'noRole')
 
         assert addRole[0]['roles']['Memo'][0] == 'canCreateMemo'
         userWithRole = db.read({'_id':users[0]['_id']},'User',findOne=True)
@@ -150,7 +170,7 @@ def test_create_offense_employee_memo():
         memos = user.readCollection('Memo')
 
         # create another memo then submit it
-        memo3 = user.createMemoAction(user, memoObject)
+        memo3 = user.createMemoAction(userCreated, memoObject)
 
         reason = 'Reason for submission'
 
@@ -186,15 +206,15 @@ def test_create_offense_employee_memo():
 def test_update_offense():
     try:
         user = UserActions(userObject)
-        userCreated = user.createUserAction('id5')
+        userCreated = user.createFirstUserAction('id5')
 
-        offense = user.createOffenseAction(offenseObject)
+        offense = user.createOffenseAction(userCreated, offenseObject)
 
         getOffense = db.read({'_id':offense['_id']},'Offense',findOne=True)
 
         assert getOffense['number'] == offense['number']
 
-        updateOffense = user.updateOffenseAction(offense, {'number':'number2'})
+        updateOffense = user.updateOffenseAction(userCreated, offense, {'number':'number2'})
 
         getOffense = db.read({'_id':updateOffense[0]['_id']},'Offense',findOne=True)
 
@@ -207,15 +227,15 @@ def test_update_offense():
 def test_delete_offense():
     try:
         user = UserActions(userObject)
-        userCreated = user.createUserAction('id6')
+        userCreated = user.createFirstUserAction('id6')
 
-        offense = user.createOffenseAction(offenseObject)
+        offense = user.createOffenseAction(userCreated, offenseObject)
 
         getOffense = db.read({'_id':offense['_id']},'Offense',findOne=True)
 
         assert getOffense['number'] == offense['number']
 
-        deleteOffense = user.deleteOffenseAction(getOffense)
+        deleteOffense = user.deleteOffenseAction(userCreated, getOffense)
 
         offenses = user.readCollection('Offense')
 
@@ -228,15 +248,15 @@ def test_delete_offense():
 def test_update_employee():
     try:
         user = UserActions(userObject)
-        userCreated = user.createUserAction('id7')
+        userCreated = user.createFirstUserAction('id7')
 
-        employee = user.createEmployeeAction(employeeObject)
+        employee = user.createEmployeeAction(userCreated ,employeeObject)
 
         getEmployee = db.read({'_id':employee['_id']},'Employee',findOne=True)
 
         assert getEmployee['name'] == employee['name']
 
-        updateEmployee = user.updateEmployeeAction(employee, {'name':'name2'})
+        updateEmployee = user.updateEmployeeAction( userCreated, employee, {'name':'name2'})
 
         getEmployee = db.read({'_id':updateEmployee[0]['_id']},'Employee',findOne=True)
 
@@ -249,9 +269,9 @@ def test_update_employee():
 def test_submit_and_delete_memo():
     try:
         user = UserActions(userObject)
-        userCreated = user.createUserAction('id8')
+        userCreated = user.createFirstUserAction('id8')
 
-        memo = user.createMemoAction(memoObject)
+        memo = user.createMemoAction(userCreated ,memoObject)
 
         getMemo = db.read({'_id':memo['_id']},'Memo',findOne=True)
 
@@ -259,22 +279,22 @@ def test_submit_and_delete_memo():
 
         reason = 'Reason for submission'
 
-        submitMemo = user.submitMemoAction(memo, reason)
+        submitMemo = user.submitMemoAction(userCreated, memo, reason)
 
         getMemo = db.read({'_id':submitMemo[0]['_id']},'Memo',findOne=True)
 
         assert getMemo['submitted'] == True
 
         with pytest.raises(ValueError, match='Memo has already been submitted'):
-            deleteMemo = user.deleteMemoAction(getMemo)
+            deleteMemo = user.deleteMemoAction(userCreated, getMemo)
 
-        memo2 = user.createMemoAction(memoObject)
+        memo2 = user.createMemoAction(userCreated, memoObject)
 
         getMemo2 = db.read({'_id':memo2['_id']},'Memo',findOne=True)
 
         assert getMemo2['subject'] == memo2['subject']
 
-        deleteMemo = user.deleteMemoAction(getMemo2)
+        deleteMemo = user.deleteMemoAction(userCreated, getMemo2)
 
         memos = user.readCollection('Memo')
 
@@ -285,14 +305,49 @@ def test_submit_and_delete_memo():
         db.delete({},'Memo')
         pass
 
+def test_submit_memo_without_reason():
+    try:
+        user = UserActions(userObject)
+        userCreated = user.createFirstUserAction('id1')
+        memo = user.createMemoAction(userCreated, memoObject)
+
+        with pytest.raises(ValueError, match='Reason must be provided'):
+            user.submitMemoAction(userCreated, memo, None)
+    finally:
+        db.delete({}, 'User')
+        db.delete({}, 'Memo')
+
+def test_delete_non_existent_offense():
+    try:
+        user = UserActions(userObject)
+        userCreated = user.createFirstUserAction('id1')
+
+        offenseObject = {
+            '_id': None,
+            'number': 0,
+            'description': 'description',
+            'remedialActions': ['Verbal Warning', 'Written Warning', 'Suspension', 'Termination'],
+            '_version': 0
+        }
+
+        with pytest.raises(ValueError, match='Offense does not exist'):
+            user.deleteOffenseAction(userCreated, offenseObject)
+    finally:
+        db.delete({}, 'User')
+        db.delete({}, 'Offense')
+
+
 if __name__ == '__main__':
     if AppConfig().getIsProductionEnvironment():
         raise ValueError('Not to be run in cloud production environment')
     test_user_login()
+    test_duplicate_user_creation()
     test_add_role_and_remove_role()
     test_create_offense_employee_memo()
     test_update_offense()
     test_delete_offense()
     test_update_employee()
     test_submit_and_delete_memo()
+    test_submit_memo_without_reason()
+    test_delete_non_existent_offense()
     pass

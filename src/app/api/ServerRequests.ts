@@ -1,19 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosResponse } from "axios";
 import Server from "./Server.ts";
-
-interface UserObject {
-  _id: string;
-  _version: number;
-  roles: string[];
-  userSettings: object;
-  access: object;
-  createdAt: object;
-  isApproved: boolean;
-  email: string;
-  displayName: string;
-}
-
+import { UserObject, Employee } from "../Schema";
 class ServerRequests extends Server {
   constructor(isProduction: boolean) {
     super(isProduction);
@@ -45,6 +33,29 @@ class ServerRequests extends Server {
       };
       const jsonData = JSON.stringify(data);
       const res: AxiosResponse = await axios.post(`${this.url}/firebaseLogin`, jsonData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return res.data;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        throw new Error(error.response.data);
+      } else {
+        throw new Error(error.message || "An error occurred during login.");
+      }
+    }
+  }
+
+  async createEmployee(employee: Employee, userObject: UserObject): Promise<any> {
+    try {
+      const data = {
+        employee,
+        userObject,
+      };
+      const jsonData = JSON.stringify(data);
+      const res: AxiosResponse = await axios.post(`${this.url}/createEmployee`, jsonData, {
         headers: {
           "Content-Type": "application/json",
         },

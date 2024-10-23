@@ -7,17 +7,6 @@ db = mongoDb()
 
 class Roles:
     def __init__(self):
-        # self.roles = {
-        #     'user': 'can login to the system',
-        #     'canCreateMemo': 'can create a memo',
-        #     'canDeleteMemo': 'can delete a memo',
-        #     'canSubmitMemo': 'can submit a memo',
-        #     'canCreateEmployee': 'can create an employee',
-        #     'canUpdateEmployee': 'can update an employee',
-        #     'canCreateOffense': 'can create an offense',
-        #     'canDeleteOffense': 'can delete an offense',
-        #     'canUpdateOffense': 'can update an offense',
-        # }
         self.roles = {
         'User' : {
             'canUpdateUser' :{
@@ -62,7 +51,6 @@ class Roles:
     def getAllRolesWithPermissions(self):
         user_permissions = {}
 
-        # Loop through each role and its permissions
         for role, permissions in self.roles.items():
             user_permissions[role] = []
             for permission in permissions:
@@ -141,7 +129,7 @@ class User:
         if self._id != None:
             raise ValueError('Cannot create User with an existing _id')
 
-        users = db.read({}, 'Users')
+        users = db.read({}, 'User')
         if len(users) > 0:
             raise ValueError(
                 'Cannot create first user. First user already exist in the system.'
@@ -159,7 +147,6 @@ class User:
             'email': self.email
         }
 
-        # res = db.create(data, 'User')
         return data
 
     def createUser(self, firebaseUserUid):
@@ -182,15 +169,16 @@ class User:
             'email': self.email,
         }
 
-        # res = db.create(data, 'User')
         return data
 
     # create a function that will add a role to a user
     def addRole(self, user, category, roleToAdd):
         if roleToAdd not in Roles().getAllRoles()[category]:
-            raise ValueError(f'Role {roleToAdd} does not exist in category {category}')
+            raise ValueError(f'Role does not exist in category ')
+        
+        if roleToAdd in user['roles'][category]:
+            raise ValueError(f'Role already exists')
 
-        # add the role to the user's roles in that category
         user['roles'][category].append(roleToAdd)
         print(f"Added role {roleToAdd} to category {category}")
 
@@ -200,9 +188,8 @@ class User:
     # create a function that will remove a role from a user
     def removeRole(self, user, category, roleToRemove):
         if roleToRemove not in user['roles'][category]:
-            raise ValueError(f'Role {roleToRemove} does not exist in category {category}')
+            raise ValueError(f'Role does not exist in category')
 
-        # remove the role from the user's roles in that category
         user['roles'][category].remove(roleToRemove)
         print(f"Removed role {roleToRemove} from category {category}")
 
@@ -374,7 +361,7 @@ class Memo:
             raise ValueError('User does not have permission to submit a memo')
         if self.submitted:
             raise ValueError('Memo has already been submitted')
-        if self.reason == None:
+        if reason == None:
             raise ValueError('Reason must be provided')
         if len(self.memoPhotosList) == 0:
             raise ValueError('Memo must have at least one photo')
@@ -499,4 +486,9 @@ class Offense:
     def deleteOffense(self, user):
         if 'canDeleteOffense' not in user['roles']['Offense']:
             raise ValueError('User does not have permission to delete an offense')
+
+        offense = db.read({'_id': self._id}, 'Offense')
+        if len(offense) == 0:
+            raise ValueError('Offense does not exist')
+
         return self.to_dict()

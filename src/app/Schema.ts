@@ -32,3 +32,24 @@ export interface UserDataFromGoogleSchema {
     email: string;
     displayName: string;
 }
+
+export interface UserObject {
+    profile: object;
+}
+
+export interface Employee {
+    _id: string;
+    name: string;
+    address: string;
+    phoneNumber: string;
+    photoOfPerson: string;
+    resumePhotosList: string[];
+    biodataPhotosList: string[];
+    email: string;
+    dateJoined: string;
+    company: string;
+    isRegular: boolean;
+    isProductionEmployee: boolean;
+    dailyWage: number;
+    _version: number;
+}

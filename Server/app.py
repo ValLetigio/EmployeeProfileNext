@@ -100,7 +100,7 @@ def create_employee():
     if request.is_json:
         data = request.get_json()
         userData = data['userData']
-
+        data = data['employee']
 
         try:
             res = UserActions(

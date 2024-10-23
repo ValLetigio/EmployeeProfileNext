@@ -10,6 +10,11 @@ import { useRouter } from 'next/navigation';
 
 import ServerRequests from '../api/ServerRequests';
 
+import firebaseConfig from '../api/firebase';
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 // Define the properties of the context
 interface AppContextProps {
   userData: UserDataFromGoogleSchema;
@@ -46,6 +51,10 @@ export default function ContextProvider({
   const { data: session, status } = useSession(); 
   const router = useRouter();
   const serverRequests = new ServerRequests(false);
+
+  const app = initializeApp(firebaseConfig);
+  const storage = getStorage(app);
+  const auth = getAuth(app);
 
   // User state initialized with an empty user object
   const [userData, setUserData] = useState<UserDataFromGoogleSchema>({
@@ -161,6 +170,7 @@ export default function ContextProvider({
   useEffect(() => {
     if (session?.user) {
       const { name: displayName, email, image } = session.user;
+      console.log("session", session);
       const _id = '';
       const _version = 0;
       const roles: string[] = [];
