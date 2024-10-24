@@ -3,6 +3,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import ServerRequests from '../../ServerRequests';
 
 import dotenv from 'dotenv'; 
+import { randomUUID, randomBytes } from 'crypto';
 dotenv.config(); 
 
 const SECRET = process.env.SECRET !;
@@ -27,8 +28,6 @@ const authOption:  NextAuthOptions = {
                 throw new Error('No Profile Found');
             }
             console.log(`${profile?.name} Logged in`, profile)
-            const res = await serverRequests.firebaseLogin({profile});
-            console.log('res', res);
             return true;
         },
         async jwt({ token, account, profile }) {
@@ -68,6 +67,8 @@ const authOption:  NextAuthOptions = {
             if (token.isApproved) {
                 session.user.isApproved = token.isApproved;
             }
+
+            console.log('Session', session);
 
             return session;
         }

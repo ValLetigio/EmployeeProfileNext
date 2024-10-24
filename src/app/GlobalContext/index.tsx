@@ -169,13 +169,8 @@ export default function ContextProvider({
 
   useEffect(() => {
     if (session?.user) {
-      const { name: displayName, email, image } = session.user;
+      const { name: displayName, email, image, roles, _id, _version, createdAt, isApproved } = session.user;
       console.log("session", session);
-      const _id = '';
-      const _version = 0;
-      const roles: string[] = [];
-      const createdAt = {};
-      const isApproved = false;
       setUserData({
         image: image || '',
         _id: _id || '',
