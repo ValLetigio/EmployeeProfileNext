@@ -5,6 +5,7 @@ import { createContext, useState, useContext, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { CardsSchema, UserDataFromGoogleSchema } from '../Schema';
 import { useSession } from 'next-auth/react';
+import { Session } from 'next-auth';
 
 import { useRouter } from 'next/navigation';
 
@@ -169,7 +170,14 @@ export default function ContextProvider({
 
   useEffect(() => {
     if (session?.user) {
-      const { name: displayName, email, image, roles, _id, _version, createdAt, isApproved } = session.user;
+      const user = session.user as Session["user"] & {
+        roles?: string[];
+        _id?: string;
+        _version?: number;
+        createdAt?: object;
+        isApproved?: boolean;
+      };
+      const { name: displayName, email, image, roles, _id, _version, createdAt, isApproved } = user;
       console.log("session", session);
       setUserData({
         image: image || '',
