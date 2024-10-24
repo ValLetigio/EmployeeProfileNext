@@ -2,8 +2,7 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import ServerRequests from '../../ServerRequests';
 
-import dotenv from 'dotenv'; 
-import { randomUUID, randomBytes } from 'crypto';
+import dotenv from 'dotenv';
 dotenv.config(); 
 
 const SECRET = process.env.SECRET !;

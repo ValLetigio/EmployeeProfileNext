@@ -98,9 +98,9 @@ def firebase_login():
 @app.route('/createEmployee', methods=['POST'])
 def create_employee():
     if request.is_json:
-        data = request.get_json()
-        userData = data['userData']
-        data = data['employee']
+        employeeData = request.get_json()
+        userData = employeeData['userData']
+        data = employeeData['employee']
 
         try:
             res = UserActions(

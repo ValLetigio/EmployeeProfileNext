@@ -53,3 +53,7 @@ export interface Employee {
     dailyWage: number;
     _version: number;
 }
+
+export interface DataToUpdate {
+    [key: string]: unknown;
+}
