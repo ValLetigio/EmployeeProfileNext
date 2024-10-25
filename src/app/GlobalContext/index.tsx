@@ -1,11 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { createContext, useState, useContext, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { CardsSchema, UserDataFromGoogleSchema, ToastOptionsSchema } from '../Schema';
 import { useSession } from 'next-auth/react';
+import { Session } from 'next-auth';
 
 import { useRouter } from 'next/navigation';
+
+import ServerRequests from '../api/ServerRequests';
+
+import firebaseConfig from '../api/firebase';
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 // Define the properties of the context
 interface AppContextProps {
@@ -21,8 +30,13 @@ interface AppContextProps {
 // Create the default context with proper types and default values
 const AppContext = createContext<AppContextProps>({
   userData: {
-    name: '',
+    _id: '',
+    _version: 0,
+    roles: [],
+    createdAt: {},
+    isApproved: false,
     email: '',
+    displayName: '',
     image: '',
   },
   setUserData: () => {},
@@ -41,11 +55,21 @@ export default function ContextProvider({
   const pathname = usePathname();
   const { data: session, status } = useSession(); 
   const router = useRouter();
+  const serverRequests = new ServerRequests(false);
+
+  const app = initializeApp(firebaseConfig);
+  const storage = getStorage(app);
+  const auth = getAuth(app);
 
   // User state initialized with an empty user object
   const [userData, setUserData] = useState<UserDataFromGoogleSchema>({
-    name: '',
+    _id: '',
+    _version: 0,
+    roles: [],
+    createdAt: {},
+    isApproved: false,
     email: '',
+    displayName: '',
     image: '',
   });
 
@@ -152,11 +176,24 @@ export default function ContextProvider({
 
   useEffect(() => {
     if (session?.user) {
-      const { name, email, image } = session.user;
+      const user = session.user as Session["user"] & {
+        roles?: string[];
+        _id?: string;
+        _version?: number;
+        createdAt?: object;
+        isApproved?: boolean;
+      };
+      const { name: displayName, email, image, roles, _id, _version, createdAt, isApproved } = user;
+      console.log("session", session);
       setUserData({
         image: image || '',
-        name: name || '',
+        _id: _id || '',
+        _version: _version || 0,
+        roles: roles || [],
+        createdAt: createdAt || {},
+        isApproved: isApproved || false,
         email: email || '',
+        displayName: displayName || ''
       }); 
       setToastOptions({open:true, message: `Welcome ${name}`, type: 'success', timer: 5});
     } 

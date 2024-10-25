@@ -24,28 +24,36 @@ export interface UserDataSchema {
 
 export interface UserDataFromGoogleSchema {
     image: string;
+    _id: string;
+    _version: number;
+    roles: string[];
+    createdAt: object;
+    isApproved: boolean;
+    email: string;
+    displayName: string;
+}
+
+export interface UserObject {
+    profile: object;
+}
+
+export interface Employee {
+    _id: string;
     name: string;
-    email: string; 
+    address: string;
+    phoneNumber: string;
+    photoOfPerson: string;
+    resumePhotosList: string[];
+    biodataPhotosList: string[];
+    email: string;
+    dateJoined: string;
+    company: string;
+    isRegular: boolean;
+    isProductionEmployee: boolean;
+    dailyWage: number;
+    _version: number;
 }
 
-
-export interface ToastOptionsSchema {
-    open: boolean;
-    message: string;
-    type: string; 
-    timer: number;
-}
-
-
-export interface EmployeeFormDataSchema {
-    name: string,
-    address: string,
-    phoneNumber: string,
-    photoOfPerson: string,
-    resumePhotosList: string,
-    biodataPhotosList: string,
-    email: string,
-    dateJoined: string,
-    company: string,
-    isRegular: boolean
+export interface DataToUpdate {
+    [key: string]: unknown;
 }

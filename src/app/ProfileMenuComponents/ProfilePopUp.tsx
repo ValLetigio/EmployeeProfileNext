@@ -33,7 +33,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, setToastOptio
         className='flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-gray-200'  
         >
         <Image src={userData?.image} width={100} height={100} className='rounded-lg' alt="userImage" />
-        <h1 className='text-xl font-semibold mt-5'>{userData.name}</h1>
+        <h1 className='text-xl font-semibold mt-5'>{userData.displayName}</h1>
         <p className='text-sm mt-2 select-all italic'>{userData.email}</p> 
       </div>
 

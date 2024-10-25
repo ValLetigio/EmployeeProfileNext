@@ -13,7 +13,9 @@ function NavBar() {
 
   const [showMenu, setShowMenu] = useState(false);
 
-  const { cards, pathname, userData } = useAppContext(); 
+  const { cards, pathname, userData } = useAppContext();
+
+  console.log(userData, "userData");
 
   return (
     <div
