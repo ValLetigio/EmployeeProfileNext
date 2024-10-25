@@ -57,3 +57,11 @@ export interface Employee {
 export interface DataToUpdate {
     [key: string]: unknown;
 }
+
+
+export interface ToastOptionsSchema {
+    open: boolean;
+    message: string;
+    type: string;
+    timer: number;
+} 

@@ -183,8 +183,7 @@ export default function ContextProvider({
         createdAt?: object;
         isApproved?: boolean;
       };
-      const { name: displayName, email, image, roles, _id, _version, createdAt, isApproved } = user;
-      console.log("session", session);
+      const { name: displayName, email, image, roles, _id, _version, createdAt, isApproved } = user; 
       setUserData({
         image: image || '',
         _id: _id || '',
@@ -195,7 +194,7 @@ export default function ContextProvider({
         email: email || '',
         displayName: displayName || ''
       }); 
-      setToastOptions({open:true, message: `Welcome ${name}`, type: 'success', timer: 5});
+      setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     } 
 
     if (status === 'unauthenticated') {
