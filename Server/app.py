@@ -288,6 +288,33 @@ def delete_memo():
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
+    
+    
+@app.route('/getUserForTesting', methods=['GET'])
+def getUserForTesting():
+    if AppConfig().getisLocalEnvironment(): 
+        try:
+            user = User({
+                '_id': 'TesTUseRiD',
+                'roles': Roles().getAllRolesWithPermissions(),
+                'createdAt': datetime.datetime.now(datetime.timezone.utc),
+                'isApproved': True,
+                'displayName': 'TesTUseRnAme',
+                'email':'test@email.com', 
+                '_version': 1
+            })
+            
+            userData = user.createUser('TesTUseRiD123') 
+
+            return jsonify({'message': 'Memo deleted successfully!', 'data': userData}), 200
+        
+        except Exception as e:
+            logging.exception("Error processing Memo: %s", e)
+            return e.args[0], 400
+
+    else:
+        return jsonify({"error": "Env is not in Local"}), 400
+    
 
 if __name__ == '__main__':
     if (AppConfig().getIsDevEnvironment()):

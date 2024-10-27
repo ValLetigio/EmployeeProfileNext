@@ -183,7 +183,9 @@ export default function ContextProvider({
         createdAt?: object;
         isApproved?: boolean;
       };
+
       const { name: displayName, email, image, roles, _id, _version, createdAt, isApproved } = user; 
+
       setUserData({
         image: image || '',
         _id: _id || '',
@@ -193,13 +195,15 @@ export default function ContextProvider({
         isApproved: isApproved || false,
         email: email || '',
         displayName: displayName || ''
-      }); 
+      });
+
       setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     } 
 
     if (status === 'unauthenticated') {
       router.push('/api/auth/signin');
     }
+    
   }, [session, status, router]);
 
   // Define the global values to be shared across the context
