@@ -1,27 +1,27 @@
-// import ServerRequests from "@/app/api/ServerRequests"
-
+import ServerRequests from '../../../src/app/api/ServerRequests'
 // const serverRequests = new ServerRequests()
 
-describe('template spec', () => {
 
+describe('template spec', () => {
+  let serverRequests ;
   before(() => { 
     // const user = serverRequests.getUserForTesting()
-
-    // expect(user).to.have.property('_id', 'TesTUseRiD')
-
-    cy.request('GET', 'http://127.0.0.1:5000/getUserForTesting').then((response) => {
-      // Assert the status code
-      expect(response.status).to.eq(200);
-
-      // Assert the response body
-      expect(response.body).to.have.property('_id', 'TesTUseRiD'); 
+    serverRequests = new ServerRequests(false)
+    serverRequests.deleteAllDataInCollection('User').then((response) => {
+      console.log(response)
+      expect(response).to.have.property('message', 'Data deleted successfully!');
     });
 
-    cy.wait(3000)
-  }) 
+    serverRequests.getUserForTesting().then((response) => {
+      console.log(response)
+      expect(response.data).to.have.property('_id', 'testUserId');
+    })
 
-  it('Redirects to Signin Page', () => { 
+    // cy.wait(3000)
+  })
+
+  it('Redirects to Signin Page', () => {
     cy.visit('/')
-    // cy.url().should('include', '/signin') 
+    cy.url().should('include', '/signin')
   })
 })

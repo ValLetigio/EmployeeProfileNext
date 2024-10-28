@@ -26,6 +26,17 @@ class ServerRequests extends Server {
     }
   }
 
+  async deleteAllDataInCollection(collection: string): Promise<any> {
+    try {
+      const res: AxiosResponse = await axios.post(`${this.url}/deleteAllDataInCollection`, {
+        collection,
+      });
+      return res.data;
+    } catch (error: any) {
+      return error.response?.data || error.message;
+    }
+  }
+
   async firebaseLogin(userObject: UserObject): Promise<any> {
     try {
       const data = {
@@ -96,18 +107,18 @@ class ServerRequests extends Server {
   }
 
   async getUserForTesting(): Promise<any> {
-    try{
-      const res: AxiosResponse = await axios.post(`${this.url}/getUserForTesting`, {
+    try {
+      const res: AxiosResponse = await axios.get(`${this.url}/getUserForTesting`, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
       return res.data;
     } catch (error: any) {
       return error.response?.data || error.message;
-    } 
+    }
   }
+  
 }
 
 export default ServerRequests;

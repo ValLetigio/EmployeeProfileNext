@@ -29,6 +29,25 @@ def get_environment():
         "data": environment
     }), 200
 
+@app.route('/deleteAllDataInCollection', methods=['POST'])
+def delete_all_data_in_collection():
+    if request.is_json:
+
+        if not AppConfig().getIsDevEnvironment():
+            return jsonify({"error": "This endpoint is only available in Dev Environment"}), 400
+
+        data = request.get_json()
+
+        print(data)
+        collection = data['collection']
+
+        try:
+            res = db.delete({}, collection)
+            return jsonify({'message': 'Data deleted successfully!', 'data': res}), 200
+        except Exception as e:
+            logging.exception("Error deleting data: %s", e)
+            return e.args[0], 400
+
 @app.route('/firebaseLogin', methods=['POST'])
 def firebase_login():
     if request.is_json:
@@ -294,19 +313,21 @@ def delete_memo():
 def getUserForTesting():
     if AppConfig().getisLocalEnvironment(): 
         try:
-            user = User({
-                '_id': 'TesTUseRiD',
-                'roles': Roles().getAllRolesWithPermissions(),
+            print(Roles().getAllRolesWithPermissions())
+
+            user = UserActions({
+                '_id': None,
+                'roles': [],
                 'createdAt': datetime.datetime.now(datetime.timezone.utc),
                 'isApproved': True,
                 'displayName': 'TesTUseRnAme',
                 'email':'test@email.com', 
-                '_version': 1
+                '_version': 0
             })
             
-            userData = user.createUser('TesTUseRiD123') 
+            userData = user.createFirstUserAction('testUserId')
 
-            return jsonify({'message': 'Memo deleted successfully!', 'data': userData}), 200
+            return jsonify({'message': 'Collection deleted successfully!', 'data': userData}), 200
         
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
