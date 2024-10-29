@@ -206,6 +206,7 @@ export default function ContextProvider({
     
   }, [session, status, router]);
 
+  console.log('userData', userData);
   // Define the global values to be shared across the context
   const globals = {
     userData,

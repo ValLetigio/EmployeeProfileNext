@@ -40,28 +40,30 @@ import ServerRequests from '../../../src/app/api/ServerRequests'
 
 describe('template spec', () => {
   let serverRequests ;
-  before(() => { 
-    // const user = serverRequests.getUserForTesting()
-    serverRequests = new ServerRequests(false)
-    serverRequests.deleteAllDataInCollection('User').then((response) => {
-      console.log(response)
-      expect(response).to.have.property('message', 'Data deleted successfully!');
-    });
+  before(async() => {
+    let userObject;
+    serverRequests = new ServerRequests(false);
 
-    serverRequests.getUserForTesting().then((response) => {
-      console.log(response)
-      expect(response.data).to.have.property('_id', 'testUserId');
+    const deleteResponse = await serverRequests.deleteAllDataInCollection('User');
+    console.log(deleteResponse);
+    expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
 
-      // window.localStorage.setItem('authToken', response.data.token);
-    })
-    // cy.loginByGoogleApi()
+    const userResponse = await serverRequests.getUserForTesting();
+    console.log(userResponse.data);
+    userObject = userResponse.data;
+    console.log(userObject)
+    expect(userResponse.data).to.have.property('_id', 'testUserId');
 
-    // cy.wait(3000)
+    window.localStorage.setItem('authToken', userResponse.data.token);
+
+    const loginResponse = await serverRequests.firebaseLogin({ profile: userObject });
+    console.log(loginResponse);
+    expect(loginResponse).to.have.property('message', 'User logged in successfully');
   })
 
   it('Redirects to Signin Page', () => {
     cy.visit('/')
-    cy.url().should('include', '/signin')
+    cy.url().should('include', 'signin')
   })
 
   // it("Login with Google", () => {

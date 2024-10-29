@@ -38,6 +38,7 @@ class ServerRequests extends Server {
   }
 
   async firebaseLogin(userObject: UserObject): Promise<any> {
+    console.log("userObject", userObject);
     try {
       const data = {
         userObject,

@@ -53,6 +53,7 @@ def firebase_login():
     if request.is_json:
         data = request.get_json()
         userObject = data['userObject']
+        print(userObject, 'app.py')
         try:
             user = firebaseAuthenticator(userObject).login()
         except Exception as e:
@@ -327,7 +328,7 @@ def getUserForTesting():
             
             userData = user.createFirstUserAction('testUserId')
 
-            return jsonify({'message': 'Collection deleted successfully!', 'data': userData}), 200
+            return jsonify({'message': 'data read successfully!', 'data': userData}), 200
         
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)

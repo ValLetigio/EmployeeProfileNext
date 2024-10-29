@@ -6,6 +6,8 @@ import datetime
 class firebaseAuthenticator:
 
     def __init__(self, userObject):
+        print('user' , userObject)
+
         self.firebaseUserObject = userObject['profile']
         self.db = mongoDb()
 
@@ -26,17 +28,17 @@ class firebaseAuthenticator:
 
         # if no user exists
         if userCount == 0:
-            user = UserActions(userObject).createFirstUserAction(firebaseUserObject['sub'])
+            user = UserActions(userObject).createFirstUserAction(firebaseUserObject['sub'] if 'sub' in firebaseUserObject else firebaseUserObject['_id'])
             print('Created first user : ' + firebaseUserObject['email'])
             return user
         # if there are users
         else:
-            user = UserActions(userObject).createUserAction(firebaseUserObject['sub'])
+            user = UserActions(userObject).createUserAction(firebaseUserObject['sub'] if 'sub' in firebaseUserObject else firebaseUserObject['_id'])
             print('Created user : ' + firebaseUserObject['email'])
             return user
 
     def login(self):
-        userList = self.db.read({'_id': self.firebaseUserObject['sub']},
+        userList = self.db.read({'_id': self.firebaseUserObject['sub'] if 'sub' in self.firebaseUserObject else self.firebaseUserObject['_id']},
                                 'User')
         try:
             user = userList[0]
