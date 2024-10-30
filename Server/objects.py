@@ -3,51 +3,54 @@ from dateutil import parser
 import datetime
 from utils import *
 import re
+
 db = mongoDb()
 
+
 class Roles:
+
     def __init__(self):
         self.roles = {
-        'User' : {
-            'canUpdateUser' :{
-                'description':'can update a user'
+            'User': {
+                'canUpdateUser': {
+                    'description': 'can update a user'
+                }
+            },
+            'Memo': {
+                'canDeleteMemo': {
+                    'description': 'can delete a memo'
+                },
+                'canSubmitMemo': {
+                    'description': 'can submit a memo'
+                },
+                'canCreateMemo': {
+                    'description': 'can create a memo'
+                },
+            },
+            'Employee': {
+                'canCreateEmployee': {
+                    'description': 'can create an employee'
+                },
+                'canUpdateEmployee': {
+                    'description': 'can update an employee'
+                },
+            },
+            'Offense': {
+                'canCreateOffense': {
+                    'description': 'can create an offense'
+                },
+                'canDeleteOffense': {
+                    'description': 'can delete an offense'
+                },
+                'canUpdateOffense': {
+                    'description': 'can update an offense'
+                },
             }
-        },
-        'Memo' : {
-            'canDeleteMemo' :{
-                'description':'can delete a memo'
-            },
-            'canSubmitMemo' :{
-                'description':'can submit a memo'
-            },
-            'canCreateMemo' :{
-                'description':'can create a memo'
-            },
-        },
-        'Employee' : {
-            'canCreateEmployee' :{
-                'description':'can create an employee'
-            },
-            'canUpdateEmployee' :{
-                'description':'can update an employee'
-            },
-        },
-        'Offense' : {
-            'canCreateOffense' :{
-                'description':'can create an offense'
-            },
-            'canDeleteOffense' :{
-                'description':'can delete an offense'
-            },
-            'canUpdateOffense' :{
-                'description':'can update an offense'
-            },
         }
-    }
 
     def getAllRoles(self):
         return self.roles
-    
+
     def getAllRolesWithPermissions(self):
         user_permissions = {}
 
@@ -57,7 +60,7 @@ class Roles:
                 user_permissions[role].append(permission)
 
         return user_permissions
-    
+
     def getAllRolesWithoutPermissions(self):
         user_permissions = {}
 
@@ -65,7 +68,10 @@ class Roles:
             user_permissions[role] = []
 
         return user_permissions
+
+
 class User:
+
     def __init__(self, data):
 
         if not isinstance(data['createdAt'], datetime.datetime):
@@ -79,16 +85,20 @@ class User:
                 'isApproved': bool,
                 'displayName': str,
                 'email': str,
-                'roles': list,
-                '_version': int
+                'roles': object,
+                '_version': int,
+                'image': (str, type(None))
             }, self.__class__.__name__)
 
         self._id = getDictionaryOrObjectValue(data, '_id')
         self.createdAt = getDictionaryOrObjectValue(data, 'createdAt')
         self.isApproved = getDictionaryOrObjectValue(data, 'isApproved')
         self.displayName = getDictionaryOrObjectValue(data, 'displayName')
-        self.email = self.validate_email(getDictionaryOrObjectValue(data, 'email'))
-        self.roles = getDictionaryOrObjectValue(data, 'roles') if getDictionaryOrObjectValue(data, 'roles') else ['user']
+        self.email = self.validate_email(
+            getDictionaryOrObjectValue(data, 'email'))
+        self.roles = getDictionaryOrObjectValue(
+            data, 'roles') if getDictionaryOrObjectValue(
+                data, 'roles') else ['user']
         self._version = getDictionaryOrObjectValue(data, '_version')
 
     def to_dict(self):
@@ -123,7 +133,6 @@ class User:
     #             raise ValueError('Incorrect password')
     #     else:
     #         raise ValueError('User does not exist')
-
 
     def createFirstUser(self, firebaseUserUid):
         if self._id != None:
@@ -175,7 +184,7 @@ class User:
     def addRole(self, user, category, roleToAdd):
         if roleToAdd not in Roles().getAllRoles()[category]:
             raise ValueError(f'Role does not exist in category ')
-        
+
         if roleToAdd in user['roles'][category]:
             raise ValueError(f'Role already exists')
 
@@ -183,7 +192,6 @@ class User:
         print(f"Added role {roleToAdd} to category {category}")
 
         return user
-
 
     # create a function that will remove a role from a user
     def removeRole(self, user, category, roleToRemove):
@@ -201,7 +209,9 @@ class User:
             raise ValueError("Invalid email format.")
         return email
 
+
 class UserActions(User):
+
     def __init__(self, data):
         super().__init__(data)
 
@@ -221,9 +231,11 @@ class UserActions(User):
             raise ValueError('User does not exist')
 
         data = self.addRole(user[0], category, roleToAdd)
-        data = db.update({'_id': data['_id'], '_version': data['_version']}, {'roles': data['roles']}, 'User')
+        data = db.update({
+            '_id': data['_id'],
+            '_version': data['_version']
+        }, {'roles': data['roles']}, 'User')
         return data
-
 
     def removeRoleAction(self, userToEdit, category, roleToRemove):
         user = db.read({'_id': userToEdit['_id']}, 'User')
@@ -231,7 +243,10 @@ class UserActions(User):
             raise ValueError('User does not exist')
 
         data = self.removeRole(user[0], category, roleToRemove)
-        data = db.update({'_id': data['_id'], '_version': data['_version']}, {'roles': data['roles']}, 'User')
+        data = db.update({
+            '_id': data['_id'],
+            '_version': data['_version']
+        }, {'roles': data['roles']}, 'User')
         return data
 
     def readCollection(self, collection_name):
@@ -254,7 +269,7 @@ class UserActions(User):
 
     def updateOffenseAction(self, user, data, dataToUpdate):
         offense = Offense(data)
-        res = offense.updateOffense( user, dataToUpdate)
+        res = offense.updateOffense(user, dataToUpdate)
         return db.update({'_id': res['_id']}, res, 'Offense')
 
     def deleteOffenseAction(self, user, data):
@@ -279,6 +294,7 @@ class UserActions(User):
 
 
 class Memo:
+
     def __init__(self, data):
         if not isinstance(data['Employee'], Employee):
             data['Employee'] = Employee(data['Employee'])
@@ -299,8 +315,7 @@ class Memo:
                 'submitted': bool,
                 'reason': (str, type(None)),
                 '_version': int
-            } , self.__class__.__name__
-        )
+            }, self.__class__.__name__)
 
         self._id = data['_id']
         self.date = data['date']
@@ -329,10 +344,16 @@ class Memo:
             '_version': self._version
         }
 
-    def _countPastOffenses(self,employeeId, offenseId):
-        employeeMemos = db.read({'Employee._id': employeeId, 'submitted': True}, 'Memo')
+    def _countPastOffenses(self, employeeId, offenseId):
+        employeeMemos = db.read({
+            'Employee._id': employeeId,
+            'submitted': True
+        }, 'Memo')
 
-        specificOffenseMemos = [memo for memo in employeeMemos if memo['MemoCode']['_id'] == offenseId]
+        specificOffenseMemos = [
+            memo for memo in employeeMemos
+            if memo['MemoCode']['_id'] == offenseId
+        ]
 
         return len(specificOffenseMemos)
 
@@ -340,7 +361,8 @@ class Memo:
         if 'canCreateMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to create a memo')
 
-        pastOffenses = self._countPastOffenses(self.Employee._id, self.MemoCode._id)
+        pastOffenses = self._countPastOffenses(self.Employee._id,
+                                               self.MemoCode._id)
 
         self.MemoCode.number = pastOffenses
 
@@ -356,7 +378,7 @@ class Memo:
 
         return self.to_dict()
 
-    def submitMemo(self, user,reason):
+    def submitMemo(self, user, reason):
         if 'canSubmitMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to submit a memo')
         if self.submitted:
@@ -365,8 +387,9 @@ class Memo:
             raise ValueError('Reason must be provided')
         if len(self.memoPhotosList) == 0:
             raise ValueError('Memo must have at least one photo')
-        
-        pastOffenses = self._countPastOffenses(self.Employee._id, self.MemoCode._id)
+
+        pastOffenses = self._countPastOffenses(self.Employee._id,
+                                               self.MemoCode._id)
 
         self.MemoCode.number = pastOffenses + 1
 
@@ -375,7 +398,9 @@ class Memo:
         return self.to_dict()
         pass
 
+
 class Employee:
+
     def __init__(self, data):
         validateParameterData(
             data, {
@@ -393,8 +418,7 @@ class Employee:
                 'isProductionEmployee': bool,
                 'dailyWage': (float, type(None)),
                 '_version': int
-            }, self.__class__.__name__
-        )
+            }, self.__class__.__name__)
 
         self._id = data['_id']
         self.name = data['name']
@@ -431,19 +455,24 @@ class Employee:
 
     def createEmployee(self, user):
         if 'canCreateEmployee' not in user['roles']['Employee']:
-            raise ValueError('User does not have permission to create an employee')
+            raise ValueError(
+                'User does not have permission to create an employee')
         self._id = generateRandomString()
         return self.to_dict()
 
     def updateEmployee(self, user, dataToUpdate):
         if 'canUpdateEmployee' not in user['roles']['Employee']:
-            raise ValueError('User does not have permission to update an employee')
-        
+            raise ValueError(
+                'User does not have permission to update an employee')
+
         newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
         return newData
+
     pass
 
+
 class Offense:
+
     def __init__(self, data):
         validateParameterData(
             data, {
@@ -452,8 +481,7 @@ class Offense:
                 'description': str,
                 'remedialActions': list,
                 '_version': int
-            } , self.__class__.__name__
-        )
+            }, self.__class__.__name__)
 
         self._id = data['_id']
         self.number = data['number']
@@ -472,20 +500,23 @@ class Offense:
 
     def createOffense(self, user):
         if 'canCreateOffense' not in user['roles']['Offense']:
-            raise ValueError('User does not have permission to create an offense')
+            raise ValueError(
+                'User does not have permission to create an offense')
         self._id = generateRandomString()
         return self.to_dict()
 
     def updateOffense(self, user, dataToUpdate):
         if 'canUpdateOffense' not in user['roles']['Offense']:
-            raise ValueError('User does not have permission to update an offense')
+            raise ValueError(
+                'User does not have permission to update an offense')
 
         newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
         return newData
 
     def deleteOffense(self, user):
         if 'canDeleteOffense' not in user['roles']['Offense']:
-            raise ValueError('User does not have permission to delete an offense')
+            raise ValueError(
+                'User does not have permission to delete an offense')
 
         offense = db.read({'_id': self._id}, 'Offense')
         if len(offense) == 0:

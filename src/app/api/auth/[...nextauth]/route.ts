@@ -54,7 +54,7 @@ const authOption:  NextAuthOptions = {
 
             if (token.sub) {
                 session.user._id = token.sub; 
-            }
+            } 
 
             if (token.roles) {
                 session.user.roles = token.roles;

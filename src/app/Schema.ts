@@ -14,10 +14,14 @@ export interface CardsSchema {
 
 
 export interface UserDataSchema {
+    image: string;
     _id: string;
-    name: string;
+    _version: number;
+    roles: string[];
+    createdAt: object;
+    isApproved: boolean;
     email: string;
-    number: string;
+    displayName: string;
 }
 
 

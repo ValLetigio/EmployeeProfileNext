@@ -6,6 +6,7 @@ from dateutil import parser
 from AppConfig import AppConfig
 import logging
 from firebaseAuthenticator import firebaseAuthenticator
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -13,6 +14,7 @@ db = mongoDb()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
+
 
 @app.route('/getIsDevEnvironment', methods=['GET'])
 def get_is_dev_environment():
@@ -29,12 +31,16 @@ def get_environment():
         "data": environment
     }), 200
 
+
 @app.route('/deleteAllDataInCollection', methods=['POST'])
 def delete_all_data_in_collection():
     if request.is_json:
 
         if not AppConfig().getIsDevEnvironment():
-            return jsonify({"error": "This endpoint is only available in Dev Environment"}), 400
+            return jsonify({
+                "error":
+                "This endpoint is only available in Dev Environment"
+            }), 400
 
         data = request.get_json()
 
@@ -43,10 +49,14 @@ def delete_all_data_in_collection():
 
         try:
             res = db.delete({}, collection)
-            return jsonify({'message': 'Data deleted successfully!', 'data': res}), 200
+            return jsonify({
+                'message': 'Data deleted successfully!',
+                'data': res
+            }), 200
         except Exception as e:
             logging.exception("Error deleting data: %s", e)
             return e.args[0], 400
+
 
 @app.route('/firebaseLogin', methods=['POST'])
 def firebase_login():
@@ -88,7 +98,7 @@ def firebase_login():
 
 #     else:
 #         return jsonify({"error": "Request must be JSON"}), 400
-    
+
 # @app.route('/userLogin', methods=['POST'])
 # def user_login():
 #     if request.is_json:
@@ -114,7 +124,8 @@ def firebase_login():
 
 #     else:
 #         return jsonify({"error": "Request must be JSON"}), 400
-    
+
+
 @app.route('/createEmployee', methods=['POST'])
 def create_employee():
     if request.is_json:
@@ -123,53 +134,63 @@ def create_employee():
         data = employeeData['employee']
 
         try:
-            res = UserActions(
-                userData
-            ).createEmployeeAction({
-                '_id': None,
-                'name': data['name'],
-                'address': data['address'],
-                'phoneNumber': data['phoneNumber'],
-                'photoOfPerson': data['photoOfPerson'],
-                'resumePhotosList': data['resumePhotosList'],
-                'biodataPhotosList': data,
-                'email': data['email'],
-                'dateJoined': data,
-                'company': data['company'],
-                'isRegular': data['isRegular'],
-                'isProductionEmployee': data['isProductionEmployee'],
-                'dailyWage': data['dailyWage'],
-                '_version': 0
-            })
 
-            return jsonify({'message': 'Employee created successfully!', 'data': res}), 200
+            dateJoined_object = datetime.strptime(data['dateJoined'],
+                                                  "%Y-%m-%d")
+
+            res = UserActions(userData).createEmployeeAction(
+                userData, {
+                    '_id': None,
+                    'name': data['name'],
+                    'address': data['address'],
+                    'phoneNumber': data['phoneNumber'],
+                    'photoOfPerson': data['photoOfPerson'],
+                    'resumePhotosList': data['resumePhotosList'],
+                    'biodataPhotosList': data['biodataPhotosList'],
+                    'email': data['email'],
+                    'dateJoined': dateJoined_object,
+                    'company': data['company'],
+                    'isRegular': data['isRegular'],
+                    'isProductionEmployee': data['isProductionEmployee'],
+                    'dailyWage': data['dailyWage'],
+                    '_version': 0
+                })
+
+            return jsonify({
+                'message': 'Employee created successfully!',
+                'data': res
+            }), 200
         except Exception as e:
             logging.exception("Error processing Employee: %s", e)
             return e.args[0], 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
-    
+
+
 @app.route('/updateEmployee', methods=['POST'])
 def update_employee():
     if request.is_json:
         data = request.get_json()
         userData = data['userData']
-        
+
         employeeData = data['employeeData']
         dataToUpdate = data['dataToUpdate']
         try:
-            res = UserActions(
-                userData
-            ).updateEmployeeAction(employeeData, dataToUpdate)
+            res = UserActions(userData).updateEmployeeAction(
+                employeeData, dataToUpdate)
 
-            return jsonify({'message': 'Employee updated successfully!', 'data': res}), 200
+            return jsonify({
+                'message': 'Employee updated successfully!',
+                'data': res
+            }), 200
         except Exception as e:
             logging.exception("Error processing Employee: %s", e)
             return e.args[0], 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
+
 
 @app.route('/createOffense', methods=['POST'])
 def create_offense():
@@ -178,23 +199,30 @@ def create_offense():
         userData = data['userData']
 
         try:
-            res = UserActions(
-                userData
-            ).createOffenseAction({
-                '_id': None,
-                'offense': data['offense'],
-                'description': data['description'],
-                'penalty': data['penalty'],
-                '_version': 0
+            res = UserActions(userData).createOffenseAction({
+                '_id':
+                None,
+                'offense':
+                data['offense'],
+                'description':
+                data['description'],
+                'penalty':
+                data['penalty'],
+                '_version':
+                0
             })
 
-            return jsonify({'message': 'Offense created successfully!', 'data': res}), 200
+            return jsonify({
+                'message': 'Offense created successfully!',
+                'data': res
+            }), 200
         except Exception as e:
             logging.exception("Error processing Offense: %s", e)
             return e.args[0], 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
+
 
 @app.route('/updateOffense', methods=['POST'])
 def update_offense():
@@ -205,17 +233,20 @@ def update_offense():
         offenseData = data['offenseData']
         dataToUpdate = data['dataToUpdate']
         try:
-            res = UserActions(
-                userData
-            ).updateOffenseAction(offenseData, dataToUpdate)
+            res = UserActions(userData).updateOffenseAction(
+                offenseData, dataToUpdate)
 
-            return jsonify({'message': 'Offense updated successfully!', 'data': res}), 200
+            return jsonify({
+                'message': 'Offense updated successfully!',
+                'data': res
+            }), 200
         except Exception as e:
             logging.exception("Error processing Offense: %s", e)
             return e.args[0], 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
+
 
 @app.route('/deleteOffense', methods=['POST'])
 def delete_offense():
@@ -225,17 +256,19 @@ def delete_offense():
 
         offenseData = data['offenseData']
         try:
-            res = UserActions(
-                userData
-            ).deleteOffenseAction(offenseData)
+            res = UserActions(userData).deleteOffenseAction(offenseData)
 
-            return jsonify({'message': 'Offense deleted successfully!', 'data': res}), 200
+            return jsonify({
+                'message': 'Offense deleted successfully!',
+                'data': res
+            }), 200
         except Exception as e:
             logging.exception("Error processing Offense: %s", e)
             return e.args[0], 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
+
 
 @app.route('/createMemo', methods=['POST'])
 def create_memo():
@@ -244,29 +277,42 @@ def create_memo():
         userData = data['userData']
 
         try:
-            res = UserActions(
-                userData
-            ).createMemoAction({
-                'date': data['date'],
-                'mediaList': data['mediaList'],
-                'Employee': data['Employee'],
-                'memoPhotosList': data['memoPhotosList'],
-                'subject': data['subject'],
-                'description': data['description'],
-                '_id': None,
-                'MemoCode': data['MemoCode'],
-                'submitted': data['submitted'],
-                'reason': data['reason'],
-                '_version': 0
+            res = UserActions(userData).createMemoAction({
+                'date':
+                data['date'],
+                'mediaList':
+                data['mediaList'],
+                'Employee':
+                data['Employee'],
+                'memoPhotosList':
+                data['memoPhotosList'],
+                'subject':
+                data['subject'],
+                'description':
+                data['description'],
+                '_id':
+                None,
+                'MemoCode':
+                data['MemoCode'],
+                'submitted':
+                data['submitted'],
+                'reason':
+                data['reason'],
+                '_version':
+                0
             })
 
-            return jsonify({'message': 'Memo created successfully!', 'data': res}), 200
+            return jsonify({
+                'message': 'Memo created successfully!',
+                'data': res
+            }), 200
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
             return e.args[0], 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
+
 
 @app.route('/submitMemo', methods=['POST'])
 def submit_memo():
@@ -277,18 +323,20 @@ def submit_memo():
         memoData = data['memoData']
         reason = data['reason']
         try:
-            res = UserActions(
-                userData
-            ).submitMemoAction(memoData, reason)
+            res = UserActions(userData).submitMemoAction(memoData, reason)
 
-            return jsonify({'message': 'Memo submitted successfully!', 'data': res}), 200
+            return jsonify({
+                'message': 'Memo submitted successfully!',
+                'data': res
+            }), 200
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
             return e.args[0], 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
-    
+
+
 @app.route('/deleteMemo', methods=['POST'])
 def delete_memo():
     if request.is_json:
@@ -297,46 +345,56 @@ def delete_memo():
 
         memoData = data['memoData']
         try:
-            res = UserActions(
-                userData
-            ).deleteMemoAction(memoData)
+            res = UserActions(userData).deleteMemoAction(memoData)
 
-            return jsonify({'message': 'Memo deleted successfully!', 'data': res}), 200
+            return jsonify({
+                'message': 'Memo deleted successfully!',
+                'data': res
+            }), 200
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
             return e.args[0], 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
-    
-    
+
+
 @app.route('/getUserForTesting', methods=['GET'])
 def getUserForTesting():
-    if AppConfig().getisLocalEnvironment(): 
+    if AppConfig().getisLocalEnvironment():
         try:
             print(Roles().getAllRolesWithPermissions())
 
             user = UserActions({
-                '_id': None,
+                '_id':
+                None,
                 'roles': [],
-                'createdAt': datetime.datetime.now(datetime.timezone.utc),
-                'isApproved': True,
-                'displayName': 'TesTUseRnAme',
-                'email':'test@email.com', 
-                '_version': 0
+                'createdAt':
+                datetime.datetime.now(datetime.timezone.utc),
+                'isApproved':
+                True,
+                'displayName':
+                'TesTUseRnAme',
+                'email':
+                'test@email.com',
+                '_version':
+                0
             })
-            
+
             userData = user.createFirstUserAction('testUserId')
 
-            return jsonify({'message': 'data read successfully!', 'data': userData}), 200
-        
+            return jsonify({
+                'message': 'data read successfully!',
+                'data': userData
+            }), 200
+
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
             return e.args[0], 400
 
     else:
         return jsonify({"error": "Env is not in Local"}), 400
-    
+
 
 if __name__ == '__main__':
     if (AppConfig().getIsDevEnvironment()):

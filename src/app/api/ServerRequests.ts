@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosResponse } from "axios";
 import Server from "./Server.ts";
-import { UserObject, Employee, DataToUpdate } from "../Schema";
+import { UserObject, Employee, DataToUpdate, UserDataSchema } from "../Schema";
 class ServerRequests extends Server {
   constructor(isProduction: boolean) {
     super(isProduction);
@@ -60,12 +60,14 @@ class ServerRequests extends Server {
     }
   }
 
-  async createEmployee(employee: Employee, userObject: UserObject): Promise<any> {
+  async createEmployee(employee: Employee, userObject: UserDataSchema): Promise<any> {
     try {
       const data = {
-        employee,
-        userObject,
+        employee: employee,
+        userData: userObject,
       };
+
+      console.log(data)
       const jsonData = JSON.stringify(data);
       const res: AxiosResponse = await axios.post(`${this.url}/createEmployee`, jsonData, {
         headers: {
@@ -83,7 +85,7 @@ class ServerRequests extends Server {
     }
   }
 
-  async updateEmployee(employee: Employee, dataToUpdate: DataToUpdate, userObject: UserObject): Promise<any> {
+  async updateEmployee(employee: Employee, dataToUpdate: DataToUpdate, userObject: UserDataSchema): Promise<any> {
     try {
       const data = {
         employee,
