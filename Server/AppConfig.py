@@ -19,7 +19,7 @@ class Environment:
         super().__init__()
         self.environment = os.getenv('ENVIRONMENT')
         if self.environment not in [
-                'localdev', 'localprod', 'clouddev', 'cloudprod'
+                'localdev', 'localprod', 'clouddev', 'cloudprod', 'localTest', 'cloudTest'
         ]:
             raise Exception("Invalid environment")
 
@@ -40,6 +40,9 @@ class Environment:
 
     def getIsDevEnvironment(self):
         return self.getEnvironment() in ['localdev', 'clouddev']
+    
+    def getIsTestEnvironment(self):
+        return self.getEnvironment() in ['localTest', 'cloudTest']
 
 
 class PubSubConfig():

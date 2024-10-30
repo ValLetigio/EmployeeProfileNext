@@ -21,6 +21,13 @@ def get_is_dev_environment():
     return jsonify({"isDevEnvironment": devEnvironment}), 200
 
 
+@app.route('/getIsTestEnvironment', methods=['GET'])
+def get_is_test_environment():
+
+        testEnvironment = AppConfig().getIsTestEnvironment()
+        return jsonify({"isTestEnvironment": testEnvironment}), 200
+
+
 @app.route('/getEnvironment', methods=['GET'])
 def get_environment():
     environment = AppConfig().getEnvironment()
