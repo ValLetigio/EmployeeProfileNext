@@ -6,7 +6,7 @@ from dateutil import parser
 from AppConfig import AppConfig
 import logging
 from firebaseAuthenticator import firebaseAuthenticator
-from datetime import datetime
+from datetime import datetime, timezone
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -377,9 +377,10 @@ def getUserForTesting():
                 None,
                 'roles': [],
                 'createdAt':
-                datetime.datetime.now(datetime.timezone.utc),
+                datetime.now(timezone.utc),
                 'isApproved':
                 True,
+                'image': 'https://www.google.com',
                 'displayName':
                 'TesTUseRnAme',
                 'email':

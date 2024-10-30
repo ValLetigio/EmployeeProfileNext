@@ -33,6 +33,9 @@ class mongoDb:
         if AppConfig().getEnvironment() == 'localdev':
             self.client = MongoClient('localhost', 27017, tz_aware=True)
             databaseName = 'testEmployeeProfile'
+        if AppConfig().getEnvironment() == 'localTest':
+            self.client = MongoClient('localhost', 27017, tz_aware=True)
+            databaseName = 'testEmployeeProfile'
         if AppConfig().getEnvironment() == 'localprod':
             self.client = MongoClient('localhost', 27017, tz_aware=True)
             databaseName = 'testEmployeeProfile'

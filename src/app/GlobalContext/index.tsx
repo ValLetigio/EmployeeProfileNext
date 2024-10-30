@@ -215,7 +215,7 @@ export default function ContextProvider({
       setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     } 
 
-    if (status === 'unauthenticated' && environment != 'localTest') {
+    if (status === 'unauthenticated' ) {
       router.push('/api/auth/signin');
     }
     
