@@ -58,6 +58,28 @@ def delete_all_data_in_collection():
             return e.args[0], 400
 
 
+@app.route('/readAllDataInCollection', methods=['POST'])
+def read_all_data_in_collection():
+    if request.is_json:
+        data = request.get_json()
+        collection = data['collection']
+        # logging(collection)
+        try:
+
+            data = db.read({}, collection)
+        except Exception as e:
+            # Log the error with exception information
+            logging.exception("Error reading purchase order: %s", e)
+            # Respond with an error message
+            return e.args[0], 400
+
+        # If everything went fine
+        return jsonify({
+            "message": "Data read successfully",
+            "data": data
+        }), 200
+
+
 @app.route('/firebaseLogin', methods=['POST'])
 def firebase_login():
     if request.is_json:

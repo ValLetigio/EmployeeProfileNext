@@ -416,7 +416,7 @@ class Employee:
                 'company': str,
                 'isRegular': bool,
                 'isProductionEmployee': bool,
-                'dailyWage': (float, type(None)),
+                'dailyWage': (float, int, type(None)),
                 '_version': int
             }, self.__class__.__name__)
 

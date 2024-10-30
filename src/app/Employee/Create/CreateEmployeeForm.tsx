@@ -38,24 +38,25 @@ const CreateEmployeeForm = () => {
 
             const res = await serverRequests.createEmployee(finalFormData, userData)
 
-            console.log(res)
-            console.log(userData)
+            if(res.message){
+                setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
+                form.reset() 
+                setFormData({
+                    name: '',
+                    address: '',
+                    phoneNumber: '',
+                    photoOfPerson: '',
+                    resumePhotosList: [''],
+                    biodataPhotosList: [''],
+                    email: '',
+                    dateJoined: '',
+                    company: '',
+                    isRegular: false,
+                    isProductionEmployee: false,
+                    dailyWage: 0
+                })  
+            }
 
-            // form.reset() 
-            // setFormData({
-            //     name: '',
-            //     address: '',
-            //     phoneNumber: '',
-            //     photoOfPerson: '',
-            //     resumePhotosList: '',
-            //     biodataPhotosList: '',
-            //     email: '',
-            //     dateJoined: '',
-            //     company: '',
-            //     isRegular: false,
-            //     isProductionEmployee: false,
-            //     dailyWage: 0
-            // })  
         }catch(e:unknown){  
             console.error('Error creating employee:', e)
             setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
