@@ -110,10 +110,11 @@ class ServerRequests extends Server {
   async updateEmployee(employee: Employee, dataToUpdate: DataToUpdate, userObject: UserDataSchema): Promise<any> {
     try {
       const data = {
-        employee: employee,
+        employeeData: employee,
         dataToUpdate: dataToUpdate,
-        userObject: userObject,
+        userData: userObject,
       };
+      console.log(data)
       const jsonData = JSON.stringify(data);
       const res: AxiosResponse = await axios.post(`${this.url}/updateEmployee`, jsonData, {
         headers: {

@@ -26,8 +26,8 @@ def get_is_dev_environment():
 @app.route('/getIsTestEnvironment', methods=['GET'])
 def get_is_test_environment():
 
-        testEnvironment = AppConfig().getIsTestEnvironment()
-        return jsonify({"isTestEnvironment": testEnvironment}), 200
+    testEnvironment = AppConfig().getIsTestEnvironment()
+    return jsonify({"isTestEnvironment": testEnvironment}), 200
 
 
 @app.route('/getEnvironment', methods=['GET'])
@@ -163,9 +163,8 @@ def create_employee():
         data = employeeData['employee']
 
         try:
-
-            dateJoined_object = datetime.strptime(data['dateJoined'],
-                                                  "%Y-%m-%d")
+            data['dateJoined'] = datetime.strptime(data['dateJoined'],
+                                                   "%Y-%m-%d")
 
             res = UserActions(userData).createEmployeeAction(
                 userData, {
@@ -177,7 +176,7 @@ def create_employee():
                     'resumePhotosList': data['resumePhotosList'],
                     'biodataPhotosList': data['biodataPhotosList'],
                     'email': data['email'],
-                    'dateJoined': dateJoined_object,
+                    'dateJoined': data['dateJoined'],
                     'company': data['company'],
                     'isRegular': data['isRegular'],
                     'isProductionEmployee': data['isProductionEmployee'],
@@ -206,8 +205,12 @@ def update_employee():
         employeeData = data['employeeData']
         dataToUpdate = data['dataToUpdate']
         try:
+
+            dataToUpdate['dateJoined'] = datetime.strptime(
+                dataToUpdate['dateJoined'], "%Y-%m-%d")
+
             res = UserActions(userData).updateEmployeeAction(
-                employeeData, dataToUpdate)
+                userData, employeeData, dataToUpdate)
 
             return jsonify({
                 'message': 'Employee updated successfully!',
@@ -395,20 +398,14 @@ def getUserForTesting():
             print(Roles().getAllRolesWithPermissions())
 
             user = UserActions({
-                '_id':
-                None,
+                '_id': None,
                 'roles': [],
-                'createdAt':
-                datetime.now(timezone.utc),
-                'isApproved':
-                True,
+                'createdAt': datetime.now(timezone.utc),
+                'isApproved': True,
                 'image': 'https://www.google.com',
-                'displayName':
-                'TesTUseRnAme',
-                'email':
-                'test@email.com',
-                '_version':
-                0
+                'displayName': 'TesTUseRnAme',
+                'email': 'test@email.com',
+                '_version': 0
             })
 
             userData = user.createFirstUserAction('testUserId')
