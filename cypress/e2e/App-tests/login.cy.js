@@ -40,9 +40,9 @@ import ServerRequests from '../../../src/app/api/ServerRequests'
 
 describe('template spec', () => {
   let serverRequests ;
+  serverRequests = new ServerRequests(false);
+  let userObject;
   before(async() => {
-    let userObject;
-    serverRequests = new ServerRequests(false);
 
     const deleteResponse = await serverRequests.deleteAllDataInCollection('User');
     console.log(deleteResponse);
@@ -65,6 +65,44 @@ describe('template spec', () => {
   it('Redirects to Signin Page', () => {
     cy.visit('/')
     // cy.url().should('include', 'signin')
+  })
+
+  it('creates and updates employee server request', async () => {
+    const employee = {
+      _id: "emp12345",
+      name: "John Doe",
+      address: "123 Main St, Sample City, Sample State, 12345",
+      phoneNumber: "123-456-7890",
+      photoOfPerson: "https://example.com/photos/johndoe.jpg",
+      resumePhotosList: [
+          "https://example.com/resume/page1.jpg",
+          "https://example.com/resume/page2.jpg",
+          "https://example.com/resume/page3.jpg"
+      ],
+      biodataPhotosList: [
+          "https://example.com/biodata/photo1.jpg",
+          "https://example.com/biodata/photo2.jpg"
+      ],
+      email: "johndoe@example.com",
+      dateJoined: "2022-01-15",
+      company: "Sample Corp",
+      isRegular: true,
+      isProductionEmployee: false,
+      dailyWage: 567.89,
+      _version: 0
+  }
+  const createEmployeeResponse = await serverRequests.createEmployee(employee, userObject);
+  console.log(createEmployeeResponse);
+
+
+  const updatedEmployee = {
+    name: "John Doe Jr",
+    phoneNumber: "123-456-7891",
+  }
+
+  const updateEmployeeResponse = await serverRequests.updateEmployee(createEmployeeResponse.data, updatedEmployee, userObject);
+  console.log(updateEmployeeResponse);
+
   })
 
   // it("Login with Google", () => {

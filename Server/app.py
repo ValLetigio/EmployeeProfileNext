@@ -184,7 +184,7 @@ def update_employee():
         employeeData = data['employeeData']
         dataToUpdate = data['dataToUpdate']
         try:
-            res = UserActions(userData).updateEmployeeAction(
+            res = UserActions(userData).updateEmployeeAction(userData,
                 employeeData, dataToUpdate)
 
             return jsonify({

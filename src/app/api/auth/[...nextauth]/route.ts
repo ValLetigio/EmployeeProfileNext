@@ -40,6 +40,7 @@ const authOption:  NextAuthOptions = {
                     token.createdAt = res.data.createdAt;
                     token.isApproved = res.data.isApproved;
                     token.refreshToken = account?.refresh_token;
+                    token.image = res.data.image;
                 }
 
             }
@@ -66,6 +67,10 @@ const authOption:  NextAuthOptions = {
 
             if (token.isApproved) {
                 session.user.isApproved = token.isApproved;
+            }
+
+            if (token.image) {
+                session.user.image = token.image as string;
             }
 
             console.log('Session', session);
