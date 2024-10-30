@@ -121,7 +121,7 @@ const CreateEmployeeForm = () => {
 
     useEffect(()=>{
         fetchEmployees() 
-    },[])
+    },[])  
  
   return (
     <form className={` form-style `}
@@ -131,7 +131,7 @@ const CreateEmployeeForm = () => {
 
         {/* employee */} 
         <div className='flex flex-col text-sm gap-2 '>Employee to Edit
-            <select className="select select-bordered w-full " id='Employee' value={selectedEmployee?._id}
+            <select className="select select-bordered w-full " id='Employee'  
                 onChange={(e:any)=>{
                     setSelectedEmployee(employeeOptions[e.target.value])
                     setFormData(employeeOptions[e.target.value])
