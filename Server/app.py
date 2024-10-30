@@ -6,7 +6,7 @@ from dateutil import parser
 from AppConfig import AppConfig
 import logging
 from firebaseAuthenticator import firebaseAuthenticator
-from datetime import datetime
+from datetime import datetime, timezone
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -21,6 +21,13 @@ def get_is_dev_environment():
 
     devEnvironment = AppConfig().getIsDevEnvironment()
     return jsonify({"isDevEnvironment": devEnvironment}), 200
+
+
+@app.route('/getIsTestEnvironment', methods=['GET'])
+def get_is_test_environment():
+
+        testEnvironment = AppConfig().getIsTestEnvironment()
+        return jsonify({"isTestEnvironment": testEnvironment}), 200
 
 
 @app.route('/getEnvironment', methods=['GET'])
@@ -392,9 +399,10 @@ def getUserForTesting():
                 None,
                 'roles': [],
                 'createdAt':
-                datetime.datetime.now(datetime.timezone.utc),
+                datetime.now(timezone.utc),
                 'isApproved':
                 True,
+                'image': 'https://www.google.com',
                 'displayName':
                 'TesTUseRnAme',
                 'email':

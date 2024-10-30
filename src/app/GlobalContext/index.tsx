@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
@@ -15,6 +16,7 @@ import firebaseConfig from '../api/firebase';
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { env } from 'process';
 
 // Define the properties of the context
 interface AppContextProps {
@@ -59,6 +61,7 @@ export default function ContextProvider({
   const router = useRouter();
   const serverRequests = new ServerRequests(false);
 
+  const [environment, setEnvironment] = useState<string>('');
   const app = initializeApp(firebaseConfig);
   const storage = getStorage(app);
   const auth = getAuth(app);
@@ -174,8 +177,17 @@ export default function ContextProvider({
       }
     )
   },[]);
-  
 
+  useEffect(() => {
+    serverRequests.getEnvironment().then((res) => {
+      console.log('res', res);
+      setEnvironment(res.data);
+    }).catch((error) => {
+      console.log('error', error);
+    });
+  }, [])
+  
+  console.log('environment', environment);
   useEffect(() => {
     if (session?.user) {
       const user = session.user as Session["user"] & {
@@ -203,7 +215,7 @@ export default function ContextProvider({
       setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     } 
 
-    if (status === 'unauthenticated') {
+    if (status === 'unauthenticated' ) {
       router.push('/api/auth/signin');
     }
     
