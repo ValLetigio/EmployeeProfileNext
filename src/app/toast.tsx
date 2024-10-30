@@ -38,15 +38,15 @@ const Toast = () => {
     const getToastType = () => {
         switch (toastOptions?.type) {
             case 'success':
-                return ['bg-success', 'progress-success'];
+                return ['bg-success', 'progress-success', 'tooltip-success'];
             case 'error':
-                return ['bg-error', 'progress-error'];
+                return ['bg-error', 'progress-error', 'tooltip-error'];
             case 'info':
-                return ['bg-info', 'progress-info'];
+                return ['bg-info', 'progress-info', 'tooltip-info'];
             case 'warning':
-                return ['bg-warning', 'progress-warning'];
+                return ['bg-warning', 'progress-warning', 'tooltip-warning'];
             default:
-                return [' ', ' '];
+                return [' ', ' ', ' '];
         }
     }
 
@@ -57,17 +57,21 @@ const Toast = () => {
                 ${toastOptions?.open ? 'toast-top toast-center lg:toast-start lg:toast-bottom' : 'hidden'} toast z-[100]
             `}  
                 key={toastOptions?.message}
+                
         >
-            <div className={`min-w-[50vw] md:min-w-max md:max-w-[30vw] alert text-white text-wrap px-5 rounded ${getToastType()[0]}`}
+            <div className={`min-w-[50vw] md:min-w-max md:max-w-[20vw] alert text-white text-wrap px-5 rounded ${getToastType()[0]}`}
                 onClick={() => {closeToast(), navigator.clipboard.writeText(toastOptions?.message)}} 
                 onMouseEnter={() => setTimer(50)} 
                 onMouseLeave={() => setTimer(toastOptions?.timer)}
             >
-                <span className='break-words'>{toastOptions?.message}</span>
+                <span 
+                    className={` text-start break-words tooltip tooltip-top ${getToastType()[2]} whitespace-pre-line`} 
+                    data-tip="Copy and Close"
+                >{toastOptions?.message}</span>
             </div>
             
             <progress 
-                className={`progress w-full ${getToastType()[1]} rounded-none -mt-2  `} 
+                className={`progress w-full ${getToastType()[1]} rounded-none -mt-2 `} 
                 value={(timer / toastOptions?.timer) * 100} 
                 max={100} 
             /> 

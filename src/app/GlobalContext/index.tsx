@@ -27,6 +27,7 @@ interface AppContextProps {
   pathname: string;
   toastOptions: ToastOptionsSchema;
   setToastOptions: (data: ToastOptionsSchema) => void;
+  serverRequests: ServerRequests;
 }
 
 // Create the default context with proper types and default values
@@ -47,6 +48,7 @@ const AppContext = createContext<AppContextProps>({
   pathname: '',
   toastOptions: {open: false, message: '', type: '', timer: 0},
   setToastOptions: () => {},
+  serverRequests: new ServerRequests(false),
 });
 
 export default function ContextProvider({
@@ -209,6 +211,7 @@ export default function ContextProvider({
         displayName: displayName || ''
       });
 
+      // console.log('userData', userData);
       setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     } 
 
@@ -218,7 +221,6 @@ export default function ContextProvider({
     
   }, [session, status, router]);
 
-  console.log('userData', userData);
   // Define the global values to be shared across the context
   const globals = {
     userData,
@@ -226,7 +228,8 @@ export default function ContextProvider({
     sampleText,
     cards,
     pathname,
-    toastOptions, setToastOptions
+    toastOptions, setToastOptions,
+    serverRequests
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;
