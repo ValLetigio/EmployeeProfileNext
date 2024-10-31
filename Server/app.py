@@ -283,29 +283,30 @@ def create_memo():
     if request.is_json:
         data = request.get_json()
         userData = data['userData']
+        memo = data['memo']
 
         try:
-            res = UserActions(userData).createMemoAction({
+            res = UserActions(userData).createMemoAction(userData,{
                 'date':
-                data['date'],
+                datetime.now(timezone.utc),
                 'mediaList':
-                data['mediaList'],
+                memo['mediaList'],
                 'Employee':
-                data['Employee'],
+                memo['Employee'],
                 'memoPhotosList':
-                data['memoPhotosList'],
+                memo['memoPhotosList'],
                 'subject':
-                data['subject'],
+                memo['subject'],
                 'description':
-                data['description'],
+                memo['description'],
                 '_id':
                 None,
                 'MemoCode':
-                data['MemoCode'],
+                memo['MemoCode'],
                 'submitted':
-                data['submitted'],
+                False,
                 'reason':
-                data['reason'],
+                memo['reason'],
                 '_version':
                 0
             })
@@ -331,7 +332,7 @@ def submit_memo():
         memoData = data['memoData']
         reason = data['reason']
         try:
-            res = UserActions(userData).submitMemoAction(memoData, reason)
+            res = UserActions(userData).submitMemoAction(userData, memoData, reason)
 
             return jsonify({
                 'message': 'Memo submitted successfully!',
@@ -353,7 +354,7 @@ def delete_memo():
 
         memoData = data['memoData']
         try:
-            res = UserActions(userData).deleteMemoAction(memoData)
+            res = UserActions(userData).deleteMemoAction(userData, memoData)
 
             return jsonify({
                 'message': 'Memo deleted successfully!',

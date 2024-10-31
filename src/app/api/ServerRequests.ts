@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosResponse } from "axios";
 import Server from "./Server.ts";
-import { UserObject, Employee, DataToUpdate, UserDataSchema, Offense } from "../Schema";
+import { UserObject, Employee, DataToUpdate, UserDataSchema, Offense, Memo } from "../Schema";
 class ServerRequests extends Server {
   constructor(isProduction: boolean) {
     super(isProduction);
@@ -174,6 +174,75 @@ class ServerRequests extends Server {
       };
       const jsonData = JSON.stringify(data);
       const res: AxiosResponse = await axios.post(`${this.url}/deleteOffense`, jsonData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return res.data;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        throw new Error(error.response.data);
+      } else {
+        throw new Error(error.message || "An error occurred during login.");
+      }
+    }
+  }
+  async createMemo (memo: Memo, userObject: UserDataSchema): Promise<any> {
+    try {
+      const data = {
+        memo: memo,
+        userData: userObject,
+      };
+      const jsonData = JSON.stringify(data);
+      const res: AxiosResponse = await axios.post(`${this.url}/createMemo`, jsonData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return res.data;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        throw new Error(error.response.data);
+      } else {
+        throw new Error(error.message || "An error occurred during login.");
+      }
+    }
+  }
+
+  async submitMemo (memo: Memo, reason: string, userObject: UserDataSchema): Promise<any> {
+    try {
+      const data = {
+        memoData: memo,
+        reason,
+        userData: userObject,
+      };
+      const jsonData = JSON.stringify(data);
+      const res: AxiosResponse = await axios.post(`${this.url}/submitMemo`, jsonData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return res.data;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        throw new Error(error.response.data);
+      } else {
+        throw new Error(error.message || "An error occurred during login.");
+      }
+    }
+  }
+
+  async deleteMemo (memo: Memo, userObject: UserDataSchema): Promise<any> {
+    try {
+      const data = {
+        memoData: memo,
+        userData: userObject,
+      };
+      const jsonData = JSON.stringify(data);
+      const res: AxiosResponse = await axios.post(`${this.url}/deleteMemo`, jsonData, {
         headers: {
           "Content-Type": "application/json",
         },

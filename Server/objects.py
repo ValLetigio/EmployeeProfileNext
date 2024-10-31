@@ -306,6 +306,9 @@ class Memo:
         if not isinstance(data['MemoCode'], Offense):
             data['MemoCode'] = Offense(data['MemoCode'])
 
+        if not isinstance(data['date'], datetime.datetime):
+            data['date'] = transformDate(data['date'])
+
         validateParameterData(
             data, {
                 'date': datetime.datetime,

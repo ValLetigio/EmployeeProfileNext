@@ -72,7 +72,6 @@ describe('template spec', () => {
     console.log(deleteResponse);
 
     const employee = {
-      _id: "emp12345",
       name: "John Doe",
       address: "123 Main St, Sample City, Sample State, 12345",
       phoneNumber: "123-456-7890",
@@ -92,7 +91,6 @@ describe('template spec', () => {
       isRegular: true,
       isProductionEmployee: false,
       dailyWage: 567.89,
-      _version: 0
   }
   const createEmployeeResponse = await serverRequests.createEmployee(employee, userObject);
   console.log(createEmployeeResponse);
@@ -143,7 +141,73 @@ describe('template spec', () => {
   })
 
   it('create and update and delete memo server request', async () => {
-    
+    const employee = {
+      name: "John Doe",
+      address: "123 Main St, Sample City, Sample State, 12345",
+      phoneNumber: "123-456-7890",
+      photoOfPerson: "https://example.com/photos/johndoe.jpg",
+      resumePhotosList: [
+          "https://example.com/resume/page1.jpg",
+          "https://example.com/resume/page2.jpg",
+          "https://example.com/resume/page3.jpg"
+      ],
+      biodataPhotosList: [
+          "https://example.com/biodata/photo1.jpg",
+          "https://example.com/biodata/photo2.jpg"
+      ],
+      email: "johndoe@example.com",
+      dateJoined: "2022-01-15",
+      company: "Sample Corp",
+      isRegular: true,
+      isProductionEmployee: false,
+      dailyWage: 567.89,
+    }
+    const offense = {
+      number: 1,
+      description: "Employee was late to work",
+      remedialActions: ['Warning', 'Suspension'],
+    }
+
+    const createEmployeeResponse = await serverRequests.createEmployee(employee, userObject);
+    console.log(createEmployeeResponse);
+    expect(createEmployeeResponse).to.have.property('message', 'Employee created successfully!');
+
+    const createOffenseResponse = await serverRequests.createOffense(offense, userObject);
+    console.log(createOffenseResponse);
+    expect(createOffenseResponse).to.have.property('message', 'Offense created successfully!');
+
+
+    const memo = {
+      // date: "2024-10-31",
+      mediaList: [
+          "https://example.com/media/photo1.jpg",
+          "https://example.com/media/photo2.jpg"
+      ],
+      Employee: createEmployeeResponse.data,
+      memoPhotosList: [
+          "https://example.com/memos/memo1.jpg",
+          "https://example.com/memos/memo2.jpg"
+      ],
+      subject: "Workplace Safety Protocols",
+      description: "Reminder to adhere to updated safety protocols in the workplace. Ensure all employees are aware and compliant.",
+      MemoCode: createOffenseResponse.data,
+      // submitted: true,
+      reason: "To ensure employee safety and compliance with regulations.",
+  };
+
+  const createMemoResponse = await serverRequests.createMemo(memo, userObject);
+  console.log(createMemoResponse);
+  expect(createMemoResponse).to.have.property('message', 'Memo created successfully!');
+
+  const reason = "To ensure employee safety and compliance with regulations. Updated safety protocols in the workplace. Ensure all employees are aware and compliant.";
+
+  const submitMemoResponse = await serverRequests.submitMemo(createMemoResponse.data, reason, userObject);
+  console.log(submitMemoResponse);
+  expect(submitMemoResponse).to.have.property('message', 'Memo submitted successfully!');
+
+  const deleteMemoResponse = await serverRequests.deleteMemo(createMemoResponse.data, userObject);
+  console.log(deleteMemoResponse);
+  expect(deleteMemoResponse).to.have.property('message', 'Memo deleted successfully!');
   })
   // it("Login with Google", () => {
   //   cy.visit("/")
