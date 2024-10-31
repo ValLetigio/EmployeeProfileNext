@@ -204,17 +204,18 @@ def create_offense():
     if request.is_json:
         data = request.get_json()
         userData = data['userData']
+        offense = data['offense']
 
         try:
-            res = UserActions(userData).createOffenseAction({
+            res = UserActions(userData).createOffenseAction(userData,{
                 '_id':
                 None,
-                'offense':
-                data['offense'],
+                'number':
+                offense['number'],
                 'description':
-                data['description'],
-                'penalty':
-                data['penalty'],
+                offense['description'],
+                'remedialActions':
+                offense['remedialActions'],
                 '_version':
                 0
             })
@@ -240,7 +241,7 @@ def update_offense():
         offenseData = data['offenseData']
         dataToUpdate = data['dataToUpdate']
         try:
-            res = UserActions(userData).updateOffenseAction(
+            res = UserActions(userData).updateOffenseAction(userData,
                 offenseData, dataToUpdate)
 
             return jsonify({
@@ -263,7 +264,7 @@ def delete_offense():
 
         offenseData = data['offenseData']
         try:
-            res = UserActions(userData).deleteOffenseAction(offenseData)
+            res = UserActions(userData).deleteOffenseAction(userData, offenseData)
 
             return jsonify({
                 'message': 'Offense deleted successfully!',

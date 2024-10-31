@@ -68,4 +68,10 @@ export interface ToastOptionsSchema {
     message: string;
     type: string;
     timer: number;
-} 
+}
+
+export interface Offense {
+    number: number;
+    description: string;
+    remedialActions: string[];
+}

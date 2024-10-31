@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosResponse } from "axios";
 import Server from "./Server.ts";
-import { UserObject, Employee, DataToUpdate, UserDataSchema } from "../Schema";
+import { UserObject, Employee, DataToUpdate, UserDataSchema, Offense } from "../Schema";
 class ServerRequests extends Server {
   constructor(isProduction: boolean) {
     super(isProduction);
@@ -121,7 +121,73 @@ class ServerRequests extends Server {
       return error.response?.data || error.message;
     }
   }
-  
+  async createOffense (offense: Offense, userObject: UserDataSchema): Promise<any> {
+    try {
+      const data = {
+        offense: offense,
+        userData: userObject,
+      };
+      const jsonData = JSON.stringify(data);
+      const res: AxiosResponse = await axios.post(`${this.url}/createOffense`, jsonData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return res.data;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        throw new Error(error.response.data);
+      } else {
+        throw new Error(error.message || "An error occurred during login.");
+      }
+    }
+  }
+  async updateOffense (offense: Offense, dataToUpdate: DataToUpdate, userObject: UserDataSchema): Promise<any> {
+    try {
+      const data = {
+        offenseData: offense,
+        dataToUpdate,
+        userData: userObject,
+      };
+      const jsonData = JSON.stringify(data);
+      const res: AxiosResponse = await axios.post(`${this.url}/updateOffense`, jsonData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return res.data;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        throw new Error(error.response.data);
+      } else {
+        throw new Error(error.message || "An error occurred during login.");
+      }
+    }
+  }
+  async deleteOffense (offense: Offense, userObject: UserDataSchema): Promise<any> {
+    try {
+      const data = {
+        offenseData: offense,
+        userData: userObject,
+      };
+      const jsonData = JSON.stringify(data);
+      const res: AxiosResponse = await axios.post(`${this.url}/deleteOffense`, jsonData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return res.data;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        throw new Error(error.response.data);
+      } else {
+        throw new Error(error.message || "An error occurred during login.");
+      }
+    }
+  }
 }
 
 export default ServerRequests;

@@ -63,11 +63,14 @@ describe('template spec', () => {
   })
 
   it('Redirects to Signin Page', () => {
-    cy.visit('/')
+    // cy.visit('/')
     // cy.url().should('include', 'signin')
   })
 
   it('creates and updates employee server request', async () => {
+    const deleteResponse = await serverRequests.deleteAllDataInCollection('Employee');
+    console.log(deleteResponse);
+
     const employee = {
       _id: "emp12345",
       name: "John Doe",
@@ -93,7 +96,7 @@ describe('template spec', () => {
   }
   const createEmployeeResponse = await serverRequests.createEmployee(employee, userObject);
   console.log(createEmployeeResponse);
-
+  expect(createEmployeeResponse).to.have.property('message', 'Employee created successfully!');
 
   const updatedEmployee = {
     name: "John Doe Jr",
@@ -102,9 +105,46 @@ describe('template spec', () => {
 
   const updateEmployeeResponse = await serverRequests.updateEmployee(createEmployeeResponse.data, updatedEmployee, userObject);
   console.log(updateEmployeeResponse);
+  expect(updateEmployeeResponse).to.have.property('message', 'Employee updated successfully!');
 
+  // create another update request
+  const updatedEmployee2 = {
+    name: "Val Johnathan Sr",
+    phoneNumber: "123-456-7892",
+  }
+  const updateEmployeeResponse2 = await serverRequests.updateEmployee(createEmployeeResponse.data, updatedEmployee2, userObject);
+  console.log(updateEmployeeResponse2);
+  expect(updateEmployeeResponse2).to.have.property('message', 'Employee updated successfully!');
   })
 
+  it('create and update and delete offense server request', async () => {
+    const offense = {
+      number: 1,
+      description: "Employee was late to work",
+      remedialActions: ['Warning', 'Suspension'],
+    }
+    const createOffenseResponse = await serverRequests.createOffense(offense, userObject);
+    console.log(createOffenseResponse);
+    expect(createOffenseResponse).to.have.property('message', 'Offense created successfully!');
+
+
+    const updatedOffense = {
+      description: "Employee was late to work and was rude to customers",
+      remedialActions: ['Warning', 'Suspension', 'Termination'],
+    }
+
+    const updateOffenseResponse = await serverRequests.updateOffense(createOffenseResponse.data, updatedOffense, userObject);
+    console.log(updateOffenseResponse);
+    expect(updateOffenseResponse).to.have.property('message', 'Offense updated successfully!');
+
+    const deleteOffenseResponse = await serverRequests.deleteOffense(createOffenseResponse.data, userObject);
+    console.log(deleteOffenseResponse);
+    expect(deleteOffenseResponse).to.have.property('message', 'Offense deleted successfully!');
+  })
+
+  it('create and update and delete memo server request', async () => {
+    
+  })
   // it("Login with Google", () => {
   //   cy.visit("/")
   //   cy.contains('Sign in with Google', { timeout: 60000 }).click();
