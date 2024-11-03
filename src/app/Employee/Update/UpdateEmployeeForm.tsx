@@ -98,6 +98,7 @@ const CreateEmployeeForm = () => {
         const stringSelectedEmployee = JSON.stringify(selectedEmployee) 
 
         if(stringFormData==stringSelectedEmployee && selectedEmployee?._id){
+            console.log("ran")
             setDisableSaveButton(true)
             setDataToUpdate({})
         }else{ 
@@ -118,6 +119,8 @@ const CreateEmployeeForm = () => {
             setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
         }
     }
+
+    const labelStyle = `${disable?'text-gray-300':' '} `
 
     useEffect(()=>{
         fetchEmployees() 
@@ -152,7 +155,7 @@ const CreateEmployeeForm = () => {
         <div className='my-5 w-full border-b border-dashed border-gray-400' hidden={disable}/>
 
         {/* name */}
-        <div className='flex flex-col text-sm gap-2'>Name
+        <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>Name
             <label className="input input-bordered flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-gray-500">
                     <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
@@ -165,7 +168,7 @@ const CreateEmployeeForm = () => {
 
 
         {/* address */} 
-        <div className='flex flex-col text-sm gap-2'>Address
+        <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>Address
             <textarea className="textarea textarea-bordered" placeholder="Address" id='address' disabled={disable}
                 value={formData?.address}
                 onChange={
@@ -178,7 +181,7 @@ const CreateEmployeeForm = () => {
 
 
         {/* Phone Number */}
-        <div className='flex flex-col text-sm gap-2'>Phone Number
+        <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>Phone Number
             <label className="input input-bordered flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-gray-500">
                     <path 
@@ -195,7 +198,7 @@ const CreateEmployeeForm = () => {
 
 
         {/* photoOfPerson, resume, bioData */}  
-        <div className='flex flex-wrap gap-3 md:gap-2 justify-between w-full '>
+        <div className={'flex flex-wrap gap-3 md:gap-2 justify-between w-full ' + labelStyle}>
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person    
@@ -227,7 +230,7 @@ const CreateEmployeeForm = () => {
 
 
         {/* E-mail */}
-        <div className='flex flex-col text-sm gap-2'>E-mail
+        <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>E-mail
             <label className="input input-bordered flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-gray-500">
                     <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
@@ -241,7 +244,7 @@ const CreateEmployeeForm = () => {
 
 
         {/* date Joined*/}
-        <label className="flex flex-col items-start gap-2 text-sm">
+        <label className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
             Date Joined
             <input type="date" className="grow input input-bordered w-full" placeholder="Date Joined" id='dateJoined' 
                 value={formData?.dateJoined?new Date(formData?.dateJoined).toISOString().split('T')[0]:''}
@@ -250,7 +253,7 @@ const CreateEmployeeForm = () => {
 
 
         {/* company */}
-        <div className='flex flex-col text-sm gap-2'>Company
+        <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>Company
             <label className="input input-bordered flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-gray-500">
                     <path 
@@ -264,17 +267,17 @@ const CreateEmployeeForm = () => {
         </div>
 
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+        <div className={'grid grid-cols-1 md:grid-cols-2 gap-2 ' }>
             {/* isRegular */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
-                <p className="label-text text-base">Is Regular?</p>
+                <p className={"label-text text-base " + labelStyle}>Is Regular?</p>
                 <input type="checkbox" defaultChecked className="checkbox"   id='isRegular' disabled={disable}
                     checked={formData?.isRegular}
                     onChange={(e)=>setFormData({...formData, isRegular:e.target.checked})}/>
             </label> 
             {/* isProductionEmployee */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
-                <p className="label-text text-base">Is Production Employee?</p>
+                <p className={"label-text text-base " + labelStyle}>Is Production Employee?</p>
                 <input type="checkbox" defaultChecked className="checkbox"   id='isProductionEmployee' disabled={disable}  
                     checked={formData?.isProductionEmployee}
                     onChange={(e)=>setFormData({...formData, isProductionEmployee:e.target.checked})}/>
@@ -282,7 +285,7 @@ const CreateEmployeeForm = () => {
         </div>
 
         {/* Daily wage */}
-        <div className='flex flex-col text-sm gap-2 '>Daily Wage
+        <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>Daily Wage
             <label className="input input-bordered flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-gray-500">
                     <path d="M12 7.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
