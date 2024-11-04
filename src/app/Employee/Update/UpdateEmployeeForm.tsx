@@ -11,6 +11,8 @@ const CreateEmployeeForm = () => {
 
     const { setToastOptions, serverRequests, userData } = useAppContext()
 
+    const formRef = React.useRef<HTMLFormElement>(null)
+
     const [disable, setDisable] = useState(true)
     const [disableSaveButton, setDisableSaveButton] = useState(true)
 
@@ -46,12 +48,14 @@ const CreateEmployeeForm = () => {
             const res = await serverRequests.updateEmployee(selectedEmployee, dataToUpdate, userData)
 
             if(res&&res.message){
+                console.log(form)
                 form.reset()
                 setFormData(EmployeeValue)  
                 setSelectedEmployee(EmployeeValue)
                 setDataToUpdate({})
                 setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
-            } 
+                formRef.current?.scrollIntoView({ behavior: 'smooth' })
+            }
 
             fetchEmployees()
         }catch(e:unknown){  
@@ -128,7 +132,8 @@ const CreateEmployeeForm = () => {
     },[])  
  
   return (
-    <form className={` form-style `}
+    <form className={` form-style `} 
+        ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     >
         <h2 className='font-semibold'>Update Employee</h2>
@@ -140,6 +145,7 @@ const CreateEmployeeForm = () => {
                     setSelectedEmployee(employeeOptions[e.target.value])
                     setFormData(employeeOptions[e.target.value])
                 }}
+                value={formData?._id && ""}
             >
                 <option disabled selected value={""}>Select Employee</option>
                 {employeeOptions&&employeeOptions.map((employee, index) => (
