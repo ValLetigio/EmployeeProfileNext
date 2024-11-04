@@ -206,13 +206,13 @@ const CreateEmployeeForm = () => {
             {/* isRegular */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className="label-text text-base">Is Regular?</p>
-                <input type="checkbox" defaultChecked className="checkbox" required id='isRegular'   
+                <input type="checkbox" className="checkbox" required id='isRegular'   
                     onChange={(e)=>setFormData({...formData, isRegular:e.target.checked})}/>
             </label> 
             {/* isProductionEmployee */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className="label-text text-base">Is Production Employee?</p>
-                <input type="checkbox" defaultChecked className="checkbox"  id='isProductionEmployee'   
+                <input type="checkbox" className="checkbox"  id='isProductionEmployee'   
                     onChange={(e)=>setFormData({...formData, isProductionEmployee:e.target.checked})}/>
             </label> 
         </div>

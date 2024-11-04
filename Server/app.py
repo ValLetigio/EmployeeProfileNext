@@ -65,6 +65,28 @@ def delete_all_data_in_collection():
             return e.args[0], 400
 
 
+@app.route('/readAllDataInCollection', methods=['POST'])
+def read_all_data_in_collection():
+    if request.is_json:
+        data = request.get_json()
+        collection = data['collection']
+        # logging(collection)
+        try:
+
+            data = db.read({}, collection)
+        except Exception as e:
+            # Log the error with exception information
+            logging.exception("Error reading purchase order: %s", e)
+            # Respond with an error message
+            return e.args[0], 400
+
+        # If everything went fine
+        return jsonify({
+            "message": "Data read successfully",
+            "data": data
+        }), 200
+
+
 @app.route('/firebaseLogin', methods=['POST'])
 def firebase_login():
     if request.is_json:
@@ -141,9 +163,8 @@ def create_employee():
         data = employeeData['employee']
 
         try:
-
-            dateJoined_object = datetime.strptime(data['dateJoined'],
-                                                  "%Y-%m-%d")
+            data['dateJoined'] = datetime.strptime(data['dateJoined'],
+                                                   "%Y-%m-%d")
 
             res = UserActions(userData).createEmployeeAction(
                 userData, {
@@ -155,7 +176,7 @@ def create_employee():
                     'resumePhotosList': data['resumePhotosList'],
                     'biodataPhotosList': data['biodataPhotosList'],
                     'email': data['email'],
-                    'dateJoined': dateJoined_object,
+                    'dateJoined': data['dateJoined'],
                     'company': data['company'],
                     'isRegular': data['isRegular'],
                     'isProductionEmployee': data['isProductionEmployee'],
@@ -192,8 +213,8 @@ def update_employee():
                 dataToUpdate['dateJoined'] = datetime.strptime(
                     dataToUpdate['dateJoined'], "%Y-%m-%d")
 
-            res = UserActions(userData).updateEmployeeAction(userData,
-                employeeData, dataToUpdate)
+            res = UserActions(userData).updateEmployeeAction(
+                userData, employeeData, dataToUpdate)
 
             return jsonify({
                 'message': 'Employee updated successfully!',
@@ -362,28 +383,6 @@ def delete_memo():
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
-
-
-@app.route('/readAllDataInCollection', methods=['POST'])
-def read_all_data_in_collection():
-    if request.is_json:
-        data = request.get_json()
-        collection = data['collection']
-        # logging(collection)
-        try:
-
-            data = db.read({}, collection)
-        except Exception as e:
-            # Log the error with exception information
-            logging.exception("Error reading purchase order: %s", e)
-            # Respond with an error message
-            return e.args[0], 400
-
-        # If everything went fine
-        return jsonify({
-            "message": "Data read successfully",
-            "data": data
-        }), 200
 
 
 @app.route('/getUserForTesting', methods=['GET'])
