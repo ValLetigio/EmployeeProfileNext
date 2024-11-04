@@ -60,6 +60,28 @@ class ServerRequests extends Server {
     }
   }
 
+  async fetchEmployeeList(collection: string): Promise<any> {
+    try {
+      const data = {
+        collection,
+      };
+      const jsonData = JSON.stringify(data);
+      const res = await axios.post(
+        `${this.url}/readAllDataInCollection`,
+        jsonData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return res.data;
+    } catch (error: any) {
+      return error.response?.data || error.message;
+    }
+  } 
+
   async createEmployee(employee: Employee, userObject: UserDataSchema): Promise<any> {
     try {
       const data = {
@@ -92,6 +114,7 @@ class ServerRequests extends Server {
         dataToUpdate,
         userData: userObject,
       };
+      console.log(data)
       const jsonData = JSON.stringify(data);
       const res: AxiosResponse = await axios.post(`${this.url}/updateEmployee`, jsonData, {
         headers: {

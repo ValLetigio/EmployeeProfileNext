@@ -185,9 +185,8 @@ export default function ContextProvider({
     }).catch((error) => {
       console.log('error', error);
     });
-  }, [])
+  }, []) 
   
-  console.log('environment', environment);
   useEffect(() => {
     if (session?.user) {
       const user = session.user as Session["user"] & {

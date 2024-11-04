@@ -30,7 +30,7 @@ const CreateEmployeeForm = () => {
 
             console.log('formData:', formData)  
 
-            let finalFormData = {
+            const finalFormData = {
                 ...formData,
                 _id: "", 
                 _version: 0, 
@@ -38,24 +38,25 @@ const CreateEmployeeForm = () => {
 
             const res = await serverRequests.createEmployee(finalFormData, userData)
 
-            console.log(res)
-            console.log(userData)
+            if(res.message){
+                setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
+                form.reset() 
+                setFormData({
+                    name: '',
+                    address: '',
+                    phoneNumber: '',
+                    photoOfPerson: '',
+                    resumePhotosList: [''],
+                    biodataPhotosList: [''],
+                    email: '',
+                    dateJoined: '',
+                    company: '',
+                    isRegular: false,
+                    isProductionEmployee: false,
+                    dailyWage: 0
+                })  
+            }
 
-            // form.reset() 
-            // setFormData({
-            //     name: '',
-            //     address: '',
-            //     phoneNumber: '',
-            //     photoOfPerson: '',
-            //     resumePhotosList: '',
-            //     biodataPhotosList: '',
-            //     email: '',
-            //     dateJoined: '',
-            //     company: '',
-            //     isRegular: false,
-            //     isProductionEmployee: false,
-            //     dailyWage: 0
-            // })  
         }catch(e:unknown){  
             console.error('Error creating employee:', e)
             setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
@@ -141,21 +142,24 @@ const CreateEmployeeForm = () => {
         <div className='flex flex-wrap gap-3 md:gap-2 justify-between w-full '>
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
-                <div className='flex items-center mb-1 gap-1 relative'>Photo Of Person    
+                <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person    
+                    <img src={formData?.photoOfPerson} className='h-20 ' alt="" />
                 </div>
                 <input type="file" className="file-input file-input-bordered sw-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*' required 
                     onChange={handleFileChange}/>
             </label>
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex items-center mb-1 gap-1 relative '>Resume  
+                <div className='flex justify-between items-center mb-1 gap-1 relative'>Resume    
+                    <img src={formData?.resumePhotosList[0]} className='h-20 ' alt="" />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='resumePhotosList' accept='image/*' 
                     onChange={handleFileChange}/>
             </label>
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex items-center mb-1 gap-1  '>Bio Data 
+                <div className='flex justify-between items-center mb-1 gap-1 relative'>Bio Data   
+                    <img src={formData?.biodataPhotosList[0]} className='h-20 ' alt="" />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
                     onChange={handleFileChange}/>
@@ -170,7 +174,7 @@ const CreateEmployeeForm = () => {
                     <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
                     <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
                 </svg> 
-                <input type="email" className="grow" placeholder="E-mail" id='email' 
+                <input type="email" className="grow" placeholder="E-mail" id='email' required
                     onChange={handleInputChange}/>
             </label>
         </div>
@@ -179,7 +183,7 @@ const CreateEmployeeForm = () => {
         {/* date */}
         <label className="flex flex-col items-start gap-2 text-sm">
             Date Joined
-            <input type="date" className="grow input input-bordered w-full" placeholder="Date Joined" id='dateJoined' 
+            <input type="date" className="grow input input-bordered w-full" placeholder="Date Joined" id='dateJoined' required
                 onChange={handleInputChange}/>
         </label>  
 
@@ -208,7 +212,7 @@ const CreateEmployeeForm = () => {
             {/* isProductionEmployee */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className="label-text text-base">Is Production Employee?</p>
-                <input type="checkbox" defaultChecked className="checkbox" required id='isProductionEmployee'   
+                <input type="checkbox" defaultChecked className="checkbox"  id='isProductionEmployee'   
                     onChange={(e)=>setFormData({...formData, isProductionEmployee:e.target.checked})}/>
             </label> 
         </div>
