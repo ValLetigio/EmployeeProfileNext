@@ -42,7 +42,6 @@ export interface UserObject {
 }
 
 export interface Employee {
-    _id: string;
     name: string;
     address: string;
     phoneNumber: string;
@@ -55,7 +54,6 @@ export interface Employee {
     isRegular: boolean;
     isProductionEmployee: boolean;
     dailyWage: number;
-    _version: number;
 }
 
 export interface DataToUpdate {
@@ -68,4 +66,21 @@ export interface ToastOptionsSchema {
     message: string;
     type: string;
     timer: number;
-} 
+}
+
+export interface Offense {
+    number: number;
+    description: string;
+    remedialActions: string[];
+}
+export interface Memo {
+    // date: string;
+    mediaList: string[];
+    Employee: Employee;
+    memoPhotosList: string[];
+    subject: string;
+    description: string;
+    MemoCode: Offense;
+    // submitted: boolean;
+    reason: string;
+}

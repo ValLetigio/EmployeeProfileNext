@@ -100,6 +100,7 @@ class User:
             data, 'roles') if getDictionaryOrObjectValue(
                 data, 'roles') else ['user']
         self._version = getDictionaryOrObjectValue(data, '_version')
+        self.image = getDictionaryOrObjectValue(data, 'image')
 
     def to_dict(self):
         return {
@@ -107,6 +108,7 @@ class User:
             'createdAt': self.createdAt,
             'isApproved': self.isApproved,
             'displayName': self.displayName,
+            'image': self.image,
             'email': self.email,
             'roles': self.roles,
             '_version': self._version
@@ -152,6 +154,7 @@ class User:
             'roles': Roles().getAllRolesWithPermissions(),
             'createdAt': datetime.datetime.now(datetime.timezone.utc),
             'isApproved': self.isApproved,
+            'image': self.image,
             'displayName': self.displayName,
             'email': self.email
         }
@@ -174,6 +177,7 @@ class User:
             'roles': Roles().getAllRolesWithoutPermissions(),
             'createdAt': datetime.datetime.now(datetime.timezone.utc),
             'isApproved': self.isApproved,
+            'image': self.image,
             'displayName': self.displayName,
             'email': self.email,
         }
@@ -302,6 +306,9 @@ class Memo:
         if not isinstance(data['MemoCode'], Offense):
             data['MemoCode'] = Offense(data['MemoCode'])
 
+        if not isinstance(data['date'], datetime.datetime):
+            data['date'] = transformDate(data['date'])
+
         validateParameterData(
             data, {
                 'date': datetime.datetime,
@@ -402,6 +409,9 @@ class Memo:
 class Employee:
 
     def __init__(self, data):
+
+        if not isinstance(data['dateJoined'], datetime.datetime):
+            data['dateJoined'] = transformDate(data['dateJoined'])
         validateParameterData(
             data, {
                 '_id': (str, type(None)),
@@ -457,6 +467,8 @@ class Employee:
         if 'canCreateEmployee' not in user['roles']['Employee']:
             raise ValueError(
                 'User does not have permission to create an employee')
+        if self._id != None:
+            raise ValueError('Cannot create Employee with an existing _id')
         self._id = generateRandomString()
         return self.to_dict()
 

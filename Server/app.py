@@ -26,8 +26,8 @@ def get_is_dev_environment():
 @app.route('/getIsTestEnvironment', methods=['GET'])
 def get_is_test_environment():
 
-    testEnvironment = AppConfig().getIsTestEnvironment()
-    return jsonify({"isTestEnvironment": testEnvironment}), 200
+        testEnvironment = AppConfig().getIsTestEnvironment()
+        return jsonify({"isTestEnvironment": testEnvironment}), 200
 
 
 @app.route('/getEnvironment', methods=['GET'])
@@ -63,28 +63,6 @@ def delete_all_data_in_collection():
         except Exception as e:
             logging.exception("Error deleting data: %s", e)
             return e.args[0], 400
-
-
-@app.route('/readAllDataInCollection', methods=['POST'])
-def read_all_data_in_collection():
-    if request.is_json:
-        data = request.get_json()
-        collection = data['collection']
-        # logging(collection)
-        try:
-
-            data = db.read({}, collection)
-        except Exception as e:
-            # Log the error with exception information
-            logging.exception("Error reading purchase order: %s", e)
-            # Respond with an error message
-            return e.args[0], 400
-
-        # If everything went fine
-        return jsonify({
-            "message": "Data read successfully",
-            "data": data
-        }), 200
 
 
 @app.route('/firebaseLogin', methods=['POST'])
@@ -163,8 +141,9 @@ def create_employee():
         data = employeeData['employee']
 
         try:
-            data['dateJoined'] = datetime.strptime(data['dateJoined'],
-                                                   "%Y-%m-%d")
+
+            dateJoined_object = datetime.strptime(data['dateJoined'],
+                                                  "%Y-%m-%d")
 
             res = UserActions(userData).createEmployeeAction(
                 userData, {
@@ -176,7 +155,7 @@ def create_employee():
                     'resumePhotosList': data['resumePhotosList'],
                     'biodataPhotosList': data['biodataPhotosList'],
                     'email': data['email'],
-                    'dateJoined': data['dateJoined'],
+                    'dateJoined': dateJoined_object,
                     'company': data['company'],
                     'isRegular': data['isRegular'],
                     'isProductionEmployee': data['isProductionEmployee'],
@@ -205,16 +184,8 @@ def update_employee():
         employeeData = data['employeeData']
         dataToUpdate = data['dataToUpdate']
         try:
-
-            employeeData['dateJoined'] = datetime.strptime(
-                employeeData['dateJoined'], '%a, %d %b %Y %H:%M:%S %Z')
-
-            if 'dateJoined' in dataToUpdate:
-                dataToUpdate['dateJoined'] = datetime.strptime(
-                    dataToUpdate['dateJoined'], "%Y-%m-%d")
-
-            res = UserActions(userData).updateEmployeeAction(
-                userData, employeeData, dataToUpdate)
+            res = UserActions(userData).updateEmployeeAction(userData,
+                employeeData, dataToUpdate)
 
             return jsonify({
                 'message': 'Employee updated successfully!',
@@ -233,17 +204,18 @@ def create_offense():
     if request.is_json:
         data = request.get_json()
         userData = data['userData']
+        offense = data['offense']
 
         try:
-            res = UserActions(userData).createOffenseAction({
+            res = UserActions(userData).createOffenseAction(userData,{
                 '_id':
                 None,
-                'offense':
-                data['offense'],
+                'number':
+                offense['number'],
                 'description':
-                data['description'],
-                'penalty':
-                data['penalty'],
+                offense['description'],
+                'remedialActions':
+                offense['remedialActions'],
                 '_version':
                 0
             })
@@ -269,7 +241,7 @@ def update_offense():
         offenseData = data['offenseData']
         dataToUpdate = data['dataToUpdate']
         try:
-            res = UserActions(userData).updateOffenseAction(
+            res = UserActions(userData).updateOffenseAction(userData,
                 offenseData, dataToUpdate)
 
             return jsonify({
@@ -292,7 +264,7 @@ def delete_offense():
 
         offenseData = data['offenseData']
         try:
-            res = UserActions(userData).deleteOffenseAction(offenseData)
+            res = UserActions(userData).deleteOffenseAction(userData, offenseData)
 
             return jsonify({
                 'message': 'Offense deleted successfully!',
@@ -311,29 +283,30 @@ def create_memo():
     if request.is_json:
         data = request.get_json()
         userData = data['userData']
+        memo = data['memo']
 
         try:
-            res = UserActions(userData).createMemoAction({
+            res = UserActions(userData).createMemoAction(userData,{
                 'date':
-                data['date'],
+                datetime.now(timezone.utc),
                 'mediaList':
-                data['mediaList'],
+                memo['mediaList'],
                 'Employee':
-                data['Employee'],
+                memo['Employee'],
                 'memoPhotosList':
-                data['memoPhotosList'],
+                memo['memoPhotosList'],
                 'subject':
-                data['subject'],
+                memo['subject'],
                 'description':
-                data['description'],
+                memo['description'],
                 '_id':
                 None,
                 'MemoCode':
-                data['MemoCode'],
+                memo['MemoCode'],
                 'submitted':
-                data['submitted'],
+                False,
                 'reason':
-                data['reason'],
+                memo['reason'],
                 '_version':
                 0
             })
@@ -359,7 +332,7 @@ def submit_memo():
         memoData = data['memoData']
         reason = data['reason']
         try:
-            res = UserActions(userData).submitMemoAction(memoData, reason)
+            res = UserActions(userData).submitMemoAction(userData, memoData, reason)
 
             return jsonify({
                 'message': 'Memo submitted successfully!',
@@ -381,7 +354,7 @@ def delete_memo():
 
         memoData = data['memoData']
         try:
-            res = UserActions(userData).deleteMemoAction(memoData)
+            res = UserActions(userData).deleteMemoAction(userData, memoData)
 
             return jsonify({
                 'message': 'Memo deleted successfully!',
@@ -402,14 +375,20 @@ def getUserForTesting():
             print(Roles().getAllRolesWithPermissions())
 
             user = UserActions({
-                '_id': None,
+                '_id':
+                None,
                 'roles': [],
-                'createdAt': datetime.now(timezone.utc),
-                'isApproved': True,
+                'createdAt':
+                datetime.now(timezone.utc),
+                'isApproved':
+                True,
                 'image': 'https://www.google.com',
-                'displayName': 'TesTUseRnAme',
-                'email': 'test@email.com',
-                '_version': 0
+                'displayName':
+                'TesTUseRnAme',
+                'email':
+                'test@email.com',
+                '_version':
+                0
             })
 
             userData = user.createFirstUserAction('testUserId')
