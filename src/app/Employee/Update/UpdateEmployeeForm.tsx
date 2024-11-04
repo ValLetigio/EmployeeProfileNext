@@ -49,6 +49,7 @@ const CreateEmployeeForm = () => {
                 form.reset()
                 setFormData(EmployeeValue)  
                 setSelectedEmployee(EmployeeValue)
+                setDataToUpdate({})
                 setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
             } 
 
@@ -141,7 +142,7 @@ const CreateEmployeeForm = () => {
                 }}
             >
                 <option disabled selected value={""}>Select Employee</option>
-                {employeeOptions.map((employee, index) => (
+                {employeeOptions&&employeeOptions.map((employee, index) => (
                     <option key={index} value={index}>{employee?.name}</option>
                 ))}
                 <option value="null">None</option>

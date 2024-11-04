@@ -26,8 +26,8 @@ def get_is_dev_environment():
 @app.route('/getIsTestEnvironment', methods=['GET'])
 def get_is_test_environment():
 
-        testEnvironment = AppConfig().getIsTestEnvironment()
-        return jsonify({"isTestEnvironment": testEnvironment}), 200
+    testEnvironment = AppConfig().getIsTestEnvironment()
+    return jsonify({"isTestEnvironment": testEnvironment}), 200
 
 
 @app.route('/getEnvironment', methods=['GET'])
@@ -184,8 +184,8 @@ def update_employee():
         employeeData = data['employeeData']
         dataToUpdate = data['dataToUpdate']
         try:
-            res = UserActions(userData).updateEmployeeAction(userData,
-                employeeData, dataToUpdate)
+            res = UserActions(userData).updateEmployeeAction(
+                userData, employeeData, dataToUpdate)
 
             return jsonify({
                 'message': 'Employee updated successfully!',
@@ -207,18 +207,14 @@ def create_offense():
         offense = data['offense']
 
         try:
-            res = UserActions(userData).createOffenseAction(userData,{
-                '_id':
-                None,
-                'number':
-                offense['number'],
-                'description':
-                offense['description'],
-                'remedialActions':
-                offense['remedialActions'],
-                '_version':
-                0
-            })
+            res = UserActions(userData).createOffenseAction(
+                userData, {
+                    '_id': None,
+                    'number': offense['number'],
+                    'description': offense['description'],
+                    'remedialActions': offense['remedialActions'],
+                    '_version': 0
+                })
 
             return jsonify({
                 'message': 'Offense created successfully!',
@@ -241,8 +237,8 @@ def update_offense():
         offenseData = data['offenseData']
         dataToUpdate = data['dataToUpdate']
         try:
-            res = UserActions(userData).updateOffenseAction(userData,
-                offenseData, dataToUpdate)
+            res = UserActions(userData).updateOffenseAction(
+                userData, offenseData, dataToUpdate)
 
             return jsonify({
                 'message': 'Offense updated successfully!',
@@ -264,7 +260,8 @@ def delete_offense():
 
         offenseData = data['offenseData']
         try:
-            res = UserActions(userData).deleteOffenseAction(userData, offenseData)
+            res = UserActions(userData).deleteOffenseAction(
+                userData, offenseData)
 
             return jsonify({
                 'message': 'Offense deleted successfully!',
@@ -286,30 +283,20 @@ def create_memo():
         memo = data['memo']
 
         try:
-            res = UserActions(userData).createMemoAction(userData,{
-                'date':
-                datetime.now(timezone.utc),
-                'mediaList':
-                memo['mediaList'],
-                'Employee':
-                memo['Employee'],
-                'memoPhotosList':
-                memo['memoPhotosList'],
-                'subject':
-                memo['subject'],
-                'description':
-                memo['description'],
-                '_id':
-                None,
-                'MemoCode':
-                memo['MemoCode'],
-                'submitted':
-                False,
-                'reason':
-                memo['reason'],
-                '_version':
-                0
-            })
+            res = UserActions(userData).createMemoAction(
+                userData, {
+                    'date': datetime.now(timezone.utc),
+                    'mediaList': memo['mediaList'],
+                    'Employee': memo['Employee'],
+                    'memoPhotosList': memo['memoPhotosList'],
+                    'subject': memo['subject'],
+                    'description': memo['description'],
+                    '_id': None,
+                    'MemoCode': memo['MemoCode'],
+                    'submitted': False,
+                    'reason': memo['reason'],
+                    '_version': 0
+                })
 
             return jsonify({
                 'message': 'Memo created successfully!',
@@ -332,7 +319,8 @@ def submit_memo():
         memoData = data['memoData']
         reason = data['reason']
         try:
-            res = UserActions(userData).submitMemoAction(userData, memoData, reason)
+            res = UserActions(userData).submitMemoAction(
+                userData, memoData, reason)
 
             return jsonify({
                 'message': 'Memo submitted successfully!',
@@ -368,6 +356,28 @@ def delete_memo():
         return jsonify({"error": "Request must be JSON"}), 400
 
 
+@app.route('/readAllDataInCollection', methods=['POST'])
+def read_all_data_in_collection():
+    if request.is_json:
+        data = request.get_json()
+        collection = data['collection']
+        # logging(collection)
+        try:
+
+            data = db.read({}, collection)
+        except Exception as e:
+            # Log the error with exception information
+            logging.exception("Error reading purchase order: %s", e)
+            # Respond with an error message
+            return e.args[0], 400
+
+        # If everything went fine
+        return jsonify({
+            "message": "Data read successfully",
+            "data": data
+        }), 200
+
+
 @app.route('/getUserForTesting', methods=['GET'])
 def getUserForTesting():
     if AppConfig().getisLocalEnvironment():
@@ -375,20 +385,14 @@ def getUserForTesting():
             print(Roles().getAllRolesWithPermissions())
 
             user = UserActions({
-                '_id':
-                None,
+                '_id': None,
                 'roles': [],
-                'createdAt':
-                datetime.now(timezone.utc),
-                'isApproved':
-                True,
+                'createdAt': datetime.now(timezone.utc),
+                'isApproved': True,
                 'image': 'https://www.google.com',
-                'displayName':
-                'TesTUseRnAme',
-                'email':
-                'test@email.com',
-                '_version':
-                0
+                'displayName': 'TesTUseRnAme',
+                'email': 'test@email.com',
+                '_version': 0
             })
 
             userData = user.createFirstUserAction('testUserId')

@@ -42,6 +42,7 @@ export interface UserObject {
 }
 
 export interface Employee {
+    _id: string
     name: string;
     address: string;
     phoneNumber: string;
@@ -54,6 +55,7 @@ export interface Employee {
     isRegular: boolean;
     isProductionEmployee: boolean;
     dailyWage: number;
+    _version: number;
 }
 
 export interface DataToUpdate {
