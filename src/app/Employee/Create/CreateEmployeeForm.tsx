@@ -30,7 +30,7 @@ const CreateEmployeeForm = () => {
 
             console.log('formData:', formData)  
 
-            let finalFormData = {
+            const finalFormData = {
                 ...formData,
                 _id: "", 
                 _version: 0, 
@@ -212,7 +212,7 @@ const CreateEmployeeForm = () => {
             {/* isProductionEmployee */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className="label-text text-base">Is Production Employee?</p>
-                <input type="checkbox" defaultChecked className="checkbox" required id='isProductionEmployee'   
+                <input type="checkbox" defaultChecked className="checkbox"  id='isProductionEmployee'   
                     onChange={(e)=>setFormData({...formData, isProductionEmployee:e.target.checked})}/>
             </label> 
         </div>

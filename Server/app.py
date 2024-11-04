@@ -184,8 +184,16 @@ def update_employee():
         employeeData = data['employeeData']
         dataToUpdate = data['dataToUpdate']
         try:
-            res = UserActions(userData).updateEmployeeAction(
-                userData, employeeData, dataToUpdate)
+
+            employeeData['dateJoined'] = datetime.strptime(
+                employeeData['dateJoined'], '%a, %d %b %Y %H:%M:%S %Z')
+
+            if 'dateJoined' in dataToUpdate:
+                dataToUpdate['dateJoined'] = datetime.strptime(
+                    dataToUpdate['dateJoined'], "%Y-%m-%d")
+
+            res = UserActions(userData).updateEmployeeAction(userData,
+                employeeData, dataToUpdate)
 
             return jsonify({
                 'message': 'Employee updated successfully!',
