@@ -1,33 +1,57 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
+
+import { Employee, Offense } from '@/app/Schema';
 
 
 
 const CreateMemoForm = () => {
 
-  const { setToastOptions } = useAppContext()
+  const { setToastOptions, serverRequests, userData } = useAppContext()
 
   const [ formData, setFormData ] = useState({
     date: '',
-    Employee: {name:""}, 
+    Employee: {} as Employee, 
     description: '',
+    subject: '',
+    mediaList: [] as string[],
+    memoPhotosList: [] as string[],
+    MemoCode: {} as Offense,
+    reason: '',
+    submitted: false 
   })
+
+  const [ employeeOptions, setEmployeeOptions ] = useState<Employee[]>([])
+
+  const [ memoCodes, setMemoCodes ] = useState<Offense[]>([]) 
   
-  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
       try{
           const form = e.target as HTMLFormElement;  
           console.log('formData:', formData)  
+
+          const res = await serverRequests.createMemo(formData, userData)
+
+          if(res&&res.data){
+            setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
   
-          form.reset()
-          setFormData({
-            date: '', 
-            Employee: {name:""},
-            description: '',
-          }) 
+            form.reset()
+            setFormData({
+              date: '',
+              Employee: {} as Employee, 
+              description: '',
+              subject: '',
+              mediaList: [] as string[],
+              memoPhotosList: [] as string[],
+              MemoCode: {} as Offense,
+              reason: '',
+              submitted: false 
+            })
+          }
       }catch(e:unknown){ 
         console.error('Error creating employee:', e)
         setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
@@ -49,11 +73,42 @@ const CreateMemoForm = () => {
           reader.onloadend = () => {
               setFormData({
                   ...formData,
-                  [e.target.id]: reader.result
+                  [e.target.id]: [reader.result]
               })
           }
       }
   } 
+
+  const fetchEmployees = async () => {
+    try{ 
+      const employees = await serverRequests.fetchEmployeeList() 
+      setEmployeeOptions(employees?.data)
+    }catch(e:unknown){
+      console.error('Error fetching employees:', e)
+      setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+    }
+  } 
+
+  const fetchOffenses = async () => {
+    try{ 
+      const memoCodes = await serverRequests.fetchOffenseList() 
+      setMemoCodes(memoCodes?.data)
+      console.log('memoCodes:', memoCodes)
+    }catch(e:unknown){
+      console.error('Error fetching memoCodes:', e)
+      setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+    }
+  }
+
+  useEffect(()=>{
+    fetchEmployees() 
+    fetchOffenses()
+  },[])
+
+  useEffect(()=>{
+    console.log('formData:', formData)
+  },[formData])
+
 
   return (
     <form
@@ -65,17 +120,37 @@ const CreateMemoForm = () => {
       {/* date */}
       <label className="flex flex-col items-start gap-2 text-sm">
         Date
-        <input type="date" className="grow input input-bordered w-full" placeholder="Date" id='date' 
+        <input type="date" className="grow input input-bordered w-full" placeholder="Date" id='date' required
           onChange={handleInputChange}/>
-      </label>  
+      </label>   
 
       {/* employee */} 
-      <div className='flex flex-col text-sm gap-2 '>Employee
-        <select className="select select-bordered w-full " id='Employee' onChange={(e)=>setFormData({...formData, Employee: JSON.parse(e.target.value)})}>
-          <option disabled selected>Select Employee</option>
-          {[{name:'John Doe'},{name:'Jane Doe'},{name:'John Smith'}].map((employee, index) => (
-            <option key={index} value={JSON.stringify(employee)} >{employee.name}</option>
+      <div className='flex flex-col text-sm gap-2 '>Employee 
+        <select className="select select-bordered w-full " id='Employee' required
+          onChange={(e:any)=>{ 
+            setFormData({...formData, Employee: employeeOptions[e.target.value]})
+          }} 
+        >
+          <option disabled selected value={""}>Select Employee</option>
+          {employeeOptions&&employeeOptions.map((employee, index) => (
+            <option key={index} value={index}>{employee?.name}</option>
           ))}
+          <option value="null">None</option>
+        </select>
+      </div>
+
+      {/* Offense */} 
+      <div className='flex flex-col text-sm gap-2 '>Memo Code
+        <select className="select select-bordered w-full " id='MemoCode' required
+          onChange={(e:any)=>{ 
+            setFormData({...formData, MemoCode: memoCodes[e.target.value]})
+          }} 
+        >
+          <option disabled selected value={""}>Select Offense</option>
+          {memoCodes&&memoCodes.map((code, index) => (
+            <option key={index} value={index}>{code?.description}</option>
+          ))}
+          <option value="null">None</option>
         </select>
       </div>
 
@@ -88,34 +163,47 @@ const CreateMemoForm = () => {
           <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
         </svg>
   
-        <input type="text" className="grow placeholder:font-light" placeholder="Subject" id="Subject" required 
+        <input type="text" className="grow placeholder:font-light" placeholder="Subject" id="subject" required 
             onChange={handleInputChange}/>
         </label>
 
         {/* description */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Description" id='description'
+        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Description" id='description' required
           onChange={
             (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
               setFormData({ ...formData, description: e.target.value })
             }}> 
         </textarea>  
-      </div>     
+      </div>
+      
+      {/* Reason */}
+      <div className='flex flex-col gap-2 text-sm'>Reason  
+        {/* Reason */} 
+        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason' required
+          onChange={
+            (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
+              setFormData({ ...formData, reason: e.target.value })
+            }}> 
+        </textarea>  
+      </div> 
 
 
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
-        <div className='flex items-center mb-1 gap-1 relative'>Photo    
+        <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
+          <img src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-20`} alt="mediaList" />
         </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*' required 
+        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'   
           onChange={handleFileChange}/>
       </label>
 
 
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
-        <div className='flex items-center mb-1 gap-1 relative'>Memo Photo   
+      <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
+          <img src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-20`} alt="mediaList" />
         </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*' required 
+        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'   
           onChange={handleFileChange}/>
       </label>
 

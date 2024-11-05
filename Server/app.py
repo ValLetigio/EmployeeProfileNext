@@ -213,8 +213,8 @@ def update_employee():
                 dataToUpdate['dateJoined'] = datetime.strptime(
                     dataToUpdate['dateJoined'], "%Y-%m-%d")
 
-            res = UserActions(userData).updateEmployeeAction(userData,
-                employeeData, dataToUpdate)
+            res = UserActions(userData).updateEmployeeAction(
+                userData, employeeData, dataToUpdate)
 
             return jsonify({
                 'message': 'Employee updated successfully!',
@@ -236,18 +236,14 @@ def create_offense():
         offense = data['offense']
 
         try:
-            res = UserActions(userData).createOffenseAction(userData,{
-                '_id':
-                None,
-                'number':
-                offense['number'],
-                'description':
-                offense['description'],
-                'remedialActions':
-                offense['remedialActions'],
-                '_version':
-                0
-            })
+            res = UserActions(userData).createOffenseAction(
+                userData, {
+                    '_id': None,
+                    'number': offense['number'],
+                    'description': offense['description'],
+                    'remedialActions': offense['remedialActions'],
+                    '_version': 0
+                })
 
             return jsonify({
                 'message': 'Offense created successfully!',
@@ -270,8 +266,8 @@ def update_offense():
         offenseData = data['offenseData']
         dataToUpdate = data['dataToUpdate']
         try:
-            res = UserActions(userData).updateOffenseAction(userData,
-                offenseData, dataToUpdate)
+            res = UserActions(userData).updateOffenseAction(
+                userData, offenseData, dataToUpdate)
 
             return jsonify({
                 'message': 'Offense updated successfully!',
@@ -293,7 +289,8 @@ def delete_offense():
 
         offenseData = data['offenseData']
         try:
-            res = UserActions(userData).deleteOffenseAction(userData, offenseData)
+            res = UserActions(userData).deleteOffenseAction(
+                userData, offenseData)
 
             return jsonify({
                 'message': 'Offense deleted successfully!',
@@ -315,30 +312,20 @@ def create_memo():
         memo = data['memo']
 
         try:
-            res = UserActions(userData).createMemoAction(userData,{
-                'date':
-                datetime.now(timezone.utc),
-                'mediaList':
-                memo['mediaList'],
-                'Employee':
-                memo['Employee'],
-                'memoPhotosList':
-                memo['memoPhotosList'],
-                'subject':
-                memo['subject'],
-                'description':
-                memo['description'],
-                '_id':
-                None,
-                'MemoCode':
-                memo['MemoCode'],
-                'submitted':
-                False,
-                'reason':
-                memo['reason'],
-                '_version':
-                0
-            })
+            res = UserActions(userData).createMemoAction(
+                userData, {
+                    'date': datetime.now(timezone.utc),
+                    'mediaList': memo['mediaList'],
+                    'Employee': memo['Employee'],
+                    'memoPhotosList': memo['memoPhotosList'],
+                    'subject': memo['subject'],
+                    'description': memo['description'],
+                    '_id': None,
+                    'MemoCode': memo['MemoCode'],
+                    'submitted': False,
+                    'reason': memo['reason'],
+                    '_version': 0
+                })
 
             return jsonify({
                 'message': 'Memo created successfully!',
@@ -361,7 +348,8 @@ def submit_memo():
         memoData = data['memoData']
         reason = data['reason']
         try:
-            res = UserActions(userData).submitMemoAction(userData, memoData, reason)
+            res = UserActions(userData).submitMemoAction(
+                userData, memoData, reason)
 
             return jsonify({
                 'message': 'Memo submitted successfully!',
