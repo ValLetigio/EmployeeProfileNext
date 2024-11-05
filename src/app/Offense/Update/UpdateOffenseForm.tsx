@@ -131,7 +131,7 @@ const UpdateOffenseForm = () => {
 
       {/* submit */}
       <button 
-        className='btn bg-blue-500 text-white w-full place-self-start my-6' 
+        className='btn bg-violet-500 text-white w-full place-self-start my-6' 
         type='submit'
       >Update</button>
     </form>

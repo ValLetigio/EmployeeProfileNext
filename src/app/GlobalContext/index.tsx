@@ -200,10 +200,11 @@ export default function ContextProvider({
     }).catch((error) => {
       console.log('error', error);
     });
-  }, []) 
-  
-  useEffect(() => {
+  }, [])  
+
+  useEffect(() => { 
     if (session?.user) {
+      
       const user = session.user as Session["user"] & {
         roles?: string[];
         _id?: string;
@@ -227,7 +228,7 @@ export default function ContextProvider({
 
       // console.log('userData', userData);
       setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
-    } 
+    }  
 
     if (status === 'unauthenticated' && !isTestEnv)  {
       router.push('/api/auth/signin');

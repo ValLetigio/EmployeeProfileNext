@@ -144,8 +144,7 @@ const CreateEmployeeForm = () => {
                 onChange={(e:any)=>{
                     setSelectedEmployee(employeeOptions[e.target.value])
                     setFormData(employeeOptions[e.target.value])
-                }}
-                value={formData?._id && ""}
+                }} 
             >
                 <option disabled selected value={""}>Select Employee</option>
                 {employeeOptions&&employeeOptions.map((employee, index) => (
@@ -309,9 +308,9 @@ const CreateEmployeeForm = () => {
 
         {/* submit */}
         <button 
-            className='btn bg-blue-500 text-white w-full place-self-start my-6 ' 
+            className='btn bg-violet-500 text-white w-full place-self-start my-6 ' 
             type='submit' disabled={disableSaveButton} id='save'
-        >Save</button>
+        >Update</button>
 
       
     </form>
