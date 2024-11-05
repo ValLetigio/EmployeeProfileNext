@@ -193,7 +193,7 @@ const CreateMemoForm = () => {
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
           <img src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-20`} alt="mediaList" />
         </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*' required 
+        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'   
           onChange={handleFileChange}/>
       </label>
 
@@ -203,7 +203,7 @@ const CreateMemoForm = () => {
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
           <img src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-20`} alt="mediaList" />
         </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*' required 
+        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'   
           onChange={handleFileChange}/>
       </label>
 
