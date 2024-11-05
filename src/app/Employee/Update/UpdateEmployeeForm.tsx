@@ -116,7 +116,7 @@ const CreateEmployeeForm = () => {
 
     const fetchEmployees = async () => {
         try{ 
-            const employees = await serverRequests.fetchEmployeeList('Employee')
+            const employees = await serverRequests.fetchEmployeeList()
             console.log(employees?.data)
             setEmployeeOptions(employees?.data)
         }catch(e:unknown){
