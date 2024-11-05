@@ -109,6 +109,29 @@ class ServerRequests extends Server {
     }
   }
 
+  async deleteEmployee(employee: Employee, userObject: UserDataSchema): Promise<any> {
+    try {
+      const data = {
+        employeeData: employee,
+        userData: userObject,
+      };
+      const jsonData = JSON.stringify(data);
+      const res: AxiosResponse = await axios.post(`${this.url}/deleteEmployee`, jsonData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return res.data;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        throw new Error(error.response.data);
+      } else {
+        throw new Error(error.message || "An error occurred during login.");
+      }
+    }
+  }
+
   async getUserForTesting(): Promise<any> {
     try {
       const res: AxiosResponse = await axios.get(`${this.url}/getUserForTesting`, {
@@ -255,6 +278,19 @@ class ServerRequests extends Server {
       } else {
         throw new Error(error.message || "An error occurred during login.");
       }
+    }
+  }
+
+  async getAllMemoThatsNotSubmitted (): Promise<any> {
+    try {
+      const res: AxiosResponse = await axios.get(`${this.url}/getAllMemoThatsNotSubmitted`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return res.data;
+    } catch (error: any) {
+      return error.response?.data || error.message;
     }
   }
 

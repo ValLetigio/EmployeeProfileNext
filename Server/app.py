@@ -227,6 +227,27 @@ def update_employee():
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 
+@app.route('/deleteEmployee', methods=['POST'])
+def delete_employee():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+
+        employeeData = data['employeeData']
+        try:
+            res = UserActions(userData).deleteEmployeeAction(userData, employeeData)
+
+            return jsonify({
+                'message': 'Employee deleted successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error processing Employee: %s", e)
+            return e.args[0], 400
+
+    else:
+        return jsonify({"error": "Request must be JSON"}), 400
+
 
 @app.route('/createOffense', methods=['POST'])
 def create_offense():
@@ -375,6 +396,26 @@ def delete_memo():
 
             return jsonify({
                 'message': 'Memo deleted successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error processing Memo: %s", e)
+            return e.args[0], 400
+
+    else:
+        return jsonify({"error": "Request must be JSON"}), 400
+    
+@app.route('/getAllMemoThatsNotSubmitted', methods=['POST'])
+def get_all_memo_thats_not_submitted():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+
+        try:
+            res = UserActions(userData).getAllMemoThatsNotSubmittedAction()
+
+            return jsonify({
+                'message': 'Memo read successfully!',
                 'data': res
             }), 200
         except Exception as e:
