@@ -18,6 +18,8 @@ import { getStorage } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { env } from 'process';
 
+
+
 // Define the properties of the context
 interface AppContextProps {
   userData: UserDataFromGoogleSchema;
@@ -51,6 +53,7 @@ const AppContext = createContext<AppContextProps>({
   serverRequests: new ServerRequests(false),
 });
 
+
 export default function ContextProvider({
   children,
 }: {
@@ -65,6 +68,7 @@ export default function ContextProvider({
   const app = initializeApp(firebaseConfig);
   const storage = getStorage(app);
   const auth = getAuth(app);
+  const isTestEnv =  process.env.NEXT_PUBLIC_CYPRESS_IS_TEST_ENV
 
   // User state initialized with an empty user object
   const [userData, setUserData] = useState<UserDataFromGoogleSchema>({
@@ -79,7 +83,9 @@ export default function ContextProvider({
   });
 
   const [sampleText] = useState<string>('');
-  const [cards, setCards] = useState<CardsSchema>({});
+  const [cards, setCards] = useState<CardsSchema>({})
+  
+
 
   const [toastOptions, setToastOptions] = useState({open:false, message: '', type: '', timer: 0});
 
@@ -214,8 +220,16 @@ export default function ContextProvider({
       setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     } 
 
-    if (status === 'unauthenticated' ) {
+    if (status === 'unauthenticated' && !isTestEnv)  {
       router.push('/api/auth/signin');
+    }
+    if (status === 'unauthenticated' && isTestEnv) {
+      router.push('/');
+      serverRequests.deleteAllDataInCollection('User')
+      serverRequests.getUserForTesting().then((res) => {
+        console.log('res', res);
+        setUserData(res.data);
+      })
     }
     
   }, [session, status, router]);
