@@ -281,9 +281,15 @@ class ServerRequests extends Server {
     }
   }
 
-  async getAllMemoThatsNotSubmitted (): Promise<any> {
+  async getAllMemoThatsNotSubmitted (userData: UserDataSchema): Promise<any> {
     try {
-      const res: AxiosResponse = await axios.get(`${this.url}/getAllMemoThatsNotSubmitted`, {
+      const data = {
+        userData: userData,
+      };
+      
+      const jsonData = JSON.stringify(data);
+
+      const res: AxiosResponse = await axios.post(`${this.url}/getAllMemoThatsNotSubmitted`, jsonData, {
         headers: {
           "Content-Type": "application/json",
         },

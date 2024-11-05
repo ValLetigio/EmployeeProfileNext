@@ -20,7 +20,7 @@ const CreateMemoForm = () => {
     mediaList: [] as string[],
     memoPhotosList: [] as string[],
     MemoCode: {} as Offense,
-    reason: '',
+    reason: null as unknown as string,
     submitted: false 
   })
 
@@ -48,7 +48,7 @@ const CreateMemoForm = () => {
               mediaList: [] as string[],
               memoPhotosList: [] as string[],
               MemoCode: {} as Offense,
-              reason: '',
+              reason: null as unknown as string,
               submitted: false 
             })
           }
@@ -179,7 +179,7 @@ const CreateMemoForm = () => {
       {/* Reason */}
       <div className='flex flex-col gap-2 text-sm'>Reason  
         {/* Reason */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason' required
+        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason'  
           onChange={
             (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
               setFormData({ ...formData, reason: e.target.value })

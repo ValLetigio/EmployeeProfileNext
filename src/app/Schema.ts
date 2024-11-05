@@ -85,5 +85,5 @@ export interface Memo {
     description: string;
     MemoCode: Offense;
     submitted: boolean;
-    reason: string;
+    reason: string | null;
 }
