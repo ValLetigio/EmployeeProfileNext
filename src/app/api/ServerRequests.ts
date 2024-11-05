@@ -281,16 +281,25 @@ class ServerRequests extends Server {
     }
   }
 
-  async getAllMemoThatsNotSubmitted (): Promise<any> {
+  async getAllMemoThatsNotSubmitted (userData: UserDataSchema): Promise<any> {
     try {
-      const res: AxiosResponse = await axios.get(`${this.url}/getAllMemoThatsNotSubmitted`, {
+      const data = {
+        userData: userData,
+      };
+      const jsonData = JSON.stringify(data);
+      const res: AxiosResponse = await axios.post(`${this.url}/getAllMemoThatsNotSubmitted`, jsonData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+
       return res.data;
     } catch (error: any) {
-      return error.response?.data || error.message;
+      if (error.response && error.response.data) {
+        throw new Error(error.response.data);
+      } else {
+        throw new Error(error.message || "An error occurred during login.");
+      }
     }
   }
 
