@@ -19,6 +19,7 @@ class ServerRequests extends Server {
   async getEnvironment(): Promise<any> {
     try {
       console.log("this.url", this.url);
+      Cypress.env('isTestEnv')
       const res: AxiosResponse = await axios.get(`${this.url}/getEnvironment`);
       return res.data;
     } catch (error: any) {
