@@ -95,6 +95,7 @@ export default function ContextProvider({
           "Employee": [
               {
               path: '/Employee/Create',
+              id: 'create-employee',
               title: 'Create Employee',
               description: 'Create a new Employee Record',
               icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -104,6 +105,7 @@ export default function ContextProvider({
               },
               {
               path: '/Employee/Update',
+              id: 'update-employee',
               title: 'Update Employee',
               description: 'Update an Employee',
               icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -114,6 +116,7 @@ export default function ContextProvider({
               },
               {
               path: '/Employee/Delete',
+              id: 'delete-employee',
               title: 'Delete Employee',
               description: 'Delete an Employee',
               icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -125,6 +128,7 @@ export default function ContextProvider({
           "Offense": [
               {
               path: '/Offense/Create',
+              id: 'create-offense',
               title: 'Create Offense',
               description: 'Create an Offense', 
               icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -134,6 +138,7 @@ export default function ContextProvider({
               },
               {
               path: '/Offense/Update',
+              id: 'update-offense',
               title: 'Update Offense',
               description: 'Update an Offense',
               icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -143,6 +148,7 @@ export default function ContextProvider({
               },
               {
               path: '/Offense/Delete',
+              id: 'delete-offense',
               title: 'Delete Offense',
               description: 'Delete an Offense', 
               icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -154,6 +160,7 @@ export default function ContextProvider({
           "Memorandum": [
               {
               path: '/Memorandum/Create',
+              id: 'create-memorandum',
               title: 'Create Memorandum',
               description: 'Create a Memorandum',
               icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -163,6 +170,7 @@ export default function ContextProvider({
               },
               {
               path: '/Memorandum/Submit',
+              id: 'submit-memorandum',
               title: 'Submit Memorandum',
               description: 'Submit a Memorandum',
               icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -172,6 +180,7 @@ export default function ContextProvider({
               },
               {
               path: '/Memorandum/Delete',
+              id: 'delete-memorandum',
               title: 'Delete Memorandum',
               description: 'Delete a Memorandum',
               icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">

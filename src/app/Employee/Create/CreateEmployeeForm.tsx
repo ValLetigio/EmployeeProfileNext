@@ -235,6 +235,7 @@ const CreateEmployeeForm = () => {
         <button 
             className='btn bg-blue-500 text-white w-full place-self-start my-6' 
             type='submit'
+            id='submit'
         >Create</button>
 
       

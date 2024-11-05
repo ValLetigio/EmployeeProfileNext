@@ -300,7 +300,7 @@ const CreateEmployeeForm = () => {
         {/* submit */}
         <button 
             className='btn bg-blue-500 text-white w-full place-self-start my-6 ' 
-            type='submit' disabled={disableSaveButton}
+            type='submit' disabled={disableSaveButton} id='save'
         >Save</button>
 
       

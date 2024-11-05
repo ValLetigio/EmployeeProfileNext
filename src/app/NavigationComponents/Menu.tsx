@@ -27,7 +27,7 @@ const Menu: FC<MenuButtonProps> = ({ open, cards, pathname, setOpen }) => {
           cards[key].map((card, index) =>  {
             const isActive = pathname.startsWith(card.path)
             return (
-              <div className='h-14 w-14 md:h-16 md:w-16 text-xl ' key={`${key} ${index}`}>
+              <div className='h-14 w-14 md:h-16 md:w-16 text-xl ' key={`${key} ${index}`} id={card.id}>
                 <Link href={card.path}
                   className={` tooltip tooltip-top 
                     ${isActive? 'border-blue-500 bg-blue-500 text-white' 

@@ -1,6 +1,7 @@
 
 export interface CardSchema {
     path: string;
+    id: string;
     icon: React.ReactNode; 
     roles: string[];
     description: string;
