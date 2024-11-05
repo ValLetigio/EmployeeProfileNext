@@ -76,13 +76,13 @@ export interface Offense {
     remedialActions: string[];
 }
 export interface Memo {
-    // date: string;
+    date: string;
     mediaList: string[];
     Employee: Employee;
     memoPhotosList: string[];
     subject: string;
     description: string;
     MemoCode: Offense;
-    // submitted: boolean;
+    submitted: boolean;
     reason: string;
 }
