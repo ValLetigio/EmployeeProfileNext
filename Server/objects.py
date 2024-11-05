@@ -34,6 +34,9 @@ class Roles:
                 'canUpdateEmployee': {
                     'description': 'can update an employee'
                 },
+                'canDeleteEmployee': {
+                    'description': 'can delete an employee'
+                },
             },
             'Offense': {
                 'canCreateOffense': {
@@ -206,6 +209,10 @@ class User:
         print(f"Removed role {roleToRemove} from category {category}")
 
         return user
+    
+    def getAllMemoThatsNotSubmitted(self):
+        memos = db.read({'submitted': False}, 'Memo')
+        return memos
 
     def validate_email(self, email):
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -265,6 +272,11 @@ class UserActions(User):
         employee = Employee(data)
         res = employee.updateEmployee(user, dataToUpdate)
         return db.update({'_id': res['_id']}, res, 'Employee')
+    
+    def deleteEmployeeAction(self, user, data):
+        employee = Employee(data)
+        res = employee.deleteEmployee(user)
+        return db.delete(res, 'Employee')
 
     def createOffenseAction(self, user, data):
         offense = Offense(data)
@@ -295,6 +307,9 @@ class UserActions(User):
         memo = Memo(data)
         res = memo.submitMemo(user, reason)
         return db.update({'_id': res['_id']}, res, 'Memo')
+    
+    def getAllMemoThatsNotSubmittedAction(self):
+        return self.getAllMemoThatsNotSubmitted()
 
 
 class Memo:
@@ -479,6 +494,17 @@ class Employee:
 
         newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
         return newData
+    
+    def deleteEmployee(self, user):
+        if 'canDeleteEmployee' not in user['roles']['Employee']:
+            raise ValueError(
+                'User does not have permission to delete an employee')
+
+        employee = db.read({'_id': self._id}, 'Employee')
+        if len(employee) == 0:
+            raise ValueError('Employee does not exist')
+
+        return self.to_dict()
 
     pass
 
