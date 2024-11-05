@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
-import { Employee, Offense } from '@/app/Schema';
+import { Employee, Offense, Memo } from '@/app/Schema';
  
 const SubmitMemoForm = () => {
 
   const { setToastOptions, serverRequests, userData } = useAppContext()
 
-  const defaultEmployee = {
+  const defaultMemo = {
     date: '',
     Employee: {} as Employee, 
     description: '',
@@ -18,27 +18,30 @@ const SubmitMemoForm = () => {
     mediaList: [] as string[],
     memoPhotosList: [] as string[],
     MemoCode: {} as Offense,
-    reason: null as unknown as string,
+    reason: '',
     submitted: false 
   }
 
 
-  const [ formData, setFormData ] = useState(defaultEmployee) 
+  const [ formData, setFormData ] = useState(defaultMemo) 
+
+  const [ memoOptions, setMemoOptions ] = useState<Memo[]>([])
 
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
       try{
-          const form = e.target as HTMLFormElement;  
-          console.log('formData:', formData)  
+          const form = e.target as HTMLFormElement;   
 
-          const res = await serverRequests.createMemo(formData, userData)
+          const res = await serverRequests.submitMemo(formData, formData.reason, userData)
 
           if(res&&res.data){
             setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
   
             form.reset()
-            setFormData(defaultEmployee)
+            setFormData(defaultMemo)
+
+            getAllMemoThatsNotSubmitted()
           }
       }catch(e:unknown){ 
         console.error('Error creating employee:', e)
@@ -62,10 +65,11 @@ const SubmitMemoForm = () => {
   }  
 
 
-  const getAllMemoThatsNotSubmitted = async () => {
+  const getAllMemoThatsNotSubmitted = async () => { 
     try{
       const res = await serverRequests.getAllMemoThatsNotSubmitted(userData)
       if(res){
+        setMemoOptions(res.data)
         console.log('res:', res.data)
       }
     }catch(e:unknown){ 
@@ -76,13 +80,12 @@ const SubmitMemoForm = () => {
 
 
   useEffect(()=>{
-    getAllMemoThatsNotSubmitted()
-  },[])
+    if(userData&&userData._id){
+      getAllMemoThatsNotSubmitted()
+    }
+  },[userData]) 
 
-
-//   useEffect(()=>{
-//     console.log('formData:', formData)
-//   },[formData])
+  console.log(formData)
 
 
   return (
@@ -92,20 +95,37 @@ const SubmitMemoForm = () => {
     >
       <h2 className='font-semibold'>Memorandum Submition</h2>
 
+      {/* Memorandum to Submit */} 
+      <div className='flex flex-col text-sm gap-2 '>Offense to Update 
+        <select className="select select-bordered w-full " id='Employee' required
+          onChange={(e:any)=>{ 
+            e.target.value=="null"?setFormData(defaultMemo):setFormData({ ...memoOptions[e.target.value], reason: memoOptions[e.target.value].reason || '' })
+          }}  
+        >
+          <option disabled selected value={""}>Select Offense </option>
+          {memoOptions&&memoOptions.map((memo, index) => (
+            <option key={index} value={index}>{memo?.Employee?.name}, {memo?.description}</option>
+          ))}
+          <option value="null">None</option>
+        </select>
+      </div>
+
+
       {/* date */}
       <label className="flex flex-col items-start gap-2 text-sm">
         Date
-        <input type="date" className="grow input input-bordered w-full" placeholder="Date" id='date' value={formData?.date}/>
+        <input type="date" className="grow input input-bordered w-full" placeholder="Date" id='date' 
+        value={formData?.date?new Date(formData?.date).toISOString().split('T')[0]:''}/>
       </label>   
 
       {/* employee */} 
       <div className='flex flex-col text-sm gap-2 '>Employee  
-            <label className="input input-bordered flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-gray-500">
-                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
-                </svg> 
-                <input type="text" className="grow" placeholder="Name" id="name" value={formData?.Employee?.name}  />
-            </label>  
+        <label className="input input-bordered flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-gray-500">
+                <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+            </svg> 
+            <input type="text" className="grow" placeholder="Name" id="name" value={formData?.Employee?.name || ""}  />
+        </label>  
       </div> 
 
       {/* memo */}
@@ -122,7 +142,7 @@ const SubmitMemoForm = () => {
 
         {/* description */} 
         <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Description" id='description' 
-        value={formData?.MemoCode?.description} 
+        value={formData?.MemoCode?.description || ""} 
         > 
         </textarea>  
       </div>
