@@ -15,8 +15,8 @@ const CreateOffenseForm = () => {
   })
 
   const remedialActions = [
-    "Verbal Warning",
-    "Written Warning",
+    "Verbal-Warning",
+    "Written-Warning",
     "Counseling or Training",
     "Performance Improvement Plan (PIP)",
     "Suspension",
@@ -85,7 +85,7 @@ const CreateOffenseForm = () => {
           {remedialActions.map((action, index) => (
             <input className="join-item btn btn-sm btn-neutral font-normal tracking-tight checked:hover:brightness-100 hover:brightness-150" 
               onChange={handleCheckboxChange}
-              type="checkbox" name="options" value={action} aria-label={action} key={index}/>
+              type="checkbox" name="options" value={action} aria-label={action} key={index} id={action}/>
           ))} 
         </div>
       </div> 
@@ -94,6 +94,7 @@ const CreateOffenseForm = () => {
       <button 
         className='btn bg-blue-500 text-white w-full place-self-start my-6' 
         type='submit'
+        id='create-offense-button'
       >Create</button>
     </form>
   )

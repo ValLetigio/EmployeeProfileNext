@@ -60,6 +60,9 @@ describe('template spec', () => {
     // console.log(loginResponse);
     // expect(loginResponse).to.have.property('message', 'User logged in successfully');
     // cy.visit('/Employee/Create')
+
+    // const memoWithoutSubmitted = await serverRequests.getAllMemoThatsNotSubmitted(userObject);
+    // console.log(memoWithoutSubmitted);
   })
 
   it('Redirects to Employee and create and update employee', async () => {
@@ -119,6 +122,11 @@ describe('template spec', () => {
     cy.url().should('include', '/')
     cy.get('#menu-button').click()
     cy.get('#create-offense').click()
+    cy.get('#description').type('Employee was late to work')
+    cy.get('#Verbal-Warning').click()
+    cy.get('#Written-Warning').click()
+
+    cy.get('#create-offense-button').click()
   })
 
   // it('creates and updates employee server request', async () => {
