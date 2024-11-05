@@ -14,6 +14,7 @@ def createUserObject(userId, email='test@gmail.com', roles=[]):
         'createdAt': datetime.datetime.now(),
         'isApproved': True,
         'email': email,
+        'image': 'testImage',
         'displayName': 'testDisplayName',
     }
 
@@ -245,7 +246,7 @@ def test_delete_offense():
         db.delete({},'Offense')
         pass
 
-def test_update_employee():
+def test_create_update_delete_employee():
     try:
         user = UserActions(userObject)
         userCreated = user.createFirstUserAction('id7')
@@ -261,6 +262,12 @@ def test_update_employee():
         getEmployee = db.read({'_id':updateEmployee[0]['_id']},'Employee',findOne=True)
 
         assert getEmployee['name'] == 'name2'
+
+        deleteEmployee = user.deleteEmployeeAction(userCreated, getEmployee)
+
+        employees = user.readCollection('Employee')
+
+        assert len(employees) == 0
     finally:
         db.delete({},'User')
         db.delete({},'Employee')
@@ -278,6 +285,10 @@ def test_submit_and_delete_memo():
         assert getMemo['subject'] == memo['subject']
 
         reason = 'Reason for submission'
+
+        memoToSubmit = user.getAllMemoThatsNotSubmittedAction()
+
+        assert len(memoToSubmit) == 1
 
         submitMemo = user.submitMemoAction(userCreated, memo, reason)
 
@@ -346,7 +357,7 @@ if __name__ == '__main__':
     test_create_offense_employee_memo()
     test_update_offense()
     test_delete_offense()
-    test_update_employee()
+    test_create_update_delete_employee()
     test_submit_and_delete_memo()
     test_submit_memo_without_reason()
     test_delete_non_existent_offense()
