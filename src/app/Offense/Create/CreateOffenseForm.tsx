@@ -35,8 +35,7 @@ const CreateOffenseForm = () => {
 
           if(formData.remedialActions.length === 0){
             throw new Error('Remedial Actions must be selected')
-          }else{
-
+          }else{ 
             const res = await serverRequests.createOffense(formData, userData)
 
             setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
@@ -93,8 +92,8 @@ const CreateOffenseForm = () => {
 
       {/* submit */}
       <button 
-          className='btn bg-blue-500 text-white w-full place-self-start my-6' 
-          type='submit'
+        className='btn bg-blue-500 text-white w-full place-self-start my-6' 
+        type='submit'
       >Create</button>
     </form>
   )

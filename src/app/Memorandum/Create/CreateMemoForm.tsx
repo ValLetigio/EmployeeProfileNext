@@ -14,38 +14,44 @@ const CreateMemoForm = () => {
 
   const [ formData, setFormData ] = useState({
     date: '',
-    Employee: {}, 
+    Employee: {} as Employee, 
     description: '',
     subject: '',
-    mediaList: [""],
-    memoPhotosList: [""],
-    MemoCode: {},
+    mediaList: [] as string[],
+    memoPhotosList: [] as string[],
+    MemoCode: {} as Offense,
     reason: '',
     submitted: false 
   })
 
   const [ employeeOptions, setEmployeeOptions ] = useState<Employee[]>([])
 
-  // const [ selectedEmployee, setSelectedEmployee ] = useState<Employee | null>(null)
+  const [ memoCodes, setMemoCodes ] = useState<Offense[]>([]) 
   
-  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
       try{
           const form = e.target as HTMLFormElement;  
           console.log('formData:', formData)  
+
+          const res = await serverRequests.createMemo(formData, userData)
+
+          if(res&&res.data){
+            setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
   
-          form.reset()
-          setFormData({
-            date: '',
-            Employee: {}, 
-            description: '',
-            subject: '',
-            mediaList: [""],
-            memoPhotosList: [""],
-            MemoCode: {},
-            reason: '',
-            submitted: false 
-          }) 
+            form.reset()
+            setFormData({
+              date: '',
+              Employee: {} as Employee, 
+              description: '',
+              subject: '',
+              mediaList: [] as string[],
+              memoPhotosList: [] as string[],
+              MemoCode: {} as Offense,
+              reason: '',
+              submitted: false 
+            })
+          }
       }catch(e:unknown){ 
         console.error('Error creating employee:', e)
         setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
@@ -75,7 +81,7 @@ const CreateMemoForm = () => {
 
   const fetchEmployees = async () => {
     try{ 
-      const employees = await serverRequests.fetchEmployeeList('Employee') 
+      const employees = await serverRequests.fetchEmployeeList() 
       setEmployeeOptions(employees?.data)
     }catch(e:unknown){
       console.error('Error fetching employees:', e)
@@ -83,13 +89,26 @@ const CreateMemoForm = () => {
     }
   } 
 
-  useEffect(()=>{
-    fetchEmployees() 
-  },[])   
+  const fetchOffenses = async () => {
+    try{ 
+      const memoCodes = await serverRequests.fetchOffenseList() 
+      setMemoCodes(memoCodes?.data)
+      console.log('memoCodes:', memoCodes)
+    }catch(e:unknown){
+      console.error('Error fetching memoCodes:', e)
+      setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+    }
+  }
 
   useEffect(()=>{
-    console.log(formData)
-  } ,[formData])
+    fetchEmployees() 
+    fetchOffenses()
+  },[])
+
+  useEffect(()=>{
+    console.log('formData:', formData)
+  },[formData])
+
 
   return (
     <form
@@ -101,13 +120,13 @@ const CreateMemoForm = () => {
       {/* date */}
       <label className="flex flex-col items-start gap-2 text-sm">
         Date
-        <input type="date" className="grow input input-bordered w-full" placeholder="Date" id='date' 
+        <input type="date" className="grow input input-bordered w-full" placeholder="Date" id='date' required
           onChange={handleInputChange}/>
       </label>   
 
       {/* employee */} 
-      <div className='flex flex-col text-sm gap-2 '>Employee to Edit
-        <select className="select select-bordered w-full " id='Employee'  
+      <div className='flex flex-col text-sm gap-2 '>Employee 
+        <select className="select select-bordered w-full " id='Employee' required
           onChange={(e:any)=>{ 
             setFormData({...formData, Employee: employeeOptions[e.target.value]})
           }} 
@@ -115,6 +134,21 @@ const CreateMemoForm = () => {
           <option disabled selected value={""}>Select Employee</option>
           {employeeOptions&&employeeOptions.map((employee, index) => (
             <option key={index} value={index}>{employee?.name}</option>
+          ))}
+          <option value="null">None</option>
+        </select>
+      </div>
+
+      {/* Offense */} 
+      <div className='flex flex-col text-sm gap-2 '>Memo Code
+        <select className="select select-bordered w-full " id='MemoCode' required
+          onChange={(e:any)=>{ 
+            setFormData({...formData, MemoCode: memoCodes[e.target.value]})
+          }} 
+        >
+          <option disabled selected value={""}>Select Offense</option>
+          {memoCodes&&memoCodes.map((code, index) => (
+            <option key={index} value={index}>{code?.description}</option>
           ))}
           <option value="null">None</option>
         </select>
@@ -134,19 +168,30 @@ const CreateMemoForm = () => {
         </label>
 
         {/* description */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Description" id='description'
+        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Description" id='description' required
           onChange={
             (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
               setFormData({ ...formData, description: e.target.value })
             }}> 
         </textarea>  
-      </div>     
+      </div>
+      
+      {/* Reason */}
+      <div className='flex flex-col gap-2 text-sm'>Reason  
+        {/* Reason */} 
+        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason' required
+          onChange={
+            (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
+              setFormData({ ...formData, reason: e.target.value })
+            }}> 
+        </textarea>  
+      </div> 
 
 
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
-          <img src={formData?.mediaList[0]} className='h-20' alt="mediaList" />
+          <img src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-20`} alt="mediaList" />
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*' required 
           onChange={handleFileChange}/>
@@ -156,7 +201,7 @@ const CreateMemoForm = () => {
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
-          <img src={formData?.memoPhotosList[0]} className='h-20' alt="mediaList" />
+          <img src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-20`} alt="mediaList" />
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*' required 
           onChange={handleFileChange}/>
