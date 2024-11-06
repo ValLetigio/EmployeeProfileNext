@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
 import { Employee } from '@/app/Schema'
 
@@ -9,6 +9,8 @@ import { useAppContext } from '@/app/GlobalContext'
 const DeleteEmployeeForm = () => {
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
+
+    const formRef = useRef<HTMLFormElement>(null)
 
     const defaultFormData = {
         _id: '',
@@ -48,6 +50,7 @@ const DeleteEmployeeForm = () => {
                     form.reset() 
                     setFormData(defaultFormData)  
                     fetchEmployees()
+                    formRef.current?.scrollIntoView({ behavior: 'smooth' })
                 }
 
             }catch(e:unknown){  
@@ -72,7 +75,7 @@ const DeleteEmployeeForm = () => {
     },[])   
 
   return (
-    <form className={` form-style `} aria-disabled={true}
+    <form className={` form-style `} aria-disabled={true} ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     >
         <h2 className='font-semibold'>Employee Deletion</h2>

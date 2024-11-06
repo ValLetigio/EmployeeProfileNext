@@ -10,6 +10,8 @@ const UpdateOffenseForm = () => {
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
+    const formRef = React.useRef<HTMLFormElement>(null)
+
     const defaultOffense = 
         {description:"", remedialActions:[]as string[], number:0}
 
@@ -61,6 +63,8 @@ const UpdateOffenseForm = () => {
               setFormData(defaultOffense) 
 
               fetchOffenses()
+
+              formRef.current?.scrollIntoView({ behavior: 'smooth' })
             }
         }catch(e:unknown){ 
           console.error('Error creating employee:', e)
@@ -89,7 +93,7 @@ const UpdateOffenseForm = () => {
 
 
   return (
-    <form className='form-style' onSubmit={handleSubmit}>
+    <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
       <h2 className='font-semibold'>Update Offense</h2> 
 
       {/* Ofense to Update */} 

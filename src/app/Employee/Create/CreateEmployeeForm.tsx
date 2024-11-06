@@ -1,12 +1,14 @@
 'use client'
 
-import React, { useEffect, useState } from 'react' 
+import React, { useEffect, useState, useRef } from 'react' 
 
 import { useAppContext } from '@/app/GlobalContext' 
 
 const CreateEmployeeForm = () => {
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
+
+    const formRef = useRef<HTMLFormElement>(null)
 
     const defaultFormData = {
         name: '',
@@ -49,6 +51,7 @@ const CreateEmployeeForm = () => {
                     setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
                     form.reset() 
                     setFormData(defaultFormData)  
+                    formRef.current?.scrollIntoView({ behavior: 'smooth' })
                 }
     
             }catch(e:unknown){  
@@ -90,6 +93,7 @@ const CreateEmployeeForm = () => {
 
   return (
     <form className={` form-style `}
+        ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     >
         <h2 className='font-semibold' 

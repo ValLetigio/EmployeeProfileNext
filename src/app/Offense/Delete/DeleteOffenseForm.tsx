@@ -10,6 +10,8 @@ const DeleteOffenseForm = () => {
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
+    const formRef = React.useRef<HTMLFormElement>(null)
+
     const defaultOffense = 
         {description:"", remedialActions:[]as string[], number:0}
 
@@ -56,6 +58,7 @@ const DeleteOffenseForm = () => {
             setFormData(defaultOffense) 
 
             fetchOffenses() 
+            formRef.current?.scrollIntoView({ behavior: 'smooth' })
         }catch(e:unknown){ 
           console.error('Error Deleting Offense:', e)
           setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
@@ -69,7 +72,7 @@ const DeleteOffenseForm = () => {
 
 
   return (
-    <form className='form-style' onSubmit={handleSubmit}>
+    <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
       <h2 className='font-semibold'>Offense Deletion</h2> 
 
       {/* Offense to Update */} 

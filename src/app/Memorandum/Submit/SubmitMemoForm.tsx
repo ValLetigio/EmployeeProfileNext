@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
@@ -9,6 +9,8 @@ import { Employee, Offense, Memo } from '@/app/Schema';
 const SubmitMemoForm = () => {
 
   const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+
+  const formRef = useRef<HTMLFormElement>(null)
 
   const defaultMemo = {
     date: '',
@@ -46,6 +48,7 @@ const SubmitMemoForm = () => {
               setFormData(defaultMemo)
 
               getAllMemoThatsNotSubmitted()
+              formRef.current?.scrollIntoView({ behavior: 'smooth' })
             }
         }catch(e:unknown){ 
           console.error('Error creating employee:', e)
@@ -93,6 +96,7 @@ const SubmitMemoForm = () => {
   return (
     <form
       className={` form-style `} 
+      ref={formRef}
       onSubmit={handleSubmit}
     >
       <h2 className='font-semibold'>Memorandum Submition</h2>
