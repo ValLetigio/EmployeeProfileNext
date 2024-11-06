@@ -8,7 +8,7 @@ import { useAppContext } from '@/app/GlobalContext'
 
 const DeleteEmployeeForm = () => {
 
-    const { setToastOptions, serverRequests, userData } = useAppContext() 
+    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
 
     const defaultFormData = {
         _id: '',
@@ -33,28 +33,28 @@ const DeleteEmployeeForm = () => {
     const [ employeeOptions, setEmployeeOptions ] = useState<Employee[]>([]) 
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()  
-        try{
-            const form = e.target as HTMLFormElement;    
+        e.preventDefault()   
 
-            console.log(userData)
-            const res = await serverRequests.deleteEmployee(formData, userData)
+        const confirmed = await handleConfirmation("Confirm Action?", `${formData?.name} will be Deleted forever!`, "error")
 
- 
+        if(confirmed){
+            try{
+                const form = e.target as HTMLFormElement;    
+                
+                const res = await serverRequests.deleteEmployee(formData, userData)  
 
-            // const res = { message: "Delete Employee Function does not exist yet." }
+                if( res.message ){
+                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
+                    form.reset() 
+                    setFormData(defaultFormData)  
+                    fetchEmployees()
+                }
 
-            if( res.message ){
-                setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
-                form.reset() 
-                setFormData(defaultFormData)  
-                fetchEmployees()
-            }
-
-        }catch(e:unknown){  
-            console.error('Error creating employee:', e)
-            setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }  
+            }catch(e:unknown){  
+                console.error('Error creating employee:', e)
+                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+            }  
+        }
     }  
 
     const fetchEmployees = async () => {
@@ -216,7 +216,7 @@ const DeleteEmployeeForm = () => {
         {/* submit */}
         <button 
             className='btn bg-red-500 text-white w-full place-self-start my-6' 
-            type='submit'
+            type='submit' disabled={formData?._id?false:true}
         >Delete</button>
 
       

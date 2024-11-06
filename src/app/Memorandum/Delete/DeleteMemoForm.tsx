@@ -8,7 +8,7 @@ import { Employee, Offense, Memo } from '@/app/Schema';
  
 const DeleteMemoForm = () => {
 
-  const { setToastOptions, serverRequests, userData } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
   const defaultMemo = {
     date: '',
@@ -29,27 +29,28 @@ const DeleteMemoForm = () => {
 
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()  
+    e.preventDefault()   
+
+    const confirmed = await handleConfirmation("Confirm Action?", `${formData?.description} for ${formData?.Employee?.name} will be deleted FOREVER!`, "error")
+
+    if(confirmed){
       try{
-          const form = e.target as HTMLFormElement;   
+        const form = e.target as HTMLFormElement;    
 
-          console.log("formData", formData)
-          console.log("userData", userData)
+        const res = await serverRequests.deleteMemo(formData, userData)
+         
+        if(res&&res.data){
+          setToastOptions({ open: true, message: res?.message || "Memo Deleted successfully", type: 'success', timer: 5 });
 
-          const res = await serverRequests.deleteMemo(formData, userData)
-          
-
-          if(res&&res.data){
-            setToastOptions({ open: true, message: res?.message || "Memo Deleted successfully", type: 'success', timer: 5 });
-  
-            form.reset()
-            setFormData(defaultMemo)
-            getAllMemoThatsNotSubmitted()
-          }
+          form.reset()
+          setFormData(defaultMemo)
+          getAllMemoThatsNotSubmitted()
+        }
       }catch(e:unknown){ 
         console.error('Error creating Memo:', e)
         setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
       }  
+    }
   }  
 
 

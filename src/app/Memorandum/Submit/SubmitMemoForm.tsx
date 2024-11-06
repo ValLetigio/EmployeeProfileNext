@@ -8,7 +8,7 @@ import { Employee, Offense, Memo } from '@/app/Schema';
  
 const SubmitMemoForm = () => {
 
-  const { setToastOptions, serverRequests, userData } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
   const defaultMemo = {
     date: '',
@@ -29,24 +29,29 @@ const SubmitMemoForm = () => {
 
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()  
-      try{
-          const form = e.target as HTMLFormElement;   
+      e.preventDefault()   
 
-          const res = await serverRequests.submitMemo(formData, formData.reason, userData)
+      const confirmed = await handleConfirmation("Confirm Action?", `Submit ${formData?.description} for ${formData?.Employee?.name}`, "")
 
-          if(res&&res.data){
-            setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
-  
-            form.reset()
-            setFormData(defaultMemo)
+      if(confirmed){
+        try{
+            const form = e.target as HTMLFormElement;   
 
-            getAllMemoThatsNotSubmitted()
-          }
-      }catch(e:unknown){ 
-        console.error('Error creating employee:', e)
-        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-      }  
+            const res = await serverRequests.submitMemo(formData, formData.reason, userData)
+
+            if(res&&res.data){
+              setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
+    
+              form.reset()
+              setFormData(defaultMemo)
+
+              getAllMemoThatsNotSubmitted()
+            }
+        }catch(e:unknown){ 
+          console.error('Error creating employee:', e)
+          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+        }  
+      }
   } 
 
   

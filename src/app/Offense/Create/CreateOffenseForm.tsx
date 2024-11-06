@@ -6,7 +6,7 @@ import { useAppContext } from '@/app/GlobalContext';
 
 const CreateOffenseForm = () => {
 
-  const { setToastOptions, serverRequests, userData } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
   const [ formData, setFormData ] = useState({
     remedialActions: [] as string[],
@@ -15,8 +15,8 @@ const CreateOffenseForm = () => {
   })
 
   const remedialActions = [
-    "Verbal-Warning",
-    "Written-Warning",
+    "Verbal Warning",
+    "Written Warning",
     "Counseling or Training",
     "Performance Improvement Plan (PIP)",
     "Suspension",
@@ -28,29 +28,33 @@ const CreateOffenseForm = () => {
   
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()  
+    e.preventDefault()   
+
+    const confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.description} Offense`, "")
+
+    if(confirmed){
       try{
-          const form = e.target as HTMLFormElement;  
-          console.log('formData:', formData)   
+        const form = e.target as HTMLFormElement;   
 
-          if(formData.remedialActions.length === 0){
-            throw new Error('Remedial Actions must be selected')
-          }else{ 
-            const res = await serverRequests.createOffense(formData, userData)
+        if(formData.remedialActions.length === 0){
+          throw new Error('Remedial Actions must be selected')
+        }else{ 
+          const res = await serverRequests.createOffense(formData, userData)
 
-            setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
+          setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
 
-            form.reset()
-            setFormData({
-              remedialActions: [] as string[],
-              description: '',
-              number: 0
-            }) 
-          }
+          form.reset()
+          setFormData({
+            remedialActions: [] as string[],
+            description: '',
+            number: 0
+          }) 
+        }
       }catch(e:unknown){ 
         console.error('Error creating employee:', e)
         setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
       }  
+    }
   } 
 
   const handleCheckboxChange = (event: any) => {

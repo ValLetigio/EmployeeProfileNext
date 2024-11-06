@@ -10,7 +10,7 @@ import { Employee, Offense } from '@/app/Schema';
 
 const CreateMemoForm = () => {
 
-  const { setToastOptions, serverRequests, userData } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
   const [ formData, setFormData ] = useState({
     date: '',
@@ -29,32 +29,37 @@ const CreateMemoForm = () => {
   const [ memoCodes, setMemoCodes ] = useState<Offense[]>([]) 
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()  
-      try{
-          const form = e.target as HTMLFormElement;   
+      e.preventDefault()   
 
-          const res = await serverRequests.createMemo(formData, userData)
+      const confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.description} for ${formData?.Employee?.name}`, "")
 
-          if(res&&res.data){
-            setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
-  
-            form.reset()
-            setFormData({
-              date: '',
-              Employee: {} as Employee, 
-              description: '',
-              subject: '',
-              mediaList: [] as string[],
-              memoPhotosList: [] as string[],
-              MemoCode: {} as Offense,
-              reason: null as unknown as string,
-              submitted: false 
-            })
-          }
-      }catch(e:unknown){ 
-        console.error('Error creating employee:', e)
-        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-      }  
+      if(confirmed){
+        try{
+            const form = e.target as HTMLFormElement;   
+
+            const res = await serverRequests.createMemo(formData, userData)
+
+            if(res&&res.data){
+              setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
+    
+              form.reset()
+              setFormData({
+                date: '',
+                Employee: {} as Employee, 
+                description: '',
+                subject: '',
+                mediaList: [] as string[],
+                memoPhotosList: [] as string[],
+                MemoCode: {} as Offense,
+                reason: null as unknown as string,
+                submitted: false 
+              })
+            }
+        }catch(e:unknown){ 
+          console.error('Error creating employee:', e)
+          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+        }  
+      }
   }
   
   const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
