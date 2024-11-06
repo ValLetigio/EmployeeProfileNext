@@ -6,7 +6,7 @@ import { useAppContext } from '@/app/GlobalContext';
 
 import { Employee, Offense, Memo } from '@/app/Schema';
  
-const SubmitMemoForm = () => {
+const DeleteMemoForm = () => {
 
   const { setToastOptions, serverRequests, userData } = useAppContext()
 
@@ -33,7 +33,7 @@ const SubmitMemoForm = () => {
       try{
           const form = e.target as HTMLFormElement;   
 
-          const res = await serverRequests.submitMemo(formData, formData.reason, userData)
+          const res = await serverRequests.deleteMemo(formData, userData)
 
           if(res&&res.data){
             setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
@@ -47,21 +47,6 @@ const SubmitMemoForm = () => {
         console.error('Error creating employee:', e)
         setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
       }  
-  } 
-
-  
-  const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
-      if(file){
-          const reader = new FileReader()
-          reader.readAsDataURL(file)
-          reader.onloadend = () => {
-              setFormData({
-                  ...formData,
-                  [e.target.id]: [reader.result]
-              })
-          }
-      }
   }  
 
 
@@ -90,7 +75,7 @@ const SubmitMemoForm = () => {
       className={` form-style `} 
       onSubmit={handleSubmit}
     >
-      <h2 className='font-semibold'>Memorandum Submition</h2>
+      <h2 className='font-semibold'>Memorandum Deletion</h2>
 
       {/* Memorandum to Submit */} 
       <div className='flex flex-col text-sm gap-2 '>Memo to Submit 
@@ -147,44 +132,33 @@ const SubmitMemoForm = () => {
       {/* Reason */}
       <div className='flex flex-col gap-2 text-sm'>Reason  
         {/* Reason */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason'  
-          onChange={
-            (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
-              setFormData({ ...formData, reason: e.target.value })
-            }}> 
+        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason'   > 
         </textarea>  
-      </div> 
+      </div>  
 
-
-      {/* medialist */}
-      <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
-        <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
-          <img src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-20`} alt="mediaList" />
-        </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'   
-          onChange={handleFileChange}/>
-      </label>
-
-
-      {/* medialist */}
-      <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
-      <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
-          <img src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-20`} alt="mediaList" />
-        </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'   
-          onChange={handleFileChange}/>
-      </label>
+      <div className='text-sm flex flex-col md:flex-row justify-evenly '>
+        {/* medialist */}
+        <div className={`${!formData?.mediaList[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 p-1 rounded-lg `}>  
+          <img src={formData?.mediaList[0]} className={` h-20 `} alt="mediaList" />
+          Photo  
+        </div>   
+        {/* memoPhotosList */} 
+        <div className={`${!formData?.memoPhotosList[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 p-1 rounded-lg `}>
+          <img src={formData?.memoPhotosList[0]} className={` h-20 `} alt="memoPhotosList" />
+          Memo Photo    
+        </div> 
+      </div>
 
 
       {/* submit */}
       <button 
-          className='btn bg-blue-500 text-white w-full place-self-start my-6' 
+          className='btn bg-red-500 text-white w-full place-self-start my-6' 
           type='submit'
-        >Submit</button>
+        >Delete</button>
 
 
     </form>
   )
 }
 
-export default SubmitMemoForm
+export default DeleteMemoForm

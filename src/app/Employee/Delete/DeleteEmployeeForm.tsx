@@ -33,9 +33,7 @@ const DeleteEmployeeForm = () => {
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()  
         try{
-            const form = e.target as HTMLFormElement;  
-
-            console.log('formData:', formData)  
+            const form = e.target as HTMLFormElement;   
 
             const finalFormData = {
                 ...formData,
@@ -61,8 +59,7 @@ const DeleteEmployeeForm = () => {
 
     const fetchEmployees = async () => {
         try{ 
-            const employees = await serverRequests.fetchEmployeeList()
-            console.log(employees?.data)
+            const employees = await serverRequests.fetchEmployeeList() 
             setEmployeeOptions(employees?.data)
         }catch(e:unknown){
             console.error('Error fetching employees:', e)

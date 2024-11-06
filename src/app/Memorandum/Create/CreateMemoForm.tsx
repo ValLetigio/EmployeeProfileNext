@@ -31,8 +31,7 @@ const CreateMemoForm = () => {
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
       try{
-          const form = e.target as HTMLFormElement;  
-          console.log('formData:', formData)  
+          const form = e.target as HTMLFormElement;   
 
           const res = await serverRequests.createMemo(formData, userData)
 
@@ -92,8 +91,7 @@ const CreateMemoForm = () => {
   const fetchOffenses = async () => {
     try{ 
       const memoCodes = await serverRequests.fetchOffenseList() 
-      setMemoCodes(memoCodes?.data)
-      console.log('memoCodes:', memoCodes)
+      setMemoCodes(memoCodes?.data) 
     }catch(e:unknown){
       console.error('Error fetching memoCodes:', e)
       setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
@@ -103,11 +101,7 @@ const CreateMemoForm = () => {
   useEffect(()=>{
     fetchEmployees() 
     fetchOffenses()
-  },[])
-
-  useEffect(()=>{
-    console.log('formData:', formData)
-  },[formData])
+  },[]) 
 
 
   return (

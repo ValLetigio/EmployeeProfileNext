@@ -33,8 +33,7 @@ const UpdateOffenseForm = () => {
 
     const fetchOffenses = async () => {
         try{
-            const res = await serverRequests.fetchOffenseList()
-            console.log('res', res)
+            const res = await serverRequests.fetchOffenseList() 
             setOffenseOptions(res.data)
         }
         catch(e:unknown){
@@ -45,8 +44,7 @@ const UpdateOffenseForm = () => {
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()  
         try{
-            const form = e.target as HTMLFormElement;  
-            console.log('formData:', formData)   
+            const form = e.target as HTMLFormElement;    
   
             if((dataToUpdate.remedialActions as string[]).length === 0){
               throw new Error('Remedial Actions must be selected')

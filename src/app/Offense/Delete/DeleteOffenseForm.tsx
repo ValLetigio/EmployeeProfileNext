@@ -31,8 +31,7 @@ const DeleteOffenseForm = () => {
 
     const fetchOffenses = async () => {
         try{
-            const res = await serverRequests.fetchOffenseList()
-            console.log('res', res)
+            const res = await serverRequests.fetchOffenseList() 
             setOffenseOptions(res.data)
         }
         catch(e:unknown){
@@ -43,8 +42,7 @@ const DeleteOffenseForm = () => {
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()  
         try{
-            const form = e.target as HTMLFormElement;  
-            console.log('formData:', formData)   
+            const form = e.target as HTMLFormElement; 
 
             const res = await serverRequests.deleteOffense(formData, userData)
 
