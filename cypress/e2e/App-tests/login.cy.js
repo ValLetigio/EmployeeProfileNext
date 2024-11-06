@@ -37,13 +37,12 @@ import ServerRequests from '../../../src/app/api/ServerRequests'
 //     })
 //   })
 // })
+let serverRequests ;
+serverRequests = new ServerRequests(false);
 
-describe('template spec', () => {
-  let serverRequests ;
-  serverRequests = new ServerRequests(false);
+describe('Employee spec', () => {
   // let userObject;
   before(async() => {
-
     const deleteResponse = await serverRequests.deleteAllDataInCollection('User');
     console.log(deleteResponse);
     expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
@@ -72,6 +71,7 @@ describe('template spec', () => {
 
     cy.visit('/')
     cy.url().should('include', '/')
+    cy.wait(4000)
     cy.get('#menu-button').click()
 
     cy.get('#create-employee').click()
@@ -110,25 +110,8 @@ describe('template spec', () => {
     cy.get('#dailyWage').clear().type('567.90')
 
     cy.get('#save').click()
-
+    cy.wait(4000)
   })
-
-  it('Redirects to Offense and create and update offense', async () => {
-    const deleteResponse = await serverRequests.deleteAllDataInCollection('Offense');
-    console.log(deleteResponse);
-    expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
-
-    cy.visit('/')
-    cy.url().should('include', '/')
-    cy.get('#menu-button').click()
-    cy.get('#create-offense').click()
-    cy.get('#description').type('Employee was late to work')
-    cy.get('#Verbal-Warning').click()
-    cy.get('#Written-Warning').click()
-
-    cy.get('#create-offense-button').click()
-  })
-
   // it('creates and updates employee server request', async () => {
   //   const deleteResponse = await serverRequests.deleteAllDataInCollection('Employee');
   //   console.log(deleteResponse);
@@ -321,3 +304,32 @@ describe('template spec', () => {
   //     })
   // })
 })
+
+describe('Offense spec', () => {
+  before(async() => {
+    const deleteResponse = await serverRequests.deleteAllDataInCollection('Offense');
+    console.log(deleteResponse);
+    expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+  }
+  )
+
+  it('Redirects to Offense and create and update offense', async () => {
+    const deleteResponse = await serverRequests.deleteAllDataInCollection('Offense');
+    console.log(deleteResponse);
+    expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+
+    cy.visit('/')
+    cy.url().should('include', '/')
+    cy.get('#menu-button').click()
+    cy.get('#create-offense').click()
+    cy.get('#description').type('Employee was late to work')
+    cy.get('#Verbal-Warning').click()
+    cy.get('#Written-Warning').click()
+
+    cy.get('#create-offense-button').click()
+
+    // cy.get('#menu-button').click()
+    // cy.get('#update-offense').click()
+  })
+}
+)
