@@ -83,9 +83,7 @@ const SubmitMemoForm = () => {
     if(userData&&userData._id){
       getAllMemoThatsNotSubmitted()
     }
-  },[userData]) 
-
-  console.log(formData)
+  },[userData])  
 
 
   return (
@@ -104,7 +102,7 @@ const SubmitMemoForm = () => {
         >
           <option disabled selected value={""}>Select Offense </option>
           {memoOptions&&memoOptions.map((memo, index) => (
-            <option key={index} value={index}>{memo?.Employee?.name}, {memo?.description}</option>
+            <option key={index} value={index}>{`${memo?.Employee?.name}, (${memo?.subject})`}</option>
           ))}
           <option value="null">None</option>
         </select>
