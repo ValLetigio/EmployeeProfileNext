@@ -28,29 +28,34 @@ const CreateEmployeeForm = () => {
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()  
-        try{
-            const form = e.target as HTMLFormElement;  
 
-            console.log('formData:', formData)  
+        const confirmed = window.confirm(`Are you sure you want to create ${formData?.name}?`); 
 
-            const finalFormData = {
-                ...formData,
-                _id: "", 
-                _version: 0, 
-            }
-
-            const res = await serverRequests.createEmployee(finalFormData, userData)
-
-            if(res.message){
-                setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
-                form.reset() 
-                setFormData(defaultFormData)  
-            }
-
-        }catch(e:unknown){  
-            console.error('Error creating employee:', e)
-            setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }  
+        if(confirmed){
+            try{
+                const form = e.target as HTMLFormElement;  
+    
+                console.log('formData:', formData)  
+    
+                const finalFormData = {
+                    ...formData,
+                    _id: "", 
+                    _version: 0, 
+                }
+    
+                const res = await serverRequests.createEmployee(finalFormData, userData) 
+    
+                if(res.message){
+                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
+                    form.reset() 
+                    setFormData(defaultFormData)  
+                }
+    
+            }catch(e:unknown){  
+                console.error('Error creating employee:', e)
+                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+            }  
+        }
     }
 
     const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {

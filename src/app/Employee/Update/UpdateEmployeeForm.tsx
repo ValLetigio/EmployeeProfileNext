@@ -42,25 +42,30 @@ const CreateEmployeeForm = () => {
 
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()  
-        try{
-            const form = e.target as HTMLFormElement;   
 
-            const res = await serverRequests.updateEmployee(selectedEmployee, dataToUpdate, userData)
+        const confirmed = window.confirm(`Are you sure you want to Update ${formData?.name}?`); 
 
-            if(res&&res.message){ 
-                form.reset()
-                setFormData(EmployeeValue)  
-                setSelectedEmployee(EmployeeValue)
-                setDataToUpdate({})
-                setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
-                formRef.current?.scrollIntoView({ behavior: 'smooth' })
-            }
+        if(confirmed){
+            try{
+                const form = e.target as HTMLFormElement;   
 
-            fetchEmployees()
-        }catch(e:unknown){  
-            console.error('Error creating employee:', e)
-            setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }  
+                const res = await serverRequests.updateEmployee(selectedEmployee, dataToUpdate, userData)
+
+                if(res&&res.message){ 
+                    form.reset()
+                    setFormData(EmployeeValue)  
+                    setSelectedEmployee(EmployeeValue)
+                    setDataToUpdate({})
+                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
+                    formRef.current?.scrollIntoView({ behavior: 'smooth' })
+                }
+
+                fetchEmployees()
+            }catch(e:unknown){  
+                console.error('Error creating employee:', e)
+                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+            }  
+        }
     }
 
     const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -135,7 +140,7 @@ const CreateEmployeeForm = () => {
 
         {/* employee */} 
         <div className='flex flex-col text-sm gap-2 '>Employee to Edit
-            <select className="select select-bordered w-full " id='Employee'  
+            <select className="select select-bordered w-full " id='Employee' required
                 onChange={(e:any)=>{
                     setSelectedEmployee(employeeOptions[e.target.value])
                     setFormData(employeeOptions[e.target.value])
@@ -305,6 +310,7 @@ const CreateEmployeeForm = () => {
         <button 
             className='btn bg-violet-500 text-white w-full place-self-start my-6 ' 
             type='submit' disabled={disableSaveButton} id='save'
+            
         >Update</button>
 
       

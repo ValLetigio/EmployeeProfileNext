@@ -30,31 +30,36 @@ const CreateMemoForm = () => {
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
-      try{
-          const form = e.target as HTMLFormElement;   
 
-          const res = await serverRequests.createMemo(formData, userData)
+      const confirmed = window.confirm('Are you sure you want to create this Memo?')
 
-          if(res&&res.data){
-            setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
-  
-            form.reset()
-            setFormData({
-              date: '',
-              Employee: {} as Employee, 
-              description: '',
-              subject: '',
-              mediaList: [] as string[],
-              memoPhotosList: [] as string[],
-              MemoCode: {} as Offense,
-              reason: null as unknown as string,
-              submitted: false 
-            })
-          }
-      }catch(e:unknown){ 
-        console.error('Error creating employee:', e)
-        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-      }  
+      if(confirmed){
+        try{
+            const form = e.target as HTMLFormElement;   
+
+            const res = await serverRequests.createMemo(formData, userData)
+
+            if(res&&res.data){
+              setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
+    
+              form.reset()
+              setFormData({
+                date: '',
+                Employee: {} as Employee, 
+                description: '',
+                subject: '',
+                mediaList: [] as string[],
+                memoPhotosList: [] as string[],
+                MemoCode: {} as Offense,
+                reason: null as unknown as string,
+                submitted: false 
+              })
+            }
+        }catch(e:unknown){ 
+          console.error('Error creating employee:', e)
+          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+        }  
+      }
   }
   
   const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {

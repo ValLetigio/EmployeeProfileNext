@@ -29,27 +29,28 @@ const DeleteMemoForm = () => {
 
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()  
+    e.preventDefault()  
+
+    const confirmed = window.confirm('Are you sure you want to create this Memo?')
+
+    if(confirmed){
       try{
-          const form = e.target as HTMLFormElement;   
+        const form = e.target as HTMLFormElement;    
 
-          console.log("formData", formData)
-          console.log("userData", userData)
+        const res = await serverRequests.deleteMemo(formData, userData)
+         
+        if(res&&res.data){
+          setToastOptions({ open: true, message: res?.message || "Memo Deleted successfully", type: 'success', timer: 5 });
 
-          const res = await serverRequests.deleteMemo(formData, userData)
-          
-
-          if(res&&res.data){
-            setToastOptions({ open: true, message: res?.message || "Memo Deleted successfully", type: 'success', timer: 5 });
-  
-            form.reset()
-            setFormData(defaultMemo)
-            getAllMemoThatsNotSubmitted()
-          }
+          form.reset()
+          setFormData(defaultMemo)
+          getAllMemoThatsNotSubmitted()
+        }
       }catch(e:unknown){ 
         console.error('Error creating Memo:', e)
         setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
       }  
+    }
   }  
 
 

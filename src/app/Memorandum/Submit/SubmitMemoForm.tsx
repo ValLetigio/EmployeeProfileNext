@@ -30,23 +30,28 @@ const SubmitMemoForm = () => {
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
-      try{
-          const form = e.target as HTMLFormElement;   
 
-          const res = await serverRequests.submitMemo(formData, formData.reason, userData)
+      const confirmed = window.confirm('Are you sure you want to create this Memo?')
 
-          if(res&&res.data){
-            setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
-  
-            form.reset()
-            setFormData(defaultMemo)
+      if(confirmed){
+        try{
+            const form = e.target as HTMLFormElement;   
 
-            getAllMemoThatsNotSubmitted()
-          }
-      }catch(e:unknown){ 
-        console.error('Error creating employee:', e)
-        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-      }  
+            const res = await serverRequests.submitMemo(formData, formData.reason, userData)
+
+            if(res&&res.data){
+              setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
+    
+              form.reset()
+              setFormData(defaultMemo)
+
+              getAllMemoThatsNotSubmitted()
+            }
+        }catch(e:unknown){ 
+          console.error('Error creating employee:', e)
+          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+        }  
+      }
   } 
 
   

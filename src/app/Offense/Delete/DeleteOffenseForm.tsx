@@ -40,7 +40,11 @@ const DeleteOffenseForm = () => {
     }
     
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()  
+      e.preventDefault()  
+
+      const confirmed = window.confirm(`Are you sure you want to Delete ${formData?.description}?`); 
+
+      if(confirmed){
         try{
             const form = e.target as HTMLFormElement; 
 
@@ -55,7 +59,8 @@ const DeleteOffenseForm = () => {
         }catch(e:unknown){ 
           console.error('Error Deleting Offense:', e)
           setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }  
+        } 
+      } 
     }  
 
     useEffect(() => {
@@ -105,7 +110,7 @@ const DeleteOffenseForm = () => {
       {/* submit */}
       <button 
         className='btn bg-red-500 text-white w-full place-self-start my-6' 
-        type='submit'
+        type='submit' disabled={formData?.description?false:true}
       >Delete</button>
     </form>
   )

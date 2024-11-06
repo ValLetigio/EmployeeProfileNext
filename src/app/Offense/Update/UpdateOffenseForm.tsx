@@ -42,17 +42,21 @@ const UpdateOffenseForm = () => {
     }
     
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()  
+      e.preventDefault()  
+
+      const confirmed = window.confirm(`Are you sure you want to Update ${formData?.description}?`); 
+
+      if(confirmed){
         try{
             const form = e.target as HTMLFormElement;    
-  
+
             if((dataToUpdate.remedialActions as string[]).length === 0){
               throw new Error('Remedial Actions must be selected')
             }else{ 
               const res = await serverRequests.updateOffense(formData, dataToUpdate, userData)
-  
+
               setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
-  
+
               form.reset()
               setFormData(defaultOffense) 
 
@@ -62,6 +66,7 @@ const UpdateOffenseForm = () => {
           console.error('Error creating employee:', e)
           setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
         }  
+      }
     } 
   
     const handleCheckboxChange = (event: any) => {
@@ -130,7 +135,7 @@ const UpdateOffenseForm = () => {
       {/* submit */}
       <button 
         className='btn bg-violet-500 text-white w-full place-self-start my-6' 
-        type='submit'
+        type='submit' disabled={formData?.description?false:true}
       >Update</button>
     </form>
   )

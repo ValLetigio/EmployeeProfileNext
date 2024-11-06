@@ -34,27 +34,27 @@ const DeleteEmployeeForm = () => {
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()  
-        try{
-            const form = e.target as HTMLFormElement;    
 
-            console.log(userData)
-            const res = await serverRequests.deleteEmployee(formData, userData)
+        const confirmed = window.confirm(`Are you sure you want to Delete ${formData?.name}?`); 
 
- 
+        if(confirmed){
+            try{
+                const form = e.target as HTMLFormElement;    
+                
+                const res = await serverRequests.deleteEmployee(formData, userData)  
 
-            // const res = { message: "Delete Employee Function does not exist yet." }
+                if( res.message ){
+                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
+                    form.reset() 
+                    setFormData(defaultFormData)  
+                    fetchEmployees()
+                }
 
-            if( res.message ){
-                setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
-                form.reset() 
-                setFormData(defaultFormData)  
-                fetchEmployees()
-            }
-
-        }catch(e:unknown){  
-            console.error('Error creating employee:', e)
-            setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }  
+            }catch(e:unknown){  
+                console.error('Error creating employee:', e)
+                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+            }  
+        }
     }  
 
     const fetchEmployees = async () => {
@@ -216,7 +216,7 @@ const DeleteEmployeeForm = () => {
         {/* submit */}
         <button 
             className='btn bg-red-500 text-white w-full place-self-start my-6' 
-            type='submit'
+            type='submit' disabled={formData?._id?false:true}
         >Delete</button>
 
       
