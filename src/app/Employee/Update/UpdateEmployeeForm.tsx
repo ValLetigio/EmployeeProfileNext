@@ -141,14 +141,16 @@ const CreateEmployeeForm = () => {
         {/* employee */} 
         <div className='flex flex-col text-sm gap-2 '>Employee to Edit
             <select className="select select-bordered w-full " id='Employee' required
+                value={formData?._id || ''}
                 onChange={(e:any)=>{
-                    setSelectedEmployee(employeeOptions[e.target.value])
-                    setFormData(employeeOptions[e.target.value])
+                    const selectedIndex = e.target.options.selectedIndex - 1
+                    setSelectedEmployee(employeeOptions[selectedIndex])
+                    setFormData(employeeOptions[selectedIndex])
                 }} 
             >
                 <option disabled selected value={""}>Select Employee</option>
                 {employeeOptions&&employeeOptions.map((employee, index) => (
-                    <option key={index} value={index}>{employee?.name}</option>
+                    <option key={index} value={employee?._id} >{employee?.name}</option>
                 ))}
                 <option value="null">None</option>
             </select>

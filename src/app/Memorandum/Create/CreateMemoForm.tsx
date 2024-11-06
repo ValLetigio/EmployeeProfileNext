@@ -126,13 +126,15 @@ const CreateMemoForm = () => {
       {/* employee */} 
       <div className='flex flex-col text-sm gap-2 '>Employee 
         <select className="select select-bordered w-full " id='Employee' required
-          onChange={(e:any)=>{ 
-            setFormData({...formData, Employee: employeeOptions[e.target.value]})
+          value={formData?.Employee?._id || ''}
+          onChange={(e:any)=>{
+              const selectedIndex = e.target.options.selectedIndex - 1
+            setFormData({...formData, Employee: employeeOptions[selectedIndex]})
           }} 
         >
           <option disabled selected value={""}>Select Employee</option>
           {employeeOptions&&employeeOptions.map((employee, index) => (
-            <option key={index} value={index}>{employee?.name}</option>
+            <option key={index} value={employee?._id}>{employee?.name}</option>
           ))}
           <option value="null">None</option>
         </select>
@@ -141,13 +143,15 @@ const CreateMemoForm = () => {
       {/* Offense */} 
       <div className='flex flex-col text-sm gap-2 '>Memo Code
         <select className="select select-bordered w-full " id='MemoCode' required
-          onChange={(e:any)=>{ 
-            setFormData({...formData, MemoCode: memoCodes[e.target.value]})
+          value={formData?.MemoCode?.description || ''}
+          onChange={(e:any)=>{
+              const selectedIndex = e.target.options.selectedIndex - 1
+            setFormData({...formData, MemoCode: memoCodes[selectedIndex]})
           }} 
         >
           <option disabled selected value={""}>Select Offense</option>
           {memoCodes&&memoCodes.map((code, index) => (
-            <option key={index} value={index}>{code?.description}</option>
+            <option key={index} value={code?.description}>{code?.description}</option>
           ))}
           <option value="null">None</option>
         </select>

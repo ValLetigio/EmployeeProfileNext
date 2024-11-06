@@ -84,13 +84,15 @@ const DeleteMemoForm = () => {
       {/* Memorandum to Submit */} 
       <div className='flex flex-col text-sm gap-2 '>Memo to Delete 
         <select className="select select-bordered w-full " id='Memo' required
-          onChange={(e:any)=>{ 
-            e.target.value=="null"?setFormData(defaultMemo):setFormData({ ...memoOptions[e.target.value], reason: memoOptions[e.target.value].reason || '' })
+          value={formData?.subject || ''}
+          onChange={(e:any)=>{
+            const selectedIndex = e.target.options.selectedIndex - 1
+            e.target.value=="null"?setFormData(defaultMemo):setFormData({ ...memoOptions[selectedIndex], reason: memoOptions[selectedIndex].reason || '' })
           }}  
         >
           <option disabled selected value={""}>Select Memo </option>
           {memoOptions&&memoOptions.map((memo, index) => (
-            <option key={index} value={index}>{`${memo?.Employee?.name}, (${memo?.subject})`}</option>
+            <option key={index} value={memo?.subject}>{`${memo?.Employee?.name}, (${memo?.subject})`}</option>
           ))}
           <option value="null">None</option>
         </select>

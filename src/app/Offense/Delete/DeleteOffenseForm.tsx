@@ -75,13 +75,15 @@ const DeleteOffenseForm = () => {
       {/* Offense to Update */} 
       <div className='flex flex-col text-sm gap-2 '>Offense to Delete 
         <select className="select select-bordered w-full " id='Offense' required
-          onChange={(e:any)=>{ 
-            e.target.value=="null"?setFormData(defaultOffense):setFormData(offenseOptions[e.target.value])
+          value={formData?.description || ''}
+          onChange={(e:any)=>{
+              const selectedIndex = e.target.options.selectedIndex - 1
+            e.target.value=="null"?setFormData(defaultOffense):setFormData(offenseOptions[selectedIndex])
           }}  
         >
           <option disabled selected value={""}>Select Offense </option>
           {offenseOptions&&offenseOptions.map((Offense, index) => (
-            <option key={index} value={index}>{Offense?.description}</option>
+            <option key={index} value={Offense?.description}>{Offense?.description}</option>
           ))}
           <option value="null">None</option>
         </select>
