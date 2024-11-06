@@ -33,10 +33,14 @@ const DeleteMemoForm = () => {
       try{
           const form = e.target as HTMLFormElement;   
 
+          console.log("formData", formData)
+          console.log("userData", userData)
+
           const res = await serverRequests.deleteMemo(formData, userData)
+          
 
           if(res&&res.data){
-            setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
+            setToastOptions({ open: true, message: res?.message || "Memo Deleted successfully", type: 'success', timer: 5 });
   
             form.reset()
             setFormData(defaultMemo)
