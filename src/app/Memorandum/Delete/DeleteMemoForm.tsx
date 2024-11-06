@@ -44,11 +44,10 @@ const DeleteMemoForm = () => {
   
             form.reset()
             setFormData(defaultMemo)
-
             getAllMemoThatsNotSubmitted()
           }
       }catch(e:unknown){ 
-        console.error('Error creating employee:', e)
+        console.error('Error creating Memo:', e)
         setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
       }  
   }  

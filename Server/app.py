@@ -344,7 +344,7 @@ def create_memo():
                     '_id': None,
                     'MemoCode': memo['MemoCode'],
                     'submitted': False,
-                    'reason': memo['reason'],
+                    'reason': memo['reason'] or None,
                     '_version': 0
                 })
 
@@ -391,6 +391,8 @@ def delete_memo():
         userData = data['userData']
 
         memoData = data['memoData']
+        if memoData['reason'] == '':
+            memoData['reason'] = None
         try:
             res = UserActions(userData).deleteMemoAction(userData, memoData)
 
