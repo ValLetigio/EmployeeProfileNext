@@ -8,7 +8,7 @@ import { Offense } from '@/app/Schema';
 
 const DeleteOffenseForm = () => {
 
-    const { setToastOptions, serverRequests, userData } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
     const defaultOffense = 
         {description:"", remedialActions:[]as string[], number:0}
@@ -42,7 +42,7 @@ const DeleteOffenseForm = () => {
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
 
-      const confirmed = window.confirm(`Are you sure you want to Delete ${formData?.description}?`); 
+      const confirmed = await handleConfirmation("Confirm Action?", `${formData?.description} will be deleted FOREVER!`, "error")
 
       if(confirmed){
         try{

@@ -8,7 +8,7 @@ import { useAppContext } from '@/app/GlobalContext'
 
 const DeleteEmployeeForm = () => {
 
-    const { setToastOptions, serverRequests, userData } = useAppContext() 
+    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
 
     const defaultFormData = {
         _id: '',
@@ -33,9 +33,9 @@ const DeleteEmployeeForm = () => {
     const [ employeeOptions, setEmployeeOptions ] = useState<Employee[]>([]) 
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()  
+        e.preventDefault()   
 
-        const confirmed = window.confirm(`Are you sure you want to Delete ${formData?.name}?`); 
+        const confirmed = await handleConfirmation("Confirm Action?", `${formData?.name} will be Deleted forever!`, "error")
 
         if(confirmed){
             try{

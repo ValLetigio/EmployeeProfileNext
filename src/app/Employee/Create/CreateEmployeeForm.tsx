@@ -6,7 +6,7 @@ import { useAppContext } from '@/app/GlobalContext'
 
 const CreateEmployeeForm = () => {
 
-    const { setToastOptions, serverRequests, userData } = useAppContext() 
+    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
 
     const defaultFormData = {
         name: '',
@@ -27,10 +27,10 @@ const CreateEmployeeForm = () => {
     const [ formData, setFormData ] = useState(defaultFormData)
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()  
+        e.preventDefault()   
 
-        const confirmed = window.confirm(`Are you sure you want to create ${formData?.name}?`); 
-
+        const confirmed = await handleConfirmation("Confirm Action?", `${formData?.name} will be Created as an Employee`, "")
+ 
         if(confirmed){
             try{
                 const form = e.target as HTMLFormElement;  
@@ -92,7 +92,8 @@ const CreateEmployeeForm = () => {
     <form className={` form-style `}
         onSubmit={(e)=>handleSubmit(e)}
     >
-        <h2 className='font-semibold'>Employee Registry</h2>
+        <h2 className='font-semibold' 
+            onClick={async()=>await handleConfirmation("U Sure Bro?", "This that make you Weak", "")} >Employee Registry</h2>
 
         {/* name */}
         <div className='flex flex-col text-sm gap-2 '>Name

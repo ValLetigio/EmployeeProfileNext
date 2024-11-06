@@ -71,6 +71,15 @@ export interface ToastOptionsSchema {
     timer: number;
 }
 
+export interface ConfirmationOptionsSchema {
+    open: boolean;
+    question: string;
+    consequence: string;
+    type: string; 
+    onConfirm: () => void;
+    onCancel: () => void;
+}
+
 export interface Offense {
     number: number;
     description: string;

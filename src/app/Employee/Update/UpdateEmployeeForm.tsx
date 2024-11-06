@@ -9,7 +9,7 @@ import { useAppContext } from '@/app/GlobalContext'
 
 const CreateEmployeeForm = () => {
 
-    const { setToastOptions, serverRequests, userData } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
     const formRef = React.useRef<HTMLFormElement>(null)
 
@@ -41,9 +41,9 @@ const CreateEmployeeForm = () => {
     const [ formData, setFormData ] = useState(EmployeeValue)
 
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()  
+        e.preventDefault()   
 
-        const confirmed = window.confirm(`Are you sure you want to Update ${formData?.name}?`); 
+        const confirmed = await handleConfirmation("Confirm Action?", `Update changes you've made for ${formData?.name}`, "")
 
         if(confirmed){
             try{

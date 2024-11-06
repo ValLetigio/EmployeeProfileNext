@@ -8,7 +8,7 @@ import { Employee, Offense, Memo } from '@/app/Schema';
  
 const SubmitMemoForm = () => {
 
-  const { setToastOptions, serverRequests, userData } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
   const defaultMemo = {
     date: '',
@@ -29,9 +29,9 @@ const SubmitMemoForm = () => {
 
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()  
+      e.preventDefault()   
 
-      const confirmed = window.confirm('Are you sure you want to create this Memo?')
+      const confirmed = await handleConfirmation("Confirm Action?", `Submit ${formData?.description} for ${formData?.Employee?.name}`, "")
 
       if(confirmed){
         try{

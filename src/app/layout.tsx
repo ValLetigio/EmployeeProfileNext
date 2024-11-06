@@ -9,6 +9,7 @@ import ContextProvider from "./GlobalContext/index";
 import NavBar from "./NavigationComponents/NavBar"; 
 import ProfileMenu from "./ProfileMenuComponents/ProfileMenu";
 import Toast from "./toast";
+import Confirmation from "./confirmation";
 
 import { Poppins } from "next/font/google"; 
 
@@ -33,6 +34,7 @@ export default function RootLayout({
             {children}
             <NavBar/>
             <Toast />
+            <Confirmation />
           </ContextProvider>
         </SessionProvider>
       </body>

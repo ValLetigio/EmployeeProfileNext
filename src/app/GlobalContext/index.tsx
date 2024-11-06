@@ -4,7 +4,7 @@
 
 import { createContext, useState, useContext, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { CardsSchema, UserDataFromGoogleSchema, ToastOptionsSchema } from '../Schema';
+import { CardsSchema, UserDataFromGoogleSchema, ToastOptionsSchema, ConfirmationOptionsSchema } from '../Schema';
 import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
 
@@ -17,6 +17,7 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { env } from 'process';
+import { on } from 'events';
 
 
 
@@ -30,6 +31,9 @@ interface AppContextProps {
   toastOptions: ToastOptionsSchema;
   setToastOptions: (data: ToastOptionsSchema) => void;
   serverRequests: ServerRequests;
+  confirmationOptions: ConfirmationOptionsSchema;
+  setConfirmationOptions: (data: ConfirmationOptionsSchema) => void;
+  handleConfirmation: (question: string, consequence: string, type: string) => Promise<boolean>;
 }
 
 // Create the default context with proper types and default values
@@ -50,7 +54,10 @@ const AppContext = createContext<AppContextProps>({
   pathname: '',
   toastOptions: {open: false, message: '', type: '', timer: 0},
   setToastOptions: () => {},
+  confirmationOptions: {open: false,  question: '', consequence: "", type: '', onConfirm: () => {}, onCancel: () => {}},
+  setConfirmationOptions: () => {}, 
   serverRequests: new ServerRequests(false),
+  handleConfirmation: () => new Promise<boolean>(() => {}),
 });
 
 
@@ -84,10 +91,10 @@ export default function ContextProvider({
 
   const [sampleText] = useState<string>('');
   const [cards, setCards] = useState<CardsSchema>({})
-  
-
-
+ 
   const [toastOptions, setToastOptions] = useState({open:false, message: '', type: '', timer: 0});
+
+  const [confirmationOptions, setConfirmationOptions] = useState({open:false, question: '', consequence: "", type: '', onConfirm: () => {}, onCancel: () => {}});
 
   useEffect(() => {
     setCards(
@@ -226,7 +233,7 @@ export default function ContextProvider({
       });
  
       setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
-    }  
+    }   
 
     if (status === 'unauthenticated' && !isTestEnv)  {
       router.push('/api/auth/signin');
@@ -241,6 +248,25 @@ export default function ContextProvider({
     
   }, [session, status, router]);
 
+  const handleConfirmation = (question: string, consequence: string, type: string) => {
+    return new Promise<boolean>((resolve) => {
+      setConfirmationOptions({
+        open: true,
+        question: question,
+        consequence: consequence,
+        type: type, 
+        onConfirm: () => {
+          setConfirmationOptions((prev) => ({ ...prev, open: false, confirmed: true }));
+          resolve(true); 
+        },
+        onCancel: () => {
+          setConfirmationOptions((prev) => ({ ...prev, open: false, confirmed: false }));
+          resolve(false); 
+        }
+      });
+    });
+  };
+
   // Define the global values to be shared across the context
   const globals = {
     userData,
@@ -249,7 +275,9 @@ export default function ContextProvider({
     cards,
     pathname,
     toastOptions, setToastOptions,
-    serverRequests
+    serverRequests,
+    confirmationOptions, setConfirmationOptions,
+    handleConfirmation
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

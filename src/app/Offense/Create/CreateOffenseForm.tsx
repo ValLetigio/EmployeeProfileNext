@@ -6,7 +6,7 @@ import { useAppContext } from '@/app/GlobalContext';
 
 const CreateOffenseForm = () => {
 
-  const { setToastOptions, serverRequests, userData } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
   const [ formData, setFormData ] = useState({
     remedialActions: [] as string[],
@@ -28,14 +28,13 @@ const CreateOffenseForm = () => {
   
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()  
+    e.preventDefault()   
 
-    const confirmed = window.confirm(`Are you sure you want to Create ${formData?.description}?`); 
+    const confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.description} Offense`, "")
 
     if(confirmed){
       try{
-        const form = e.target as HTMLFormElement;  
-        console.log('formData:', formData)   
+        const form = e.target as HTMLFormElement;   
 
         if(formData.remedialActions.length === 0){
           throw new Error('Remedial Actions must be selected')

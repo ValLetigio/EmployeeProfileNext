@@ -8,7 +8,7 @@ import { DataToUpdate, Offense } from '@/app/Schema';
 
 const UpdateOffenseForm = () => {
 
-    const { setToastOptions, serverRequests, userData } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
     const defaultOffense = 
         {description:"", remedialActions:[]as string[], number:0}
@@ -42,10 +42,10 @@ const UpdateOffenseForm = () => {
     }
     
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()  
+      e.preventDefault()   
 
-      const confirmed = window.confirm(`Are you sure you want to Update ${formData?.description}?`); 
-
+      const confirmed = await handleConfirmation("Confirm Action?", `Save changes you've made for ${formData?.description} Offense`, "")
+ 
       if(confirmed){
         try{
             const form = e.target as HTMLFormElement;    
