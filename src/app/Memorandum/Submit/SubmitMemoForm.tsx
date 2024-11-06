@@ -179,7 +179,7 @@ const SubmitMemoForm = () => {
       {/* submit */}
       <button 
           className='btn bg-blue-500 text-white w-full place-self-start my-6' 
-          type='submit'
+          type='submit' disabled={formData?.subject?false:true}
         >Submit</button>
 
 

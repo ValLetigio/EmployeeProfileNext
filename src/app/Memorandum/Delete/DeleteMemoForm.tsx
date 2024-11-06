@@ -156,7 +156,7 @@ const DeleteMemoForm = () => {
       {/* submit */}
       <button 
           className='btn bg-red-500 text-white w-full place-self-start my-6' 
-          type='submit'
+          type='submit' disabled={formData?.subject?false:true}
         >Delete</button>
 
 
