@@ -11,6 +11,8 @@ const DeleteEmployeeForm = () => {
     const { setToastOptions, serverRequests, userData } = useAppContext() 
 
     const defaultFormData = {
+        _id: '',
+        _version: 0,
         name: '',
         address: '',
         phoneNumber: '',
@@ -26,31 +28,27 @@ const DeleteEmployeeForm = () => {
     }
 
 
-    const [ formData, setFormData ] = useState(defaultFormData)
+    const [ formData, setFormData ] = useState<Employee>(defaultFormData)
 
     const [ employeeOptions, setEmployeeOptions ] = useState<Employee[]>([]) 
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()  
         try{
-            const form = e.target as HTMLFormElement;  
+            const form = e.target as HTMLFormElement;    
 
-            console.log('formData:', formData)  
+            console.log(userData)
+            const res = await serverRequests.deleteEmployee(formData, userData)
 
-            const finalFormData = {
-                ...formData,
-                _id: "", 
-                _version: 0, 
-            }
+ 
 
-            // const res = await serverRequests.deleteEmployee(finalFormData, userData)
-
-            const res = { message: "Delete Employee Function does not exist yet." }
+            // const res = { message: "Delete Employee Function does not exist yet." }
 
             if( res.message ){
                 setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
                 form.reset() 
                 setFormData(defaultFormData)  
+                fetchEmployees()
             }
 
         }catch(e:unknown){  
@@ -61,8 +59,7 @@ const DeleteEmployeeForm = () => {
 
     const fetchEmployees = async () => {
         try{ 
-            const employees = await serverRequests.fetchEmployeeList()
-            console.log(employees?.data)
+            const employees = await serverRequests.fetchEmployeeList() 
             setEmployeeOptions(employees?.data)
         }catch(e:unknown){
             console.error('Error fetching employees:', e)
@@ -170,8 +167,8 @@ const DeleteEmployeeForm = () => {
         {/* date */}
         <label className="flex flex-col items-start gap-2 text-sm">
             Date Joined
-            <input type="date" className="grow input input-bordered w-full" placeholder="Date Joined" id='dateJoined'  
-                value={formData?.dateJoined} />
+            <input type="date" className="grow input input-bordered w-full" placeholder="Date Joined" id='dateJoined' 
+            value={formData?.dateJoined?new Date(formData?.dateJoined).toISOString().split('T')[0]:''}/>
         </label>  
 
 

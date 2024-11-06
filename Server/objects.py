@@ -301,7 +301,7 @@ class UserActions(User):
     def deleteMemoAction(self, user, data):
         memo = Memo(data)
         res = memo.deleteMemo(user)
-        return db.delete(res, 'Memo')
+        return db.delete({'_id':res['_id']}, 'Memo')
 
     def submitMemoAction(self, user, data, reason):
         memo = Memo(data)

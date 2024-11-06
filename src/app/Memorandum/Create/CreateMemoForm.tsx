@@ -20,7 +20,7 @@ const CreateMemoForm = () => {
     mediaList: [] as string[],
     memoPhotosList: [] as string[],
     MemoCode: {} as Offense,
-    reason: '',
+    reason: null as unknown as string,
     submitted: false 
   })
 
@@ -31,8 +31,7 @@ const CreateMemoForm = () => {
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
       try{
-          const form = e.target as HTMLFormElement;  
-          console.log('formData:', formData)  
+          const form = e.target as HTMLFormElement;   
 
           const res = await serverRequests.createMemo(formData, userData)
 
@@ -48,7 +47,7 @@ const CreateMemoForm = () => {
               mediaList: [] as string[],
               memoPhotosList: [] as string[],
               MemoCode: {} as Offense,
-              reason: '',
+              reason: null as unknown as string,
               submitted: false 
             })
           }
@@ -92,8 +91,7 @@ const CreateMemoForm = () => {
   const fetchOffenses = async () => {
     try{ 
       const memoCodes = await serverRequests.fetchOffenseList() 
-      setMemoCodes(memoCodes?.data)
-      console.log('memoCodes:', memoCodes)
+      setMemoCodes(memoCodes?.data) 
     }catch(e:unknown){
       console.error('Error fetching memoCodes:', e)
       setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
@@ -103,11 +101,7 @@ const CreateMemoForm = () => {
   useEffect(()=>{
     fetchEmployees() 
     fetchOffenses()
-  },[])
-
-  useEffect(()=>{
-    console.log('formData:', formData)
-  },[formData])
+  },[]) 
 
 
   return (
@@ -179,7 +173,7 @@ const CreateMemoForm = () => {
       {/* Reason */}
       <div className='flex flex-col gap-2 text-sm'>Reason  
         {/* Reason */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason' required
+        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason'  
           onChange={
             (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
               setFormData({ ...formData, reason: e.target.value })

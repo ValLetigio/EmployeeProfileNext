@@ -47,8 +47,7 @@ const CreateEmployeeForm = () => {
 
             const res = await serverRequests.updateEmployee(selectedEmployee, dataToUpdate, userData)
 
-            if(res&&res.message){
-                console.log(form)
+            if(res&&res.message){ 
                 form.reset()
                 setFormData(EmployeeValue)  
                 setSelectedEmployee(EmployeeValue)
@@ -102,22 +101,18 @@ const CreateEmployeeForm = () => {
         const stringFormData = JSON.stringify(formData)
         const stringSelectedEmployee = JSON.stringify(selectedEmployee) 
 
-        if(stringFormData==stringSelectedEmployee && selectedEmployee?._id){
-            console.log("ran")
+        if(stringFormData==stringSelectedEmployee && selectedEmployee?._id){ 
             setDisableSaveButton(true)
             setDataToUpdate({})
         }else{ 
             setDisableSaveButton(false)
-        } 
-
-        console.log(dataToUpdate)
+        }  
     },[selectedEmployee, formData])
 
 
     const fetchEmployees = async () => {
         try{ 
-            const employees = await serverRequests.fetchEmployeeList()
-            console.log(employees?.data)
+            const employees = await serverRequests.fetchEmployeeList() 
             setEmployeeOptions(employees?.data)
         }catch(e:unknown){
             console.error('Error fetching employees:', e)
@@ -144,8 +139,7 @@ const CreateEmployeeForm = () => {
                 onChange={(e:any)=>{
                     setSelectedEmployee(employeeOptions[e.target.value])
                     setFormData(employeeOptions[e.target.value])
-                }}
-                value={formData?._id && ""}
+                }} 
             >
                 <option disabled selected value={""}>Select Employee</option>
                 {employeeOptions&&employeeOptions.map((employee, index) => (
@@ -309,9 +303,9 @@ const CreateEmployeeForm = () => {
 
         {/* submit */}
         <button 
-            className='btn bg-blue-500 text-white w-full place-self-start my-6 ' 
+            className='btn bg-violet-500 text-white w-full place-self-start my-6 ' 
             type='submit' disabled={disableSaveButton} id='save'
-        >Save</button>
+        >Update</button>
 
       
     </form>

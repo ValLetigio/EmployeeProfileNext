@@ -194,16 +194,16 @@ export default function ContextProvider({
   },[]);
 
   useEffect(() => {
-    serverRequests.getEnvironment().then((res) => {
-      console.log('res', res);
+    serverRequests.getEnvironment().then((res) => { 
       setEnvironment(res.data);
     }).catch((error) => {
-      console.log('error', error);
+      console.error('error', error);
     });
-  }, []) 
-  
-  useEffect(() => {
+  }, [])  
+
+  useEffect(() => { 
     if (session?.user) {
+      
       const user = session.user as Session["user"] & {
         roles?: string[];
         _id?: string;
@@ -224,10 +224,9 @@ export default function ContextProvider({
         email: email || '',
         displayName: displayName || ''
       });
-
-      // console.log('userData', userData);
+ 
       setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
-    } 
+    }  
 
     if (status === 'unauthenticated' && !isTestEnv)  {
       router.push('/api/auth/signin');
@@ -235,8 +234,7 @@ export default function ContextProvider({
     if (status === 'unauthenticated' && isTestEnv) {
       router.push('/');
       serverRequests.deleteAllDataInCollection('User')
-      serverRequests.getUserForTesting().then((res) => {
-        console.log('res', res);
+      serverRequests.getUserForTesting().then((res) => { 
         setUserData(res.data);
       })
     }
