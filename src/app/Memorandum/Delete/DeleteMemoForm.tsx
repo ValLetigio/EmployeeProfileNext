@@ -82,7 +82,7 @@ const DeleteMemoForm = () => {
       <h2 className='font-semibold'>Memorandum Deletion</h2>
 
       {/* Memorandum to Submit */} 
-      <div className='flex flex-col text-sm gap-2 '>Memo to Submit 
+      <div className='flex flex-col text-sm gap-2 '>Memo to Delete 
         <select className="select select-bordered w-full " id='Memo' required
           onChange={(e:any)=>{ 
             e.target.value=="null"?setFormData(defaultMemo):setFormData({ ...memoOptions[e.target.value], reason: memoOptions[e.target.value].reason || '' })
