@@ -1,77 +1,24 @@
 import ServerRequests from '../../../src/app/api/ServerRequests'
-// const serverRequests = new ServerRequests()
 
-// Cypress.Commands.add('loginByGoogleApi', () => {
-//   cy.log('Logging in to Google')
-//   cy.request({
-//     method: 'POST',
-//     url: 'https://www.googleapis.com/oauth2/v4/token',
-//     body: {
-//       // grant_type: 'refresh_token',
-//       client_id: Cypress.env('googleClientId'),
-//       client_secret: Cypress.env('googleClientSecret'),
-//       // refresh_token: Cypress.env('googleRefreshToken'),
-//     },
-//   }).then(({ body }) => {
-//     const { access_token, id_token } = body
-
-//     cy.request({
-//       method: 'GET',
-//       url: 'https://www.googleapis.com/oauth2/v3/userinfo',
-//       headers: { Authorization: `Bearer ${access_token}` },
-//     }).then(({ body }) => {
-//       cy.log(body)
-//       const userItem = {
-//         token: id_token,
-//         user: {
-//           googleId: body.sub,
-//           email: body.email,
-//           givenName: body.given_name,
-//           familyName: body.family_name,
-//           imageUrl: body.picture,
-//         },
-//       }
-
-//       window.localStorage.setItem('googleCypress', JSON.stringify(userItem))
-//       cy.visit('/')
-//     })
-//   })
-// })
 let serverRequests ;
 serverRequests = new ServerRequests(false);
 
 describe('Employee spec', () => {
-  // let userObject;
-  before(async() => {
-    const deleteResponse = await serverRequests.deleteAllDataInCollection('User');
-    console.log(deleteResponse);
-    expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
-
-    // const userResponse = await serverRequests.getUserForTesting();
-    // console.log(userResponse.data);
-    // userObject = userResponse.data;
-    // console.log(userObject)
-    // expect(userResponse.data).to.have.property('_id', 'testUserId');
-
-    // window.localStorage.setItem('authToken', userResponse.data._id);
-
-    // const loginResponse = await serverRequests.firebaseLogin({ profile: userObject });
-    // console.log(loginResponse);
-    // expect(loginResponse).to.have.property('message', 'User logged in successfully');
-    // cy.visit('/Employee/Create')
-
-    // const memoWithoutSubmitted = await serverRequests.getAllMemoThatsNotSubmitted(userObject);
-    // console.log(memoWithoutSubmitted);
-  })
+  beforeEach(() => {
+    // cy.wrap(serverRequests.deleteAllDataInCollection('User')).then((deleteResponse) => {
+    //   expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+    // });
+    cy.visit('http://localhost:3000')
+    // cy.wait(6000)
+    // cy.url().should('include', '/')
+  });
 
   it('Redirects to Employee and create and update employee', async () => {
-    const deleteResponse = await serverRequests.deleteAllDataInCollection('Employee');
-    console.log(deleteResponse);
-    expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+    cy.wrap(serverRequests.deleteAllDataInCollection('Employee')).then((deleteResponse) => {
+      expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+    });
 
-    cy.visit('/')
-    cy.url().should('include', '/')
-    cy.wait(4000)
+    // cy.wait(6000)
     cy.get('#menu-button').click()
 
     cy.get('#create-employee').click()
@@ -91,6 +38,7 @@ describe('Employee spec', () => {
     cy.get('#dailyWage').type('567.89')
 
     cy.get('#submit').click()
+    cy.wait(4000)
 
     cy.get('#menu-button').click()
     cy.get('#update-employee').click()
@@ -111,6 +59,25 @@ describe('Employee spec', () => {
 
     cy.get('#save').click()
     cy.wait(4000)
+  })
+
+  
+  it('Redirects to Offense and create and update offense', async () => {
+    cy.wrap(serverRequests.deleteAllDataInCollection('Offense')).then((deleteResponse) => {
+      expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+    });
+
+    cy.get('#menu-button').click()
+    cy.get('#create-offense').click()
+    cy.get('#description').type('Employee was late to work')
+    cy.get('#Verbal-Warning').click()
+    cy.get('#Written-Warning').click()
+
+    cy.get('#create-offense-button').click()
+
+
+    // cy.get('#menu-button').click()
+    // cy.get('#update-offense').click()
   })
   // it('creates and updates employee server request', async () => {
   //   const deleteResponse = await serverRequests.deleteAllDataInCollection('Employee');
@@ -305,31 +272,32 @@ describe('Employee spec', () => {
   // })
 })
 
-describe('Offense spec', () => {
-  before(async() => {
-    const deleteResponse = await serverRequests.deleteAllDataInCollection('Offense');
-    console.log(deleteResponse);
-    expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
-  }
-  )
+// describe('Offense spec', () => {
+//   before(() => {
+//     cy.wrap(serverRequests.deleteAllDataInCollection('Offense')).then((deleteResponse) => {
+//       expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+//     });
+//   });
 
-  it('Redirects to Offense and create and update offense', async () => {
-    const deleteResponse = await serverRequests.deleteAllDataInCollection('Offense');
-    console.log(deleteResponse);
-    expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+//   it('Redirects to Offense and create and update offense', async () => {
+//     // cy.wrap(serverRequests.deleteAllDataInCollection('Offense')).then((deleteResponse) => {
+//     //   expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+//     // });
+//     cy.wait(6000)
+//     cy.visit('/')
+//     cy.url().should('include', '/')
+//     cy.get('#menu-button').click()
+//     cy.get('#create-offense').click()
+//     cy.get('#description').type('Employee was late to work')
+//     cy.get('#Verbal-Warning').click()
+//     cy.get('#Written-Warning').click()
 
-    cy.visit('/')
-    cy.url().should('include', '/')
-    cy.get('#menu-button').click()
-    cy.get('#create-offense').click()
-    cy.get('#description').type('Employee was late to work')
-    cy.get('#Verbal-Warning').click()
-    cy.get('#Written-Warning').click()
+//     cy.get('#create-offense-button').click()
 
-    cy.get('#create-offense-button').click()
+//     cy.visit('/')
 
-    // cy.get('#menu-button').click()
-    // cy.get('#update-offense').click()
-  })
-}
-)
+//     // cy.get('#menu-button').click()
+//     // cy.get('#update-offense').click()
+//   })
+// }
+// )

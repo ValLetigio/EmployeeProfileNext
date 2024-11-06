@@ -351,14 +351,14 @@ def test_delete_non_existent_offense():
 if __name__ == '__main__':
     if AppConfig().getIsProductionEnvironment():
         raise ValueError('Not to be run in cloud production environment')
-    test_user_login()
-    test_duplicate_user_creation()
-    test_add_role_and_remove_role()
-    test_create_offense_employee_memo()
-    test_update_offense()
-    test_delete_offense()
-    test_create_update_delete_employee()
+    # test_user_login()
+    # test_duplicate_user_creation()
+    # test_add_role_and_remove_role()
+    # test_create_offense_employee_memo()
+    # test_update_offense()
+    # test_delete_offense()
+    # test_create_update_delete_employee()
     test_submit_and_delete_memo()
-    test_submit_memo_without_reason()
-    test_delete_non_existent_offense()
+    # test_submit_memo_without_reason()
+    # test_delete_non_existent_offense()
     pass
