@@ -209,8 +209,10 @@ export default function ContextProvider({
   }, [])  
 
   console.log(isTestEnv)
+  console.log(status)
 
   useEffect(() => { 
+    console.log('ran1')
     if (session?.user) {
       
       const user = session.user as Session["user"] & {
@@ -237,17 +239,20 @@ export default function ContextProvider({
       setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     }   
 
-    if (status === 'unauthenticated' && isTestEnv == 'false') { {
+    if (status === 'unauthenticated' && !isTestEnv)  {
+      console.log('ran2')
       router.push('/api/auth/signin');
     }
-    if (status === 'unauthenticated' && isTestEnv == 'true') {
+    if (status === 'unauthenticated' && isTestEnv) {
+      console.log('ran')
       router.push('/');
-      serverRequests.deleteAllDataInCollection('User')
+      // serverRequests.deleteAllDataInCollection('User')
       serverRequests.getUserForTesting().then((res) => { 
         setUserData(res.data);
+        console.log(res.data)
       })
     }
-  }
+  
   }, [session, status, router]);
 
   const handleConfirmation = (question: string, consequence: string, type: string) => {

@@ -432,6 +432,9 @@ def get_all_memo_thats_not_submitted():
 def getUserForTesting():
     if AppConfig().getisLocalEnvironment():
         try:
+            if len(db.read({}, 'User')) > 0:
+                db.delete({}, 'User')
+
             print(Roles().getAllRolesWithPermissions())
 
             user = UserActions({

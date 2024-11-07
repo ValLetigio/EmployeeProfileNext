@@ -3,22 +3,25 @@ import ServerRequests from '../../../src/app/api/ServerRequests'
 let serverRequests ;
 serverRequests = new ServerRequests(false);
 
+
 describe('Employee spec', () => {
   beforeEach(() => {
     // cy.wrap(serverRequests.deleteAllDataInCollection('User')).then((deleteResponse) => {
     //   expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
     // });
-    cy.visit('http://localhost:3000')
-    // cy.wait(6000)
-    // cy.url().should('include', '/')
+
+    cy.visit('/')
+    cy.wait(6000)
   });
+
+  context('Employee', () => {
 
   it('Redirects to Employee and create and update employee', async () => {
     cy.wrap(serverRequests.deleteAllDataInCollection('Employee')).then((deleteResponse) => {
       expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
     });
 
-    // cy.wait(6000)
+    cy.wait(2000)
     cy.get('#menu-button').click()
 
     cy.get('#create-employee').click()
@@ -38,6 +41,8 @@ describe('Employee spec', () => {
     cy.get('#dailyWage').type('567.89')
 
     cy.get('#submit').click()
+    cy.wait(1000)
+    cy.get('#confirm-button').click()
     cy.wait(4000)
 
     cy.get('#menu-button').click()
@@ -58,10 +63,59 @@ describe('Employee spec', () => {
     cy.get('#dailyWage').clear().type('567.90')
 
     cy.get('#save').click()
+    cy.wait(1000)
+    cy.get('#confirm-button').click()
     cy.wait(4000)
   })
 
-  
+})
+
+context('Offense', () => {
+  it('Redirects to Offense and create and update offense', async () => {
+    cy.wrap(serverRequests.deleteAllDataInCollection('Offense')).then((deleteResponse) => {
+      expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+    });
+
+    cy.wait(2000)
+    cy.visit('/')
+    cy.url().should('include', '/')
+    cy.get('#menu-button').click()
+    cy.get('#create-offense').click()
+    cy.get('#description').type('Employee was late to work')
+    cy.get('#Verbal-Warning').click()
+    cy.get('#Written-Warning').click()
+
+    cy.get('#create-offense-button').click()
+    cy.wait(1000)
+    cy.get('#confirm-button').click()
+    cy.wait(4000)
+    cy.visit('/')
+
+    cy.wait(2000)
+    cy.get('#menu-button').click()
+    cy.wait(1000)
+    cy.get('#update-offense').click()
+    cy.wait(1000)
+    cy.get('#select-offense').select('Employee was late to work')
+    cy.get('#description').clear()
+    cy.wait(1000)
+    cy.get('#description').type('Employee was late to work and was rude to customers')
+    cy.get('#Suspension').click()
+    cy.get('#update-offense-button').click()
+    cy.wait(1000)
+    cy.get('#confirm-button').click()
+  })
+})
+
+context('Memo', () => {
+  it('create and update and delete memo server request', async () => {
+    cy.wrap(serverRequests.deleteAllDataInCollection('Memo')).then((deleteResponse) => {
+      expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+    });
+
+    
+  })
+})
   // it('Redirects to Offense and create and update offense', async () => {
   //   cy.wrap(serverRequests.deleteAllDataInCollection('Offense')).then((deleteResponse) => {
   //     expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
@@ -272,32 +326,32 @@ describe('Employee spec', () => {
   // })
 })
 
-describe('Offense spec', () => {
-  before(() => {
-    cy.wrap(serverRequests.deleteAllDataInCollection('Offense')).then((deleteResponse) => {
-      expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
-    });
-  });
+// describe('Offense spec', () => {
+//   before(() => {
+//     cy.wrap(serverRequests.deleteAllDataInCollection('Offense')).then((deleteResponse) => {
+//       expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+//     });
+//   });
 
-  it('Redirects to Offense and create and update offense', async () => {
-    // cy.wrap(serverRequests.deleteAllDataInCollection('Offense')).then((deleteResponse) => {
-    //   expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
-    // });
-    cy.wait(6000)
-    cy.visit('/')
-    cy.url().should('include', '/')
-    cy.get('#menu-button').click()
-    cy.get('#create-offense').click()
-    cy.get('#description').type('Employee was late to work')
-    cy.get('#Verbal-Warning').click()
-    cy.get('#Written-Warning').click()
+//   it('Redirects to Offense and create and update offense', async () => {
+//     // cy.wrap(serverRequests.deleteAllDataInCollection('Offense')).then((deleteResponse) => {
+//     //   expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+//     // });
+//     cy.wait(6000)
+//     cy.visit('/')
+//     cy.url().should('include', '/')
+//     cy.get('#menu-button').click()
+//     cy.get('#create-offense').click()
+//     cy.get('#description').type('Employee was late to work')
+//     cy.get('#Verbal-Warning').click()
+//     cy.get('#Written-Warning').click()
 
-    cy.get('#create-offense-button').click()
+//     cy.get('#create-offense-button').click()
 
-    cy.visit('/')
+//     cy.visit('/')
 
-    // cy.get('#menu-button').click()
-    // cy.get('#update-offense').click()
-  })
-}
-)
+//     // cy.get('#menu-button').click()
+//     // cy.get('#update-offense').click()
+//   })
+// }
+// )

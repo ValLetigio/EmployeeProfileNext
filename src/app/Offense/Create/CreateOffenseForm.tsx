@@ -15,8 +15,8 @@ const CreateOffenseForm = () => {
   })
 
   const remedialActions = [
-    "Verbal Warning",
-    "Written Warning",
+    "Verbal-Warning",
+    "Written-Warning",
     "Counseling or Training",
     "Performance Improvement Plan (PIP)",
     "Suspension",
