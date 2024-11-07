@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 
 import { Employee } from '@/app/Schema'
 
@@ -63,7 +63,7 @@ const DeleteEmployeeForm = () => {
         }
     }  
 
-    const fetchEmployees = async () => {
+    const fetchEmployees = useCallback(async () => {
         try{ 
             const employees = await serverRequests.fetchEmployeeList() 
             setEmployeeOptions(employees?.data)
@@ -71,11 +71,11 @@ const DeleteEmployeeForm = () => {
             console.error('Error fetching employees:', e)
             setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
         }
-    } 
+    },[serverRequests])
 
     useEffect(()=>{
         fetchEmployees() 
-    })   
+    },[fetchEmployees])   
 
   return (
     <form className={` form-style `} ref={formRef}

@@ -1,18 +1,31 @@
-import React from 'react'
+// app/employee/update/page.tsx
+import React from 'react';
+import UpdateEmployeeForm from './UpdateEmployeeForm';
+import type { Employee } from '@/app/Schema';
 
-import UpdateEmployeeForm from './UpdateEmployeeForm' 
+const Page = async () => {
+  const data = {
+    collection: 'Employee',
+  };
+  
+  const res = await fetch('http://127.0.0.1:5000/readAllDataInCollection', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+    cache: 'no-store', // Ensures fresh data on every request
+  }); 
 
-const page = () => {
+  const { data: employeeList }: { data: Employee[] } = await res.json();
+
   return (
-    <div className='w-screen h-screen flex items-center justify-center '> 
-      {/* CreateEmployeeForm container */}
-      <div className={` form-container `} >
-        <UpdateEmployeeForm/>
+    <div className="w-screen h-screen flex items-center justify-center"> 
+      <div className="form-container">
+        <UpdateEmployeeForm employeeList={employeeList} />
       </div>
-
-
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default Page;

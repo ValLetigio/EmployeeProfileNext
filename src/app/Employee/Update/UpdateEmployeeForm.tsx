@@ -1,7 +1,7 @@
 
 'use client'
 
-import React, { useEffect, useState } from 'react' 
+import React, { useEffect, useState, FC } from 'react' 
 
 import { Employee, DataToUpdate } from '@/app/Schema'
 
@@ -9,16 +9,20 @@ import { useAppContext } from '@/app/GlobalContext'
 
 import Image from 'next/image' 
 
-const CreateEmployeeForm = () => {
+interface CreateEmployeeFormProps {
+    employeeList: Employee[]
+}
+
+const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
+
+    console.log(employeeList)
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
     const formRef = React.useRef<HTMLFormElement>(null)
 
     const [disable, setDisable] = useState(true)
-    const [disableSaveButton, setDisableSaveButton] = useState(true)
-
-    const [employeeOptions, setEmployeeOptions] = useState<Employee[]>([]) 
+    const [disableSaveButton, setDisableSaveButton] = useState(true) 
 
     const [dataToUpdate, setDataToUpdate] = useState<DataToUpdate>({})
 
@@ -60,9 +64,7 @@ const CreateEmployeeForm = () => {
                     setDataToUpdate({})
                     setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
                     formRef.current?.scrollIntoView({ behavior: 'smooth' })
-                }
-
-                fetchEmployees()
+                } 
             }catch(e:unknown){  
                 console.error('Error creating employee:', e)
                 setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
@@ -114,24 +116,7 @@ const CreateEmployeeForm = () => {
         }else{ 
             setDisableSaveButton(false)
         }  
-    },[selectedEmployee, formData])
-
-
-    const fetchEmployees = async () => {
-        try{ 
-            const employees = await serverRequests.fetchEmployeeList() 
-            setEmployeeOptions(employees?.data)
-        }catch(e:unknown){
-            console.error('Error fetching employees:', e)
-            setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }
-    }
-
-    const labelStyle = `${disable?'text-gray-300':' '} `
-
-    useEffect(()=>{
-        fetchEmployees() 
-    })  
+    },[selectedEmployee, formData]) 
  
   return (
     <form className={` form-style `} 
@@ -146,12 +131,12 @@ const CreateEmployeeForm = () => {
                 value={formData?._id || ''}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
                     const selectedIndex = e.target.options.selectedIndex - 1
-                    setSelectedEmployee(employeeOptions[selectedIndex])
-                    setFormData(employeeOptions[selectedIndex])
+                    setSelectedEmployee(employeeList[selectedIndex])
+                    setFormData(employeeList[selectedIndex])
                 }} 
             >
                 <option disabled selected value={""}>Select Employee</option>
-                {employeeOptions&&employeeOptions.map((employee, index) => (
+                {employeeList&&employeeList.map((employee, index) => (
                     <option key={index} value={employee?._id} >{employee?.name}</option>
                 ))}
                 <option value="null">None</option>
