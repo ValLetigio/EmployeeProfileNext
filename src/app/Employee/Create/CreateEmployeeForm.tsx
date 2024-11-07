@@ -63,7 +63,7 @@ const CreateEmployeeForm = () => {
         }
     }
 
-    const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => { 
         setFormData({
             ...formData,
             [e.target.id]: e.target.id != 'dailyWage' ? e.target.value : parseFloat(e.target.value)
@@ -186,7 +186,7 @@ const CreateEmployeeForm = () => {
         <label className="flex flex-col items-start gap-2 text-sm">
             Date Joined
             <input type="date" className="grow input input-bordered w-full" placeholder="Date Joined" id='dateJoined' required
-                onChange={handleInputChange}/>
+                onChange={(e)=>{handleInputChange(e)}}/>
         </label>  
 
 

@@ -232,7 +232,7 @@ export default function ContextProvider({
         displayName: displayName || ''
       });
  
-      setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
+      // setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     }   
 
     if (status === 'unauthenticated' && isTestEnv == 'false') {

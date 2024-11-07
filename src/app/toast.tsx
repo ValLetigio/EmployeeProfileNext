@@ -12,28 +12,28 @@ const Toast = () => {
         setTimer(0); 
     },[setToastOptions]);  
 
-    const startTimer = useCallback(() => {
-        const remainingTime = timer || 5; 
-        const decrement = remainingTime / 1000;
+    // const startTimer = useCallback(() => {
+    //     const remainingTime = timer || 5; 
+    //     const decrement = remainingTime / 1000;
 
-        const interval = setInterval(() => {
-            setTimer(prevTimer => {  
-                if (prevTimer <= 0) {
-                    clearInterval(interval);
-                    closeToast(); 
-                    return 0;
-                }
-                return prevTimer - decrement; 
-            });
-        }, decrement); 
-    },[closeToast, timer]);
+    //     const interval = setInterval(() => {
+    //         setTimer(prevTimer => {  
+    //             if (prevTimer <= 0) {
+    //                 clearInterval(interval);
+    //                 closeToast(); 
+    //                 return 0;
+    //             }
+    //             return prevTimer - decrement; 
+    //         });
+    //     }, decrement); 
+    // },[timer]);
 
-    useEffect(() => {
-        if (toastOptions?.open) {
-            setTimer(toastOptions?.timer); 
-            startTimer();
-        }
-    }, [toastOptions, startTimer]);
+    // useEffect(() => {
+    //     if (toastOptions?.open) {
+    //         setTimer(toastOptions?.timer); 
+    //         startTimer();
+    //     }
+    // }, [toastOptions, startTimer]);
 
 
 
@@ -51,6 +51,8 @@ const Toast = () => {
                 return [' ', ' ', ' '];
         }
     }
+
+    // console.log(timer);
 
 
     return (
@@ -75,11 +77,11 @@ const Toast = () => {
                 >{toastOptions?.message}</span>
             </div>
             
-            <progress 
+            {/* <progress 
                 className={`progress w-full ${getToastType()[1]} rounded-none -mt-2 `} 
                 value={(timer / toastOptions?.timer) * 100} 
                 max={100} 
-            /> 
+            />  */}
         </div>
     );
 }

@@ -15,7 +15,12 @@ declare module 'next-auth' {
     interface Session {
         user: {
             _id?: string;
-            roles?: string[];
+            roles?: {
+                User: string[];
+                Memo: string[];
+                Employee: string[];
+                Offender: string[];
+            };
             createdAt?: string | Date;
             isApproved?: boolean;
             name?: string | null;
@@ -47,6 +52,7 @@ const authOption: NextAuthOptions = {
         async jwt({ token, account, profile }) {
             if(profile){
                 const res = await serverRequests.firebaseLogin({profile});
+                console.log('Firebase Login', res);
     
                 if (res.data) {
                     token.firebaseUserId = res.data._id;
@@ -66,14 +72,19 @@ const authOption: NextAuthOptions = {
             if (session?.user) {
                 if (token.sub) {
                     session.user._id = token.sub;
-                }
-            
-                if (token.roles) {
-                    session.user.roles = Array.isArray(token.roles) ? token.roles : [];
-                }
+                } 
             
                 if (token.createdAt) {
                     session.user.createdAt = typeof token.createdAt === 'string' || token.createdAt instanceof Date ? token.createdAt : undefined;
+                }
+
+                if (token.roles) {
+                    session.user.roles = token.roles as {
+                        User: string[];
+                        Memo: string[];
+                        Employee: string[];
+                        Offender: string[];
+                    };
                 }
             
                 if (typeof token.isApproved !== "undefined") {
