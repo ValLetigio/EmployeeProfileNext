@@ -61,7 +61,7 @@ const CreateOffenseForm = () => {
     }
   } 
 
-  const handleCheckboxChange = (event: any) => {
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value; 
     setFormData((prevData) => {
       return {

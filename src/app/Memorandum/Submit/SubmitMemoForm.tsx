@@ -1,10 +1,12 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback  } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
 import { Employee, Offense, Memo } from '@/app/Schema';
+
+import Image from 'next/image';  
  
 const SubmitMemoForm = () => {
 
@@ -73,7 +75,7 @@ const SubmitMemoForm = () => {
   }  
 
 
-  const getAllMemoThatsNotSubmitted = async () => { 
+  const getAllMemoThatsNotSubmitted = useCallback(async () => { 
     try{
       const res = await serverRequests.getAllMemoThatsNotSubmitted(userData)
       if(res){
@@ -83,14 +85,14 @@ const SubmitMemoForm = () => {
       console.error('Error getting all memo:', e)
       setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
     }  
-  }
+  }, [userData, serverRequests, setToastOptions])
 
 
   useEffect(()=>{
     if(userData&&userData._id){
       getAllMemoThatsNotSubmitted()
     }
-  },[userData])  
+  },[userData, getAllMemoThatsNotSubmitted])  
 
 
   return (
@@ -105,9 +107,9 @@ const SubmitMemoForm = () => {
       <div className='flex flex-col text-sm gap-2 '>Memo to Submit 
         <select className="select select-bordered w-full " id='Memo' required
             value={formData?.subject || ''}
-            onChange={(e:any)=>{
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
-            e.target.value=="null"?setFormData(defaultMemo):setFormData({ ...memoOptions[selectedIndex], reason: memoOptions[selectedIndex].reason || '' })
+              setFormData(e.target.value=="null"?defaultMemo:{ ...memoOptions[selectedIndex], reason: memoOptions[selectedIndex].reason || '' })
           }}  
         >
           <option disabled selected value={""}>Select Memo </option>
@@ -170,7 +172,7 @@ const SubmitMemoForm = () => {
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
-          <img src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-20`} alt="mediaList" />
+          <Image src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'   
           onChange={handleFileChange}/>
@@ -180,7 +182,7 @@ const SubmitMemoForm = () => {
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
-          <img src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-20`} alt="mediaList" />
+        <Image src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'   
           onChange={handleFileChange}/>

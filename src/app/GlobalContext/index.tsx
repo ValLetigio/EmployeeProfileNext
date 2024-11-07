@@ -206,9 +206,7 @@ export default function ContextProvider({
     }).catch((error) => {
       console.error('error', error);
     });
-  }, [])  
-
-  console.log(isTestEnv)
+  }, [])   
 
   useEffect(() => { 
     if (session?.user) {

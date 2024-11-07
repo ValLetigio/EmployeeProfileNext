@@ -11,14 +11,21 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET !;
 
 const serverRequests = new ServerRequests(false);
 
-interface CustomSessionUser {
-    _id?: string;
-    roles?: string[];
-    createdAt?: string | Date;
-    isApproved?: boolean;
+declare module 'next-auth' {
+    interface Session {
+        user: {
+            _id?: string;
+            roles?: string[];
+            createdAt?: string | Date;
+            isApproved?: boolean;
+            name?: string | null;
+            email?: string | null;
+            image?: string | null;
+        };
+    }
 }
 
-const authOption:  NextAuthOptions = {
+const authOption: NextAuthOptions = {
     session: {
         strategy: 'jwt',
     },
@@ -56,29 +63,28 @@ const authOption:  NextAuthOptions = {
         },
 
         async session({ session, token }) {
-            if (!session.user) {
-                session.user = {} as CustomSessionUser;
-            } 
-
-            if (token.sub) {
-                (session.user as CustomSessionUser)._id = token.sub;
+            if (session?.user) {
+                if (token.sub) {
+                    session.user._id = token.sub;
+                }
+            
+                if (token.roles) {
+                    session.user.roles = Array.isArray(token.roles) ? token.roles : [];
+                }
+            
+                if (token.createdAt) {
+                    session.user.createdAt = typeof token.createdAt === 'string' || token.createdAt instanceof Date ? token.createdAt : undefined;
+                }
+            
+                if (typeof token.isApproved !== "undefined") {
+                    session.user.isApproved = typeof token.isApproved === 'boolean' ? token.isApproved : undefined;
+                }
+            
+                if (token.image) {
+                    session.user.image = typeof token.image === 'string' ? token.image : '';
+                }
             }
-        
-            if (token.roles) {
-                (session.user as CustomSessionUser).roles = token.roles;
-            }
-        
-            if (token.createdAt) {
-                (session.user as CustomSessionUser).createdAt = token.createdAt;
-            }
-        
-            if (token.isApproved) {
-                (session.user as CustomSessionUser).isApproved = token.isApproved;
-            }
-
-            if (token.image) {
-                session.user.image = token.image as string;
-            }
+            
 
             console.log('Session', session);
 

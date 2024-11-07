@@ -6,7 +6,7 @@ import { useAppContext } from '@/app/GlobalContext';
 
 import { Employee, Offense } from '@/app/Schema';
 
-
+import Image from 'next/image'; 
 
 const CreateMemoForm = () => {
 
@@ -109,7 +109,7 @@ const CreateMemoForm = () => {
   useEffect(()=>{
     fetchEmployees() 
     fetchOffenses()
-  },[]) 
+  }) 
 
 
   return (
@@ -131,7 +131,7 @@ const CreateMemoForm = () => {
       <div className='flex flex-col text-sm gap-2 '>Employee 
         <select className="select select-bordered w-full " id='Employee' required
           value={formData?.Employee?._id || ''}
-          onChange={(e:any)=>{
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
             setFormData({...formData, Employee: employeeOptions[selectedIndex]})
           }} 
@@ -148,7 +148,7 @@ const CreateMemoForm = () => {
       <div className='flex flex-col text-sm gap-2 '>Memo Code
         <select className="select select-bordered w-full " id='MemoCode' required
           value={formData?.MemoCode?.description || ''}
-          onChange={(e:any)=>{
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
             setFormData({...formData, MemoCode: memoCodes[selectedIndex]})
           }} 
@@ -198,7 +198,7 @@ const CreateMemoForm = () => {
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
-          <img src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-20`} alt="mediaList" />
+          <Image src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'   
           onChange={handleFileChange}/>
@@ -208,7 +208,7 @@ const CreateMemoForm = () => {
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
-          <img src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-20`} alt="mediaList" />
+          <Image src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'   
           onChange={handleFileChange}/>

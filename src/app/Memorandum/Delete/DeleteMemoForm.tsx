@@ -1,10 +1,13 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
 import { Employee, Offense, Memo } from '@/app/Schema';
+
+import Image from 'next/image';
+
  
 const DeleteMemoForm = () => {
 
@@ -57,7 +60,7 @@ const DeleteMemoForm = () => {
   }  
 
 
-  const getAllMemoThatsNotSubmitted = async () => { 
+  const getAllMemoThatsNotSubmitted = useCallback(async () => { 
     try{
       const res = await serverRequests.getAllMemoThatsNotSubmitted(userData)
       if(res){
@@ -67,14 +70,14 @@ const DeleteMemoForm = () => {
       console.error('Error getting all memo:', e)
       setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
     }  
-  }
+  },[userData, serverRequests, setToastOptions])
 
 
   useEffect(()=>{
     if(userData&&userData._id){
       getAllMemoThatsNotSubmitted()
     }
-  },[userData])  
+  },[userData, getAllMemoThatsNotSubmitted])  
 
 
   return (
@@ -89,9 +92,9 @@ const DeleteMemoForm = () => {
       <div className='flex flex-col text-sm gap-2 '>Memo to Delete 
         <select className="select select-bordered w-full " id='Memo' required
           value={formData?.subject || ''}
-          onChange={(e:any)=>{
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
             const selectedIndex = e.target.options.selectedIndex - 1
-            e.target.value=="null"?setFormData(defaultMemo):setFormData({ ...memoOptions[selectedIndex], reason: memoOptions[selectedIndex].reason || '' })
+            setFormData(e.target.value=="null"?defaultMemo:{ ...memoOptions[selectedIndex], reason: memoOptions[selectedIndex].reason || '' })
           }}  
         >
           <option disabled selected value={""}>Select Memo </option>
@@ -148,13 +151,13 @@ const DeleteMemoForm = () => {
 
       <div className='text-sm flex flex-col md:flex-row justify-evenly '>
         {/* medialist */}
-        <div className={`${!formData?.mediaList[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 p-1 rounded-lg `}>  
-          <img src={formData?.mediaList[0]} className={` h-20 `} alt="mediaList" />
+        <div className={`${!formData?.mediaList[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 pt-4 p-1 rounded-lg `}>   
+          <Image src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />  
           Photo  
         </div>   
         {/* memoPhotosList */} 
-        <div className={`${!formData?.memoPhotosList[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 p-1 rounded-lg `}>
-          <img src={formData?.memoPhotosList[0]} className={` h-20 `} alt="memoPhotosList" />
+        <div className={`${!formData?.memoPhotosList[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 pt-4 p-1 rounded-lg `}>
+          <Image src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" />  
           Memo Photo    
         </div> 
       </div>

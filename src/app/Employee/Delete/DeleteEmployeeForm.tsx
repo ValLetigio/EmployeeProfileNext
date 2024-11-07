@@ -6,6 +6,9 @@ import { Employee } from '@/app/Schema'
 
 import { useAppContext } from '@/app/GlobalContext' 
 
+import Image from 'next/image'
+
+
 const DeleteEmployeeForm = () => {
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
@@ -72,10 +75,10 @@ const DeleteEmployeeForm = () => {
 
     useEffect(()=>{
         fetchEmployees() 
-    },[])   
+    })   
 
   return (
-    <form className={` form-style `} aria-disabled={true} ref={formRef}
+    <form className={` form-style `} ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     >
         <h2 className='font-semibold'>Employee Deletion</h2>
@@ -84,7 +87,7 @@ const DeleteEmployeeForm = () => {
         <div className='flex flex-col text-sm gap-2 '>Employee to Edit
             <select className="select select-bordered w-full " id='Employee'  
                 value={formData?._id || ''}
-                onChange={(e:any)=>{
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
                     const selectedIndex = e.target.options.selectedIndex - 1
                     setFormData(employeeOptions[selectedIndex])
                 }} 
@@ -138,19 +141,19 @@ const DeleteEmployeeForm = () => {
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
                 <div className='flex justify-evenly items-center mb-1 gap-1 relative bg-gray-100 p-1 rounded-lg'>Photo Of Person    
-                    <img src={formData?.photoOfPerson} className='h-20 ' alt="" />
+                    <Image src={formData?.photoOfPerson} className='h-[60px]' height={60} width={60} alt="photoOfPerson" />  
                 </div> 
             </label>
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex justify-evenly items-center mb-1 gap-1 bg-gray-100 rounded-lg '>Resume    
-                    <img src={formData?.resumePhotosList[0]} className='h-20 ' alt="" />
+                <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-gray-100 rounded-lg '>Resume    
+                    <Image src={formData?.resumePhotosList[0]} className='h-[60px]' height={60} width={60} alt="resumePhotosList" />  
                 </div> 
             </label>
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex justify-evenly items-center mb-1 gap-1 bg-gray-100 rounded-lg '>Bio Data   
-                    <img src={formData?.biodataPhotosList[0]} className='h-20 ' alt="" />
+                <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-gray-100 rounded-lg '>Bio Data   
+                    <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />  
                 </div> 
             </label>
         </div> 

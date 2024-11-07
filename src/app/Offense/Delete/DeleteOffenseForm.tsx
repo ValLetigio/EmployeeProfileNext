@@ -67,8 +67,8 @@ const DeleteOffenseForm = () => {
     }  
 
     useEffect(() => {
-        fetchOffenses()
-    }, []) 
+      fetchOffenses()
+    }) 
 
 
   return (
@@ -79,9 +79,9 @@ const DeleteOffenseForm = () => {
       <div className='flex flex-col text-sm gap-2 '>Offense to Delete 
         <select className="select select-bordered w-full " id='Offense' required
           value={formData?.description || ''}
-          onChange={(e:any)=>{
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
-            e.target.value=="null"?setFormData(defaultOffense):setFormData(offenseOptions[selectedIndex])
+            setFormData(e.target.value=="null"?defaultOffense:offenseOptions[selectedIndex])
           }}  
         >
           <option disabled selected value={""}>Select Offense </option>

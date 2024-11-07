@@ -4,6 +4,8 @@ import React, { useEffect, useState, useRef } from 'react'
 
 import { useAppContext } from '@/app/GlobalContext' 
 
+import Image from 'next/image' 
+
 const CreateEmployeeForm = () => {
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
@@ -143,7 +145,7 @@ const CreateEmployeeForm = () => {
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person    
-                    <img src={formData?.photoOfPerson} className='h-20 ' alt="" />
+                    <Image src={formData?.photoOfPerson} className='h-[60px]' height={60} width={60} alt="photoOfPerson" />
                 </div>
                 <input type="file" className="file-input file-input-bordered sw-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*' required 
                     onChange={handleFileChange}/>
@@ -151,7 +153,7 @@ const CreateEmployeeForm = () => {
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Resume    
-                    <img src={formData?.resumePhotosList[0]} className='h-20 ' alt="" />
+                    <Image src={formData?.resumePhotosList[0]} className='h-[60px]' height={60} width={60} alt="resumePhotosList" />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='resumePhotosList' accept='image/*' 
                     onChange={handleFileChange}/>
@@ -159,7 +161,7 @@ const CreateEmployeeForm = () => {
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Bio Data   
-                    <img src={formData?.biodataPhotosList[0]} className='h-20 ' alt="" />
+                    <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
                     onChange={handleFileChange}/>
