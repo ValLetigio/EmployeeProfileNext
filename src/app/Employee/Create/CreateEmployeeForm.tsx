@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from 'react' 
+import React, { useState, useRef } from 'react' 
 
 import { useAppContext } from '@/app/GlobalContext' 
 
@@ -38,8 +38,6 @@ const CreateEmployeeForm = () => {
         if(confirmed){
             try{
                 const form = e.target as HTMLFormElement;  
-    
-                console.log('formData:', formData)  
     
                 const finalFormData = {
                     ...formData,
@@ -83,16 +81,7 @@ const CreateEmployeeForm = () => {
                 })
             }
         }
-    }
-
-    useEffect(()=>{
-        const timeout = setTimeout(()=>{
-            console.log('formData:', formData)
-        }
-        , 20000)
-        return ()=>clearTimeout(timeout)
-        
-    },[formData])
+    } 
 
   return (
     <form className={` form-style `}

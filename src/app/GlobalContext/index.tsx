@@ -34,7 +34,7 @@ interface AppContextProps {
   confirmationOptions: ConfirmationOptionsSchema;
   setConfirmationOptions: (data: ConfirmationOptionsSchema) => void;
   handleConfirmation: (question: string, consequence: string, type: string) => Promise<boolean>;
-  router: any;
+  router: ReturnType<typeof useRouter>;
 }
 
 // Create the default context with proper types and default values
@@ -59,7 +59,7 @@ const AppContext = createContext<AppContextProps>({
   setConfirmationOptions: () => {}, 
   serverRequests: new ServerRequests( ),
   handleConfirmation: () => new Promise<boolean>(() => {}),
-  router: null,
+  router: {} as ReturnType<typeof useRouter>
 });
 
 

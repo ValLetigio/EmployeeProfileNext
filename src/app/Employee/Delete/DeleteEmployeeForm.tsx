@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, FC, useEffect } from 'react'
+import React, { useState, useRef, FC } from 'react'
 
 import { Employee } from '@/app/Schema'
 

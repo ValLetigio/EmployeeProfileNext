@@ -52,6 +52,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
     
               form.reset()
               setFormData(defaultMemo) 
+              setSubmittedMemos([...submittedMemos, formData.description])
 
               formRef.current?.scrollIntoView({ behavior: 'smooth' })
             }else{
