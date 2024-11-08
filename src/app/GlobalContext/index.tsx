@@ -34,6 +34,7 @@ interface AppContextProps {
   confirmationOptions: ConfirmationOptionsSchema;
   setConfirmationOptions: (data: ConfirmationOptionsSchema) => void;
   handleConfirmation: (question: string, consequence: string, type: string) => Promise<boolean>;
+  router: ReturnType<typeof useRouter>;
 }
 
 // Create the default context with proper types and default values
@@ -56,8 +57,9 @@ const AppContext = createContext<AppContextProps>({
   setToastOptions: () => {},
   confirmationOptions: {open: false,  question: '', consequence: "", type: '', onConfirm: () => {}, onCancel: () => {}},
   setConfirmationOptions: () => {}, 
-  serverRequests: new ServerRequests(false),
+  serverRequests: new ServerRequests( ),
   handleConfirmation: () => new Promise<boolean>(() => {}),
+  router: {} as ReturnType<typeof useRouter>
 });
 
 
@@ -69,7 +71,7 @@ export default function ContextProvider({
   const pathname = usePathname();
   const { data: session, status } = useSession(); 
   const router = useRouter();
-  const serverRequests = new ServerRequests(false);
+  const serverRequests = new ServerRequests( );
 
   const [environment, setEnvironment] = useState<string>('');
   const app = initializeApp(firebaseConfig);
@@ -86,7 +88,7 @@ export default function ContextProvider({
     isApproved: false,
     email: '',
     displayName: '',
-    image: '',
+    image: ''
   });
 
   const [sampleText] = useState<string>('');
@@ -206,10 +208,7 @@ export default function ContextProvider({
     }).catch((error) => {
       console.error('error', error);
     });
-  }, [])  
-
-  console.log(isTestEnv)
-  console.log(status)
+  }, [])   
 
   useEffect(() => { 
     console.log('ran1')
@@ -279,7 +278,7 @@ export default function ContextProvider({
     userData,
     setUserData,
     sampleText,
-    cards,
+    cards, router,
     pathname,
     toastOptions, setToastOptions,
     serverRequests,

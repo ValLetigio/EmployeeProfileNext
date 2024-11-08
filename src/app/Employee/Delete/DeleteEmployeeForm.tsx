@@ -1,14 +1,23 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState, useRef, FC } from 'react'
 
 import { Employee } from '@/app/Schema'
 
 import { useAppContext } from '@/app/GlobalContext' 
 
-const DeleteEmployeeForm = () => {
+import Image from 'next/image'
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
+interface CreateEmployeeFormProps {
+    employeeList: Employee[]
+}
+
+
+const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
+
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext() 
+
+    const formRef = useRef<HTMLFormElement>(null)
 
     const defaultFormData = {
         _id: '',
@@ -25,12 +34,10 @@ const DeleteEmployeeForm = () => {
         isRegular: false,
         isProductionEmployee: false,
         dailyWage: 0
-    }
+    } 
 
-
-    const [ formData, setFormData ] = useState<Employee>(defaultFormData)
-
-    const [ employeeOptions, setEmployeeOptions ] = useState<Employee[]>([]) 
+    const [ formData, setFormData ] = useState<Employee>(defaultFormData)  
+    
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()   
@@ -43,36 +50,23 @@ const DeleteEmployeeForm = () => {
                 
                 const res = await serverRequests.deleteEmployee(formData, userData)  
 
-                if( res.message ){
-                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
+                if( res.message ){ 
+                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
                     form.reset() 
-                    setFormData(defaultFormData)  
-                    fetchEmployees()
+                    setFormData(defaultFormData)   
+                    formRef.current?.scrollIntoView({ behavior: 'smooth' })
+                    router.refresh()
                 }
 
             }catch(e:unknown){  
-                console.error('Error creating employee:', e)
-                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+                console.error('Error deleting employee:', e)
+                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
             }  
         }
-    }  
-
-    const fetchEmployees = async () => {
-        try{ 
-            const employees = await serverRequests.fetchEmployeeList() 
-            setEmployeeOptions(employees?.data)
-        }catch(e:unknown){
-            console.error('Error fetching employees:', e)
-            setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }
-    } 
-
-    useEffect(()=>{
-        fetchEmployees() 
-    },[])   
+    }    
 
   return (
-    <form className={` form-style `} aria-disabled={true}
+    <form className={` form-style `} ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     >
         <h2 className='font-semibold'>Employee Deletion</h2>
@@ -80,13 +74,15 @@ const DeleteEmployeeForm = () => {
         {/* employee */} 
         <div className='flex flex-col text-sm gap-2 '>Employee to Edit
             <select className="select select-bordered w-full " id='Employee'  
-                onChange={(e:any)=>{ 
-                    setFormData(employeeOptions[e.target.value])
+                value={formData?._id || ''}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
+                    const selectedIndex = e.target.options.selectedIndex - 1
+                    setFormData(employeeList[selectedIndex])
                 }} 
             >
                 <option disabled selected value={""}>Select Employee</option>
-                {employeeOptions&&employeeOptions.map((employee, index) => (
-                    <option key={index} value={index}>{employee?.name}</option>
+                {employeeList&&employeeList.map((employee, index) => (
+                    <option key={index} value={employee?._id}>{employee?.name}</option>
                 ))}
                 <option value="null">None</option>
             </select>
@@ -133,19 +129,19 @@ const DeleteEmployeeForm = () => {
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
                 <div className='flex justify-evenly items-center mb-1 gap-1 relative bg-gray-100 p-1 rounded-lg'>Photo Of Person    
-                    <img src={formData?.photoOfPerson} className='h-20 ' alt="" />
+                    <Image src={formData?.photoOfPerson} className='h-[60px]' height={60} width={60} alt="photoOfPerson" />  
                 </div> 
             </label>
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex justify-evenly items-center mb-1 gap-1 bg-gray-100 rounded-lg '>Resume    
-                    <img src={formData?.resumePhotosList[0]} className='h-20 ' alt="" />
+                <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-gray-100 rounded-lg '>Resume    
+                    <Image src={formData?.resumePhotosList[0]} className='h-[60px]' height={60} width={60} alt="resumePhotosList" />  
                 </div> 
             </label>
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex justify-evenly items-center mb-1 gap-1 bg-gray-100 rounded-lg '>Bio Data   
-                    <img src={formData?.biodataPhotosList[0]} className='h-20 ' alt="" />
+                <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-gray-100 rounded-lg '>Bio Data   
+                    <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />  
                 </div> 
             </label>
         </div> 

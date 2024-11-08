@@ -1,14 +1,22 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
 import { Employee, Offense, Memo } from '@/app/Schema';
+
+import Image from 'next/image';
+
+interface DeleteMemoFormProps {
+  memoList: Memo[], 
+}
  
-const DeleteMemoForm = () => {
+const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
 
   const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+
+  const formRef = useRef<HTMLFormElement>(null)
 
   const defaultMemo = {
     date: '',
@@ -23,10 +31,11 @@ const DeleteMemoForm = () => {
   }
 
 
-  const [ formData, setFormData ] = useState(defaultMemo) 
+  const [ formData, setFormData ] = useState(defaultMemo)  
 
-  const [ memoOptions, setMemoOptions ] = useState<Memo[]>([])
+  const [ filteredMemos, setFilteredMemos ] = useState<Memo[]>([])
 
+  const [ deletedMemos, setDeletedMemos ] = useState<string[]>([])
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()   
@@ -42,41 +51,32 @@ const DeleteMemoForm = () => {
         if(res&&res.data){
           setToastOptions({ open: true, message: res?.message || "Memo Deleted successfully", type: 'success', timer: 5 });
 
+          setDeletedMemos([...deletedMemos, formData?.description])
           form.reset()
-          setFormData(defaultMemo)
-          getAllMemoThatsNotSubmitted()
+          setFormData(defaultMemo) 
+          formRef.current?.scrollIntoView({ behavior: 'smooth' })
         }
       }catch(e:unknown){ 
-        console.error('Error creating Memo:', e)
-        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+        console.error('Error Deleting Memo:', e)
+        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
       }  
     }
-  }  
+  }    
 
-
-  const getAllMemoThatsNotSubmitted = async () => { 
-    try{
-      const res = await serverRequests.getAllMemoThatsNotSubmitted(userData)
-      if(res){
-        setMemoOptions(res.data) 
-      }
-    }catch(e:unknown){ 
-      console.error('Error getting all memo:', e)
-      setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-    }  
+  const filterMemos = (memoList: Memo[]) => {
+    const filteredMemos = memoList.filter(memo=>!deletedMemos.includes(memo.description)&&!memo?.submitted)
+    
+    setFilteredMemos(filteredMemos)
   }
 
-
-  useEffect(()=>{
-    if(userData&&userData._id){
-      getAllMemoThatsNotSubmitted()
-    }
-  },[userData])  
-
+  useEffect(() => {
+    filterMemos(memoList) 
+  },[memoList, deletedMemos]) 
 
   return (
     <form
       className={` form-style `} 
+      ref={formRef}
       onSubmit={handleSubmit}
     >
       <h2 className='font-semibold'>Memorandum Deletion</h2>
@@ -84,13 +84,15 @@ const DeleteMemoForm = () => {
       {/* Memorandum to Submit */} 
       <div className='flex flex-col text-sm gap-2 '>Memo to Delete 
         <select className="select select-bordered w-full " id='Memo' required
-          onChange={(e:any)=>{ 
-            e.target.value=="null"?setFormData(defaultMemo):setFormData({ ...memoOptions[e.target.value], reason: memoOptions[e.target.value].reason || '' })
+          value={formData?.subject || ''}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
+            const selectedIndex = e.target.options.selectedIndex - 1
+            setFormData(e.target.value=="null"?defaultMemo:{ ...filteredMemos[selectedIndex], reason: filteredMemos[selectedIndex].reason || '' })
           }}  
         >
           <option disabled selected value={""}>Select Memo </option>
-          {memoOptions&&memoOptions.map((memo, index) => (
-            <option key={index} value={index}>{`${memo?.Employee?.name}, (${memo?.subject})`}</option>
+          {filteredMemos&&filteredMemos.map((memo, index) => (
+            <option key={index} value={memo?.subject}>{`${memo?.Employee?.name}, (${memo?.subject})`}</option>
           ))}
           <option value="null">None</option>
         </select>
@@ -142,13 +144,13 @@ const DeleteMemoForm = () => {
 
       <div className='text-sm flex flex-col md:flex-row justify-evenly '>
         {/* medialist */}
-        <div className={`${!formData?.mediaList[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 p-1 rounded-lg `}>  
-          <img src={formData?.mediaList[0]} className={` h-20 `} alt="mediaList" />
+        <div className={`${!formData?.mediaList[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 pt-4 p-1 rounded-lg `}>   
+          <Image src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />  
           Photo  
         </div>   
         {/* memoPhotosList */} 
-        <div className={`${!formData?.memoPhotosList[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 p-1 rounded-lg `}>
-          <img src={formData?.memoPhotosList[0]} className={` h-20 `} alt="memoPhotosList" />
+        <div className={`${!formData?.memoPhotosList[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 pt-4 p-1 rounded-lg `}>
+          <Image src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" />  
           Memo Photo    
         </div> 
       </div>

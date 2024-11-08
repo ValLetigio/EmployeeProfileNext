@@ -19,9 +19,7 @@ const Confirmation = () => {
     const handleCancel = () => {
         confirmationOptions.onCancel(); 
         setConfirmationOptions(clearedOptions);
-    } 
-
-    console.log(confirmationOptions)
+    }  
 
   return (
     <div 

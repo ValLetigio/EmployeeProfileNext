@@ -1,18 +1,25 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
 import { Employee, Offense } from '@/app/Schema';
 
+import Image from 'next/image'; 
 
+interface CreateMemoFormProps {
+  employeeList: Employee[],
+  offenseList: Offense[]
+}
 
-const CreateMemoForm = () => {
+const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
 
-  const [ formData, setFormData ] = useState({
+  const formRef = useRef<HTMLFormElement>(null)
+
+  const defaultMemo = {
     date: '',
     Employee: {} as Employee, 
     description: '',
@@ -22,11 +29,9 @@ const CreateMemoForm = () => {
     MemoCode: {} as Offense,
     reason: null as unknown as string,
     submitted: false 
-  })
+  }
 
-  const [ employeeOptions, setEmployeeOptions ] = useState<Employee[]>([])
-
-  const [ memoCodes, setMemoCodes ] = useState<Offense[]>([]) 
+  const [ formData, setFormData ] = useState(defaultMemo)  
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
@@ -43,20 +48,14 @@ const CreateMemoForm = () => {
               setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
     
               form.reset()
-              setFormData({
-                date: '',
-                Employee: {} as Employee, 
-                description: '',
-                subject: '',
-                mediaList: [] as string[],
-                memoPhotosList: [] as string[],
-                MemoCode: {} as Offense,
-                reason: null as unknown as string,
-                submitted: false 
-              })
+              setFormData(defaultMemo)
+
+              router.refresh()
+
+              formRef.current?.scrollIntoView({ behavior: 'smooth' })
             }
         }catch(e:unknown){ 
-          console.error('Error creating employee:', e)
+          console.error('Error creating Memo:', e)
           setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
         }  
       }
@@ -81,37 +80,12 @@ const CreateMemoForm = () => {
               })
           }
       }
-  } 
-
-  const fetchEmployees = async () => {
-    try{ 
-      const employees = await serverRequests.fetchEmployeeList() 
-      setEmployeeOptions(employees?.data)
-    }catch(e:unknown){
-      console.error('Error fetching employees:', e)
-      setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-    }
-  } 
-
-  const fetchOffenses = async () => {
-    try{ 
-      const memoCodes = await serverRequests.fetchOffenseList() 
-      setMemoCodes(memoCodes?.data) 
-    }catch(e:unknown){
-      console.error('Error fetching memoCodes:', e)
-      setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-    }
-  }
-
-  useEffect(()=>{
-    fetchEmployees() 
-    fetchOffenses()
-  },[]) 
-
-
+  }   
+ 
   return (
     <form
       className={` form-style `} 
+      ref={formRef}
       onSubmit={handleSubmit}
     >
       <h2 className='font-semibold'>Memorandum Creation</h2>
@@ -126,13 +100,15 @@ const CreateMemoForm = () => {
       {/* employee */} 
       <div className='flex flex-col text-sm gap-2 '>Employee 
         <select className="select select-bordered w-full " id='Employee' required
-          onChange={(e:any)=>{ 
-            setFormData({...formData, Employee: employeeOptions[e.target.value]})
+          value={formData?.Employee?._id || ''}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
+              const selectedIndex = e.target.options.selectedIndex - 1
+            setFormData({...formData, Employee: employeeList[selectedIndex]})
           }} 
         >
           <option disabled selected value={""}>Select Employee</option>
-          {employeeOptions&&employeeOptions.map((employee, index) => (
-            <option key={index} value={index}>{employee?.name}</option>
+          {employeeList&&employeeList.map((employee, index) => (
+            <option key={index} value={employee?._id}>{employee?.name}</option>
           ))}
           <option value="null">None</option>
         </select>
@@ -141,13 +117,15 @@ const CreateMemoForm = () => {
       {/* Offense */} 
       <div className='flex flex-col text-sm gap-2 '>Memo Code
         <select className="select select-bordered w-full " id='MemoCode' required
-          onChange={(e:any)=>{ 
-            setFormData({...formData, MemoCode: memoCodes[e.target.value]})
+          value={formData?.MemoCode?.description || ''}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
+              const selectedIndex = e.target.options.selectedIndex - 1
+            setFormData({...formData, MemoCode: offenseList[selectedIndex]})
           }} 
         >
           <option disabled selected value={""}>Select Offense</option>
-          {memoCodes&&memoCodes.map((code, index) => (
-            <option key={index} value={index}>{code?.description}</option>
+          {offenseList&&offenseList.map((code, index) => (
+            <option key={index} value={code?.description}>{code?.description}</option>
           ))}
           <option value="null">None</option>
         </select>
@@ -190,7 +168,7 @@ const CreateMemoForm = () => {
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
-          <img src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-20`} alt="mediaList" />
+          <Image src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'   
           onChange={handleFileChange}/>
@@ -200,7 +178,7 @@ const CreateMemoForm = () => {
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
-          <img src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-20`} alt="mediaList" />
+          <Image src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'   
           onChange={handleFileChange}/>

@@ -1,12 +1,16 @@
 'use client'
 
-import React, { useEffect, useState } from 'react' 
+import React, { useState, useRef } from 'react' 
 
 import { useAppContext } from '@/app/GlobalContext' 
 
+import Image from 'next/image' 
+
 const CreateEmployeeForm = () => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext() 
+
+    const formRef = useRef<HTMLFormElement>(null)
 
     const defaultFormData = {
         name: '',
@@ -35,8 +39,6 @@ const CreateEmployeeForm = () => {
             try{
                 const form = e.target as HTMLFormElement;  
     
-                console.log('formData:', formData)  
-    
                 const finalFormData = {
                     ...formData,
                     _id: "", 
@@ -49,16 +51,18 @@ const CreateEmployeeForm = () => {
                     setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
                     form.reset() 
                     setFormData(defaultFormData)  
+                    formRef.current?.scrollIntoView({ behavior: 'smooth' })
+                    router.refresh()
                 }
     
             }catch(e:unknown){  
                 console.error('Error creating employee:', e)
-                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
             }  
         }
     }
 
-    const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => { 
         setFormData({
             ...formData,
             [e.target.id]: e.target.id != 'dailyWage' ? e.target.value : parseFloat(e.target.value)
@@ -77,19 +81,11 @@ const CreateEmployeeForm = () => {
                 })
             }
         }
-    }
-
-    useEffect(()=>{
-        const timeout = setTimeout(()=>{
-            console.log('formData:', formData)
-        }
-        , 20000)
-        return ()=>clearTimeout(timeout)
-        
-    },[formData])
+    } 
 
   return (
     <form className={` form-style `}
+        ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     >
         <h2 className='font-semibold' 
@@ -139,7 +135,7 @@ const CreateEmployeeForm = () => {
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person    
-                    <img src={formData?.photoOfPerson} className='h-20 ' alt="" />
+                    <Image src={formData?.photoOfPerson} className='h-[60px]' height={60} width={60} alt="photoOfPerson" />
                 </div>
                 <input type="file" className="file-input file-input-bordered sw-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*' required 
                     onChange={handleFileChange}/>
@@ -147,7 +143,7 @@ const CreateEmployeeForm = () => {
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Resume    
-                    <img src={formData?.resumePhotosList[0]} className='h-20 ' alt="" />
+                    <Image src={formData?.resumePhotosList[0]} className='h-[60px]' height={60} width={60} alt="resumePhotosList" />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='resumePhotosList' accept='image/*' 
                     onChange={handleFileChange}/>
@@ -155,7 +151,7 @@ const CreateEmployeeForm = () => {
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Bio Data   
-                    <img src={formData?.biodataPhotosList[0]} className='h-20 ' alt="" />
+                    <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
                     onChange={handleFileChange}/>
@@ -180,7 +176,7 @@ const CreateEmployeeForm = () => {
         <label className="flex flex-col items-start gap-2 text-sm">
             Date Joined
             <input type="date" className="grow input input-bordered w-full" placeholder="Date Joined" id='dateJoined' required
-                onChange={handleInputChange}/>
+                onChange={(e)=>{handleInputChange(e)}}/>
         </label>  
 
 

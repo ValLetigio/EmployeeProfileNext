@@ -1,22 +1,26 @@
 
 'use client'
 
-import React, { useEffect, useState } from 'react' 
+import React, { useEffect, useState, FC } from 'react' 
 
 import { Employee, DataToUpdate } from '@/app/Schema'
 
 import { useAppContext } from '@/app/GlobalContext' 
 
-const CreateEmployeeForm = () => {
+import Image from 'next/image' 
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+interface CreateEmployeeFormProps {
+    employeeList: Employee[]
+}
+
+const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {  
+
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
 
     const formRef = React.useRef<HTMLFormElement>(null)
 
     const [disable, setDisable] = useState(true)
-    const [disableSaveButton, setDisableSaveButton] = useState(true)
-
-    const [employeeOptions, setEmployeeOptions] = useState<Employee[]>([]) 
+    const [disableSaveButton, setDisableSaveButton] = useState(true) 
 
     const [dataToUpdate, setDataToUpdate] = useState<DataToUpdate>({})
 
@@ -52,18 +56,17 @@ const CreateEmployeeForm = () => {
                 const res = await serverRequests.updateEmployee(selectedEmployee, dataToUpdate, userData)
 
                 if(res&&res.message){ 
-                    form.reset()
-                    setFormData(EmployeeValue)  
-                    setSelectedEmployee(EmployeeValue)
-                    setDataToUpdate({})
-                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
-                    formRef.current?.scrollIntoView({ behavior: 'smooth' })
+                    form.reset() 
+                    setFormData(EmployeeValue) 
+                    setSelectedEmployee(EmployeeValue) 
+                    setDataToUpdate({}) 
+                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 }); 
+                    formRef.current?.scrollIntoView({ behavior: 'smooth' }) 
+                    router.refresh() 
                 }
-
-                fetchEmployees()
             }catch(e:unknown){  
-                console.error('Error creating employee:', e)
-                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+                console.error('Error Updating employee:', e)
+                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
             }  
         }
     }
@@ -112,43 +115,30 @@ const CreateEmployeeForm = () => {
         }else{ 
             setDisableSaveButton(false)
         }  
-    },[selectedEmployee, formData])
+    },[selectedEmployee, formData]) 
 
-
-    const fetchEmployees = async () => {
-        try{ 
-            const employees = await serverRequests.fetchEmployeeList() 
-            setEmployeeOptions(employees?.data)
-        }catch(e:unknown){
-            console.error('Error fetching employees:', e)
-            setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }
-    }
-
-    const labelStyle = `${disable?'text-gray-300':' '} `
-
-    useEffect(()=>{
-        fetchEmployees() 
-    },[])  
+    const labelStyle = `${selectedEmployee?._id ? '': 'text-gray-300'}`
  
   return (
     <form className={` form-style `} 
         ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     >
-        <h2 className='font-semibold'>Update Employee</h2>
+        <h2 className='font-semibold' >Update Employee</h2>
 
         {/* employee */} 
         <div className='flex flex-col text-sm gap-2 '>Employee to Edit
             <select className="select select-bordered w-full " id='Employee' required
-                onChange={(e:any)=>{
-                    setSelectedEmployee(employeeOptions[e.target.value])
-                    setFormData(employeeOptions[e.target.value])
+                value={formData?._id || ''}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
+                    const selectedIndex = e.target.options.selectedIndex - 1
+                    setSelectedEmployee(employeeList[selectedIndex])
+                    setFormData(employeeList[selectedIndex])
                 }} 
             >
                 <option disabled selected value={""}>Select Employee</option>
-                {employeeOptions&&employeeOptions.map((employee, index) => (
-                    <option key={index} value={index}>{employee?.name}</option>
+                {employeeList&&employeeList.map((employee, index) => (
+                    <option key={index} value={employee?._id} >{employee?.name}</option>
                 ))}
                 <option value="null">None</option>
             </select>
@@ -167,7 +157,7 @@ const CreateEmployeeForm = () => {
                     <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
                 </svg> 
                 <input type="text" className="grow" placeholder="Name" id="name" disabled={disable}
-                    value={formData?.name}
+                    value={formData?.name || ""}
                     onChange={handleInputChange}/>
             </label>
         </div>
@@ -176,7 +166,7 @@ const CreateEmployeeForm = () => {
         {/* address */} 
         <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>Address
             <textarea className="textarea textarea-bordered" placeholder="Address" id='address' disabled={disable}
-                value={formData?.address}
+                value={formData?.address || ""}
                 onChange={
                     (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
                         setFormData({ ...formData, address: e.target.value })
@@ -197,7 +187,7 @@ const CreateEmployeeForm = () => {
                     />
                 </svg> 
                 <input type="text" className="grow" placeholder="Phone Number" id='phoneNumber' disabled={disable}
-                    value={formData?.phoneNumber}
+                    value={formData?.phoneNumber || ""}
                     onChange={handleInputChange}/>
             </label>
         </div>
@@ -207,29 +197,26 @@ const CreateEmployeeForm = () => {
         <div className={'flex flex-wrap gap-3 md:gap-2 justify-between w-full ' + labelStyle}>
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
-                <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person    
-                    <img src={formData?.photoOfPerson} className='h-20 ' alt="" />
+                <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person  
+                    <Image src={formData?.photoOfPerson} className='h-[60px]' height={60} width={60} alt="photoOfPerson" /> 
                 </div>
-                <input type="file" className="file-input file-input-bordered sw-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*'   
-                    // value={formData?.photoOfPerson}
+                <input type="file" className="file-input file-input-bordered sw-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*' 
                     onChange={handleFileChange} disabled={disable}/>
             </label>
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative '>Resume  
-                    <img src={formData?.resumePhotosList[0]} className='h-20 ' alt="" />
+                    <Image src={formData?.resumePhotosList[0]} className='h-[60px]' height={60} width={60} alt="resumePhotosList" /> 
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='resumePhotosList' accept='image/*' 
-                    // value={formData?.resumePhotosList[0]}
                     onChange={handleFileChange} disabled={disable}/>
             </label>
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1  '>Bio Data  
-                    <img src={formData?.biodataPhotosList[0]} className='h-20 ' alt="" />
+                    <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />  
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
-                    // value={formData?.biodataPhotosList[0]}
                     onChange={handleFileChange} disabled={disable}/>
             </label>
         </div> 
@@ -243,7 +230,7 @@ const CreateEmployeeForm = () => {
                     <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
                 </svg> 
                 <input type="email" className="grow" placeholder="E-mail" id='email' 
-                    value={formData?.email}
+                    value={formData?.email || ""}
                     onChange={handleInputChange} disabled={disable}/>
             </label>
         </div>
@@ -267,7 +254,7 @@ const CreateEmployeeForm = () => {
                         d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z" clipRule="evenodd" />
                 </svg> 
                 <input type="text" className="grow" placeholder="Company"   id='company' 
-                value={formData?.company}
+                value={formData?.company || ""}
                 onChange={handleInputChange} disabled={disable}/>
             </label>
         </div>
@@ -279,14 +266,20 @@ const CreateEmployeeForm = () => {
                 <p className={"label-text text-base " + labelStyle}>Is Regular?</p>
                 <input type="checkbox" defaultChecked className="checkbox"   id='isRegular' disabled={disable}
                     checked={formData?.isRegular}
-                    onChange={(e)=>setFormData({...formData, isRegular:e.target.checked})}/>
+                    onChange={(e)=>{
+                        setFormData({...formData, isRegular:e.target.checked})
+                        setDataToUpdate({...dataToUpdate, isRegular:e.target.checked})
+                    }}/>
             </label> 
             {/* isProductionEmployee */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className={"label-text text-base " + labelStyle}>Is Production Employee?</p>
                 <input type="checkbox" defaultChecked className="checkbox"   id='isProductionEmployee' disabled={disable}  
                     checked={formData?.isProductionEmployee}
-                    onChange={(e)=>setFormData({...formData, isProductionEmployee:e.target.checked})}/>
+                    onChange={(e)=>{
+                        setFormData({...formData, isProductionEmployee:e.target.checked})
+                        setDataToUpdate({...dataToUpdate, isProductionEmployee:e.target.checked})
+                    }}/>
             </label> 
         </div>
 
@@ -300,7 +293,7 @@ const CreateEmployeeForm = () => {
                 </svg>
 
                 <input type="number" className="grow" placeholder="Daily Wage"   id='dailyWage' step={0.00001} disabled={disable}
-                    value={formData?.dailyWage}
+                    value={formData?.dailyWage || ""}
                     onChange={handleInputChange}/>
             </label>
         </div> 
@@ -309,7 +302,7 @@ const CreateEmployeeForm = () => {
         {/* submit */}
         <button 
             className='btn bg-violet-500 text-white w-full place-self-start my-6 ' 
-            type='submit' disabled={disableSaveButton} id='save'
+            type='submit' disabled={disableSaveButton || !formData?._id} id='save'
             
         >Update</button>
 

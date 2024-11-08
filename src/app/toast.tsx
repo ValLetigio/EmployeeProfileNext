@@ -1,13 +1,18 @@
 'use client';
 
-import React, { useEffect, useState } from 'react'; 
+import React, { useState, useCallback, useEffect } from 'react'; 
 import { useAppContext } from './GlobalContext'; 
 
 const Toast = () => { 
     const { toastOptions, setToastOptions } = useAppContext();    
     const [timer, setTimer] = useState(toastOptions?.timer);
 
-    const startTimer = () => {
+    const closeToast = useCallback(() => {
+        setToastOptions({ open: false, message: '', type: '', timer: 0 });
+        setTimer(0); 
+    },[setToastOptions]);  
+
+    const startTimer = useCallback(() => {
         const remainingTime = timer || 5; 
         const decrement = remainingTime / 1000;
 
@@ -21,7 +26,7 @@ const Toast = () => {
                 return prevTimer - decrement; 
             });
         }, decrement); 
-    };
+    }, [timer])
 
     useEffect(() => {
         if (toastOptions?.open) {
@@ -29,12 +34,7 @@ const Toast = () => {
             startTimer();
         }
     }, [toastOptions]);
-
-    const closeToast = () => {
-        setToastOptions({ open: false, message: '', type: '', timer: 0 });
-        setTimer(0); 
-    };  
-
+ 
     const getToastType = () => {
         switch (toastOptions?.type) {
             case 'success':
@@ -49,8 +49,7 @@ const Toast = () => {
                 return [' ', ' ', ' '];
         }
     }
-
-
+  
     return (
         <div 
             className={` flex items-center justify-center 
@@ -60,7 +59,10 @@ const Toast = () => {
                 
         >
             <div className={`min-w-[50vw] md:min-w-max md:max-w-[20vw] alert text-white text-wrap px-5 rounded ${getToastType()[0]}`}
-                onClick={() => {closeToast(), navigator.clipboard.writeText(toastOptions?.message)}} 
+                onClick={() => {
+                    closeToast()
+                    navigator.clipboard.writeText(toastOptions?.message)
+                }} 
                 onMouseEnter={() => setTimer(50)} 
                 onMouseLeave={() => setTimer(toastOptions?.timer)}
             >

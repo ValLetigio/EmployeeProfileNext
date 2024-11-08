@@ -1,45 +1,28 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import { useAppContext } from '@/app/GlobalContext';
 
 import { DataToUpdate, Offense } from '@/app/Schema';
 
-const UpdateOffenseForm = () => {
+interface UpdateOffenseFormProps {
+  offenseList: Offense[]
+  remedialActions: string[]
+}
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remedialActions}) => {
+
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
+
+    const formRef = React.useRef<HTMLFormElement>(null)
 
     const defaultOffense = 
         {description:"", remedialActions:[]as string[], number:0}
 
     const [ formData, setFormData ] = useState(defaultOffense)
 
-    const [ dataToUpdate, setDataToUpdate ] = useState<DataToUpdate>({ remedialActions: [] })
-
-    const [ offenseOptions, setOffenseOptions ] = useState<Offense[]>([])
-  
-    const remedialActions = [
-      "Verbal-Warning",
-      "Written-Warning",
-      "Counseling or Training",
-      "Performance Improvement Plan (PIP)",
-      "Suspension",
-      "Probation",
-      "Mediation or Conflict Resolution",
-      "Final Written Warning",
-      "Termination of Employment"
-    ]; 
-
-    const fetchOffenses = async () => {
-        try{
-            const res = await serverRequests.fetchOffenseList() 
-            setOffenseOptions(res.data)
-        }
-        catch(e:unknown){
-            console.error('Error fetching offenses:', e)
-        }
-    }
+    const [ dataToUpdate, setDataToUpdate ] = useState<DataToUpdate>({ remedialActions: [] })  
     
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
@@ -58,18 +41,20 @@ const UpdateOffenseForm = () => {
               setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
 
               form.reset()
-              setFormData(defaultOffense) 
+              setFormData(defaultOffense)  
 
-              fetchOffenses()
+              router.refresh() 
+
+              formRef.current?.scrollIntoView({ behavior: 'smooth' })
             }
         }catch(e:unknown){ 
-          console.error('Error creating employee:', e)
-          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+          console.error('Error Updating Offense:', e)
+          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
         }  
       }
     } 
   
-    const handleCheckboxChange = (event: any) => {
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value; 
       setFormData((prevData) => {
         const data = {
@@ -81,27 +66,24 @@ const UpdateOffenseForm = () => {
         setDataToUpdate({remedialActions: data.remedialActions})
         return data;
       });
-    }; 
-
-    useEffect(() => {
-        fetchOffenses()
-    }, []) 
-
-
+    };  
+ 
   return (
-    <form className='form-style' onSubmit={handleSubmit}>
+    <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
       <h2 className='font-semibold'>Update Offense</h2> 
 
       {/* Ofense to Update */} 
       <div className='flex flex-col text-sm gap-2 '>Offense to Update 
-        <select className="select select-bordered w-full " id='select-offense' required
-          onChange={(e:any)=>{ 
-            e.target.value=="null"?setFormData(defaultOffense):setFormData(offenseOptions[e.target.value])
+        <select className="select select-bordered w-full " id='Employee' required
+          value={formData?.description || ''}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
+              const selectedIndex = e.target.options.selectedIndex - 1
+            setFormData(e.target.value=="null"?defaultOffense:offenseList[selectedIndex])
           }}  
         >
           <option disabled selected value={""}>Select Offense </option>
-          {offenseOptions&&offenseOptions.map((employee, index) => (
-            <option key={index} value={index}>{employee?.description}</option>
+          {offenseList&&offenseList.map((employee, index) => (
+            <option key={index} value={employee?.description}>{employee?.description}</option>
           ))}
           <option value="null">None</option>
         </select>

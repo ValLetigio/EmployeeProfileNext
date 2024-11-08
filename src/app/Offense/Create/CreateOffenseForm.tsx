@@ -6,7 +6,9 @@ import { useAppContext } from '@/app/GlobalContext';
 
 const CreateOffenseForm = () => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
+
+  const formRef = React.useRef<HTMLFormElement>(null)
 
   const [ formData, setFormData ] = useState({
     remedialActions: [] as string[],
@@ -49,15 +51,19 @@ const CreateOffenseForm = () => {
             description: '',
             number: 0
           }) 
+
+          router.refresh()
+
+          formRef.current?.scrollIntoView({ behavior: 'smooth' })
         }
       }catch(e:unknown){ 
-        console.error('Error creating employee:', e)
-        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+        console.error('Error creating Offense:', e)
+        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
       }  
     }
   } 
 
-  const handleCheckboxChange = (event: any) => {
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value; 
     setFormData((prevData) => {
       return {
@@ -70,7 +76,7 @@ const CreateOffenseForm = () => {
   }; 
 
   return (
-    <form className='form-style' onSubmit={handleSubmit}>
+    <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
       <h2 className='font-semibold'>Offense Creation</h2> 
 
       {/* description */} 

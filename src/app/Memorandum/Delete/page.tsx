@@ -2,12 +2,23 @@ import React from 'react'
 
 import DeleteMemoForm from './DeleteMemoForm'
 
-const page = () => {
+import type { Memo } from '@/app/Schema';  
+
+import ServerRequests from '@/app/api/ServerRequests'; 
+
+const page = async () => { 
+
+  const serverRequests = new ServerRequests( );  
+  
+  const res = await serverRequests.getAllMemoThatsNotSubmitted(); 
+
+  const memoList: Memo[] = res.data;  
+
   return (
     <div className='w-screen h-screen flex items-center justify-center '> 
       {/* DeleteMemoForm container */}
       <div className={` form-container `} >
-        <DeleteMemoForm/>
+        <DeleteMemoForm memoList={memoList}/>
       </div>
 
 
