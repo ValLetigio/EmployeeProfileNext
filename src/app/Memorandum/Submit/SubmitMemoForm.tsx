@@ -48,18 +48,18 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
             const res = await serverRequests.submitMemo(formData, formData.reason, userData)
 
             if(res&&res.data){
-              setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
-
-              setSubmittedMemos([...submittedMemos, formData?.description])
+              setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 }); 
     
               form.reset()
               setFormData(defaultMemo) 
 
               formRef.current?.scrollIntoView({ behavior: 'smooth' })
-            }
+            }else{
+              throw new Error('Error Submitting Memo')
+            } 
         }catch(e:unknown){ 
-          console.error('Error creating employee:', e)
-          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+          console.error('Error Submitting Memo:', e)
+          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
         }  
       }
   } 
@@ -79,7 +79,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
   }   
 
   const filterMemos = (memoList: Memo[]) => {
-    const filteredMemos = memoList.filter(memo=>!submittedMemos.includes(memo.description)&&!memo?.submitted)
+    const filteredMemos = memoList.filter(memo=>!submittedMemos.includes(memo.description)&&!memo?.submitted) 
     
     setFilteredMemos(filteredMemos)
   }
@@ -153,7 +153,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
       {/* Reason */}
       <div className='flex flex-col gap-2 text-sm'>Reason  
         {/* Reason */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason'  
+        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason' required
           onChange={
             (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
               setFormData({ ...formData, reason: e.target.value })
@@ -167,7 +167,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
           <Image src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
         </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'   
+        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'    
           onChange={handleFileChange}/>
       </label>
 
@@ -177,7 +177,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
         <Image src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
         </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'   
+        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'  required
           onChange={handleFileChange}/>
       </label>
 

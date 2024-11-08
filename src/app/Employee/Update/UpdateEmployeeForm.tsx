@@ -15,7 +15,7 @@ interface CreateEmployeeFormProps {
 
 const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {  
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
 
     const formRef = React.useRef<HTMLFormElement>(null)
 
@@ -56,16 +56,17 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                 const res = await serverRequests.updateEmployee(selectedEmployee, dataToUpdate, userData)
 
                 if(res&&res.message){ 
-                    form.reset()
-                    setFormData(EmployeeValue)  
-                    setSelectedEmployee(EmployeeValue)
-                    setDataToUpdate({})
-                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
-                    formRef.current?.scrollIntoView({ behavior: 'smooth' })
-                } 
+                    form.reset() 
+                    setFormData(EmployeeValue) 
+                    setSelectedEmployee(EmployeeValue) 
+                    setDataToUpdate({}) 
+                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 }); 
+                    formRef.current?.scrollIntoView({ behavior: 'smooth' }) 
+                    router.refresh() 
+                }
             }catch(e:unknown){  
-                console.error('Error creating employee:', e)
-                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+                console.error('Error Updating employee:', e)
+                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
             }  
         }
     }
@@ -123,7 +124,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
         ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     >
-        <h2 className='font-semibold'>Update Employee</h2>
+        <h2 className='font-semibold' >Update Employee</h2>
 
         {/* employee */} 
         <div className='flex flex-col text-sm gap-2 '>Employee to Edit

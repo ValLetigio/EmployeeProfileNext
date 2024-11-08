@@ -34,6 +34,7 @@ interface AppContextProps {
   confirmationOptions: ConfirmationOptionsSchema;
   setConfirmationOptions: (data: ConfirmationOptionsSchema) => void;
   handleConfirmation: (question: string, consequence: string, type: string) => Promise<boolean>;
+  router: any;
 }
 
 // Create the default context with proper types and default values
@@ -58,6 +59,7 @@ const AppContext = createContext<AppContextProps>({
   setConfirmationOptions: () => {}, 
   serverRequests: new ServerRequests( ),
   handleConfirmation: () => new Promise<boolean>(() => {}),
+  router: null,
 });
 
 
@@ -86,7 +88,7 @@ export default function ContextProvider({
     isApproved: false,
     email: '',
     displayName: '',
-    image: '',
+    image: ''
   });
 
   const [sampleText] = useState<string>('');
@@ -232,7 +234,7 @@ export default function ContextProvider({
         displayName: displayName || ''
       });
  
-      // setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
+      setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     }   
 
     if (status === 'unauthenticated' && isTestEnv == 'false') {
@@ -271,7 +273,7 @@ export default function ContextProvider({
     userData,
     setUserData,
     sampleText,
-    cards,
+    cards, router,
     pathname,
     toastOptions, setToastOptions,
     serverRequests,

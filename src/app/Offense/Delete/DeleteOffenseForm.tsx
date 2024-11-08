@@ -13,15 +13,13 @@ interface DeleteOffenseFormProps {
 
 const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remedialActions}) => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
 
     const formRef = React.useRef<HTMLFormElement>(null)
 
     const defaultOffense = { description:"", remedialActions: [] as string[], number: 0 }
 
-    const [ formData, setFormData ] = useState(defaultOffense)  
-
-    const [ deletedOffenses, setDeletedOffenses ] = useState<string[]>([])
+    const [ formData, setFormData ] = useState(defaultOffense) 
    
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
@@ -34,17 +32,17 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
 
             const res = await serverRequests.deleteOffense(formData, userData)
 
-            setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
-
-            setDeletedOffenses([...deletedOffenses, formData.description])
+            setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 }); 
 
             form.reset()
             setFormData(defaultOffense)  
 
+            router.refresh()
+
             formRef.current?.scrollIntoView({ behavior: 'smooth' })
         }catch(e:unknown){ 
           console.error('Error Deleting Offense:', e)
-          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
         } 
       } 
     }   
@@ -63,7 +61,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
           }}  
         >
           <option disabled selected value={""}>Select Offense </option>
-          {offenseList&&offenseList.map((Offense, index) => !deletedOffenses.includes(Offense?.description)&&(
+          {offenseList&&offenseList.map((Offense, index) => (
             <option key={index} value={Offense?.description}>{Offense?.description}</option>
           ))}
           <option value="null">None</option>

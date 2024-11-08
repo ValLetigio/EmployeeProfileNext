@@ -15,11 +15,11 @@ interface CreateMemoFormProps {
 
 const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
 
   const formRef = useRef<HTMLFormElement>(null)
 
-  const [ formData, setFormData ] = useState({
+  const defaultMemo = {
     date: '',
     Employee: {} as Employee, 
     description: '',
@@ -29,7 +29,9 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
     MemoCode: {} as Offense,
     reason: null as unknown as string,
     submitted: false 
-  })  
+  }
+
+  const [ formData, setFormData ] = useState(defaultMemo)  
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
@@ -46,21 +48,14 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
               setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
     
               form.reset()
-              setFormData({
-                date: '',
-                Employee: {} as Employee, 
-                description: '',
-                subject: '',
-                mediaList: [] as string[],
-                memoPhotosList: [] as string[],
-                MemoCode: {} as Offense,
-                reason: null as unknown as string,
-                submitted: false 
-              })
+              setFormData(defaultMemo)
+
+              router.refresh()
+
               formRef.current?.scrollIntoView({ behavior: 'smooth' })
             }
         }catch(e:unknown){ 
-          console.error('Error creating employee:', e)
+          console.error('Error creating Memo:', e)
           setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
         }  
       }

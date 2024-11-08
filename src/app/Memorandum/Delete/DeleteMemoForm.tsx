@@ -57,8 +57,8 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
           formRef.current?.scrollIntoView({ behavior: 'smooth' })
         }
       }catch(e:unknown){ 
-        console.error('Error creating Memo:', e)
-        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+        console.error('Error Deleting Memo:', e)
+        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
       }  
     }
   }    

@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 const CreateEmployeeForm = () => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext() 
 
     const formRef = useRef<HTMLFormElement>(null)
 
@@ -54,11 +54,12 @@ const CreateEmployeeForm = () => {
                     form.reset() 
                     setFormData(defaultFormData)  
                     formRef.current?.scrollIntoView({ behavior: 'smooth' })
+                    router.refresh()
                 }
     
             }catch(e:unknown){  
                 console.error('Error creating employee:', e)
-                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
             }  
         }
     }

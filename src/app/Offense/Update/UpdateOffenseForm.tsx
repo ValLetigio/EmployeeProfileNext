@@ -13,7 +13,7 @@ interface UpdateOffenseFormProps {
 
 const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remedialActions}) => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
 
     const formRef = React.useRef<HTMLFormElement>(null)
 
@@ -43,11 +43,13 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
               form.reset()
               setFormData(defaultOffense)  
 
+              router.refresh() 
+
               formRef.current?.scrollIntoView({ behavior: 'smooth' })
             }
         }catch(e:unknown){ 
-          console.error('Error creating employee:', e)
-          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+          console.error('Error Updating Offense:', e)
+          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
         }  
       }
     } 

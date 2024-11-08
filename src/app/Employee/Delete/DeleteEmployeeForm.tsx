@@ -15,7 +15,7 @@ interface CreateEmployeeFormProps {
 
 const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext() 
 
     const formRef = useRef<HTMLFormElement>(null)
 
@@ -36,11 +36,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
         dailyWage: 0
     } 
 
-    const [ formData, setFormData ] = useState<Employee>(defaultFormData) 
-
-    const [ filteredEmployees, setFilteredEmployees ] = useState<Employee[]>([])
-
-    const [ deletedEmployeeIds, setDeletedEmployeeIds ] = useState<string[]>([])
+    const [ formData, setFormData ] = useState<Employee>(defaultFormData)  
     
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
@@ -54,30 +50,20 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
                 
                 const res = await serverRequests.deleteEmployee(formData, userData)  
 
-                if( res.message ){
-                    setDeletedEmployeeIds([...deletedEmployeeIds, formData._id])
-                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
+                if( res.message ){ 
+                    setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
                     form.reset() 
                     setFormData(defaultFormData)   
                     formRef.current?.scrollIntoView({ behavior: 'smooth' })
+                    router.refresh()
                 }
 
             }catch(e:unknown){  
-                console.error('Error creating employee:', e)
-                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+                console.error('Error deleting employee:', e)
+                setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
             }  
         }
-    }   
-
-    const filterMemos = (employeeList: Employee[]) => {
-        const filteredEmployees = employeeList.filter(employee=>!deletedEmployeeIds.includes(employee._id))
-        
-        setFilteredEmployees(filteredEmployees)
-      }
-    
-    useEffect(() => {
-    filterMemos(employeeList) 
-    },[employeeList, deletedEmployeeIds])  
+    }    
 
   return (
     <form className={` form-style `} ref={formRef}
@@ -91,11 +77,11 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
                 value={formData?._id || ''}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
                     const selectedIndex = e.target.options.selectedIndex - 1
-                    setFormData(filteredEmployees[selectedIndex])
+                    setFormData(employeeList[selectedIndex])
                 }} 
             >
                 <option disabled selected value={""}>Select Employee</option>
-                {filteredEmployees&&filteredEmployees.map((employee, index) => (
+                {employeeList&&employeeList.map((employee, index) => (
                     <option key={index} value={employee?._id}>{employee?.name}</option>
                 ))}
                 <option value="null">None</option>

@@ -6,7 +6,7 @@ import { useAppContext } from '@/app/GlobalContext';
 
 const CreateOffenseForm = () => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
 
   const formRef = React.useRef<HTMLFormElement>(null)
 
@@ -52,11 +52,13 @@ const CreateOffenseForm = () => {
             number: 0
           }) 
 
+          router.refresh()
+
           formRef.current?.scrollIntoView({ behavior: 'smooth' })
         }
       }catch(e:unknown){ 
-        console.error('Error creating employee:', e)
-        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
+        console.error('Error creating Offense:', e)
+        setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
       }  
     }
   } 
