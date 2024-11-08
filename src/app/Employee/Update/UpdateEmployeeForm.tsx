@@ -13,9 +13,7 @@ interface CreateEmployeeFormProps {
     employeeList: Employee[]
 }
 
-const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
-
-    console.log(employeeList)
+const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {  
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
@@ -117,6 +115,8 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
             setDisableSaveButton(false)
         }  
     },[selectedEmployee, formData]) 
+
+    const labelStyle = `${selectedEmployee?._id ? '': 'text-gray-300'}`
  
   return (
     <form className={` form-style `} 
@@ -156,7 +156,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                     <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
                 </svg> 
                 <input type="text" className="grow" placeholder="Name" id="name" disabled={disable}
-                    value={formData?.name}
+                    value={formData?.name || ""}
                     onChange={handleInputChange}/>
             </label>
         </div>
@@ -165,7 +165,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
         {/* address */} 
         <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>Address
             <textarea className="textarea textarea-bordered" placeholder="Address" id='address' disabled={disable}
-                value={formData?.address}
+                value={formData?.address || ""}
                 onChange={
                     (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
                         setFormData({ ...formData, address: e.target.value })
@@ -186,7 +186,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                     />
                 </svg> 
                 <input type="text" className="grow" placeholder="Phone Number" id='phoneNumber' disabled={disable}
-                    value={formData?.phoneNumber}
+                    value={formData?.phoneNumber || ""}
                     onChange={handleInputChange}/>
             </label>
         </div>
@@ -229,7 +229,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                     <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
                 </svg> 
                 <input type="email" className="grow" placeholder="E-mail" id='email' 
-                    value={formData?.email}
+                    value={formData?.email || ""}
                     onChange={handleInputChange} disabled={disable}/>
             </label>
         </div>
@@ -253,7 +253,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                         d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z" clipRule="evenodd" />
                 </svg> 
                 <input type="text" className="grow" placeholder="Company"   id='company' 
-                value={formData?.company}
+                value={formData?.company || ""}
                 onChange={handleInputChange} disabled={disable}/>
             </label>
         </div>
@@ -292,7 +292,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                 </svg>
 
                 <input type="number" className="grow" placeholder="Daily Wage"   id='dailyWage' step={0.00001} disabled={disable}
-                    value={formData?.dailyWage}
+                    value={formData?.dailyWage || ""}
                     onChange={handleInputChange}/>
             </label>
         </div> 
@@ -301,7 +301,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
         {/* submit */}
         <button 
             className='btn bg-violet-500 text-white w-full place-self-start my-6 ' 
-            type='submit' disabled={disableSaveButton} id='save'
+            type='submit' disabled={disableSaveButton || !formData?._id} id='save'
             
         >Update</button>
 

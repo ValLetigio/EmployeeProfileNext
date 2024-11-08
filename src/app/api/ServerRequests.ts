@@ -3,8 +3,8 @@ import axios, { AxiosResponse } from "axios";
 import Server from "./Server.ts";
 import { UserObject, Employee, DataToUpdate, UserDataSchema, Offense, Memo } from "../Schema";
 class ServerRequests extends Server {
-  constructor(isProduction: boolean) {
-    super(isProduction);
+  constructor( ) {
+    super( );
   }
 
   async getIsDevEnvironment(): Promise<boolean | string> {
@@ -280,27 +280,49 @@ class ServerRequests extends Server {
     }
   }
 
-  async getAllMemoThatsNotSubmitted (userData: UserDataSchema): Promise<any> {
+  // async getAllMemoThatsNotSubmitted (userData: UserDataSchema): Promise<any> {
+  //   try {
+  //     const data = {
+  //       userData: userData,
+  //     };
+  //     const jsonData = JSON.stringify(data);
+  //     const res: AxiosResponse = await axios.post(`${this.url}/getAllMemoThatsNotSubmitted`, jsonData, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+
+  //     return res.data;
+  //   } catch (error: any) {
+  //     if (error.response && error.response.data) {
+  //       throw new Error(error.response.data);
+  //     } else {
+  //       throw new Error(error.message || "An error occurred during login.");
+  //     }
+  //   }
+  // }
+
+  async getAllMemoThatsNotSubmitted(): Promise<any> {
     try {
       const data = {
-        userData: userData,
+        collection: "Memo",
       };
       const jsonData = JSON.stringify(data);
-      const res: AxiosResponse = await axios.post(`${this.url}/getAllMemoThatsNotSubmitted`, jsonData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await axios.post(
+        `${this.url}/readAllDataInCollection`,
+        jsonData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       return res.data;
     } catch (error: any) {
-      if (error.response && error.response.data) {
-        throw new Error(error.response.data);
-      } else {
-        throw new Error(error.message || "An error occurred during login.");
-      }
+      return error.response?.data || error.message;
     }
-  }
+  } 
 
   async fetchEmployeeList(): Promise<any> {
     try {

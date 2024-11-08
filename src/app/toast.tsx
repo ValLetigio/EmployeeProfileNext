@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react'; 
+import React, { useState, useCallback } from 'react'; 
 import { useAppContext } from './GlobalContext'; 
 
 const Toast = () => { 
@@ -52,7 +52,7 @@ const Toast = () => {
         }
     }
 
-    // console.log(timer);
+    console.log(timer);
 
 
     return (

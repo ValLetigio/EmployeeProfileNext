@@ -1,12 +1,17 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import { useAppContext } from '@/app/GlobalContext';
 
 import { DataToUpdate, Offense } from '@/app/Schema';
 
-const UpdateOffenseForm = () => {
+interface UpdateOffenseFormProps {
+  offenseList: Offense[]
+  remedialActions: string[]
+}
+
+const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remedialActions}) => {
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
@@ -17,31 +22,7 @@ const UpdateOffenseForm = () => {
 
     const [ formData, setFormData ] = useState(defaultOffense)
 
-    const [ dataToUpdate, setDataToUpdate ] = useState<DataToUpdate>({ remedialActions: [] })
-
-    const [ offenseOptions, setOffenseOptions ] = useState<Offense[]>([])
-  
-    const remedialActions = [
-      "Verbal Warning",
-      "Written Warning",
-      "Counseling or Training",
-      "Performance Improvement Plan (PIP)",
-      "Suspension",
-      "Probation",
-      "Mediation or Conflict Resolution",
-      "Final Written Warning",
-      "Termination of Employment"
-    ]; 
-
-    const fetchOffenses = async () => {
-        try{
-            const res = await serverRequests.fetchOffenseList() 
-            setOffenseOptions(res.data)
-        }
-        catch(e:unknown){
-            console.error('Error fetching offenses:', e)
-        }
-    }
+    const [ dataToUpdate, setDataToUpdate ] = useState<DataToUpdate>({ remedialActions: [] })  
     
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
@@ -60,9 +41,7 @@ const UpdateOffenseForm = () => {
               setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
 
               form.reset()
-              setFormData(defaultOffense) 
-
-              fetchOffenses()
+              setFormData(defaultOffense)  
 
               formRef.current?.scrollIntoView({ behavior: 'smooth' })
             }
@@ -85,13 +64,8 @@ const UpdateOffenseForm = () => {
         setDataToUpdate({remedialActions: data.remedialActions})
         return data;
       });
-    }; 
-
-    useEffect(() => {
-      fetchOffenses()
-    }) 
-
-
+    };  
+ 
   return (
     <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
       <h2 className='font-semibold'>Update Offense</h2> 
@@ -102,11 +76,11 @@ const UpdateOffenseForm = () => {
           value={formData?.description || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData(e.target.value=="null"?defaultOffense:offenseOptions[selectedIndex])
+            setFormData(e.target.value=="null"?defaultOffense:offenseList[selectedIndex])
           }}  
         >
           <option disabled selected value={""}>Select Offense </option>
-          {offenseOptions&&offenseOptions.map((employee, index) => (
+          {offenseList&&offenseList.map((employee, index) => (
             <option key={index} value={employee?.description}>{employee?.description}</option>
           ))}
           <option value="null">None</option>

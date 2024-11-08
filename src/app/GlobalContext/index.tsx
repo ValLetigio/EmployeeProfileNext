@@ -56,7 +56,7 @@ const AppContext = createContext<AppContextProps>({
   setToastOptions: () => {},
   confirmationOptions: {open: false,  question: '', consequence: "", type: '', onConfirm: () => {}, onCancel: () => {}},
   setConfirmationOptions: () => {}, 
-  serverRequests: new ServerRequests(false),
+  serverRequests: new ServerRequests( ),
   handleConfirmation: () => new Promise<boolean>(() => {}),
 });
 
@@ -69,7 +69,7 @@ export default function ContextProvider({
   const pathname = usePathname();
   const { data: session, status } = useSession(); 
   const router = useRouter();
-  const serverRequests = new ServerRequests(false);
+  const serverRequests = new ServerRequests( );
 
   const [environment, setEnvironment] = useState<string>('');
   const app = initializeApp(firebaseConfig);

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
@@ -8,7 +8,12 @@ import { Employee, Offense } from '@/app/Schema';
 
 import Image from 'next/image'; 
 
-const CreateMemoForm = () => {
+interface CreateMemoFormProps {
+  employeeList: Employee[],
+  offenseList: Offense[]
+}
+
+const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseList}) => {
 
   const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
@@ -24,11 +29,7 @@ const CreateMemoForm = () => {
     MemoCode: {} as Offense,
     reason: null as unknown as string,
     submitted: false 
-  })
-
-  const [ employeeOptions, setEmployeeOptions ] = useState<Employee[]>([])
-
-  const [ memoCodes, setMemoCodes ] = useState<Offense[]>([]) 
+  })  
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
@@ -84,34 +85,8 @@ const CreateMemoForm = () => {
               })
           }
       }
-  } 
-
-  const fetchEmployees = async () => {
-    try{ 
-      const employees = await serverRequests.fetchEmployeeList() 
-      setEmployeeOptions(employees?.data)
-    }catch(e:unknown){
-      console.error('Error fetching employees:', e)
-      setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-    }
-  } 
-
-  const fetchOffenses = async () => {
-    try{ 
-      const memoCodes = await serverRequests.fetchOffenseList() 
-      setMemoCodes(memoCodes?.data) 
-    }catch(e:unknown){
-      console.error('Error fetching memoCodes:', e)
-      setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-    }
-  }
-
-  useEffect(()=>{
-    fetchEmployees() 
-    fetchOffenses()
-  }) 
-
-
+  }   
+ 
   return (
     <form
       className={` form-style `} 
@@ -133,11 +108,11 @@ const CreateMemoForm = () => {
           value={formData?.Employee?._id || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData({...formData, Employee: employeeOptions[selectedIndex]})
+            setFormData({...formData, Employee: employeeList[selectedIndex]})
           }} 
         >
           <option disabled selected value={""}>Select Employee</option>
-          {employeeOptions&&employeeOptions.map((employee, index) => (
+          {employeeList&&employeeList.map((employee, index) => (
             <option key={index} value={employee?._id}>{employee?.name}</option>
           ))}
           <option value="null">None</option>
@@ -150,11 +125,11 @@ const CreateMemoForm = () => {
           value={formData?.MemoCode?.description || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData({...formData, MemoCode: memoCodes[selectedIndex]})
+            setFormData({...formData, MemoCode: offenseList[selectedIndex]})
           }} 
         >
           <option disabled selected value={""}>Select Offense</option>
-          {memoCodes&&memoCodes.map((code, index) => (
+          {offenseList&&offenseList.map((code, index) => (
             <option key={index} value={code?.description}>{code?.description}</option>
           ))}
           <option value="null">None</option>

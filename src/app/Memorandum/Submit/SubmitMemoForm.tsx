@@ -1,14 +1,18 @@
 'use client'
 
-import React, { useState, useEffect, useRef, useCallback  } from 'react';
+import React, { useState, useRef, useEffect, } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
 import { Employee, Offense, Memo } from '@/app/Schema';
 
 import Image from 'next/image';  
+
+interface CreateMemoFormProps {
+  memoList: Memo[], 
+}
  
-const SubmitMemoForm = () => {
+const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
 
   const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
@@ -25,13 +29,13 @@ const SubmitMemoForm = () => {
     reason: '',
     submitted: false 
   }
+ 
+  const [ formData, setFormData ] = useState(defaultMemo)  
 
+  const [filteredMemos, setFilteredMemos] = useState<Memo[]>([])
 
-  const [ formData, setFormData ] = useState(defaultMemo) 
-
-  const [ memoOptions, setMemoOptions ] = useState<Memo[]>([])
-
-  
+  const [ submittedMemos, setSubmittedMemos ] = useState<string[]>([])
+ 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
 
@@ -45,11 +49,12 @@ const SubmitMemoForm = () => {
 
             if(res&&res.data){
               setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
+
+              setSubmittedMemos([...submittedMemos, formData?.description])
     
               form.reset()
-              setFormData(defaultMemo)
+              setFormData(defaultMemo) 
 
-              getAllMemoThatsNotSubmitted()
               formRef.current?.scrollIntoView({ behavior: 'smooth' })
             }
         }catch(e:unknown){ 
@@ -58,8 +63,7 @@ const SubmitMemoForm = () => {
         }  
       }
   } 
-
-  
+ 
   const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
       if(file){
@@ -72,28 +76,17 @@ const SubmitMemoForm = () => {
               })
           }
       }
-  }  
+  }   
 
+  const filterMemos = (memoList: Memo[]) => {
+    const filteredMemos = memoList.filter(memo=>!submittedMemos.includes(memo.description)&&!memo?.submitted)
+    
+    setFilteredMemos(filteredMemos)
+  }
 
-  const getAllMemoThatsNotSubmitted = useCallback(async () => { 
-    try{
-      const res = await serverRequests.getAllMemoThatsNotSubmitted(userData)
-      if(res){
-        setMemoOptions(res.data) 
-      }
-    }catch(e:unknown){ 
-      console.error('Error getting all memo:', e)
-      setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-    }  
-  }, [userData, serverRequests, setToastOptions])
-
-
-  useEffect(()=>{
-    if(userData&&userData._id){
-      getAllMemoThatsNotSubmitted()
-    }
-  },[userData, getAllMemoThatsNotSubmitted])  
-
+  useEffect(() => {
+    filterMemos(memoList) 
+  },[memoList, submittedMemos]) 
 
   return (
     <form
@@ -109,11 +102,11 @@ const SubmitMemoForm = () => {
             value={formData?.subject || ''}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
-              setFormData(e.target.value=="null"?defaultMemo:{ ...memoOptions[selectedIndex], reason: memoOptions[selectedIndex].reason || '' })
+              setFormData(e.target.value=="null"?defaultMemo:{ ...filteredMemos[selectedIndex], reason: filteredMemos[selectedIndex].reason || '' })
           }}  
         >
           <option disabled selected value={""}>Select Memo </option>
-          {memoOptions&&memoOptions.map((memo, index) => (
+          {filteredMemos&&filteredMemos.map((memo, index) => (
             <option key={index} value={memo?.subject}>{`${memo?.Employee?.name}, (${memo?.subject})`}</option>
           ))}
           <option value="null">None</option>

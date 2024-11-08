@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, FC, useEffect } from 'react'
 
 import { Employee } from '@/app/Schema'
 
@@ -8,8 +8,12 @@ import { useAppContext } from '@/app/GlobalContext'
 
 import Image from 'next/image'
 
+interface CreateEmployeeFormProps {
+    employeeList: Employee[]
+}
 
-const DeleteEmployeeForm = () => {
+
+const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext() 
 
@@ -30,12 +34,14 @@ const DeleteEmployeeForm = () => {
         isRegular: false,
         isProductionEmployee: false,
         dailyWage: 0
-    }
+    } 
 
+    const [ formData, setFormData ] = useState<Employee>(defaultFormData) 
 
-    const [ formData, setFormData ] = useState<Employee>(defaultFormData)
+    const [ filteredEmployees, setFilteredEmployees ] = useState<Employee[]>([])
 
-    const [ employeeOptions, setEmployeeOptions ] = useState<Employee[]>([]) 
+    const [ deletedEmployeeIds, setDeletedEmployeeIds ] = useState<string[]>([])
+    
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()   
@@ -49,10 +55,10 @@ const DeleteEmployeeForm = () => {
                 const res = await serverRequests.deleteEmployee(formData, userData)  
 
                 if( res.message ){
+                    setDeletedEmployeeIds([...deletedEmployeeIds, formData._id])
                     setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
                     form.reset() 
-                    setFormData(defaultFormData)  
-                    fetchEmployees()
+                    setFormData(defaultFormData)   
                     formRef.current?.scrollIntoView({ behavior: 'smooth' })
                 }
 
@@ -61,21 +67,17 @@ const DeleteEmployeeForm = () => {
                 setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
             }  
         }
-    }  
+    }   
 
-    const fetchEmployees = useCallback(async () => {
-        try{ 
-            const employees = await serverRequests.fetchEmployeeList() 
-            setEmployeeOptions(employees?.data)
-        }catch(e:unknown){
-            console.error('Error fetching employees:', e)
-            setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }
-    },[serverRequests])
-
-    useEffect(()=>{
-        fetchEmployees() 
-    },[fetchEmployees])   
+    const filterMemos = (employeeList: Employee[]) => {
+        const filteredEmployees = employeeList.filter(employee=>!deletedEmployeeIds.includes(employee._id))
+        
+        setFilteredEmployees(filteredEmployees)
+      }
+    
+    useEffect(() => {
+    filterMemos(employeeList) 
+    },[employeeList, deletedEmployeeIds])  
 
   return (
     <form className={` form-style `} ref={formRef}
@@ -89,11 +91,11 @@ const DeleteEmployeeForm = () => {
                 value={formData?._id || ''}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
                     const selectedIndex = e.target.options.selectedIndex - 1
-                    setFormData(employeeOptions[selectedIndex])
+                    setFormData(filteredEmployees[selectedIndex])
                 }} 
             >
                 <option disabled selected value={""}>Select Employee</option>
-                {employeeOptions&&employeeOptions.map((employee, index) => (
+                {filteredEmployees&&filteredEmployees.map((employee, index) => (
                     <option key={index} value={employee?._id}>{employee?.name}</option>
                 ))}
                 <option value="null">None</option>

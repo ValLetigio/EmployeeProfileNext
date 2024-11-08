@@ -1,46 +1,28 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import { useAppContext } from '@/app/GlobalContext';
 
 import { Offense } from '@/app/Schema';
 
-const DeleteOffenseForm = () => {
+interface DeleteOffenseFormProps {
+  offenseList: Offense[]
+  remedialActions: string[]
+}
+
+const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remedialActions}) => {
 
     const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
     const formRef = React.useRef<HTMLFormElement>(null)
 
-    const defaultOffense = 
-        {description:"", remedialActions:[]as string[], number:0}
+    const defaultOffense = { description:"", remedialActions: [] as string[], number: 0 }
 
-    const [ formData, setFormData ] = useState(defaultOffense) 
+    const [ formData, setFormData ] = useState(defaultOffense)  
 
-    const [ offenseOptions, setOffenseOptions ] = useState<Offense[]>([])
-  
-    const remedialActions = [
-      "Verbal Warning",
-      "Written Warning",
-      "Counseling or Training",
-      "Performance Improvement Plan (PIP)",
-      "Suspension",
-      "Probation",
-      "Mediation or Conflict Resolution",
-      "Final Written Warning",
-      "Termination of Employment"
-    ]; 
-
-    const fetchOffenses = async () => {
-        try{
-            const res = await serverRequests.fetchOffenseList() 
-            setOffenseOptions(res.data)
-        }
-        catch(e:unknown){
-            console.error('Error fetching offenses:', e)
-        }
-    }
-    
+    const [ deletedOffenses, setDeletedOffenses ] = useState<string[]>([])
+   
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
 
@@ -54,22 +36,18 @@ const DeleteOffenseForm = () => {
 
             setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
 
-            form.reset()
-            setFormData(defaultOffense) 
+            setDeletedOffenses([...deletedOffenses, formData.description])
 
-            fetchOffenses() 
+            form.reset()
+            setFormData(defaultOffense)  
+
             formRef.current?.scrollIntoView({ behavior: 'smooth' })
         }catch(e:unknown){ 
           console.error('Error Deleting Offense:', e)
           setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
         } 
       } 
-    }  
-
-    useEffect(() => {
-      fetchOffenses()
-    }) 
-
+    }   
 
   return (
     <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
@@ -81,11 +59,11 @@ const DeleteOffenseForm = () => {
           value={formData?.description || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData(e.target.value=="null"?defaultOffense:offenseOptions[selectedIndex])
+            setFormData(e.target.value=="null"?defaultOffense:offenseList[selectedIndex])
           }}  
         >
           <option disabled selected value={""}>Select Offense </option>
-          {offenseOptions&&offenseOptions.map((Offense, index) => (
+          {offenseList&&offenseList.map((Offense, index) => !deletedOffenses.includes(Offense?.description)&&(
             <option key={index} value={Offense?.description}>{Offense?.description}</option>
           ))}
           <option value="null">None</option>
