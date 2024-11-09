@@ -99,7 +99,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
 
       {/* employee */} 
       <div className='flex flex-col text-sm gap-2 '>Employee 
-        <select className="select select-bordered w-full " id='Employee' required
+        <select className="select select-bordered w-full " id='select-employee' required
           value={formData?.Employee?._id || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
@@ -189,6 +189,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       <button 
           className='btn bg-blue-500 text-white w-full place-self-start my-6' 
           type='submit'
+          id='create-memo-btn'
         >Create</button>
 
 

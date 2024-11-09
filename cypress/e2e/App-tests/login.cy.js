@@ -15,58 +15,57 @@ describe('Employee spec', () => {
   });
 
   context('Employee', () => {
+    it('Redirects to Employee and create and update employee', async () => {
+      cy.wrap(serverRequests.deleteAllDataInCollection('Employee')).then((deleteResponse) => {
+        expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
+      });
 
-  it('Redirects to Employee and create and update employee', async () => {
-    cy.wrap(serverRequests.deleteAllDataInCollection('Employee')).then((deleteResponse) => {
-      expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
-    });
+      cy.get('#menu-button').should('be.visible').click()
 
-    cy.wait(2000)
-    cy.get('#menu-button').click()
+      cy.get('#create-employee').should('be.visible').click()
+      cy.url().should('include', '/Employee/Create')
 
-    cy.get('#create-employee').click()
-    cy.url().should('include', '/Employee/Create')
+      cy.get('#name').type('John Doe')
+      cy.get('#address').type('123 Main St, Sample City, Sample State, 12345')
+      cy.get('#phoneNumber').type('123-456-7890')
+      cy.get('input[type=file]#photoOfPerson').attachFile('smiley.png')
+      cy.get('input[type=file]#resumePhotosList').attachFile('mhm.png')
+      cy.get('input[type=file]#biodataPhotosList').attachFile('minor.png')
+      cy.get('#email').type('johndoe@gmail.com')
+      cy.get('#dateJoined').type('2022-01-15')
+      cy.get('#company').type('Sample Corp')
+      cy.get('#isRegular').check()
+      cy.get('#isProductionEmployee').uncheck()
+      cy.get('#dailyWage').type('567.89')
+      
 
-    cy.get('#name').type('John Doe')
-    cy.get('#address').type('123 Main St, Sample City, Sample State, 12345')
-    cy.get('#phoneNumber').type('123-456-7890')
-    cy.get('input[type=file]#photoOfPerson').attachFile('smiley.png')
-    cy.get('input[type=file]#resumePhotosList').attachFile('mhm.png')
-    cy.get('input[type=file]#biodataPhotosList').attachFile('minor.png')
-    cy.get('#email').type('johndoe@gmail.com')
-    cy.get('#dateJoined').type('2022-01-15')
-    cy.get('#company').type('Sample Corp')
-    cy.get('#isRegular').check()
-    cy.get('#isProductionEmployee').uncheck()
-    cy.get('#dailyWage').type('567.89')
+      cy.get('#submit').click()
+      cy.wait(1000)
+      cy.get('#confirm-button').click()
+      cy.wait(4000)
 
-    cy.get('#submit').click()
-    cy.wait(1000)
-    cy.get('#confirm-button').click()
-    cy.wait(4000)
+      cy.get('#menu-button').click()
+      cy.get('#update-employee').click()
 
-    cy.get('#menu-button').click()
-    cy.get('#update-employee').click()
+      cy.get('#Employee').select('John Doe')
+      cy.get('#name').clear().type('John Doe Jr')
+      cy.get('#address').clear().type('123 Main St, Sample City, Sample State, 12345')
+      cy.get('#phoneNumber').clear().type('123-456-7891')
+      cy.get('input[type=file]#photoOfPerson').attachFile('mhm.png')
+      cy.get('input[type=file]#resumePhotosList').attachFile('minor.png')
+      cy.get('input[type=file]#biodataPhotosList').attachFile('smiley.png')
+      cy.get('#email').clear().type('johndoejr@gmail.com')
+      cy.get('#dateJoined').clear().type('2022-01-15')
+      cy.get('#company').clear().type('Sample Corp 2')
+      cy.get('#isRegular').uncheck()
+      cy.get('#isProductionEmployee').check()
+      cy.get('#dailyWage').clear().type('567.90')
 
-    cy.get('#Employee').select('John Doe')
-    cy.get('#name').clear().type('John Doe Jr')
-    cy.get('#address').clear().type('123 Main St, Sample City, Sample State, 12345')
-    cy.get('#phoneNumber').clear().type('123-456-7891')
-    cy.get('input[type=file]#photoOfPerson').attachFile('mhm.png')
-    cy.get('input[type=file]#resumePhotosList').attachFile('minor.png')
-    cy.get('input[type=file]#biodataPhotosList').attachFile('smiley.png')
-    cy.get('#email').clear().type('johndoejr@gmail.com')
-    cy.get('#dateJoined').clear().type('2022-01-15')
-    cy.get('#company').clear().type('Sample Corp 2')
-    cy.get('#isRegular').uncheck()
-    cy.get('#isProductionEmployee').check()
-    cy.get('#dailyWage').clear().type('567.90')
-
-    cy.get('#save').click()
-    cy.wait(1000)
-    cy.get('#confirm-button').click()
-    cy.wait(4000)
-  })
+      cy.get('#save').click()
+      cy.wait(1000)
+      cy.get('#confirm-button').click()
+      cy.wait(4000)
+    })
 
 })
 
@@ -75,12 +74,11 @@ context('Offense', () => {
     cy.wrap(serverRequests.deleteAllDataInCollection('Offense')).then((deleteResponse) => {
       expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
     });
-
     cy.wait(2000)
-    cy.visit('/')
     cy.url().should('include', '/')
     cy.get('#menu-button').click()
     cy.get('#create-offense').click()
+    cy.location('pathname').should('include', '/Offense/Create')
     cy.get('#description').type('Employee was late to work')
     cy.get('#Verbal-Warning').click()
     cy.get('#Written-Warning').click()
@@ -95,6 +93,7 @@ context('Offense', () => {
     cy.get('#menu-button').click()
     cy.wait(1000)
     cy.get('#update-offense').click()
+    cy.location('pathname').should('include', '/Offense/Update')
     cy.wait(1000)
     cy.get('#select-offense').select('Employee was late to work')
     cy.get('#description').clear()
@@ -113,7 +112,22 @@ context('Memo', () => {
       expect(deleteResponse).to.have.property('message', 'Data deleted successfully!');
     });
 
-    
+    cy.wait(2000)
+    cy.get('#menu-button').click()
+    cy.get('#create-memorandum').click()
+    cy.location('pathname').should('include', '/Memorandum/Create')
+    cy.get('#date').type('2024-10-31')
+    cy.get('#select-employee').select('John Doe Jr')
+    cy.get('#MemoCode').select('None')
+    cy.get('#subject').type('Workplace Safety Protocols')
+    cy.get('#description').type('Reminder to adhere to updated safety protocols in the workplace. Ensure all employees are aware and compliant.')
+    cy.get('reason').type('To ensure employee safety and compliance with regulations.')
+    cy.get('input[type=file]#mediaList').attachFile('smiley.png')
+    cy.get('input[type=file]#memoPhotosList').attachFile('mhm.png')
+    cy.get('#create-memo-btn').click()
+    cy.wait(1000)
+    cy.get('#confirm-button').click()
+    cy.wait(4000)
   })
 })
   // it('Redirects to Offense and create and update offense', async () => {

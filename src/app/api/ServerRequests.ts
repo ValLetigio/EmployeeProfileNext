@@ -73,7 +73,7 @@ class ServerRequests extends Server {
 
     } catch (error:unknown) {
       return (error as Error).message;
-    }  
+    }
   }
 
   async updateEmployee(employee: Employee, dataToUpdate: DataToUpdate, userObject: UserDataSchema): Promise<any> {
