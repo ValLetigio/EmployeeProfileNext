@@ -6,7 +6,7 @@ from AppConfig import AppConfig
 
 db = mongoDb()
 
-def createUserObject(userId, email='test@gmail.com', roles=[]):
+def createUserObject(userId, email='test@gmail.com', roles={}):
     return {
         '_id': userId,
         '_version': 0,
@@ -64,7 +64,9 @@ memoObject = {
 def test_user_login():
     try:
         db.delete({},'User')
+        # userObject['_id'] = 123
         user = UserActions(userObject)
+
         userCreated = user.createFirstUserAction('id1')
 
         firstUser = db.read({'_id':userCreated['_id']},'User',findOne=True)
@@ -149,7 +151,7 @@ def test_create_offense_employee_memo():
 
         # create employee
         employee = user.createEmployeeAction(userCreated, employeeObject)
-
+        print(employee)
         employees = user.readCollection('Employee')
 
         getEmployee = db.read({'_id':employees[0]['_id']},'Employee',findOne=True)
@@ -354,11 +356,11 @@ if __name__ == '__main__':
     # test_user_login()
     # test_duplicate_user_creation()
     # test_add_role_and_remove_role()
-    # test_create_offense_employee_memo()
+    test_create_offense_employee_memo()
     # test_update_offense()
     # test_delete_offense()
     # test_create_update_delete_employee()
-    test_submit_and_delete_memo()
+    # test_submit_and_delete_memo()
     # test_submit_memo_without_reason()
     # test_delete_non_existent_offense()
     pass

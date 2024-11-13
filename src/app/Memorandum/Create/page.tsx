@@ -1,9 +1,11 @@
+
 import React from 'react'
 
 import CreateMemoForm from './CreateMemoForm'
 
-import type { Employee, Offense } from '@/app/Schema';  
-
+// import type { Offense } from '@/app/Schema';  
+import { Offense } from '@/app/schemas/OffenseSchema.ts';
+import { Employee } from '../../schemas/EmployeeSchema.ts'
 import ServerRequests from '@/app/api/ServerRequests';
 
 const page = async () => { 

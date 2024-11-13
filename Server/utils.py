@@ -6,6 +6,7 @@ import datetime
 def generateRandomString():
     return ''.join(
         random.choice(string.ascii_letters + string.digits) for _ in range(32))
+    # return random.randint(1000000000, 9999999999)
 
 def getDictionaryOrObjectValue(obj, *args):
     # Initialize the current value with the first object

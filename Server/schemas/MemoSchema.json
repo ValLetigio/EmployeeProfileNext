@@ -1,0 +1,251 @@
+{
+    "$defs": {
+        "Employee": {
+            "properties": {
+                "_id": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": " Id"
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string"
+                },
+                "address": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Address"
+                },
+                "phoneNumber": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Phonenumber"
+                },
+                "photoOfPerson": {
+                    "title": "Photoofperson",
+                    "type": "string"
+                },
+                "resumePhotosList": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "Resumephotoslist",
+                    "type": "array"
+                },
+                "biodataPhotosList": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "Biodataphotoslist",
+                    "type": "array"
+                },
+                "email": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Email"
+                },
+                "dateJoined": {
+                    "format": "date-time",
+                    "title": "Datejoined",
+                    "type": "string"
+                },
+                "company": {
+                    "title": "Company",
+                    "type": "string"
+                },
+                "isRegular": {
+                    "title": "Isregular",
+                    "type": "boolean"
+                },
+                "isProductionEmployee": {
+                    "title": "Isproductionemployee",
+                    "type": "boolean"
+                },
+                "dailyWage": {
+                    "anyOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Dailywage"
+                },
+                "_version": {
+                    "title": " Version",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "name",
+                "address",
+                "phoneNumber",
+                "photoOfPerson",
+                "resumePhotosList",
+                "biodataPhotosList",
+                "email",
+                "dateJoined",
+                "company",
+                "isRegular",
+                "isProductionEmployee",
+                "dailyWage",
+                "_version"
+            ],
+            "title": "Employee",
+            "type": "object"
+        },
+        "Offense": {
+            "properties": {
+                "_id": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": " Id"
+                },
+                "number": {
+                    "title": "Number",
+                    "type": "integer"
+                },
+                "description": {
+                    "title": "Description",
+                    "type": "string"
+                },
+                "remedialActions": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "Remedialactions",
+                    "type": "array"
+                },
+                "_version": {
+                    "title": " Version",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "number",
+                "description",
+                "remedialActions",
+                "_version"
+            ],
+            "title": "Offense",
+            "type": "object"
+        }
+    },
+    "properties": {
+        "_id": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "title": " Id"
+        },
+        "date": {
+            "format": "date-time",
+            "title": "Date",
+            "type": "string"
+        },
+        "mediaList": {
+            "items": {
+                "type": "string"
+            },
+            "title": "Medialist",
+            "type": "array"
+        },
+        "Employee": {
+            "$ref": "#/$defs/Employee"
+        },
+        "memoPhotosList": {
+            "items": {
+                "type": "string"
+            },
+            "title": "Memophotoslist",
+            "type": "array"
+        },
+        "subject": {
+            "title": "Subject",
+            "type": "string"
+        },
+        "description": {
+            "title": "Description",
+            "type": "string"
+        },
+        "MemoCode": {
+            "$ref": "#/$defs/Offense"
+        },
+        "submitted": {
+            "title": "Submitted",
+            "type": "boolean"
+        },
+        "reason": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Reason"
+        },
+        "_version": {
+            "title": " Version",
+            "type": "integer"
+        }
+    },
+    "required": [
+        "date",
+        "mediaList",
+        "Employee",
+        "memoPhotosList",
+        "subject",
+        "description",
+        "MemoCode",
+        "submitted",
+        "reason",
+        "_version"
+    ],
+    "title": "Memo",
+    "type": "object",
+    "additionalProperties": false
+}

@@ -2,7 +2,8 @@
 
 import React, { useState, useRef, FC } from 'react'
 
-import { Employee } from '@/app/Schema'
+// import { Employee } from '@/app/Schema'
+import { Employee } from '@/app/schemas/EmployeeSchema.ts'
 
 import { useAppContext } from '@/app/GlobalContext' 
 
@@ -82,7 +83,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
             >
                 <option disabled selected value={""}>Select Employee</option>
                 {employeeList&&employeeList.map((employee, index) => (
-                    <option key={index} value={employee?._id}>{employee?.name}</option>
+                    <option key={index} value={employee?._id?.toString()}>{employee?.name}</option>
                 ))}
                 <option value="null">None</option>
             </select>
@@ -103,7 +104,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
         {/* address */} 
         <div className='flex flex-col text-sm gap-2 '>Address
             <textarea className="textarea textarea-bordered" placeholder="Address" id='address' 
-                value={formData?.address} > 
+                value={formData?.address || ''} > 
             </textarea>
         </div>
 
@@ -119,7 +120,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
                     />
                 </svg> 
                 <input type="text" className="grow" placeholder="Phone Number" id='phoneNumber' 
-                    value={formData?.phoneNumber} />
+                    value={formData?.phoneNumber || ''} />
             </label>
         </div>
 
@@ -155,7 +156,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
                     <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
                 </svg> 
                 <input type="email" className="grow" placeholder="E-mail" id='email'  
-                    value={formData?.email} />
+                    value={formData?.email || ''} />
             </label>
         </div>
 
@@ -205,7 +206,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
                 </svg>
 
                 <input type="number" className="grow" placeholder="Daily Wage" id='dailyWage' step={0.00001}
-                    value={formData?.dailyWage} />
+                    value={formData?.dailyWage ?? ''} />
             </label>
         </div> 
 
@@ -213,6 +214,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
         <button 
             className='btn bg-red-500 text-white w-full place-self-start my-6' 
             type='submit' disabled={formData?._id?false:true}
+            id='delete-employee-btn'
         >Delete</button>
 
       

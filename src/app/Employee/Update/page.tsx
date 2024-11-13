@@ -3,7 +3,8 @@ import React from 'react';
 
 import UpdateEmployeeForm from './UpdateEmployeeForm';
 
-import type { Employee } from '@/app/Schema';  
+// import type { Employee } from '@/app/Schema';
+import { Employee } from '../../schemas/EmployeeSchema.ts'
 
 import ServerRequests from '@/app/api/ServerRequests';
 

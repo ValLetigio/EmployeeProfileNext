@@ -4,7 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
-import { Employee, Offense, Memo } from '@/app/Schema';
+// import { Employee, Offense, Memo } from '@/app/Schema';
+import { Employee } from '@/app/schemas/EmployeeSchema.ts';
+import { Offense } from '@/app/schemas/OffenseSchema.ts';
+import { Memo } from '@/app/schemas/MemoSchema.ts';
 
 import Image from 'next/image';
 
@@ -83,7 +86,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
 
       {/* Memorandum to Submit */} 
       <div className='flex flex-col text-sm gap-2 '>Memo to Delete 
-        <select className="select select-bordered w-full " id='Memo' required
+        <select className="select select-bordered w-full " id='select-memo' required
           value={formData?.subject || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
             const selectedIndex = e.target.options.selectedIndex - 1
@@ -160,6 +163,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
       <button 
           className='btn bg-red-500 text-white w-full place-self-start my-6' 
           type='submit' disabled={formData?.subject?false:true}
+          id='delete-memo-btn'
         >Delete</button>
 
 

@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 
 import { useAppContext } from '@/app/GlobalContext';
 
-import { Offense } from '@/app/Schema';
+// import { Offense } from '@/app/Schema';
+import { Offense } from '@/app/schemas/OffenseSchema.ts'
 
 interface DeleteOffenseFormProps {
   offenseList: Offense[]
@@ -53,7 +54,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
 
       {/* Offense to Update */} 
       <div className='flex flex-col text-sm gap-2 '>Offense to Delete 
-        <select className="select select-bordered w-full " id='Offense' required
+        <select className="select select-bordered w-full " id='select-offense' required
           value={formData?.description || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
@@ -92,6 +93,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
       <button 
         className='btn bg-red-500 text-white w-full place-self-start my-6' 
         type='submit' disabled={formData?.description?false:true}
+        id='delete-offense-btn'
       >Delete</button>
     </form>
   )

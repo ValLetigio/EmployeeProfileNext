@@ -1,0 +1,124 @@
+{
+    "properties": {
+        "_id": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "title": " Id"
+        },
+        "name": {
+            "title": "Name",
+            "type": "string"
+        },
+        "address": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Address"
+        },
+        "phoneNumber": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Phonenumber"
+        },
+        "photoOfPerson": {
+            "title": "Photoofperson",
+            "type": "string"
+        },
+        "resumePhotosList": {
+            "items": {
+                "type": "string"
+            },
+            "title": "Resumephotoslist",
+            "type": "array"
+        },
+        "biodataPhotosList": {
+            "items": {
+                "type": "string"
+            },
+            "title": "Biodataphotoslist",
+            "type": "array"
+        },
+        "email": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Email"
+        },
+        "dateJoined": {
+            "format": "date-time",
+            "title": "Datejoined",
+            "type": "string"
+        },
+        "company": {
+            "title": "Company",
+            "type": "string"
+        },
+        "isRegular": {
+            "title": "Isregular",
+            "type": "boolean"
+        },
+        "isProductionEmployee": {
+            "title": "Isproductionemployee",
+            "type": "boolean"
+        },
+        "dailyWage": {
+            "anyOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "integer"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Dailywage"
+        },
+        "_version": {
+            "title": " Version",
+            "type": "integer"
+        }
+    },
+    "required": [
+        "name",
+        "address",
+        "phoneNumber",
+        "photoOfPerson",
+        "resumePhotosList",
+        "biodataPhotosList",
+        "email",
+        "dateJoined",
+        "company",
+        "isRegular",
+        "isProductionEmployee",
+        "dailyWage",
+        "_version"
+    ],
+    "title": "Employee",
+    "type": "object",
+    "additionalProperties": false
+}

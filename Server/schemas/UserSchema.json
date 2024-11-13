@@ -1,0 +1,57 @@
+{
+    "properties": {
+        "_id": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "title": " Id"
+        },
+        "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+        },
+        "isApproved": {
+            "title": "Isapproved",
+            "type": "boolean"
+        },
+        "displayName": {
+            "title": "Displayname",
+            "type": "string"
+        },
+        "email": {
+            "title": "Email",
+            "type": "string"
+        },
+        "roles": {
+            "title": "Roles",
+            "type": "object"
+        },
+        "_version": {
+            "title": " Version",
+            "type": "integer"
+        },
+        "image": {
+            "title": "Image",
+            "type": "string"
+        }
+    },
+    "required": [
+        "createdAt",
+        "isApproved",
+        "displayName",
+        "email",
+        "roles",
+        "_version",
+        "image"
+    ],
+    "title": "User",
+    "type": "object",
+    "additionalProperties": false
+}

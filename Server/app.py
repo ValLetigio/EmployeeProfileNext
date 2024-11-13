@@ -439,7 +439,7 @@ def getUserForTesting():
 
             user = UserActions({
                 '_id': None,
-                'roles': [],
+                'roles': {},
                 'createdAt': datetime.now(timezone.utc),
                 'isApproved': True,
                 'image': 'https://www.google.com',
@@ -448,7 +448,7 @@ def getUserForTesting():
                 '_version': 0
             })
 
-            userData = user.createFirstUserAction('testUserId')
+            userData = user.createFirstUserAction(firebaseUserUid='1234')
 
             return jsonify({
                 'message': 'data read successfully!',

@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 
 import { useAppContext } from '@/app/GlobalContext';
 
-import { DataToUpdate, Offense } from '@/app/Schema';
+import { DataToUpdate } from '@/app/Schema';
+import { Offense } from '@/app/schemas/OffenseSchema.ts'
 
 interface UpdateOffenseFormProps {
   offenseList: Offense[]
@@ -74,7 +75,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
 
       {/* Ofense to Update */} 
       <div className='flex flex-col text-sm gap-2 '>Offense to Update 
-        <select className="select select-bordered w-full " id='Employee' required
+        <select className="select select-bordered w-full " id='select-offense' required
           value={formData?.description || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1

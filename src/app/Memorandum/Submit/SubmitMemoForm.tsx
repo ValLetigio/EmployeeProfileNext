@@ -4,7 +4,10 @@ import React, { useState, useRef, useEffect, } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
-import { Employee, Offense, Memo } from '@/app/Schema';
+// import { Memo } from '@/app/Schema';
+import { Memo } from '@/app/schemas/MemoSchema.ts';
+import { Employee } from '@/app/schemas/EmployeeSchema.ts';
+import { Offense } from '@/app/schemas/OffenseSchema.ts';
 
 import Image from 'next/image';  
 
@@ -99,7 +102,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
 
       {/* Memorandum to Submit */} 
       <div className='flex flex-col text-sm gap-2 '>Memo to Submit 
-        <select className="select select-bordered w-full " id='Memo' required
+        <select className="select select-bordered w-full " id='select-memo' required
             value={formData?.subject || ''}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
@@ -187,6 +190,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
       <button 
           className='btn bg-blue-500 text-white w-full place-self-start my-6' 
           type='submit' disabled={formData?.subject?false:true}
+          id='submit-memo-btn'
         >Submit</button>
 
 

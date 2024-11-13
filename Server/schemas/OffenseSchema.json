@@ -1,0 +1,44 @@
+{
+    "properties": {
+        "_id": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "title": " Id"
+        },
+        "number": {
+            "title": "Number",
+            "type": "integer"
+        },
+        "description": {
+            "title": "Description",
+            "type": "string"
+        },
+        "remedialActions": {
+            "items": {
+                "type": "string"
+            },
+            "title": "Remedialactions",
+            "type": "array"
+        },
+        "_version": {
+            "title": " Version",
+            "type": "integer"
+        }
+    },
+    "required": [
+        "number",
+        "description",
+        "remedialActions",
+        "_version"
+    ],
+    "title": "Offense",
+    "type": "object",
+    "additionalProperties": false
+}

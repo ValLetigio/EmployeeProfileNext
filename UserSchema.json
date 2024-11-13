@@ -1,0 +1,42 @@
+{
+    "properties": {
+        "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+        },
+        "isApproved": {
+            "title": "Isapproved",
+            "type": "boolean"
+        },
+        "displayName": {
+            "title": "Displayname",
+            "type": "string"
+        },
+        "email": {
+            "title": "Email",
+            "type": "string"
+        },
+        "roles": {
+            "default": [],
+            "items": {
+                "type": "string"
+            },
+            "title": "Roles",
+            "type": "array"
+        },
+        "image": {
+            "title": "Image",
+            "type": "string"
+        }
+    },
+    "required": [
+        "createdAt",
+        "isApproved",
+        "displayName",
+        "email",
+        "image"
+    ],
+    "title": "User",
+    "type": "object"
+}

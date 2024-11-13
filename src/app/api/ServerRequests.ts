@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosResponse } from "axios";
 import Server from "./Server.ts";
-import { UserObject, Employee, DataToUpdate, UserDataSchema, Offense, Memo } from "../Schema";
+import { UserObject, DataToUpdate } from "../Schema";
+import { Memo } from "../schemas/MemoSchema.ts";
+import { Offense } from "../schemas/OffenseSchema.ts";
+import { Employee } from '../schemas/EmployeeSchema.ts'
+import {User} from "../schemas/UserSchema.ts";
 class ServerRequests extends Server {
   constructor( ) {
     super( );
@@ -59,7 +63,7 @@ class ServerRequests extends Server {
     }
   }
 
-  async createEmployee(employee: Employee, userObject: UserDataSchema): Promise<any> {
+  async createEmployee(employee: Employee, userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/createEmployee`, {
         method: 'POST',
@@ -76,7 +80,7 @@ class ServerRequests extends Server {
     }
   }
 
-  async updateEmployee(employee: Employee, dataToUpdate: DataToUpdate, userObject: UserDataSchema): Promise<any> {
+  async updateEmployee(employee: Employee, dataToUpdate: DataToUpdate, userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/updateEmployee`, {
         method: 'POST',
@@ -91,7 +95,7 @@ class ServerRequests extends Server {
     }  
   }
 
-  async deleteEmployee(employee: Employee, userObject: UserDataSchema): Promise<any> {
+  async deleteEmployee(employee: Employee, userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/deleteEmployee`, {
         method: 'POST',
@@ -139,7 +143,7 @@ class ServerRequests extends Server {
     }
   }
 
-  async createOffense (offense: Offense, userObject: UserDataSchema): Promise<any> {
+  async createOffense (offense: Offense, userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/createOffense`, {
         method: 'POST',
@@ -154,7 +158,7 @@ class ServerRequests extends Server {
     } 
   }
 
-  async updateOffense (offense: Offense, dataToUpdate: DataToUpdate, userObject: UserDataSchema): Promise<any> {
+  async updateOffense (offense: Offense, dataToUpdate: DataToUpdate, userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/updateOffense`, {
         method: 'POST',
@@ -169,7 +173,7 @@ class ServerRequests extends Server {
     }  
   }
 
-  async deleteOffense (offense: Offense, userObject: UserDataSchema): Promise<any> {
+  async deleteOffense (offense: Offense, userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/deleteOffense`, {
         method: 'POST',
@@ -184,7 +188,7 @@ class ServerRequests extends Server {
     }  
   }
 
-  async createMemo (memo: Memo, userObject: UserDataSchema): Promise<any> {
+  async createMemo (memo: Memo, userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/createMemo`, {
         method: 'POST',
@@ -199,7 +203,7 @@ class ServerRequests extends Server {
     }   
   }
 
-  async submitMemo (memo: Memo, reason: string, userObject: UserDataSchema): Promise<any> {
+  async submitMemo (memo: Memo, reason: string, userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/submitMemo`, {
         method: 'POST',
@@ -235,7 +239,7 @@ class ServerRequests extends Server {
     // }
   }
 
-  async deleteMemo (memo: Memo, userObject: UserDataSchema): Promise<any> {
+  async deleteMemo (memo: Memo, userObject: User): Promise<any> {
     try {
       const res = await fetch(`${this.url}/deleteMemo`, {
         method: 'POST',

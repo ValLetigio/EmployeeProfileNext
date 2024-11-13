@@ -4,7 +4,10 @@ import React, { useState, useRef } from 'react';
 
 import { useAppContext } from '@/app/GlobalContext';
 
-import { Employee, Offense } from '@/app/Schema';
+// import { Offense } from '@/app/Schema'
+import { Offense } from '@/app/schemas/OffenseSchema.ts'
+import { Employee } from '../../schemas/EmployeeSchema.ts'
+
 
 import Image from 'next/image'; 
 
@@ -108,7 +111,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         >
           <option disabled selected value={""}>Select Employee</option>
           {employeeList&&employeeList.map((employee, index) => (
-            <option key={index} value={employee?._id}>{employee?.name}</option>
+            <option key={index} value={employee?._id?.toString()}>{employee?.name}</option>
           ))}
           <option value="null">None</option>
         </select>
