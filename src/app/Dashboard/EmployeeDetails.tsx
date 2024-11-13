@@ -12,16 +12,24 @@ const EmployeeDetails = () => {
 
     const { selectedEmployee, setSelectedEmployee } = useAppContext(); 
 
+    const dummy = React.useRef<HTMLDivElement>(null);
+
     const detailStyle = (item:boolean) => (`${!item&&"hidden"} flex grow flex-col-reverse text-center p-2 xl:p-4 border rounded-xl hover:bg-gray-700 hover:text-white`); 
 
     const skeletonStyle = `${selectedEmployee._id ? "hidden" : "block"} skeleton shrink-0 `;
 
     const contentStyle = `${selectedEmployee._id ? "block" : "hidden"}`;
 
+    React.useEffect(() => {
+        if(selectedEmployee._id) {
+            dummy.current?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [selectedEmployee]);
+
 
   return (
-    <div className='relative h-full w-full flex flex-col justify-start items-center rounded-xl shadow-md shadow-gray-500 border p-4'>
-        <button onClick={()=>setSelectedEmployee({}as Employee)} className={`${!selectedEmployee?._id&&"hidden"} absolute top-1 right-2`}>X</button>
+    <div className='relative h-full w-full flex flex-col justify-start items-center rounded-xl shadow-md shadow-gray-500 border p-4' ref={dummy}>
+        <button onClick={()=>setSelectedEmployee({}as Employee)} className={`${!selectedEmployee?._id&&"hidden"} absolute top-1 right-2 opacity-40`}>X</button>
 
         <div className={skeletonStyle + " rounded-full h-32 md:h-40 w-32 md:w-40 "}></div>
 
@@ -48,12 +56,13 @@ const EmployeeDetails = () => {
             <div className={skeletonStyle + " h-12 w-72 grow"}></div>
             <div className={skeletonStyle + " h-12 w-32 grow"}></div>
             <div className={skeletonStyle + " h-12 w-40 grow"}></div>
+            
             <div className={detailStyle(Boolean(selectedEmployee?.company))} >Company<i>
                 <strong className='text-base'>{selectedEmployee?.company}</strong></i></div>
             <div className={detailStyle(Boolean(selectedEmployee?.dateJoined))} >Joined<i>
                 <strong className='text-base'>{selectedEmployee?.dateJoined?.substring(5, 17)}</strong></i></div>
             <div className={detailStyle(Boolean(selectedEmployee?.dailyWage))} >Daily Wage<i>
-                <strong className='text-base'>₱{selectedEmployee?.dailyWage?.toLocaleString()}</strong></i></div>
+                <strong className='text-base'>₱ {selectedEmployee?.dailyWage?.toLocaleString()}</strong></i></div>
             <div className={detailStyle(Boolean(selectedEmployee?.email))} >Email<i>
                 <strong className='text-base'>{selectedEmployee?.email}</strong></i></div> 
             <div className={detailStyle(Boolean(selectedEmployee?.phoneNumber))} >Phone<i>
