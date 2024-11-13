@@ -4,7 +4,10 @@
 
 import { createContext, useState, useContext, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+
 import { UserDataFromGoogleSchema, ToastOptionsSchema, ConfirmationOptionsSchema } from '../Schema';
+import { Employee } from '../schemas/EmployeeSchema';
+
 import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
 
@@ -34,6 +37,8 @@ interface AppContextProps {
   setConfirmationOptions: (data: ConfirmationOptionsSchema) => void;
   handleConfirmation: (question: string, consequence: string, type: string) => Promise<boolean>;
   router: ReturnType<typeof useRouter>;
+  selectedEmployee: Employee;
+  setSelectedEmployee: (data: Employee) => void;
 }
 
 // Create the default context with proper types and default values
@@ -58,7 +63,9 @@ const AppContext = createContext<AppContextProps>({
   setConfirmationOptions: () => {}, 
   serverRequests: new ServerRequests( ),
   handleConfirmation: () => new Promise<boolean>(() => {}),
-  router: {} as ReturnType<typeof useRouter>
+  router: {} as ReturnType<typeof useRouter>,
+  selectedEmployee: {} as Employee,
+  setSelectedEmployee: () => {}
 });
 
 
@@ -197,6 +204,8 @@ export default function ContextProvider({
 
   const [confirmationOptions, setConfirmationOptions] = useState({open:false, question: '', consequence: "", type: '', onConfirm: () => {}, onCancel: () => {}});
 
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee>({} as Employee);
+
   // useEffect(() => {
   //   setCards(
   //     { 
@@ -309,8 +318,7 @@ export default function ContextProvider({
     });
   }, [])   
 
-  useEffect(() => { 
-    console.log('ran1')
+  useEffect(() => {  
     if (session?.user) {
       
       const user = session.user as Session["user"] & {
@@ -334,7 +342,7 @@ export default function ContextProvider({
         displayName: displayName || ''
       });
  
-      setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
+      // setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     }   
 
     if (status === 'unauthenticated' && !isTestEnv)  {
@@ -382,7 +390,8 @@ export default function ContextProvider({
     toastOptions, setToastOptions,
     serverRequests,
     confirmationOptions, setConfirmationOptions,
-    handleConfirmation
+    handleConfirmation,
+    selectedEmployee, setSelectedEmployee
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

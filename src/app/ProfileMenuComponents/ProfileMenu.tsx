@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useAppContext } from '../GlobalContext';  
 
@@ -9,17 +9,17 @@ import ProfilePopUp from './ProfilePopUp';
 
 const ProfileMenu = () => {
 
-  const { userData, setToastOptions } = useAppContext(); 
+  const { userData, setToastOptions, pathname } = useAppContext(); 
 
   const [ showMenu, setShowMenu ] = useState(false);
 
   const handleMenuClick = () => {
     setShowMenu(!showMenu);
-  }
+  } 
 
   return (
     <div 
-      className={` ${userData?.email? "scale-100" : "scale-0"}
+      className={` ${!userData._id || pathname == '/Dashboard' ? "scale-0" : "scale-100"}
         fixed top-2 right-2 md:top-4 md:right-4 h-16 w-16 duration-300 z-50
       `} 
     > 
