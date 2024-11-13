@@ -13,7 +13,7 @@ function NavBar() {
 
   const [showMenu, setShowMenu] = useState(false);
 
-  const { cards, pathname, userData } = useAppContext(); 
+  const { cards, pathname, userData } = useAppContext();  
 
   return (
     <div
@@ -21,7 +21,7 @@ function NavBar() {
         fixed bottom-4 md:bottom-6 left-1/2 right-1/2 translate-x-[-50%] 
         w-[90%] md:w-[60%] lg:w-[40%] xl:w-[30%] 2xl:w-[25%]
         flex justify-evenly items-center h-16 border duration-300
-        ${userData?.email ? "scale-100" : "scale-0"}
+        ${!userData?.email || pathname == "/Dashboard" ? "scale-0" : "scale-100"}
       `}
     >
       
