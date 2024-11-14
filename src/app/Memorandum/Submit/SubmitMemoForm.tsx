@@ -2,12 +2,9 @@
 
 import React, { useState, useRef, useEffect, } from 'react';
 
-import { useAppContext } from '@/app/GlobalContext';
+import { useAppContext } from '@/app/GlobalContext'; 
 
-// import { Memo } from '@/app/Schema';
-import { Memo } from '@/app/schemas/MemoSchema.ts';
-import { Employee } from '@/app/schemas/EmployeeSchema.ts';
-import { Offense } from '@/app/schemas/OffenseSchema.ts';
+import { Memo } from '@/app/schemas/MemoSchema.ts'; 
 
 import Image from 'next/image';  
 
@@ -19,21 +16,9 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
 
   const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
-  const formRef = useRef<HTMLFormElement>(null)
-
-  const defaultMemo = {
-    date: '',
-    Employee: {} as Employee, 
-    description: '',
-    subject: '',
-    mediaList: [] as string[],
-    memoPhotosList: [] as string[],
-    MemoCode: {} as Offense,
-    reason: '',
-    submitted: false 
-  }
+  const formRef = useRef<HTMLFormElement>(null) 
  
-  const [ formData, setFormData ] = useState(defaultMemo)  
+  const [ formData, setFormData ] = useState<Memo>({} as Memo)  
 
   const [filteredMemos, setFilteredMemos] = useState<Memo[]>([])
 
@@ -48,13 +33,13 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
         try{
             const form = e.target as HTMLFormElement;   
 
-            const res = await serverRequests.submitMemo(formData, formData.reason, userData)
+            const res = await serverRequests.submitMemo(formData, formData.reason || "", userData)
 
             if(res&&res.data){
               setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 }); 
     
               form.reset()
-              setFormData(defaultMemo) 
+              setFormData({} as Memo) 
               setSubmittedMemos([...submittedMemos, formData.description])
 
               formRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -68,19 +53,35 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
       }
   } 
  
-  const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
-      if(file){
-          const reader = new FileReader()
-          reader.readAsDataURL(file)
-          reader.onloadend = () => {
-              setFormData({
-                  ...formData,
-                  [e.target.id]: [reader.result]
-              })
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (files && files.length > 0) {
+      const fileReaders = [];
+      const fileDataUrls: string[] = [];
+      
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        fileReaders.push(reader);
+        
+        reader.readAsDataURL(files[i]);
+        
+        reader.onloadend = () => {
+          fileDataUrls.push(reader.result as string);
+
+          // Check if all files have been processed
+          if (fileDataUrls.length === files.length) {
+            const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+
+            setFormData({
+                ...formData,
+                [e.target.id]: finalResult
+            }); 
           }
+        };
       }
-  }   
+    }
+  };
 
   const filterMemos = (memoList: Memo[]) => {
     const filteredMemos = memoList.filter(memo=>!submittedMemos.includes(memo.description)&&!memo?.submitted) 
@@ -106,7 +107,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
             value={formData?.subject || ''}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
-              setFormData(e.target.value=="null"?defaultMemo:{ ...filteredMemos[selectedIndex], reason: filteredMemos[selectedIndex].reason || '' })
+              setFormData(e.target.value=="null"?{}as Memo:{ ...filteredMemos[selectedIndex], reason: filteredMemos[selectedIndex].reason || '' })
           }}  
         >
           <option disabled selected value={""}>Select Memo </option>
@@ -172,7 +173,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
           <Image src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'    
-          onChange={handleFileChange}/>
+          onChange={handleFileChange} multiple/>
       </label>
 
 
@@ -182,7 +183,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
         <Image src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'  required
-          onChange={handleFileChange}/>
+          onChange={handleFileChange} multiple/>
       </label>
 
 

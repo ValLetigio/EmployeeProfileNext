@@ -7,6 +7,7 @@ import { useAppContext } from '@/app/GlobalContext';
 // import { Employee, Offense, Memo } from '@/app/Schema';
 import { Employee } from '@/app/schemas/EmployeeSchema.ts';
 import { Offense } from '@/app/schemas/OffenseSchema.ts';
+
 import { Memo } from '@/app/schemas/MemoSchema.ts';
 
 import Image from 'next/image';
@@ -19,25 +20,12 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
 
   const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
 
-  const formRef = useRef<HTMLFormElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)  
 
-  const defaultMemo = {
-    date: '',
-    Employee: {} as Employee, 
-    description: '',
-    subject: '',
-    mediaList: [] as string[],
-    memoPhotosList: [] as string[],
-    MemoCode: {} as Offense,
-    reason: '',
-    submitted: false 
-  }
-
-
-  const [ formData, setFormData ] = useState(defaultMemo)  
+  const [ formData, setFormData ] = useState<Memo>({} as Memo)  
 
   const [ filteredMemos, setFilteredMemos ] = useState<Memo[]>([])
-
+ 
   const [ deletedMemos, setDeletedMemos ] = useState<string[]>([])
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
@@ -56,7 +44,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
 
           setDeletedMemos([...deletedMemos, formData?.description])
           form.reset()
-          setFormData(defaultMemo) 
+          setFormData({} as Memo) 
           formRef.current?.scrollIntoView({ behavior: 'smooth' })
         }
       }catch(e:unknown){ 
@@ -90,7 +78,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
           value={formData?.subject || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
             const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData(e.target.value=="null"?defaultMemo:{ ...filteredMemos[selectedIndex], reason: filteredMemos[selectedIndex].reason || '' })
+            setFormData(e.target.value=="null"?{} as Memo:{ ...filteredMemos[selectedIndex], reason: filteredMemos[selectedIndex].reason || '' })
           }}  
         >
           <option disabled selected value={""}>Select Memo </option>

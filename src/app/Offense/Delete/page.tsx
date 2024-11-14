@@ -2,7 +2,7 @@ import React from 'react'
 
 import DeleteOffenseForm from './DeleteOffenseForm'
 
-import type { Offense } from '@/app/Schema';  
+import { Offense } from '@/app/schemas/OffenseSchema';
 
 import ServerRequests from '@/app/api/ServerRequests';
 

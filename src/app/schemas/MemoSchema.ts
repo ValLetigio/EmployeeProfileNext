@@ -61,14 +61,12 @@ export interface Employee {
   isRegular: Isregular;
   isProductionEmployee: Isproductionemployee;
   dailyWage: Dailywage;
-  _version: Version;
-  [k: string]: unknown;
+  _version: Version; 
 }
 export interface Offense {
   _id?: Id2;
   number: Number;
   description: Description1;
   remedialActions: Remedialactions;
-  _version: Version1;
-  [k: string]: unknown;
+  _version: Version1; 
 }

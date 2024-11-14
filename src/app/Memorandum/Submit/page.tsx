@@ -1,8 +1,8 @@
 import React from 'react'
 
-import SubmitMemoForm from './SubmitMemoForm'
+import SubmitMemoForm from './SubmitMemoForm' 
 
-import type { Memo } from '@/app/Schema';  
+import { Memo } from '@/app/schemas/MemoSchema';
 
 import ServerRequests from '@/app/api/ServerRequests'; 
 

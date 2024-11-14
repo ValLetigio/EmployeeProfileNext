@@ -16,8 +16,8 @@ const Menu: FC<MenuButtonProps> = ({ open, cards, pathname, setOpen }) => {
 
   return (
     <div 
-      className={` ${!open? "scale-0 hidden" : "scale-100"}  
-        fixed bottom-32 gap-4
+      className={` ${!open? "scale-0 hidden " : "scale-100"}  
+        fixed bottom-32 gap-4 
         flex flex-wrap justify-center item-center 
         w-[90vw] md:w-[60vw] lg:w-[40vw] xl:w-[30vw] 2xl:w-[25vw] 
       `}

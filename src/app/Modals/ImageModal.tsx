@@ -18,7 +18,7 @@ const ImageModal = () => {
 
             <div className="carousel h-[90%] w-full ">
                 {imageListForModal.map((item, index) => ( 
-                    <div id={`item${index}`} className="carousel-item w-full h-full">
+                    <div id={`item${index}`} className="carousel-item w-full h-full active:border-2">
                         <Image
                             src={item}
                             className="h-full w-full" width={1} height={1} alt={`#item${index}`} />

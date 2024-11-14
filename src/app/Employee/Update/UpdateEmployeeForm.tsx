@@ -5,9 +5,7 @@ import React, { useEffect, useState, FC } from 'react'
 
 import { DataToUpdate } from '@/app/Schema'
 
-import { Employee } from '@/app/schemas/EmployeeSchema'
-
-import { User } from '@/app/schemas/UserSchema'
+import { Employee } from '@/app/schemas/EmployeeSchema' 
 
 import { useAppContext } from '@/app/GlobalContext' 
 
@@ -240,7 +238,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                     <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />  
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
-                    onChange={handleFileChange} disabled={disable}/>
+                    onChange={handleFileChange} disabled={disable} multiple/>
             </label>
         </div> 
 

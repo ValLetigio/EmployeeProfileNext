@@ -4,17 +4,15 @@ import React, { useState } from 'react'
 
 import { useAppContext } from '@/app/GlobalContext';
 
+import { Offense } from '@/app/schemas/OffenseSchema';
+
 const CreateOffenseForm = () => {
 
   const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
 
   const formRef = React.useRef<HTMLFormElement>(null)
 
-  const [ formData, setFormData ] = useState({
-    remedialActions: [] as string[],
-    description: '',
-    number: 0
-  })
+  const [ formData, setFormData ] = useState<Offense>({ } as Offense)
 
   const remedialActions = [
     "Verbal-Warning",
@@ -46,11 +44,7 @@ const CreateOffenseForm = () => {
           setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
 
           form.reset()
-          setFormData({
-            remedialActions: [] as string[],
-            description: '',
-            number: 0
-          }) 
+          setFormData({} as Offense) 
 
           router.refresh()
 

@@ -2,7 +2,7 @@ import React from 'react'
 
 import DeleteMemoForm from './DeleteMemoForm'
 
-import type { Memo } from '@/app/Schema';  
+import { Memo } from '@/app/schemas/MemoSchema'; 
 
 import ServerRequests from '@/app/api/ServerRequests'; 
 

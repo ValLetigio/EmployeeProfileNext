@@ -69,19 +69,35 @@ const CreateEmployeeForm = () => {
         })
     }  
 
-    const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        if(file){
-            const reader = new FileReader()
-            reader.readAsDataURL(file)
-            reader.onloadend = () => {
-                setFormData({
-                    ...formData,
-                    [e.target.id]: e.target.id == "photoOfPerson" ? reader.result : [reader.result]
-                })
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+    
+        if (files && files.length > 0) {
+            const fileReaders = [];
+            const fileDataUrls: string[] = [];
+            
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                fileReaders.push(reader);
+                
+                reader.readAsDataURL(files[i]);
+                
+                reader.onloadend = () => {
+                    fileDataUrls.push(reader.result as string);
+    
+                    // Check if all files have been processed
+                    if (fileDataUrls.length === files.length) {
+                        const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+    
+                        setFormData({
+                            ...formData,
+                            [e.target.id]: finalResult
+                        }); 
+                    }
+                };
             }
         }
-    } 
+    };
 
   return (
     <form className={` form-style `}
@@ -146,7 +162,7 @@ const CreateEmployeeForm = () => {
                     <Image src={formData?.resumePhotosList[0]} className='h-[60px]' height={60} width={60} alt="resumePhotosList" />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='resumePhotosList' accept='image/*' 
-                    onChange={handleFileChange}/>
+                    onChange={handleFileChange} multiple/>
             </label>
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
@@ -154,7 +170,7 @@ const CreateEmployeeForm = () => {
                     <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
-                    onChange={handleFileChange}/>
+                    onChange={handleFileChange} multiple/>
             </label>
         </div> 
 

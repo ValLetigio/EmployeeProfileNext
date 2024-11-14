@@ -8,6 +8,8 @@ import { useAppContext } from '@/app/GlobalContext';
 import { Offense } from '@/app/schemas/OffenseSchema.ts'
 import { Employee } from '../../schemas/EmployeeSchema.ts'
 
+import { Memo } from '@/app/schemas/MemoSchema.ts';
+
 
 import Image from 'next/image'; 
 
@@ -20,21 +22,9 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
 
   const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
 
-  const formRef = useRef<HTMLFormElement>(null)
+  const formRef = useRef<HTMLFormElement>(null) 
 
-  const defaultMemo = {
-    date: '',
-    Employee: {} as Employee, 
-    description: '',
-    subject: '',
-    mediaList: [] as string[],
-    memoPhotosList: [] as string[],
-    MemoCode: {} as Offense,
-    reason: null as unknown as string,
-    submitted: false 
-  }
-
-  const [ formData, setFormData ] = useState(defaultMemo)  
+  const [ formData, setFormData ] = useState<Memo>({} as Memo)  
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
@@ -51,7 +41,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
               setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
     
               form.reset()
-              setFormData(defaultMemo)
+              setFormData({} as Memo)
 
               router.refresh()
 
@@ -71,19 +61,35 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       })
   }  
   
-  const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
-      if(file){
-          const reader = new FileReader()
-          reader.readAsDataURL(file)
-          reader.onloadend = () => {
-              setFormData({
-                  ...formData,
-                  [e.target.id]: [reader.result]
-              })
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (files && files.length > 0) {
+      const fileReaders = [];
+      const fileDataUrls: string[] = [];
+      
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        fileReaders.push(reader);
+        
+        reader.readAsDataURL(files[i]);
+        
+        reader.onloadend = () => {
+          fileDataUrls.push(reader.result as string);
+
+          // Check if all files have been processed
+          if (fileDataUrls.length === files.length) {
+            const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+
+            setFormData({
+              ...formData,
+              [e.target.id]: finalResult
+            }); 
           }
+        };
       }
-  }   
+    }
+  }; 
  
   return (
     <form
@@ -174,7 +180,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           <Image src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'   
-          onChange={handleFileChange}/>
+          onChange={handleFileChange} multiple/>
       </label>
 
 
@@ -184,7 +190,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           <Image src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'   
-          onChange={handleFileChange}/>
+          onChange={handleFileChange} multiple/>
       </label>
 
 

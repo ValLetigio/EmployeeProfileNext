@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react'
 
-import { useAppContext } from '@/app/GlobalContext';
+import { useAppContext } from '@/app/GlobalContext'; 
 
-// import { Offense } from '@/app/Schema';
 import { Offense } from '@/app/schemas/OffenseSchema.ts'
 
 interface DeleteOffenseFormProps {
@@ -16,11 +15,9 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
 
     const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
 
-    const formRef = React.useRef<HTMLFormElement>(null)
+    const formRef = React.useRef<HTMLFormElement>(null) 
 
-    const defaultOffense = { description:"", remedialActions: [] as string[], number: 0 }
-
-    const [ formData, setFormData ] = useState(defaultOffense) 
+    const [ formData, setFormData ] = useState<Offense>({} as Offense) 
    
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
@@ -36,7 +33,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
             setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 }); 
 
             form.reset()
-            setFormData(defaultOffense)  
+            setFormData({} as Offense)  
 
             router.refresh()
 
@@ -58,7 +55,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
           value={formData?.description || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData(e.target.value=="null"?defaultOffense:offenseList[selectedIndex])
+            setFormData(e.target.value=="null"?{} as Offense:offenseList[selectedIndex])
           }}  
         >
           <option disabled selected value={""}>Select Offense </option>
