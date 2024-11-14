@@ -28,9 +28,8 @@ const ImageModal = () => {
 
             <div className='flex absolute bottom-0 z-50 gap-2'>
                 {imageListForModal.map((item, index) => (
-                    <a href={`#item${index}`} className="btn btn-sm btn-neutral active:text-error" >{index + 1}</a>
-                ))}
-
+                    <a href={`#item${index}`} className="btn btn-sm active:text-error" >{index + 1}</a>
+                ))} 
             </div>
  
         </div>

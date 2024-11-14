@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 
 import Link from 'next/link';
  
-import { CardsSchema } from '../Schema';
+import { CardsSchema, CardSchema } from '../Schema';
 
 interface MenuButtonProps {
   open: boolean; 
@@ -16,7 +16,7 @@ const Menu: FC<MenuButtonProps> = ({ open, cards, pathname, setOpen }) => {
 
   return (
     <div 
-      className={` ${!open? "scale-0 hidden" : "scale-100"} 
+      className={` ${!open? "scale-0 hidden" : "scale-100"}  
         fixed bottom-32 gap-4
         flex flex-wrap justify-center item-center 
         w-[90vw] md:w-[60vw] lg:w-[40vw] xl:w-[30vw] 2xl:w-[25vw] 
@@ -24,7 +24,7 @@ const Menu: FC<MenuButtonProps> = ({ open, cards, pathname, setOpen }) => {
     >
       {Object.keys(cards).map((key : string) => {
         return (
-          cards[key].map((card, index) =>  {
+          cards[key].map((card: CardSchema, index: number) =>  {
             const isActive = pathname.startsWith(card.path)
             return (
               <div className='h-14 w-14 md:h-16 md:w-16 text-xl ' key={`${key} ${index}`} id={card.id}>

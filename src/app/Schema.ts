@@ -11,9 +11,9 @@ export interface CardSchema {
 }
 
 
-// export interface CardsSchema {
-//     [key: string]: CardSchema[]; 
-// }  
+export interface CardsSchema {
+    [key: string]: CardSchema[]; 
+}  
 
 
 // export interface UserDataSchema {
