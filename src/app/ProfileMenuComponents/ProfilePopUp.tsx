@@ -2,20 +2,22 @@
 
 import React, { FC } from 'react'
 
-import { UserDataFromGoogleSchema, ToastOptionsSchema } from '../Schema' 
+import { UserDataFromGoogleSchema } from '../Schema' 
 
 import { signOut } from 'next-auth/react'
 
-import Image from 'next/image'
+import Image from 'next/image' 
 
 export interface ProfilePopUpProps {
   userData: UserDataFromGoogleSchema, 
   showMenu: boolean, 
-  setToastOptions: (data: ToastOptionsSchema) => void
+  handleImageModalClick: (data: string[]) => void
 }
 
 
-const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, setToastOptions }) => {  
+const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, handleImageModalClick }) => {  
+
+
 
   const handleSignOut = async () => { 
     signOut()
@@ -44,7 +46,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, setToastOptio
       > 
         {[1,2,3,4,5].map((item, index) => (
           <button
-            key={index} onClick={()=>setToastOptions({open: true, message: `Option ${item} clicked`, type: 'info', timer: item})}
+            key={index} onClick={()=>handleImageModalClick([""])}
             className=' w-3/4 h-12 border-gray-300 hover:bg-blue-400 hover:text-white first:rounded-t-2xl' 
           >   
             <p className=' font-semibold'>Option {item}</p>

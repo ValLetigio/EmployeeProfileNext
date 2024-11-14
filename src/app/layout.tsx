@@ -11,6 +11,8 @@ import ProfileMenu from "./ProfileMenuComponents/ProfileMenu";
 import Toast from "./toast";
 import Confirmation from "./confirmation";
 
+import ImageModal from "./Modals/ImageModal";
+
 import { Poppins } from "next/font/google"; 
 
 const poppins = Poppins({ 
@@ -31,8 +33,9 @@ export default function RootLayout({
         <SessionProvider session={session}>
           <ContextProvider>
             <ProfileMenu/>
-            {children}
+            {children} 
             <NavBar/>
+            <ImageModal/>
             <Toast />
             <Confirmation />
           </ContextProvider>
