@@ -1,7 +1,7 @@
 
-import React from 'react'; 
+import React from 'react';  
 
-import type { Employee } from '@/app/Schema';  
+import { Employee } from '@/app/schemas/EmployeeSchema';
 
 import ServerRequests from '@/app/api/ServerRequests';
 
@@ -14,14 +14,24 @@ const Page = async () => {
 
   const serverRequests = new ServerRequests( );  
   const res = await serverRequests.fetchEmployeeList(); 
-  const employeeList: Employee[] = res.data;  
 
-  const employeeListLength = employeeList.length; 
-  const productionEmployeeCount = employeeList.filter((employee) => employee.isProductionEmployee).length; 
-  const newlyJoinedEmployeeCount = employeeList.filter((employee) => {
-    const daysSinceJoined = (new Date().getTime() - new Date(employee.dateJoined).getTime()) / (1000 * 60 * 60 * 24);
-    return daysSinceJoined <= 30;
-  }).length; 
+  let employeeList: Employee[] = [];
+
+  let employeeListLength = 0;
+  let productionEmployeeCount = 0;
+  let newlyJoinedEmployeeCount = 0;
+  let daysSinceJoined = 0;
+  
+  if(res.data){
+    employeeList = res.data;  
+
+    employeeListLength = employeeList?.length; 
+    productionEmployeeCount = employeeList.filter((employee) => employee.isProductionEmployee)?.length; 
+    newlyJoinedEmployeeCount = employeeList.filter((employee) => {
+    daysSinceJoined = (new Date().getTime() - new Date(employee.dateJoined).getTime()) / (1000 * 60 * 60 * 24);
+      return daysSinceJoined <= 30;
+    })?.length; 
+  }
 
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
     overflow-y-auto hover:bg-gray-700 hover:text-white hover:border-transparent

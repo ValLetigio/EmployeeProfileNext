@@ -105,9 +105,9 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
         <div className=" flex flex-wrap gap-2 px-3" id="remedialActions">
           {remedialActions.map((action, index) => (
             <input 
-                className={` ${formData?.remedialActions.includes(action) ? ' ' : ' hover:brightness-150'}
+                className={` ${formData?.remedialActions?.includes(action) ? ' ' : ' hover:brightness-150'}
                  join-item btn btn-sm font-normal tracking-tight btn-neutral `}
-              onChange={handleCheckboxChange} checked={formData?.remedialActions.includes(action)}
+              onChange={handleCheckboxChange} checked={formData?.remedialActions?.includes(action)}
               disabled={formData?.description==""}
               type="checkbox" name="options" value={action} aria-label={action} key={index} id={action}/>
           ))} 

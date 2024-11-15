@@ -78,8 +78,8 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
         <div className=" flex flex-wrap gap-2 px-3" id="remedialActions">
           {remedialActions.map((action, index) => (
             <input 
-                className={` ${formData?.remedialActions.includes(action) ? ' ' : ' hover:brightness-150'}
-                 join-item btn btn-sm font-normal tracking-tight btn-neutral `} checked={formData?.remedialActions.includes(action)}
+                className={` ${formData?.remedialActions?.includes(action) ? ' ' : ' hover:brightness-150'}
+                 join-item btn btn-sm font-normal tracking-tight btn-neutral `} checked={formData?.remedialActions?.includes(action)}
               disabled={formData?.description==""}
               type="checkbox" name="options" value={action} aria-label={action} key={index}/>
           ))} 

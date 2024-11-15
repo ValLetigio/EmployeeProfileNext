@@ -10,7 +10,8 @@ class Server {
         server: 'https://flask-app-614461425863.asia-east1.run.app'
       };  
 
-      this.url = next_env === 'production' ? urls.server : urls.local;
+      // this.url = next_env === 'production' ? urls.server : urls.local;
+      this.url = next_env === 'production' ? urls.local : urls.local;
     }
   }
   

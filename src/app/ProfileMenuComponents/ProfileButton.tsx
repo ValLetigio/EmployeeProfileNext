@@ -1,10 +1,10 @@
-import React, { FC } from 'react' 
+import React, { FC } from 'react'  
 
-import { UserDataFromGoogleSchema } from '../Schema'  
+import { User } from '../schemas/UserSchema';
 
 import Image from 'next/image'
 export interface ProfileButtonProps {
-    userData: UserDataFromGoogleSchema,
+    userData: User,
     handleMenuClick: () => void;
     showMenu: boolean 
 }

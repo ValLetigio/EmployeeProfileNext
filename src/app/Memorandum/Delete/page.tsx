@@ -9,10 +9,12 @@ import ServerRequests from '@/app/api/ServerRequests';
 const page = async () => { 
 
   const serverRequests = new ServerRequests( );  
-  
-  const res = await serverRequests.getAllMemoThatsNotSubmitted(); 
 
-  const memoList: Memo[] = res.data;  
+  const [memoRes] = await Promise.all([
+    serverRequests.getAllMemoThatsNotSubmitted(), 
+  ]);
+
+  const memoList: Memo[] = memoRes?.data || [];   
 
   return (
     <div className='w-screen h-screen flex items-center justify-center '> 

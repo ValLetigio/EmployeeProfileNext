@@ -84,7 +84,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
   };
 
   const filterMemos = (memoList: Memo[]) => {
-    const filteredMemos = memoList.filter(memo=>!submittedMemos.includes(memo.description)&&!memo?.submitted) 
+    const filteredMemos = memoList.filter(memo=>!submittedMemos?.includes(memo.description)&&!memo?.submitted) 
     
     setFilteredMemos(filteredMemos)
   }
@@ -170,7 +170,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
-          <Image src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
+          <Image src={formData?.mediaList?.[0]} className={`${!formData?.mediaList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'    
           onChange={handleFileChange} multiple/>
@@ -180,7 +180,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
-        <Image src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
+        <Image src={formData?.memoPhotosList?.[0]} className={`${!formData?.memoPhotosList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'  required
           onChange={handleFileChange} multiple/>

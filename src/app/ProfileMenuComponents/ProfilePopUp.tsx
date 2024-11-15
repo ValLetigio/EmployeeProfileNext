@@ -2,14 +2,14 @@
 
 import React, { FC } from 'react'
 
-import { UserDataFromGoogleSchema } from '../Schema' 
+import { User } from '../schemas/UserSchema'
 
 import { signOut } from 'next-auth/react'
 
 import Image from 'next/image' 
 
 export interface ProfilePopUpProps {
-  userData: UserDataFromGoogleSchema, 
+  userData: User, 
   showMenu: boolean, 
   handleImageModalClick: (data: string[]) => void
 }

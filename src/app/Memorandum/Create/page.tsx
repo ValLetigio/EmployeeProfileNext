@@ -1,9 +1,8 @@
 
 import React from 'react'
 
-import CreateMemoForm from './CreateMemoForm'
+import CreateMemoForm from './CreateMemoForm' 
 
-// import type { Offense } from '@/app/Schema';  
 import { Offense } from '@/app/schemas/OffenseSchema.ts';
 import { Employee } from '../../schemas/EmployeeSchema.ts'
 import ServerRequests from '@/app/api/ServerRequests';
@@ -11,13 +10,14 @@ import ServerRequests from '@/app/api/ServerRequests';
 const page = async () => { 
 
   const serverRequests = new ServerRequests( ); 
-  
-  const employeeRes = await serverRequests.fetchEmployeeList();
 
-  const offenseRes = await serverRequests.fetchOffenseList();
+  const [employeeRes, offenseRes] = await Promise.all([
+    serverRequests.fetchEmployeeList(),
+    serverRequests.fetchOffenseList(),
+  ]);
 
-  const employeeList: Employee[] = employeeRes.data; 
-  const offenseList: Offense[] = offenseRes.data;
+  const employeeList: Employee[] = employeeRes?.data || [];
+  const offenseList: Offense[] = offenseRes?.data || []; 
 
   return (
     <div className='w-screen h-screen flex items-center justify-center '>  

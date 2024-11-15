@@ -5,7 +5,7 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-import { ToastOptionsSchema, ConfirmationOptionsSchema } from '../Schema';
+import { ToastOptionsSchema, ConfirmationOptionsSchema, CardsSchema } from '../Schema';
 import { Employee } from '../schemas/EmployeeSchema';
 
 import { useSession } from 'next-auth/react';
@@ -20,7 +20,7 @@ import ServerRequests from '../api/ServerRequests';
 import firebaseConfig from '../api/firebase';
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 
 // Define the properties of the context
@@ -28,7 +28,7 @@ interface AppContextProps {
   userData: User;
   setUserData: (data: User) => void;
   sampleText: string;
-  cards: object;
+  cards: CardsSchema;
   pathname: string;
   toastOptions: ToastOptionsSchema;
   setToastOptions: (data: ToastOptionsSchema) => void;
@@ -49,7 +49,7 @@ const AppContext = createContext<AppContextProps>({
   userData: { } as User,
   setUserData: () => {},
   sampleText: '',
-  cards: {},
+  cards: {} as CardsSchema,
   pathname: '',
   toastOptions: {open: false, message: '', type: '', timer: 0},
   setToastOptions: () => {},
@@ -208,7 +208,8 @@ export default function ContextProvider({
     if (session?.user) {
       
       const user = session.user as Session["user"] & {
-        roles?: { [k: string]: any };
+        // roles?: { [k: string]: any };
+        roles?: Roles;
         _id?: string;
         _version?: number;
         createdAt?: object;

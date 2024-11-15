@@ -1,8 +1,8 @@
 'use client'
 
-import React from 'react'
+import React from 'react' 
 
-import type { Employee } from '@/app/Schema';
+import { Employee } from '../schemas/EmployeeSchema';
 
 import { useAppContext } from '../GlobalContext';
 

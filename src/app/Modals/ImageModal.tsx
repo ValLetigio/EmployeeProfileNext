@@ -18,7 +18,7 @@ const ImageModal = () => {
 
             <div className="carousel h-[90%] w-full ">
                 {imageListForModal.map((item, index) => ( 
-                    <div id={`item${index}`} className="carousel-item w-full h-full active:border-2">
+                    <div key={`item${index}`} id={`item${index}`} className="carousel-item w-full h-full ">
                         <Image
                             src={item}
                             className="h-full w-full" width={1} height={1} alt={`#item${index}`} />
@@ -28,7 +28,7 @@ const ImageModal = () => {
 
             <div className='flex absolute bottom-0 z-50 gap-2'>
                 {imageListForModal.map((item, index) => (
-                    <a href={`#item${index}`} className="btn btn-sm active:text-error" >{index + 1}</a>
+                    <a key={`item${index}`} href={`#item${index}`} className="btn btn-sm active:text-error" >{index + 1}</a>
                 ))} 
             </div>
  

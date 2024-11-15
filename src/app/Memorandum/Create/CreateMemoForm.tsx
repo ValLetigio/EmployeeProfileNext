@@ -64,11 +64,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
-    if (files && files.length > 0) {
+    if (files && files?.length > 0) {
       const fileReaders = [];
       const fileDataUrls: string[] = [];
       
-      for (let i = 0; i < files.length; i++) {
+      for (let i = 0; i < files?.length; i++) {
         const reader = new FileReader();
         fileReaders.push(reader);
         
@@ -78,7 +78,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           fileDataUrls.push(reader.result as string);
 
           // Check if all files have been processed
-          if (fileDataUrls.length === files.length) {
+          if (fileDataUrls?.length === files?.length) {
             const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
 
             setFormData({
@@ -177,7 +177,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
-          <Image src={formData?.mediaList[0]} className={`${!formData?.mediaList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
+          <Image src={formData?.mediaList?.[0]} className={`${!formData?.mediaList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'   
           onChange={handleFileChange} multiple/>
@@ -187,7 +187,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       {/* medialist */}
       <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
-          <Image src={formData?.memoPhotosList[0]} className={`${!formData?.memoPhotosList[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
+          <Image src={formData?.memoPhotosList?.[0]} className={`${!formData?.memoPhotosList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
         </div>
         <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'   
           onChange={handleFileChange} multiple/>
