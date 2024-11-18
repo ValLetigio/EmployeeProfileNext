@@ -388,7 +388,7 @@ def get_memo_list():
     if request.is_json:
         data = request.get_json()
         userData = data['userData']
-        employeeId = data['employee']['_id']
+        employeeId = data['employeeId']
         try:
             res = UserActions(userData).getMemoListAction(userData, employeeId)
 
