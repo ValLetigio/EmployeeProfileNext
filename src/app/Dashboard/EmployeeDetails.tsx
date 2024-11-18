@@ -10,11 +10,15 @@ import Image from 'next/image'
 
 const EmployeeDetails = () => {
 
-    const { selectedEmployee, setSelectedEmployee, handleImageModalClick } = useAppContext(); 
+    const { 
+        selectedEmployee, setSelectedEmployee, 
+        memoForModal, setMemoForModal,
+        handleImageModalClick, handleMemoModalClick
+    } = useAppContext(); 
 
     const dummy = React.useRef<HTMLDivElement>(null);
 
-    const detailStyle = (item:boolean) => (`${!item&&"hidden"} tracking-widest flex grow flex-col-reverse text-center p-2 xl:p-4 border rounded-xl hover:bg-gray-700 hover:text-white`); 
+    const detailStyle = (item:boolean) => (`${!item&&"hidden"} tracking-widest flex grow flex-col-reverse text-center p-2 xl:p-3 border rounded-xl hover:bg-gray-700 hover:text-white`); 
 
     const skeletonStyle = `${selectedEmployee._id ? "hidden" : "block"} skeleton shrink-0 `;
 
@@ -29,7 +33,10 @@ const EmployeeDetails = () => {
 
   return (
     <div className='relative h-full w-full flex flex-col justify-start items-center rounded-xl shadow-md shadow-gray-500 border p-4' ref={dummy}>
-        <button onClick={()=>setSelectedEmployee({}as Employee)} className={`${!selectedEmployee?._id&&"hidden"} absolute top-1 right-2 opacity-40`}>X</button>
+        <button onClick={()=>handleMemoModalClick(memoForModal)} className={`${!selectedEmployee?._id&&"hidden"} absolute top-1 left-2 opacity-40`}>
+            X
+        </button>
+        <button onClick={()=>setSelectedEmployee({} as Employee)} className={`${!selectedEmployee?._id&&"hidden"} absolute top-1 right-2 opacity-40`}>X</button>
 
         <div className={skeletonStyle + " rounded-full h-32 md:h-40 w-32 md:w-40 "}></div>
 
@@ -51,9 +58,9 @@ const EmployeeDetails = () => {
 
 
         <div className='flex flex-wrap gap-3 items-stretch w-full h-max text-xs overflow-auto max-h-[50%] pb-2'>
-            <div className={skeletonStyle + " h-12 w-44 grow"}></div>
-            <div className={skeletonStyle + " h-12 w-20 grow"}></div>
-            <div className={skeletonStyle + " h-12 w-72 grow"}></div>
+            <div className={skeletonStyle + " p-4 w-full bg-opacity-55 text-xl text-center"}>Select an Employee</div>
+            <div className={skeletonStyle + " h-12 w-40 grow"}></div>
+            <div className={skeletonStyle + " h-12 w-28 grow"}></div>
             <div className={skeletonStyle + " h-12 w-32 grow"}></div>
             <div className={skeletonStyle + " h-12 w-40 grow"}></div>
             
@@ -73,8 +80,7 @@ const EmployeeDetails = () => {
                 <strong className='text-base'>✔</strong></div>
         </div>
 
-        <div className='absolute flex justify-stretch bottom-2 gap-4 w-full text-center py-1 px-4'>
-            <div className={skeletonStyle + " p-4 w-full opacity-55 "}>Select an Employee</div>
+        <div className='absolute flex justify-stretch bottom-2 gap-4 w-full text-center py-1 px-4'> 
             <div onClick={()=>handleImageModalClick(selectedEmployee?.resumePhotosList)}
                 className={`${!selectedEmployee?.resumePhotosList?.[0]&&"hidden"} 
                 p-2 xl:p-4 flex items-center justify-evenly bg-gray-100 hover:bg-gray-700 hover:text-white w-full rounded-xl`}>Resume

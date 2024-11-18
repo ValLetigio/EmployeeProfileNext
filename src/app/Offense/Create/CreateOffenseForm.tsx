@@ -15,7 +15,7 @@ const CreateOffenseForm = () => {
   const [ formData, setFormData ] = useState<Offense>({ } as Offense)
 
   const remedialActions = [
-    "Verbal-Warning",
+    "Verbal Warning",
     "Written-Warning",
     "Counseling or Training",
     "Performance Improvement Plan (PIP)",
@@ -40,6 +40,7 @@ const CreateOffenseForm = () => {
           throw new Error('Remedial Actions must be selected')
         }else{ 
           const res = await serverRequests.createOffense(formData, userData)
+          console.log(res)
 
           setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
 
@@ -60,15 +61,17 @@ const CreateOffenseForm = () => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value; 
     setFormData((prevData) => {
+      let remedialActions = prevData.remedialActions || []
       return {
         ...prevData,
         remedialActions: event.target.checked
-          ? [...prevData.remedialActions, value]
-          : prevData.remedialActions.filter((action) => action !== value)
+        ? [...remedialActions, value]
+        : remedialActions.filter((action) => action !== value)
       };
     });
   }; 
-
+  
+  
   return (
     <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
       <h2 className='font-semibold'>Offense Creation</h2> 
