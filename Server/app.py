@@ -382,6 +382,26 @@ def submit_memo():
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
+    
+@app.route('/getMemoList', methods= ['POST'])
+def get_memo_list():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        employeeId = data['employee']['_id']
+        try:
+            res = UserActions(userData).getMemoListAction(userData, employeeId)
+
+            return jsonify({
+                'message': 'Memo read successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error processing Memo: %s", e)
+            return e.args[0], 400
+
+    else:
+        return jsonify({"error": "Request must be JSON"}), 400
 
 
 @app.route('/deleteMemo', methods=['POST'])

@@ -27,6 +27,9 @@ class Roles:
                 'canCreateMemo': {
                     'description': 'can create a memo'
                 },
+                'canGetMemoList': {
+                    'description': 'can get a list of memos'
+                }
             },
             'Employee': {
                 'canCreateEmployee': {
@@ -332,6 +335,13 @@ class UserActions(User):
         res = memo.submitMemo(user, reason)
         return db.update({'_id': res['_id']}, res, 'Memo')
     
+    def getMemoListAction(self, user, employeeId):
+        if 'canGetMemoList' not in user['roles']['Memo']:
+            raise ValueError('User does not have permission to get memo list')
+
+        memos = db.read({'Employee._id': employeeId}, 'Memo')
+        return memos
+    
     def getAllMemoThatsNotSubmittedAction(self):
         return self.getAllMemoThatsNotSubmitted()
 
@@ -468,8 +478,6 @@ class Memo(BaseModel):
         self.reason = reason
         self.submitted = True
         return self.to_dict()
-        pass
-
 
 class Employee(BaseModel):
     id: Optional[str] = Field(None, alias='_id')

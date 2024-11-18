@@ -313,6 +313,10 @@ def test_submit_and_delete_memo():
 
         assert len(memos) == 1
 
+        memoList = user.getMemoListAction(userCreated, memos[0]['Employee']['_id'])
+
+        assert len(memoList) == 1
+
     finally:
         db.delete({},'User')
         db.delete({},'Memo')
@@ -356,11 +360,11 @@ if __name__ == '__main__':
     # test_user_login()
     # test_duplicate_user_creation()
     # test_add_role_and_remove_role()
-    test_create_offense_employee_memo()
+    # test_create_offense_employee_memo()
     # test_update_offense()
     # test_delete_offense()
     # test_create_update_delete_employee()
-    # test_submit_and_delete_memo()
+    test_submit_and_delete_memo()
     # test_submit_memo_without_reason()
     # test_delete_non_existent_offense()
     pass

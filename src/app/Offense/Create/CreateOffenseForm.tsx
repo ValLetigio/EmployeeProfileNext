@@ -63,15 +63,15 @@ const CreateOffenseForm = () => {
       return {
         ...prevData,
         remedialActions: event.target.checked
-          ? [...prevData.remedialActions, value]
-          : prevData.remedialActions.filter((action) => action !== value)
+          ? [...prevData?.remedialActions, value]
+          : prevData?.remedialActions.filter((action) => action !== value)
       };
     });
-  }; 
+  };
 
   return (
     <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
-      <h2 className='font-semibold'>Offense Creation</h2> 
+      <h2 className='font-semibold'>Offense Creation</h2>
 
       {/* description */} 
       <div className='flex flex-col text-sm gap-2 mt-2'>Offense
