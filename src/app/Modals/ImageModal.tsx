@@ -13,15 +13,16 @@ const ImageModal = () => {
         <div className="modal-box bg-transparent shadow-none gap-2 flex flex-col w-full h-full justify-center items-center relative">  
             <form className='absolute top-2 right-2' method="dialog"> 
                 <button onClick={()=>setImageListForModal([])} 
-                    className=" btn btn-error text-white btn-sm rounded-full">Close</button>
+                    className=" btn btn-error text-white btn-sm rounded-full h-8 w-8">X</button>
             </form>
 
             <div className="carousel h-[90%] w-full ">
                 {imageListForModal.map((item, index) => ( 
-                    <div key={`item${index}`} id={`item${index}`} className="carousel-item w-full h-full ">
+                    <div key={`item${index}`} id={`item${index}`} className="carousel-item w-full h-full relative ">
                         <Image
                             src={item}
                             className="h-full w-full" width={1} height={1} alt={`#item${index}`} />
+                        {/* <span className='absolute top-2 left-3 font-bold bg-white rounded-full w-8 h-8 grid place-content-center'>{index + 1}</span> */}
                     </div> 
                 ))} 
             </div> 

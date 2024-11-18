@@ -15,7 +15,7 @@ const CreateOffenseForm = () => {
   const [ formData, setFormData ] = useState<Offense>({ } as Offense)
 
   const remedialActions = [
-    "Verbal-Warning",
+    "Verbal Warning",
     "Written-Warning",
     "Counseling or Training",
     "Performance Improvement Plan (PIP)",
@@ -41,6 +41,7 @@ const CreateOffenseForm = () => {
           throw new Error('Remedial Actions must be selected')
         }else{ 
           const res = await serverRequests.createOffense(formData, userData)
+          console.log(res)
 
           setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
 

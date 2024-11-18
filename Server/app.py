@@ -227,6 +227,7 @@ def update_employee():
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 
+
 @app.route('/deleteEmployee', methods=['POST'])
 def delete_employee():
     if request.is_json:
@@ -235,7 +236,8 @@ def delete_employee():
 
         employeeData = data['employeeData']
         try:
-            res = UserActions(userData).deleteEmployeeAction(userData, employeeData)
+            res = UserActions(userData).deleteEmployeeAction(
+                userData, employeeData)
 
             return jsonify({
                 'message': 'Employee deleted successfully!',
@@ -382,8 +384,9 @@ def submit_memo():
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
-    
-@app.route('/getMemoList', methods= ['POST'])
+
+
+@app.route('/getMemoList', methods=['POST'])
 def get_memo_list():
     if request.is_json:
         data = request.get_json()
@@ -426,7 +429,8 @@ def delete_memo():
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
-    
+
+
 @app.route('/getAllMemoThatsNotSubmitted', methods=['POST'])
 def get_all_memo_thats_not_submitted():
     if request.is_json:
@@ -462,7 +466,8 @@ def getUserForTesting():
                 'roles': {},
                 'createdAt': datetime.now(timezone.utc),
                 'isApproved': True,
-                'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLKqQ7NtUUGp8bSaplFyO23nW2YuWlj92q7Q&s',
+                'image':
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLKqQ7NtUUGp8bSaplFyO23nW2YuWlj92q7Q&s',
                 'displayName': 'TesTUseRnAme',
                 'email': 'test@email.com',
                 '_version': 0

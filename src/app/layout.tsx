@@ -12,6 +12,7 @@ import Toast from "./toast";
 import Confirmation from "./confirmation";
 
 import ImageModal from "./Modals/ImageModal";
+import EmployeeMemoModal from "./Modals/EmployeeMemoModal";
 
 import { Poppins } from "next/font/google"; 
 
@@ -36,6 +37,7 @@ export default function RootLayout({
             {children} 
             <NavBar/>
             <ImageModal/>
+            <EmployeeMemoModal/>
             <Toast />
             <Confirmation />
           </ContextProvider>

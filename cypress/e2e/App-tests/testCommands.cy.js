@@ -96,7 +96,7 @@ export function DeleteEmployee(name){
 
 export function CreateOffense(
   description = "Employee was late to work",
-  offenseType = ["Verbal-Warning", "Written-Warning"],
+  offenseType = ["Verbal Warning", "Written-Warning"],
 ){
   cy.get('#menu-button').click()
   cy.get('#create-offense').click()

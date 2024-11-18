@@ -3,18 +3,17 @@
 'use client';
 
 import { createContext, useState, useContext, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+
+import { usePathname, useRouter } from 'next/navigation'; 
 
 import { ToastOptionsSchema, ConfirmationOptionsSchema, CardsSchema } from '../Schema';
 import { Employee } from '../schemas/EmployeeSchema';
+import { User, Roles } from '../schemas/UserSchema';  
+import { Memo } from '../schemas/MemoSchema';
 
 import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
-
-import { User, Roles } from '../schemas/UserSchema'; 
-
-import { useRouter } from 'next/navigation';
-
+  
 import ServerRequests from '../api/ServerRequests';
 
 import firebaseConfig from '../api/firebase';
@@ -42,6 +41,9 @@ interface AppContextProps {
   handleImageModalClick: (imageList: string[]) => void; 
   imageListForModal: string[];
   setImageListForModal: (data: string[]) => void;
+  memoForModal: Memo[];
+  setMemoForModal: (data: Memo[]) => void;
+  handleMemoModalClick: (data: Memo[]) => void;
 }
 
 // Create the default context with proper types and default values
@@ -62,7 +64,10 @@ const AppContext = createContext<AppContextProps>({
   setSelectedEmployee: () => {},
   handleImageModalClick: () => {},
   imageListForModal: [],
-  setImageListForModal: () => {}
+  setImageListForModal: () => {},
+  memoForModal: []as Memo[],
+  setMemoForModal: () => {},
+  handleMemoModalClick: () => {}
 });
 
 
@@ -194,6 +199,8 @@ export default function ContextProvider({
 
   const [imageListForModal, setImageListForModal] = useState<string[]>([]);
 
+  const [memoForModal, setMemoForModal] = useState<Memo[]>([]);
+
 
  
   useEffect(() => {
@@ -275,6 +282,14 @@ export default function ContextProvider({
     setImageListForModal(imageList);
   }
 
+  const handleMemoModalClick = (selectedEmployeeMemos : Memo[]) => {
+    const modal = document.getElementById('EmployeeMemoModal');
+    if (modal) {
+      (modal as HTMLDialogElement).showModal();
+    }
+    setMemoForModal(selectedEmployeeMemos);
+  }
+
   // Define the global values to be shared across the context
   const globals = {
     userData,
@@ -287,8 +302,8 @@ export default function ContextProvider({
     confirmationOptions, setConfirmationOptions,
     handleConfirmation,
     selectedEmployee, setSelectedEmployee,
-    handleImageModalClick, 
-    imageListForModal, setImageListForModal
+    handleImageModalClick, imageListForModal, setImageListForModal,
+    memoForModal, setMemoForModal, handleMemoModalClick
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;
