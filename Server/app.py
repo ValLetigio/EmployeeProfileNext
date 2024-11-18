@@ -462,7 +462,7 @@ def getUserForTesting():
                 'roles': {},
                 'createdAt': datetime.now(timezone.utc),
                 'isApproved': True,
-                'image': 'https://www.google.com',
+                'image': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLKqQ7NtUUGp8bSaplFyO23nW2YuWlj92q7Q&s',
                 'displayName': 'TesTUseRnAme',
                 'email': 'test@email.com',
                 '_version': 0

@@ -237,13 +237,14 @@ export default function ContextProvider({
       });
  
       // setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
-    }   
+    }
+    console.log('test', isTestEnv)
 
-    if (status === 'unauthenticated' && !isTestEnv)  {
+    if (status === 'unauthenticated' && isTestEnv === 'false') {
       console.log('ran2')
       router.push('/api/auth/signin');
     }
-    if (status === 'unauthenticated' && isTestEnv) {
+    if (status === 'unauthenticated' && isTestEnv === 'true') {
       console.log('ran')
       router.push('/');
       // serverRequests.deleteAllDataInCollection('User')
@@ -252,8 +253,7 @@ export default function ContextProvider({
         console.log(res.data)
       })
     }
-  
-  }, [session, status, router]);
+  }, [session, status, router, isTestEnv]);
 
   const handleConfirmation = (question: string, consequence: string, type: string) => {
     return new Promise<boolean>((resolve) => {
