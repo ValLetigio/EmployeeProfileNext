@@ -8,7 +8,7 @@ import { usePathname, useRouter } from 'next/navigation';
 
 import { ToastOptionsSchema, ConfirmationOptionsSchema, CardsSchema } from '../Schema';
 import { Employee } from '../schemas/EmployeeSchema';
-import { User, Roles } from '../schemas/UserSchema'; 
+import { User, Roles } from '../schemas/UserSchema';  
 import { Memo } from '../schemas/MemoSchema';
 
 import { useSession } from 'next-auth/react';
@@ -41,9 +41,9 @@ interface AppContextProps {
   handleImageModalClick: (imageList: string[]) => void; 
   imageListForModal: string[];
   setImageListForModal: (data: string[]) => void;
-  memoForModal: {[key: string]: Memo[]};
-  setMemoForModal: (data: {[key: string]: Memo[]}) => void;
-  handleMemoModalClick: (memoList: {[key: string]: Memo[]}) => void;
+  memoForModal: Memo[];
+  setMemoForModal: (data: Memo[]) => void;
+  handleMemoModalClick: (data: Memo[]) => void;
 }
 
 // Create the default context with proper types and default values
@@ -65,7 +65,7 @@ const AppContext = createContext<AppContextProps>({
   handleImageModalClick: () => {},
   imageListForModal: [],
   setImageListForModal: () => {},
-  memoForModal: {},
+  memoForModal: []as Memo[],
   setMemoForModal: () => {},
   handleMemoModalClick: () => {}
 });
@@ -199,7 +199,7 @@ export default function ContextProvider({
 
   const [imageListForModal, setImageListForModal] = useState<string[]>([]);
 
-  const [memoForModal, setMemoForModal] = useState<{[key: string]: Memo[]}>({});
+  const [memoForModal, setMemoForModal] = useState<Memo[]>([]);
 
 
  
@@ -282,12 +282,12 @@ export default function ContextProvider({
     setImageListForModal(imageList);
   }
 
-  const handleMemoModalClick = (memoList: {[key: string]: Memo[]}) => {
+  const handleMemoModalClick = (selectedEmployeeMemos : Memo[]) => {
     const modal = document.getElementById('EmployeeMemoModal');
     if (modal) {
       (modal as HTMLDialogElement).showModal();
     }
-    setMemoForModal(memoList);
+    setMemoForModal(selectedEmployeeMemos);
   }
 
   // Define the global values to be shared across the context

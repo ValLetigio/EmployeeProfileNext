@@ -14,7 +14,7 @@ interface EmployeeTableProps {
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({employeeList}) => {
 
-    const { selectedEmployee, setSelectedEmployee } = useAppContext();
+    const { selectedEmployee, setSelectedEmployee } = useAppContext(); 
 
   return (
     <table className="table w-full table-pin-rows ">
