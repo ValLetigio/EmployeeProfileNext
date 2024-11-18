@@ -251,29 +251,23 @@ class ServerRequests extends Server {
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
-    }   
-    // try {
-    //   const data = {
-    //     memoData: memo,
-    //     userData: userObject,
-    //   };
-    //   const jsonData = JSON.stringify(data);
-    //   const res: AxiosResponse = await axios.post(`${this.url}/deleteMemo`, jsonData, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
-
-    //   return res.data;
-    // } catch (error: any) {
-    //   if (error.response && error.response.data) {
-    //     throw new Error(error.response.data);
-    //   } else {
-    //     throw new Error(error.message || "An error occurred during login.");
-    //   }
-    // }
+    }
   }
 
+  async getMemoList(userObject: User, employeeId: string): Promise<any> {
+    try {
+      const res = await fetch(`${this.url}/getMemoList`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userData: userObject, employeeId }),
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error('Failed to fetch data');
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
   // async getAllMemoThatsNotSubmitted (userData: UserDataSchema): Promise<any> {
   //   try {
   //     const data = {
