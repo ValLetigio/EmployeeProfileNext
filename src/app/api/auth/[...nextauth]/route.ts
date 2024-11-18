@@ -19,7 +19,7 @@ declare module 'next-auth' {
                 User: string[];
                 Memo: string[];
                 Employee: string[];
-                Offender: string[];
+                Offense: string[];
             };
             createdAt?: string | Date;
             isApproved?: boolean;
@@ -50,6 +50,7 @@ const authOption: NextAuthOptions = {
             return true;
         },
         async jwt({ token, account, profile }) {
+            console.log('JWT', token);
             if(profile){
                 const res = await serverRequests.firebaseLogin({profile});
                 console.log('Firebase Login', res);
@@ -83,7 +84,7 @@ const authOption: NextAuthOptions = {
                         User: string[];
                         Memo: string[];
                         Employee: string[];
-                        Offender: string[];
+                        Offense: string[];
                     };
                 }
             

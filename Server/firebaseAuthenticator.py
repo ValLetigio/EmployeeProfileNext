@@ -17,7 +17,7 @@ class firebaseAuthenticator:
         userObject = {
             '_id': None,
             '_version': 0,
-            'roles': [],
+            'roles': {},
             'createdAt': datetime.datetime.now(),
             'isApproved': True,
             'email': firebaseUserObject['email'],
