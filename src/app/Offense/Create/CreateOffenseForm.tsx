@@ -26,7 +26,8 @@ const CreateOffenseForm = () => {
     "Termination of Employment"
   ];
   
-  
+  console.log('formData:', formData)
+
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()   
 
@@ -60,11 +61,12 @@ const CreateOffenseForm = () => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value; 
     setFormData((prevData) => {
+      let remedialActions = prevData.remedialActions || []
       return {
         ...prevData,
         remedialActions: event.target.checked
-          ? [...prevData?.remedialActions, value]
-          : prevData?.remedialActions.filter((action) => action !== value)
+        ? [...remedialActions, value]
+        : remedialActions.filter((action) => action !== value)
       };
     });
   };
