@@ -202,3 +202,8 @@ export function DeleteMemo(memo){
   cy.wait(1000)
   cy.get('#confirm-button').click()
 }
+
+export function Dashboard(){
+  cy.get('#dashboard-button').click()
+  cy.location('pathname').should('include', '/Dashboard')
+}

@@ -15,6 +15,12 @@ class Roles:
             'User': {
                 'canUpdateUser': {
                     'description': 'can update a user'
+                },
+                'canGetEmployeeForDashboard': {
+                    'description': 'can get employee for dashboard'
+                },
+                'canGetMemoList': {
+                    'description': 'can get a list of memos'
                 }
             },
             'Memo': {
@@ -26,9 +32,6 @@ class Roles:
                 },
                 'canCreateMemo': {
                     'description': 'can create a memo'
-                },
-                'canGetMemoList': {
-                    'description': 'can get a list of memos'
                 }
             },
             'Employee': {
@@ -186,9 +189,31 @@ class User(BaseModel):
 
         return user
     
-    def getAllMemoThatsNotSubmitted(self):
+    def getAllMemoThatsNotSubmitted(self, user):
+        print('self.roles',self.roles)
+        if 'canGetMemoList' not in user['roles']['User']:
+            raise ValueError('User does not have permission to get memo list')
+
         memos = db.read({'submitted': False}, 'Memo')
         return memos
+
+    def getEmployeeForDashboard(self, user):
+        if 'canGetEmployeeForDashboard' not in user['roles']['User']:
+            raise ValueError('User does not have permission to get employee for dashboard')
+
+        employees = db.read(
+            {},
+            'Employee',
+            projection={
+                '_id': 1,
+                'name': 1,
+                'address': 1,
+                'phoneNumber': 1,
+                'company': 1,
+                'photoOfPerson': 1,
+            }
+        )
+        return employees
 
     def validate_email(self, email):
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -286,14 +311,17 @@ class UserActions(User):
         return db.update({'_id': res['_id']}, res, 'Memo')
     
     def getMemoListAction(self, user, employeeId):
-        if 'canGetMemoList' not in user['roles']['Memo']:
+        if 'canGetMemoList' not in user['roles']['User']:
             raise ValueError('User does not have permission to get memo list')
 
         memos = db.read({'Employee._id': employeeId}, 'Memo')
         return memos
+
+    def getEmployeeForDashboardAction(self, user):
+        return self.getEmployeeForDashboard(user)
     
-    def getAllMemoThatsNotSubmittedAction(self):
-        return self.getAllMemoThatsNotSubmitted()
+    def getAllMemoThatsNotSubmittedAction(self, user):
+        return self.getAllMemoThatsNotSubmitted(user)
 
 
 class Memo(BaseModel):
@@ -306,7 +334,7 @@ class Memo(BaseModel):
     description: str
     MemoCode: 'Offense'
     submitted: bool
-    reason: Optional[str]
+    reason: Optional[str] = None
     version: int = Field(..., alias='_version')
 
     @field_validator("date", mode='before' ,check_fields=True)

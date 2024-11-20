@@ -255,6 +255,10 @@ def test_create_update_delete_employee():
 
         employee = user.createEmployeeAction(userCreated ,employeeObject)
 
+        employeeDashboard = user.getEmployeeForDashboardAction(userCreated)
+
+        assert len(employeeDashboard) == 1
+
         getEmployee = db.read({'_id':employee['_id']},'Employee',findOne=True)
 
         assert getEmployee['name'] == employee['name']
@@ -270,6 +274,11 @@ def test_create_update_delete_employee():
         employees = user.readCollection('Employee')
 
         assert len(employees) == 0
+
+        employeeDashboard = user.getEmployeeForDashboardAction(userCreated)
+
+        assert len(employeeDashboard) == 0
+
     finally:
         db.delete({},'User')
         db.delete({},'Employee')
@@ -288,7 +297,7 @@ def test_submit_and_delete_memo():
 
         reason = 'Reason for submission'
 
-        memoToSubmit = user.getAllMemoThatsNotSubmittedAction()
+        memoToSubmit = user.getAllMemoThatsNotSubmittedAction(userCreated)
 
         assert len(memoToSubmit) == 1
 

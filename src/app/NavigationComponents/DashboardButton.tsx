@@ -13,7 +13,7 @@ const DashboardButton: FC<DashboardButtonProps> = ({pathname}) => {
         tooltip tooltip-top 
         backdrop-blur-xl shadow-md shadow-gray-400
         p-3 border rounded-full
-      `} data-tip="Dashboard"
+      `} data-tip="Dashboard" id="dashboard-button"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

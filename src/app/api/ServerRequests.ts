@@ -352,7 +352,22 @@ class ServerRequests extends Server {
     } catch (error:unknown) {
       return (error as Error).message;
     } 
-  } 
+  }
+
+  async getEmployeeForDashboardAction(userObject: User): Promise<any> {
+    try {
+      const res = await fetch(`${this.url}/getEmployeeForDashboardAction`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userData: userObject }),
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error('Failed to fetch data');
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
 }
 
 export default ServerRequests;

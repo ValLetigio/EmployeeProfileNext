@@ -438,7 +438,7 @@ def get_all_memo_thats_not_submitted():
         userData = data['userData']
 
         try:
-            res = UserActions(userData).getAllMemoThatsNotSubmittedAction()
+            res = UserActions(userData).getAllMemoThatsNotSubmittedAction(userData)
 
             return jsonify({
                 'message': 'Memo read successfully!',
@@ -448,6 +448,23 @@ def get_all_memo_thats_not_submitted():
             logging.exception("Error processing Memo: %s", e)
             return e.args[0], 400
 
+    else:
+        return jsonify({"error": "Request must be JSON"}), 400
+    
+@app.route('/getEmployeeForDashboardAction', methods = ['POST'])
+def get_employee_for_dashboard_action():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        try:
+            res = UserActions(userData).getEmployeeForDashboardAction(userData)
+            return jsonify({
+                'message': 'Employee read successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error processing Employee: %s", e)
+            return e.args[0], 400
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 

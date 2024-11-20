@@ -10,6 +10,7 @@ import {
   SubmitMemo,
   DeleteMemo,
   clearCollections,
+  Dashboard,
 } from './testCommands.cy'
 
 let serverRequests ;
@@ -93,14 +94,16 @@ describe('Employee spec', () => {
       )
 
       // Delete Employee
-      DeleteEmployee(
-        "John Doe Letigio"
-      )
+      // DeleteEmployee(
+      //   "John Doe Letigio"
+      // )
 
       // Delete Offense
       DeleteOffense(
         "Employee was late to work multiple times"
       )
+
+      Dashboard()
     })
   })
 })
