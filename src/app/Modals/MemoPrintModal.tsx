@@ -27,25 +27,83 @@ const PrintMemorandumModal = () => {
     const { memoForPrintModal, setMemoForPrintModal } = useAppContext( );  
 
     const convertToPdf = async () => {
+        // Desktop dimensions to simulate
+        const desktopWidth = 1200; // Adjust as needed for desktop
+        const desktopHeight = 800; // Adjust as needed for desktop
+    
+        // Store the original dimensions of the window
+        const originalWidth = window.innerWidth;
+        const originalHeight = window.innerHeight;
+    
+        // Resize the window to simulate a desktop view
+        window.innerWidth = desktopWidth;
+        window.innerHeight = desktopHeight;
+    
+        // Trigger resize event to adjust the layout (if necessary)
+        window.dispatchEvent(new Event('resize'));
+    
+        // Ensure element exists before proceeding
         const element = memoRef.current;
-        if (!element) return;
+        if (!element) {
+            console.error('Element not found');
+            return;
+        }
+    
+        try {
+            // Capture the element with html2canvas
+            const canvas = await html2canvas(element, {
+                scale: 1, // Higher scale for better quality
+                useCORS: true, // Handles cross-origin images
+            });
+    
+            // Get the image data from the canvas
+            const imgData = canvas.toDataURL('image/png');
+    
+            // Create a new jsPDF instance, setting the format to match the canvas size
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'px',
+                format: [canvas.width, canvas.height], // Match the canvas size
+            });
+    
+            // Add the image data to the PDF, with appropriate scaling
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    
+            // Save the PDF with a filename based on the employee's name
+            pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+        } finally {
+            // Restore the original window dimensions after the process
+            window.innerWidth = originalWidth;
+            window.innerHeight = originalHeight;
+    
+            // Dispatch resize event to revert layout back to mobile (if necessary)
+            window.dispatchEvent(new Event('resize'));
+        }
+    };
 
-        const canvas = await html2canvas(element, {
-            scale: 1, // Higher scale for better quality
-            useCORS: true, // Handles cross-origin images
-        });
+    // const convertToPdf = async () => { 
 
-        // Get image data from the canvas
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'px',
-            format: [canvas.width, canvas.height], // Match the canvas size
-        });
+    //     const element = memoRef.current;
+    //     if (!element) return;
 
-        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-        pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
-    }; 
+    //     const canvas = await html2canvas(element, {
+    //         scale: 1, // Higher scale for better quality
+    //         useCORS: true, // Handles cross-origin images
+    //     });
+
+    //     // Get image data from the canvas
+    //     const imgData = canvas.toDataURL('image/png');
+    //     const pdf = new jsPDF({
+    //         orientation: 'portrait',
+    //         unit: 'px',
+    //         format: [canvas.width, canvas.height], // Match the canvas size
+    //     });
+
+    //     pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    //     pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`); 
+    // }; 
 
     const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
  
@@ -116,7 +174,7 @@ const PrintMemorandumModal = () => {
                             <p className='indent-4 whitespace-pre-line '>{memoForPrintModal?.reason}</p>
                         ) : (
                             [0,1,2,3,4,5,6].map((i) => (
-                                <div key={i} ><div className='w-full border-b border-black mb-1.5 '/><br /></div>
+                                <div key={i} ><div className='w-full border-b border-gray-500 mb-1.5 '/><br /></div>
                             ))
                         )}  
                         <br />

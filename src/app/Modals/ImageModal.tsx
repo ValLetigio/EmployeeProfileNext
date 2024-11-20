@@ -8,6 +8,8 @@ const ImageModal = () => {
 
     const { imageListForModal, setImageListForModal } = useAppContext() 
 
+    const [hash, setHash] = React.useState('#item0'); 
+
   return (
     <dialog id="imageModal" className="modal ">
         <div className="modal-box bg-transparent shadow-none gap-2 flex flex-col w-full h-full justify-center items-center relative">  
@@ -29,7 +31,8 @@ const ImageModal = () => {
 
             <div className='flex absolute bottom-0 z-50 gap-2'>
                 {imageListForModal.map((item, index) => (
-                    <a key={`item${index}`} href={`#item${index}`} className="btn btn-sm active:text-error" >{index + 1}</a>
+                    <a key={`item${index}`} href={`#item${index}`} onClick={()=>setHash(`#item${index}`)}
+                        className={`${hash==`#item${index}`&&'btn-error'} btn btn-sm active:text-error`} >{index + 1}</a>
                 ))} 
             </div>
  

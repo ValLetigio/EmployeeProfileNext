@@ -22,7 +22,7 @@ const EmployeeMemoTableModal = () => {
           </form>
           
           <h3 className='text-xl font-semibold w-full text-start '>Memos <span className='text-base'>( {memoForTableModal?.[0]?.Employee?.name} )</span> </h3> 
-          <div className='w-full h-full overflow-auto rounded-xl pb-2'>
+          <div className='w-full h-full overflow-auto rounded-xl  '>
             <table className="table w-full table-pin-rows ">
               {/* head */} 
               <thead>
@@ -56,9 +56,9 @@ const EmployeeMemoTableModal = () => {
                   {/* Date */}
                   <td className='w-max '> {memo?.date?.substring(0, 16)} </td>
                   {/* Memo */}
-                  <td className=' '>
+                  <td className=' ' onClick={()=>handleMemoPrintModalClick(memo)}>
                       <h3 className='font-bold underline'>{memo?.subject}</h3>
-                      <p className='whitespace-pre-line'>{memo?.description}</p> 
+                      <p className='whitespace-pre-line hover:underline decoration-wavy line-clamp-4'>{memo?.description}</p> 
                   </td>
                   {/* Offense */}
                   <td>
@@ -79,7 +79,8 @@ const EmployeeMemoTableModal = () => {
                   <td> <Image className='w-[150px] h-[150px] hover:border cursor-pointer' src={memo?.memoPhotosList?.[0]} width={1} height={1} alt="memoPhotosList" 
                     onClick={()=>memo?.memoPhotosList?.[0]&&handleImageModalClick(memo?.memoPhotosList)}></Image> </td>
                   {/* Reason */}
-                  <td> <p className='whitespace-pre-line hover:underline decoration-wavy'>{memo?.reason || "None"}</p> </td>
+                  <td> <p onClick={()=>handleMemoPrintModalClick(memo)}
+                  className='whitespace-pre-line hover:underline decoration-wavy line-clamp-4' >{memo?.reason || "None"}</p> </td>
                   {/* isSubmitted */}
                   <td className='font-bold text-center'> {memo?.submitted?"✔":"X"} </td>
                 </tr>

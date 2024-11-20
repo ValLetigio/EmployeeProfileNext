@@ -24,14 +24,12 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
 
   const formRef = useRef<HTMLFormElement>(null) 
 
-  const [ formData, setFormData ] = useState<Memo>({} as Memo)
-
-  console.log('formData:', formData)
+  const [ formData, setFormData ] = useState<Memo>({} as Memo) 
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
 
-      const confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.description} for ${formData?.Employee?.name}`, "")
+      const confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.subject} Memorandum for ${formData?.Employee?.name}`, "")
 
       if(confirmed){
         try{
@@ -181,7 +179,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
           <Image src={formData?.mediaList?.[0]} className={`${!formData?.mediaList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
         </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*'   
+        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='mediaList' accept='image/*' required
           onChange={handleFileChange} multiple/>
       </label>
 
@@ -191,7 +189,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
           <Image src={formData?.memoPhotosList?.[0]} className={`${!formData?.memoPhotosList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" /> 
         </div>
-        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'   
+        <input type="file" className="file-input file-input-bordered w-full max-w-full " id='memoPhotosList' accept='image/*'  required
           onChange={handleFileChange} multiple/>
       </label>
 
