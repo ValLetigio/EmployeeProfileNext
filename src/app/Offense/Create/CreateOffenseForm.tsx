@@ -62,7 +62,7 @@ const CreateOffenseForm = () => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value; 
     setFormData((prevData) => {
-      let remedialActions = prevData.remedialActions || []
+      const remedialActions = prevData.remedialActions || []
       return {
         ...prevData,
         remedialActions: event.target.checked

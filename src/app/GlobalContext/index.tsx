@@ -41,9 +41,12 @@ interface AppContextProps {
   handleImageModalClick: (imageList: string[]) => void; 
   imageListForModal: string[];
   setImageListForModal: (data: string[]) => void;
-  memoForModal: Memo[];
-  setMemoForModal: (data: Memo[]) => void;
-  handleMemoModalClick: (data: Memo[]) => void;
+  memoForTableModal: Memo[];
+  setMemoForTableModal: (data: Memo[]) => void;
+  handleMemoTableModalClick: (data: Memo[]) => void; 
+  memoForPrintModal: Memo;
+  setMemoForPrintModal: (data: Memo) => void;
+  handleMemoPrintModalClick: (data: Memo) => void; 
 }
 
 // Create the default context with proper types and default values
@@ -65,9 +68,12 @@ const AppContext = createContext<AppContextProps>({
   handleImageModalClick: () => {},
   imageListForModal: [],
   setImageListForModal: () => {},
-  memoForModal: []as Memo[],
-  setMemoForModal: () => {},
-  handleMemoModalClick: () => {}
+  memoForTableModal: [] as Memo[],
+  setMemoForTableModal: () => {},
+  handleMemoTableModalClick: () => {}, 
+  memoForPrintModal: {} as Memo,
+  setMemoForPrintModal: () => {},
+  handleMemoPrintModalClick: () => {}
 });
 
 
@@ -199,7 +205,9 @@ export default function ContextProvider({
 
   const [imageListForModal, setImageListForModal] = useState<string[]>([]);
 
-  const [memoForModal, setMemoForModal] = useState<Memo[]>([]);
+  const [memoForTableModal, setMemoForTableModal] = useState<Memo[]>([]);
+
+  const [memoForPrintModal, setMemoForPrintModal] = useState<Memo>({} as Memo);
 
 
  
@@ -237,8 +245,7 @@ export default function ContextProvider({
       });
  
       // setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
-    }
-    console.log('test', isTestEnv)
+    } 
 
     if (status === 'unauthenticated' && isTestEnv === 'false') {
       console.log('ran2')
@@ -282,12 +289,20 @@ export default function ContextProvider({
     setImageListForModal(imageList);
   }
 
-  const handleMemoModalClick = (selectedEmployeeMemos : Memo[]) => {
+  const handleMemoTableModalClick = (selectedEmployeeMemos : Memo[]) => {
     const modal = document.getElementById('EmployeeMemoModal');
     if (modal) {
       (modal as HTMLDialogElement).showModal();
     }
-    setMemoForModal(selectedEmployeeMemos);
+    setMemoForTableModal(selectedEmployeeMemos);
+  }
+
+  const handleMemoPrintModalClick = (selectedMemo : Memo) => {
+    const modal = document.getElementById('MemoPrintModal'); 
+    if (modal) {
+      (modal as HTMLDialogElement).showModal();
+    }
+    setMemoForPrintModal(selectedMemo);
   }
 
   // Define the global values to be shared across the context
@@ -303,7 +318,8 @@ export default function ContextProvider({
     handleConfirmation,
     selectedEmployee, setSelectedEmployee,
     handleImageModalClick, imageListForModal, setImageListForModal,
-    memoForModal, setMemoForModal, handleMemoModalClick
+    memoForTableModal, setMemoForTableModal, handleMemoTableModalClick,
+    memoForPrintModal, setMemoForPrintModal, handleMemoPrintModalClick
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

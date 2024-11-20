@@ -8,6 +8,7 @@ import { useAppContext } from '../GlobalContext';
 
 import Image from 'next/image';
 
+
 interface EmployeeTableProps {
     employeeList: Employee[]; 
 }
@@ -16,11 +17,13 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({employeeList}) => {
 
     const { selectedEmployee, setSelectedEmployee } = useAppContext(); 
 
+    
+
   return (
-    <table className="table w-full table-pin-rows ">
+    <table className="table w-full table-pin-rows z-10">
         {/* head */} 
         <thead>
-            <tr> 
+            <tr className='backdrop-blur-md'> 
                 <th>Name</th>
                 <th>Address</th>
                 <th>Company</th> 
@@ -29,7 +32,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({employeeList}) => {
         <tbody>
             {employeeList.map((employee) => (
             <tr key={employee._id} 
-                className={`${selectedEmployee?._id == employee?._id ? "bg-gray-700 text-white" : "hover:bg-gray-200"} `}
+                className={`${selectedEmployee?._id == employee?._id ? "bg-gray-700 text-white" : "hover:bg-gray-200"} backdrop-blur-md z-10`}
                 onClick={() => setSelectedEmployee(employee)} data-tip={'View'}
             > 
                 <th className='bg-opacity-0 backdrop-blur-md ' >

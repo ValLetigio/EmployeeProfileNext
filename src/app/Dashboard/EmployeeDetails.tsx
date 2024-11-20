@@ -6,20 +6,22 @@ import { useAppContext } from '../GlobalContext'
 
 import { Employee } from '../schemas/EmployeeSchema'
 
+import { Memo } from '../schemas/MemoSchema'
+
 import Image from 'next/image'  
 
 const EmployeeDetails = () => {
 
     const { 
         selectedEmployee, setSelectedEmployee,  
-        handleImageModalClick, handleMemoModalClick,
+        handleImageModalClick, handleMemoTableModalClick,
         serverRequests, userData
 
     } = useAppContext(); 
 
     const dummy = React.useRef<HTMLDivElement>(null);
 
-    const [ selectedEmployeeMemos, setSelectedEmployeeMemos ] = React.useState([] as any[]);
+    const [ selectedEmployeeMemos, setSelectedEmployeeMemos ] = React.useState([] as Memo[]);
 
     const detailStyle = (item:boolean) => (`${!item&&"hidden"} tracking-widest flex grow flex-col-reverse text-center p-2 xl:p-3 border rounded-xl hover:bg-gray-700 hover:text-white`); 
 
@@ -56,9 +58,9 @@ const EmployeeDetails = () => {
             <div className=' indicator' >
 
                 <span data-tip={`${selectedEmployeeMemos?.length} Memos`} 
-                    className={`${!selectedEmployeeMemos?.length&&"hidden"}
-                        tooltip-top tooltip indicator-item badge badge-error text-white absolute hover:bg-red-200`}
-                    onClick={()=>handleMemoModalClick(selectedEmployeeMemos)}>
+                    className={`${!selectedEmployeeMemos?.length&&"hidden"}  
+                        cursor-pointer tooltip-top tooltip indicator-item badge badge-error text-white absolute hover:bg-red-200`}
+                    onClick={()=>handleMemoTableModalClick(selectedEmployeeMemos)}>
                     {selectedEmployeeMemos?.length}
                 </span>
 

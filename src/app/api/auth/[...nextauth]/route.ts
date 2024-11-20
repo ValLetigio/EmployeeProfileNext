@@ -44,16 +44,13 @@ const authOption: NextAuthOptions = {
         async signIn({account, profile}){
             if (!profile?.email) {
                 throw new Error('No Profile Found');
-            }
-            console.log(`${profile?.name} Logged in`, profile)
-            console.log(`Account Info:`, account)
+            } 
+            console.log(account)
             return true;
         },
-        async jwt({ token, account, profile }) {
-            console.log('JWT', token);
+        async jwt({ token, account, profile }) { 
             if(profile){
-                const res = await serverRequests.firebaseLogin({profile});
-                console.log('Firebase Login', res);
+                const res = await serverRequests.firebaseLogin({profile}); 
     
                 if (res.data) {
                     token.firebaseUserId = res.data._id;
@@ -95,10 +92,7 @@ const authOption: NextAuthOptions = {
                 if (token.image) {
                     session.user.image = typeof token.image === 'string' ? token.image : '';
                 }
-            }
-            
-
-            console.log('Session', session);
+            } 
 
             return session;
         }

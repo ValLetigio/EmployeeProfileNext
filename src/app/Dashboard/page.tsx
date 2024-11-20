@@ -7,6 +7,7 @@ import ServerRequests from '@/app/api/ServerRequests';
 
 import EmployeeTable from './EmployeeTable';
 import EmployeeDetails from './EmployeeDetails';  
+import SearchBar from './SearchBar';
 
 import Link from 'next/link';
  
@@ -36,8 +37,7 @@ const Page = async () => {
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
     overflow-y-auto hover:bg-gray-700 hover:text-white hover:border-transparent
     pl-4 p-2 shadow-md shadow-gray-500 rounded-xl flex flex-col items-start justify-evenly gap-2 border tracking-tighter`;
-  
-
+ 
   return (
     <div className=" flex flex-col items-center justify-start">  
       <div className=' w-full h-[10vh] scale-0'> </div>
@@ -84,7 +84,9 @@ const Page = async () => {
           {/* Table */}
           <div className='w-[100%] max-h-[95vh] lg:h-[75%] p-4 shadow-md shadow-gray-500 rounded-xl flex flex-col items-start justify-between border '>
             <div className=" w-full overflow-auto h-full">
-              <h2 className='text-xl font-semibold tracking-tighter sticky left-0 top-0 mb-2'>Employees</h2>
+              <div className='text-xl font-semibold tracking-tighter sticky left-0 top-1 mb-2 w-full flex items-center justify-between px-3'>Employees 
+                <SearchBar employeeList={employeeList}/>
+              </div>
               <EmployeeTable employeeList={employeeList} />
             </div>
           </div>  
