@@ -346,7 +346,7 @@ def create_memo():
                     '_id': None,
                     'MemoCode': memo['MemoCode'],
                     'submitted': False,
-                    'reason': memo['reason'],
+                    'reason': memo['reason'] or None,
                     '_version': 0
                 })
 
