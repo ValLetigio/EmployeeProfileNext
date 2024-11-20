@@ -25,7 +25,7 @@ const Page = async () => {
   if(res.data){
     employeeList = res.data;  
 
-    employeeListLength = employeeList?.length; 
+    employeeListLength = employeeList?.length
     productionEmployeeCount = employeeList.filter((employee) => employee.isProductionEmployee)?.length; 
     newlyJoinedEmployeeCount = employeeList.filter((employee) => {
     daysSinceJoined = (new Date().getTime() - new Date(employee.dateJoined).getTime()) / (1000 * 60 * 60 * 24);
@@ -85,7 +85,9 @@ const Page = async () => {
           <div className='w-[100%] max-h-[95vh] lg:h-[75%] p-4 shadow-md shadow-gray-500 rounded-xl flex flex-col items-start justify-between border '>
             <div className=" w-full overflow-auto h-full">
               <h2 className='text-xl font-semibold tracking-tighter sticky left-0 top-0 mb-2'>Employees</h2>
-              <EmployeeTable employeeList={employeeList} />
+              <EmployeeTable
+                // employeeList={employeeList} 
+              />
             </div>
           </div>  
         </div>
