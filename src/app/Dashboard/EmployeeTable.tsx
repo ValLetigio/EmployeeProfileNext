@@ -1,6 +1,8 @@
 'use client'
 
-import React from 'react' 
+import React from 'react'
+
+import { useState, useEffect } from 'react';
 
 import { Employee } from '../schemas/EmployeeSchema';
 
@@ -8,22 +10,36 @@ import { useAppContext } from '../GlobalContext';
 
 import Image from 'next/image';
 
+// interface EmployeeTableProps {
+//     employeeList: Employee[]; 
+// }
 
-interface EmployeeTableProps {
-    employeeList: Employee[]; 
-}
+const EmployeeTable = () => {
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({employeeList}) => {
+    const { selectedEmployee, setSelectedEmployee, userData, serverRequests } = useAppContext(); 
 
-    const { selectedEmployee, setSelectedEmployee } = useAppContext(); 
+    const [employeeList, setEmployeeList] = useState<Employee[]>([])
 
-    
+    const getEmployeeForDashboard = async () =>{
+        if(userData?._id){
+            const res = await serverRequests.getEmployeeForDashboardAction(userData)
+            if(res.data){
+                setEmployeeList(res.data)
+            }
+        } else {
+            console.error('userData not found')
+        }
+    }
+
+    useEffect(() => {
+        getEmployeeForDashboard()
+    }, [])
 
   return (
-    <table className="table w-full table-pin-rows z-10">
+    <table className="table w-full table-pin-rows ">
         {/* head */} 
         <thead>
-            <tr className='backdrop-blur-md'> 
+            <tr> 
                 <th>Name</th>
                 <th>Address</th>
                 <th>Company</th> 
@@ -32,7 +48,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({employeeList}) => {
         <tbody>
             {employeeList.map((employee) => (
             <tr key={employee._id} 
-                className={`${selectedEmployee?._id == employee?._id ? "bg-gray-700 text-white" : "hover:bg-gray-200"} backdrop-blur-md z-10`}
+                className={`${selectedEmployee?._id == employee?._id ? "bg-gray-700 text-white" : "hover:bg-gray-200"} `}
                 onClick={() => setSelectedEmployee(employee)} data-tip={'View'}
             > 
                 <th className='bg-opacity-0 backdrop-blur-md ' >

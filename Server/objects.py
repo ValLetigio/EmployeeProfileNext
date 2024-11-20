@@ -314,7 +314,19 @@ class UserActions(User):
         if 'canGetMemoList' not in user['roles']['User']:
             raise ValueError('User does not have permission to get memo list')
 
-        memos = db.read({'Employee._id': employeeId}, 'Memo')
+        memos = db.read({
+            'Employee._id': employeeId},
+            'Memo',
+            projection={
+                '_id': 1,
+                'date': 1,
+                'mediaList': 1,
+                'Employee': 1,
+                'memoPhotosList': 1,
+                'MemoCode': 1,
+                'submitted': 1,
+                'reason': 1,
+            })
         return memos
 
     def getEmployeeForDashboardAction(self, user):
