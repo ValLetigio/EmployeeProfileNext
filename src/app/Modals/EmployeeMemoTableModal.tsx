@@ -33,7 +33,7 @@ const EmployeeMemoTableModal = () => {
                   <th className='min-w-[20vw]'>Offense</th> 
                   <th className='min-w-[150px]'>Photos</th> 
                   <th className='min-w-[150px]'>Memo Photos</th> 
-                  <th>Reason</th> 
+                  <th className='min-w-[200px]'>Reason</th> 
                   <th>isSubmitted</th>  
                 </tr>
               </thead>

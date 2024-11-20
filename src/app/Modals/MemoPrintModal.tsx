@@ -55,7 +55,7 @@ const PrintMemorandumModal = () => {
     >
         <div 
             style={style}
-            className={` relative h-[90vh] w-[95vw] sm:w-[500px] md:min-w-[50vw] border bg-white rounded-3xl`}  
+            className={` relative h-[90vh] w-[95vw] sm:w-[500px] md:min-w-[50vw] border bg-white `}  
         >  
             <div className='w-full h-full overflow-auto'>
                 <form className='absolute top-2 right-2' method="dialog" id='closeButton'> 
