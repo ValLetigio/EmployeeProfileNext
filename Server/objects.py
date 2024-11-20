@@ -15,6 +15,12 @@ class Roles:
             'User': {
                 'canUpdateUser': {
                     'description': 'can update a user'
+                },
+                'canGetEmployeeForDashboard': {
+                    'description': 'can get employee for dashboard'
+                },
+                'canGetMemoList': {
+                    'description': 'can get a list of memos'
                 }
             },
             'Memo': {
@@ -26,9 +32,6 @@ class Roles:
                 },
                 'canCreateMemo': {
                     'description': 'can create a memo'
-                },
-                'canGetMemoList': {
-                    'description': 'can get a list of memos'
                 }
             },
             'Employee': {
@@ -103,34 +106,6 @@ class User(BaseModel):
             return datetime.datetime.fromtimestamp(value)
         raise ValueError("createdAt must be a valid datetime, string, or timestamp")
 
-    #     if not isinstance(data['createdAt'], datetime.datetime):
-    #         transformedDate = transformDate(data['createdAt'])
-    #         data['createdAt'] = transformDate(data['createdAt'])
-
-        # validateParameterData(
-        #     data, {
-        #         '_id': (str, type(None)),
-        #         'createdAt': datetime.datetime,
-        #         'isApproved': bool,
-        #         'displayName': str,
-        #         'email': str,
-        #         'roles': object,
-        #         '_version': int,
-        #         'image': (str, type(None))
-        #     }, self.__class__.__name__)
-
-        # self._id = getDictionaryOrObjectValue(data, '_id')
-        # self.createdAt = getDictionaryOrObjectValue(data, 'createdAt')
-        # self.isApproved = getDictionaryOrObjectValue(data, 'isApproved')
-        # self.displayName = getDictionaryOrObjectValue(data, 'displayName')
-        # self.email = self.validate_email(
-        #     getDictionaryOrObjectValue(data, 'email'))
-        # self.roles = getDictionaryOrObjectValue(
-        #     data, 'roles') if getDictionaryOrObjectValue(
-        #         data, 'roles') else ['user']
-        # self._version = getDictionaryOrObjectValue(data, '_version')
-        # self.image = getDictionaryOrObjectValue(data, 'image')
-
     def to_dict(self):
         return {
             '_id': self.id,
@@ -142,28 +117,6 @@ class User(BaseModel):
             'roles': self.roles,
             '_version': self._version
         }
-
-    # # create a function to create a user
-    # def createUser(self):
-    #     existing_user = db.read({'email': self.email}, 'User')
-    #     if existing_user and self._id != None:
-    #         raise ValueError('User already exists')
-    #     else:
-    #         self._id = generateRandomString()
-    #         if len(db.read({}, 'User')) == 0:
-    #             self.roles = Roles().getAllRoleNames()
-    #         else:
-    #             self.roles = ['user']
-    #         return self.to_dict()
-    # def userLogin(self):
-    #     existing_user = db.read({'email': self.email}, 'User', findOne=True)
-    #     if existing_user:
-    #         if existing_user['password'] == self.password:
-    #             return existing_user
-    #         else:
-    #             raise ValueError('Incorrect password')
-    #     else:
-    #         raise ValueError('User does not exist')
 
     def createFirstUser(self, firebaseUserUid):
         if self.id != None:
@@ -236,9 +189,31 @@ class User(BaseModel):
 
         return user
     
-    def getAllMemoThatsNotSubmitted(self):
+    def getAllMemoThatsNotSubmitted(self, user):
+        print('self.roles',self.roles)
+        if 'canGetMemoList' not in user['roles']['User']:
+            raise ValueError('User does not have permission to get memo list')
+
         memos = db.read({'submitted': False}, 'Memo')
         return memos
+
+    def getEmployeeForDashboard(self, user):
+        if 'canGetEmployeeForDashboard' not in user['roles']['User']:
+            raise ValueError('User does not have permission to get employee for dashboard')
+
+        employees = db.read(
+            {},
+            'Employee',
+            projection={
+                '_id': 1,
+                'name': 1,
+                'address': 1,
+                'phoneNumber': 1,
+                'company': 1,
+                'photoOfPerson': 1,
+            }
+        )
+        return employees
 
     def validate_email(self, email):
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -336,14 +311,17 @@ class UserActions(User):
         return db.update({'_id': res['_id']}, res, 'Memo')
     
     def getMemoListAction(self, user, employeeId):
-        if 'canGetMemoList' not in user['roles']['Memo']:
+        if 'canGetMemoList' not in user['roles']['User']:
             raise ValueError('User does not have permission to get memo list')
 
         memos = db.read({'Employee._id': employeeId}, 'Memo')
         return memos
+
+    def getEmployeeForDashboardAction(self, user):
+        return self.getEmployeeForDashboard(user)
     
-    def getAllMemoThatsNotSubmittedAction(self):
-        return self.getAllMemoThatsNotSubmitted()
+    def getAllMemoThatsNotSubmittedAction(self, user):
+        return self.getAllMemoThatsNotSubmitted(user)
 
 
 class Memo(BaseModel):
@@ -356,7 +334,7 @@ class Memo(BaseModel):
     description: str
     MemoCode: 'Offense'
     submitted: bool
-    reason: Optional[str]
+    reason: Optional[str] = None
     version: int = Field(..., alias='_version')
 
     @field_validator("date", mode='before' ,check_fields=True)
@@ -373,43 +351,6 @@ class Memo(BaseModel):
         elif isinstance(value, (int, float)):
             return datetime.datetime.fromtimestamp(value)
         raise ValueError("date must be a valid datetime, string, or timestamp")
-
-    # def __init__(self, data):
-    #     if not isinstance(data['Employee'], Employee):
-    #         data['Employee'] = Employee(**data['Employee'])
-
-    #     if not isinstance(data['MemoCode'], Offense):
-    #         data['MemoCode'] = Offense(**data['MemoCode'])
-
-    #     if not isinstance(data['date'], datetime.datetime):
-    #         data['date'] = transformDate(data['date'])
-
-    #     validateParameterData(
-    #         data, {
-    #             'date': datetime.datetime,
-    #             'mediaList': list,
-    #             'Employee': Employee,
-    #             'memoPhotosList': list,
-    #             'subject': str,
-    #             'description': str,
-    #             '_id': (str, type(None)),
-    #             'MemoCode': Offense,
-    #             'submitted': bool,
-    #             'reason': (str, type(None)),
-    #             '_version': int
-    #         }, self.__class__.__name__)
-
-    #     self._id = data['_id']
-    #     self.date = data['date']
-    #     self.mediaList = data['mediaList']
-    #     self.Employee = data['Employee']
-    #     self.memoPhotosList = data['memoPhotosList']
-    #     self.subject = data['subject']
-    #     self.description = data['description']
-    #     self.MemoCode = data['MemoCode']
-    #     self.submitted = data['submitted']
-    #     self.reason = data['reason']
-    #     self._version = data['_version']
 
     def to_dict(self):
         return {
@@ -510,43 +451,6 @@ class Employee(BaseModel):
             return datetime.datetime.fromtimestamp(value)
         raise ValueError("dateJoined must be a valid datetime, string, or timestamp")
 
-    # def __init__(self, data):
-
-    #     if not isinstance(data['dateJoined'], datetime.datetime):
-    #         data['dateJoined'] = transformDate(data['dateJoined'])
-    #     validateParameterData(
-    #         data, {
-    #             '_id': (str, type(None)),
-    #             'name': str,
-    #             'address': (str, type(None)),
-    #             'phoneNumber': (str, type(None)),
-    #             'photoOfPerson': str,
-    #             'resumePhotosList': list,
-    #             'biodataPhotosList': list,
-    #             'email': (str, type(None)),
-    #             'dateJoined': (datetime.datetime, type(None)),
-    #             'company': str,
-    #             'isRegular': bool,
-    #             'isProductionEmployee': bool,
-    #             'dailyWage': (float, int, type(None)),
-    #             '_version': int
-    #         }, self.__class__.__name__)
-
-    #     self._id = data['_id']
-    #     self.name = data['name']
-    #     self.address = data['address']
-    #     self.phoneNumber = data['phoneNumber']
-    #     self.photoOfPerson = data['photoOfPerson']
-    #     self.resumePhotosList = data['resumePhotosList']
-    #     self.biodataPhotosList = data['biodataPhotosList']
-    #     self.email = data['email']
-    #     self.dateJoined = data['dateJoined']
-    #     self.company = data['company']
-    #     self.isRegular = data['isRegular']
-    #     self.isProductionEmployee = data['isProductionEmployee']
-    #     self.dailyWage = data['dailyWage']
-    #     self._version = data['_version']
-
     def to_dict(self):
         return {
             '_id': self.id,
@@ -581,7 +485,7 @@ class Employee(BaseModel):
 
         newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
         return newData
-    
+
     def deleteEmployee(self, user):
         if 'canDeleteEmployee' not in user['roles']['Employee']:
             raise ValueError(
@@ -602,22 +506,6 @@ class Offense(BaseModel):
     description: str
     remedialActions: List[str]
     version: int = Field(..., alias='_version')
-
-    # def __init__(self, data):
-    #     validateParameterData(
-    #         data, {
-    #             '_id': (str, type(None)),
-    #             'number': int,
-    #             'description': str,
-    #             'remedialActions': list,
-    #             '_version': int
-    #         }, self.__class__.__name__)
-
-    #     self._id = data['_id']
-    #     self.number = data['number']
-    #     self.description = data['description']
-    #     self.remedialActions = data['remedialActions']
-    #     self._version = data['_version']
 
     def to_dict(self):
         return {
