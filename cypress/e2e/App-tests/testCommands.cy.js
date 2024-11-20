@@ -152,7 +152,7 @@ export function CreateMemo(
   memoCode = 'Employee was late to work and was rude to customers',
   subject = 'Workplace Safety Protocols',
   description = 'Reminder to adhere to updated safety protocols in the workplace. Ensure all employees are aware and compliant.',
-  reason = 'To ensure employee safety and compliance with regulations.',
+  // reason = null,
   mediaList = 'smiley.png',
   memoPhotosList = 'mhm.png'
 ){
@@ -164,7 +164,7 @@ export function CreateMemo(
   cy.get('#MemoCode').select(memoCode)
   cy.get('#subject').type(subject)
   cy.get('#description').type(description)
-  cy.get('#reason').type(reason)
+  // cy.get('#reason').type(reason)
   cy.get('input[type=file]#mediaList').attachFile(mediaList)
   cy.wait(1000)
   cy.get('input[type=file]#memoPhotosList').attachFile(memoPhotosList)

@@ -64,7 +64,7 @@ describe('Employee spec', () => {
         "Employee was late to work multiple times",
         "late again bro",
         "ayaw na ka late pls",
-        "sorry i was late",
+        // null,
         "mhm.png",
         "minor.png",
       )
@@ -80,7 +80,7 @@ describe('Employee spec', () => {
         "Employee was late to work multiple times",
         "Employee was late to work nasad",
         "ayaw na ka late pls",
-        "wala lang hehe",
+        // "wala lang hehe",
         "mhm.png",
         "minor.png",
       )
