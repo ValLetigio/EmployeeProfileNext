@@ -8,8 +8,7 @@ import { Employee } from "../schemas/EmployeeSchema";
 
 import { Memo } from "../schemas/MemoSchema";
 
-import Image from "next/image";
-import { fail } from "assert";
+import Image from "next/image"; 
 
 const EmployeeDetails = () => {
   const {
@@ -68,7 +67,7 @@ const EmployeeDetails = () => {
   const getMemosForEmployee = async () => {
     setSelectedEmployeeMemos([] as Memo[]);
     setFetchingMemos(true);
-    try {
+    try { 
       const res = await serverRequests.getMemoList(
         userData,
         selectedEmployee?._id || ""
@@ -85,7 +84,7 @@ const EmployeeDetails = () => {
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
-      if(userData?._id){ 
+      if(userData?._id && selectedEmployee?._id){ 
         getMemosForEmployee();
       }
   
@@ -128,12 +127,12 @@ const EmployeeDetails = () => {
       <div
         className={"w-full flex justify-center py-3 xl:py-8 " + contentStyle}
       >
-        <div className=" indicator">
+        <div className=" indicator ">
           <span
             className={`${loading&&"hidden"} ${fetchingMemos&&"animate-pulse"}
               cursor-pointer tooltip-top tooltip indicator-item badge badge-error text-white absolute hover:bg-red-200`}
             data-tip={`${fetchingMemos?"Fetching" : selectedEmployeeMemos?.length} Memos`}
-            onClick={() => handleMemoTableModalClick(selectedEmployeeMemos)}
+            onClick={() => selectedEmployeeMemos?.length&&handleMemoTableModalClick(selectedEmployeeMemos)}
           > {fetchingMemos ? "..." : selectedEmployeeMemos?.length}
           </span>
 

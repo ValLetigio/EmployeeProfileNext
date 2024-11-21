@@ -47,9 +47,9 @@ const Page = async () => {
   
 
   return (
-    <div className=" flex flex-col items-center justify-start">  
+    <div className=" flex flex-col items-center justify-center h-max md:h-[100vh] ">  
       <BackButton/>
-      <div className=' w-full h-[10vh] scale-0'> </div>
+      <div className=' w-full h-[10vh] md:h-[5vh] scale-0'> </div>
 
       <div 
         className=" md:h-[90vh] overflow-auto w-[99vw] lg:w-[97vw] justify-between flex flex-wrap "
