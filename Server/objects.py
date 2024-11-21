@@ -21,7 +21,10 @@ class Roles:
                 },
                 'canGetMemoList': {
                     'description': 'can get a list of memos'
-                }
+                },
+                'canViewEmployeeDetails': {
+                    'description': 'can view employee details'
+                },
             },
             'Memo': {
                 'canDeleteMemo': {
@@ -188,32 +191,6 @@ class User(BaseModel):
         print(f"Removed role {roleToRemove} from category {category}")
 
         return user
-    
-    def getAllMemoThatsNotSubmitted(self, user):
-        print('self.roles',self.roles)
-        if 'canGetMemoList' not in user['roles']['User']:
-            raise ValueError('User does not have permission to get memo list')
-
-        memos = db.read({'submitted': False}, 'Memo')
-        return memos
-
-    def getEmployeeForDashboard(self, user):
-        if 'canGetEmployeeForDashboard' not in user['roles']['User']:
-            raise ValueError('User does not have permission to get employee for dashboard')
-
-        employees = db.read(
-            {},
-            'Employee',
-            projection={
-                '_id': 1,
-                'name': 1,
-                'address': 1,
-                'phoneNumber': 1,
-                'company': 1,
-                'photoOfPerson': 1,
-            }
-        )
-        return employees
 
     def validate_email(self, email):
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -330,10 +307,36 @@ class UserActions(User):
         return memos
 
     def getEmployeeForDashboardAction(self, user):
-        return self.getEmployeeForDashboard(user)
-    
+        if 'canGetEmployeeForDashboard' not in user['roles']['User']:
+            raise ValueError('User does not have permission to get employee for dashboard')
+
+        employees = db.read(
+            {},
+            'Employee',
+            projection={
+                '_id': 1,
+                'name': 1,
+                'address': 1,
+                'phoneNumber': 1,
+                'company': 1,
+                'photoOfPerson': 1,
+            }
+        )
+        return employees
+
     def getAllMemoThatsNotSubmittedAction(self, user):
-        return self.getAllMemoThatsNotSubmitted(user)
+        if 'canGetMemoList' not in user['roles']['User']:
+            raise ValueError('User does not have permission to get memo list')
+
+        memos = db.read({'submitted': False}, 'Memo')
+        return memos
+
+    def getEmployeeDetailsAction(self, user, employeeId):
+        if 'canViewEmployeeDetails' not in user['roles']['User']:
+            raise ValueError('User does not have permission to get employee for dashboard')
+
+        employee = db.read({'_id': employeeId}, 'Employee')
+        return employee[0]
 
 
 class Memo(BaseModel):

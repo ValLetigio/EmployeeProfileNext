@@ -259,6 +259,10 @@ def test_create_update_delete_employee():
 
         assert len(employeeDashboard) == 1
 
+        employeeDetails = user.getEmployeeDetailsAction(userCreated, employee['_id'])
+
+        assert employeeDetails['name'] == employee['name']
+
         getEmployee = db.read({'_id':employee['_id']},'Employee',findOne=True)
 
         assert getEmployee['name'] == employee['name']
@@ -372,8 +376,8 @@ if __name__ == '__main__':
     # test_create_offense_employee_memo()
     # test_update_offense()
     # test_delete_offense()
-    # test_create_update_delete_employee()
-    test_submit_and_delete_memo()
+    test_create_update_delete_employee()
+    # test_submit_and_delete_memo()
     # test_submit_memo_without_reason()
     # test_delete_non_existent_offense()
     pass
