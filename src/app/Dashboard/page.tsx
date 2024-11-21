@@ -1,37 +1,71 @@
 
+'use client'
+
 import React from 'react';  
 
 import { Employee } from '@/app/schemas/EmployeeSchema';
 
-import ServerRequests from '@/app/api/ServerRequests';
+// import ServerRequests from '@/app/api/ServerRequests';
 
 import EmployeeTable from './EmployeeTable';
 import EmployeeDetails from './EmployeeDetails';  
 
 import Link from 'next/link';
+
+import { useAppContext } from '@/app/GlobalContext';
  
 const Page = async () => { 
 
-  const serverRequests = new ServerRequests( );  
-  const res = await serverRequests.fetchEmployeeList(); 
+  // const serverRequests = new ServerRequests( );  
+  // const res = await serverRequests.fetchEmployeeList(); 
 
-  let employeeList: Employee[] = [];
+  const { serverRequests, userData } = useAppContext();
 
-  let employeeListLength = 0;
-  let productionEmployeeCount = 0;
-  let newlyJoinedEmployeeCount = 0;
-  let daysSinceJoined = 0;
-  
-  if(res.data){
-    employeeList = res.data;  
+  const [ employeeListLength, setEmployeeListLength ] = React.useState(0);  
+  const [ productionEmployeeCount, setProductionEmployeeCount ] = React.useState(0);
+  const [ newlyJoinedEmployeeCount, setNewlyJoinedEmployeeCount ] = React.useState(0);
 
-    employeeListLength = employeeList?.length
-    productionEmployeeCount = employeeList.filter((employee) => employee.isProductionEmployee)?.length; 
-    newlyJoinedEmployeeCount = employeeList.filter((employee) => {
-    daysSinceJoined = (new Date().getTime() - new Date(employee.dateJoined).getTime()) / (1000 * 60 * 60 * 24);
-      return daysSinceJoined <= 30;
-    })?.length; 
+  const [ employeeList, setEmployeeList ] = React.useState<Employee[]>([]);
+
+  const fetchEmployeeList = async () => {
+    const res = await serverRequests.getEmployeeForDashboardAction(userData)
+
+    if(res?.data){
+      setEmployeeList(res.data);  
+      setEmployeeListLength(res.data.length)
+      const prodEmp = await res.data.filter((employee: Employee) => employee.isProductionEmployee).length
+      setProductionEmployeeCount(prodEmp); 
+      const newEmp = res.data.filter((employee: Employee) => {
+        const daysSinceJoined = (new Date().getTime() - new Date(employee.dateJoined).getTime()) / (1000 * 60 * 60 * 24);
+          return daysSinceJoined <= 50;
+      }).length
+      setNewlyJoinedEmployeeCount(newEmp); 
+    }
   }
+
+  React.useEffect(() => {
+    if(userData?._id && employeeList?.length == 0){
+      fetchEmployeeList();
+    }
+  }, [userData, employeeList]);
+
+  // let employeeList: Employee[] = [];
+
+  // let employeeListLength = 0;
+  // let productionEmployeeCount = 0;
+  // let newlyJoinedEmployeeCount = 0;
+  // let daysSinceJoined = 0;
+  
+  // if(res.data){
+  //   employeeList = res.data;  
+
+  //   employeeListLength = employeeList?.length
+  //   productionEmployeeCount = employeeList.filter((employee) => employee.isProductionEmployee)?.length; 
+  //   newlyJoinedEmployeeCount = employeeList.filter((employee) => {
+  //     daysSinceJoined = (new Date().getTime() - new Date(employee.dateJoined).getTime()) / (1000 * 60 * 60 * 24);
+  //       return daysSinceJoined <= 30;
+  //   })?.length; 
+  // }
 
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
     overflow-y-auto hover:bg-gray-700 hover:text-white hover:border-transparent
@@ -86,7 +120,7 @@ const Page = async () => {
             <div className=" w-full overflow-auto h-full">
               <h2 className='text-xl font-semibold tracking-tighter sticky left-0 top-0 mb-2'>Employees</h2>
               <EmployeeTable
-                // employeeList={employeeList} 
+                employeeList={employeeList} 
               />
             </div>
           </div>  

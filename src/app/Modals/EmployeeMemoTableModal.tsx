@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 const EmployeeMemoTableModal = () => {
 
-  const { memoForTableModal, setMemoForTableModal, handleImageModalClick, handleMemoPrintModalClick } = useAppContext()   
+  const { memoForTableModal, setMemoForTableModal, handleImageModalClick, handleMemoPrintModalClick } = useAppContext()    
 
   return (
     <dialog id="EmployeeMemoModal" className="modal ">

@@ -26,6 +26,10 @@ const EmployeeDetails = () => {
     [] as Memo[]
   );
 
+  const [selectedEmployeeDetails, setSelectedEmployeeDetails] = React.useState(
+    {} as Employee
+  );
+
   const [daysWithUs, setDaysWithUs] = React.useState<number>(0);
 
   const detailStyle = (item: boolean) =>
@@ -39,6 +43,8 @@ const EmployeeDetails = () => {
 
   const contentStyle = `${selectedEmployee._id ? "block" : "hidden"}`;
 
+
+
   const getMemosForEmployee = async () => {
     try {
       const res = await serverRequests.getMemoList(
@@ -51,7 +57,7 @@ const EmployeeDetails = () => {
     } catch (e) {
       console.error(e);
     }
-  };
+  }; 
 
   React.useEffect(() => {
     if (selectedEmployee._id) {

@@ -1,8 +1,6 @@
 'use client'
 
-import React from 'react'
-
-import { useState, useEffect } from 'react';
+import React from 'react' 
 
 import { Employee } from '../schemas/EmployeeSchema';
 
@@ -10,30 +8,13 @@ import { useAppContext } from '../GlobalContext';
 
 import Image from 'next/image';
 
-// interface EmployeeTableProps {
-//     employeeList: Employee[]; 
-// }
+interface EmployeeTableProps {
+    employeeList: Employee[]; 
+}
 
-const EmployeeTable = () => {
+const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
 
-    const { selectedEmployee, setSelectedEmployee, userData, serverRequests } = useAppContext(); 
-
-    const [employeeList, setEmployeeList] = useState<Employee[]>([])
-
-    const getEmployeeForDashboard = async () =>{
-        if(userData?._id){
-            const res = await serverRequests.getEmployeeForDashboardAction(userData)
-            if(res.data){
-                setEmployeeList(res.data)
-            }
-        } else {
-            console.error('userData not found')
-        }
-    }
-
-    useEffect(() => {
-        getEmployeeForDashboard()
-    }, [])
+    const { selectedEmployee, setSelectedEmployee } = useAppContext();   
 
   return (
     <table className="table w-full table-pin-rows ">

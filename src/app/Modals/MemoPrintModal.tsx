@@ -120,10 +120,14 @@ const PrintMemorandumModal = () => {
                 type="range"
                 min={1} max="3" step="1"
                 value={resolution} placeholder="Resolution" 
-                className="range opacity-50 focus:opacity-100 hover:opacity-80 z-10 " 
+                className="range opacity-50 hover:opacity-80 z-10 " 
                 onChange={(e) => setResolution(parseInt(e.target.value))}
             />  
-            <span className='absolute -z-10 text-xs'>Resolution</span> 
+            <div className='absolute -z-10 text-xs flex justify-between w-full px-2 font-bold'>
+              <p className="text-xs">0</p>
+              <p className="text-xs">1</p>
+              <p className="text-xs">2</p>
+            </div> 
           </div>
 
           <form
