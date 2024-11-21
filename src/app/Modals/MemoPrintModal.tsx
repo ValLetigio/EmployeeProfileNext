@@ -115,7 +115,7 @@ const PrintMemorandumModal = () => {
         className={` relative h-[90vh] w-[95vw] sm:w-[500px] md:min-w-[50vw] border bg-white `}
       >
         <div className="w-full h-full overflow-auto pt-8">
-          <div className=' gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-right tooltip group' data-tip='Resolution'> 
+          <div className=' gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom tooltip group' data-tip='Resolution'> 
             <input 
                 type="range"
                 min={1} max="3" step="1"

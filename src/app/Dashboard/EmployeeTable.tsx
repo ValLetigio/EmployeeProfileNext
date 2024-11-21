@@ -14,7 +14,7 @@ interface EmployeeTableProps {
 
 const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
 
-    const { selectedEmployee, setSelectedEmployee } = useAppContext();   
+    const { selectedEmployee, setSelectedEmployee, loading } = useAppContext();   
 
   return (
     <table className="table w-full table-pin-rows ">
@@ -29,8 +29,11 @@ const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
         <tbody>
             {employeeList.map((employee) => (
             <tr key={employee._id} 
-                className={`${selectedEmployee?._id == employee?._id ? "bg-gray-700 text-white" : "hover:bg-gray-200"} `}
-                onClick={() => setSelectedEmployee(employee)} data-tip={'View'}
+                className={`
+                    ${selectedEmployee?._id == employee?._id ? "bg-gray-700 text-white" : "hover:bg-gray-200"} 
+                    ${loading ? 'disabled cursor-wait' : ''}
+                `}
+                onClick={() => !loading&&setSelectedEmployee(employee)} data-tip={'View'}
             > 
                 <th className='bg-opacity-0 backdrop-blur-md ' >
                     <div className="flex items-center gap-3">

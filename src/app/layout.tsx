@@ -1,5 +1,7 @@
 'use client'; 
 
+import React from "react";
+
 import { SessionProvider } from "next-auth/react";  
 
 import "./globals.css"; 
@@ -35,7 +37,7 @@ export default function RootLayout({
         <SessionProvider session={session}>
           <ContextProvider>
             <ProfileMenu/>
-            {children} 
+            {children}  
             <NavBar/>
             <ImageModal/>
             <EmployeeMemoTableModal/>

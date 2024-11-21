@@ -3,8 +3,9 @@ from dateutil import parser
 import datetime
 from utils import *
 import re
-from pydantic import BaseModel,Field, field_validator
-from typing import Optional,Union, List
+from pydantic import BaseModel, Field, field_validator
+from typing import Optional, Union, List
+
 db = mongoDb()
 
 
@@ -94,12 +95,13 @@ class User(BaseModel):
     version: int = Field(..., alias='_version')
     image: str
 
-    @field_validator("createdAt", mode='before' ,check_fields=True)
+    @field_validator("createdAt", mode='before', check_fields=True)
     def parse_created_at(cls, value):
         if isinstance(value, datetime.datetime):
             return value
         elif isinstance(value, str):
-            for transformDate in ("%Y-%m-%dT%H:%M:%S", "%a, %d %b %Y %H:%M:%S %Z"):
+            for transformDate in ("%Y-%m-%dT%H:%M:%S",
+                                  "%a, %d %b %Y %H:%M:%S %Z"):
                 try:
                     return datetime.datetime.strptime(value, transformDate)
                 except ValueError:
@@ -107,7 +109,8 @@ class User(BaseModel):
             raise ValueError("createdAt must be a valid datetime string")
         elif isinstance(value, (int, float)):
             return datetime.datetime.fromtimestamp(value)
-        raise ValueError("createdAt must be a valid datetime, string, or timestamp")
+        raise ValueError(
+            "createdAt must be a valid datetime, string, or timestamp")
 
     def to_dict(self):
         return {
@@ -205,7 +208,7 @@ class UserActions(User):
         super().__init__(**data)
 
     def createFirstUserAction(self, firebaseUserUid):
-        print('ran'+firebaseUserUid)
+        print('ran' + firebaseUserUid)
         user = self.createFirstUser(firebaseUserUid)
         data = db.create(user, 'User')
         return data
@@ -280,48 +283,50 @@ class UserActions(User):
     def deleteMemoAction(self, user, data):
         memo = Memo(**data)
         res = memo.deleteMemo(user)
-        return db.delete({'_id':res['_id']}, 'Memo')
+        return db.delete({'_id': res['_id']}, 'Memo')
 
     def submitMemoAction(self, user, data, reason):
         memo = Memo(**data)
         res = memo.submitMemo(user, reason)
         return db.update({'_id': res['_id']}, res, 'Memo')
-    
+
     def getMemoListAction(self, user, employeeId):
         if 'canGetMemoList' not in user['roles']['User']:
             raise ValueError('User does not have permission to get memo list')
 
-        memos = db.read({
-            'Employee._id': employeeId},
-            'Memo',
-            projection={
-                '_id': 1,
-                'date': 1,
-                'mediaList': 1,
-                'Employee': 1,
-                'memoPhotosList': 1,
-                'MemoCode': 1,
-                'submitted': 1,
-                'reason': 1,
-            })
+        memos = db.read({'Employee._id': employeeId},
+                        'Memo',
+                        projection={
+                            '_id': 1,
+                            'date': 1,
+                            'mediaList': 1,
+                            'Employee': 1,
+                            'memoPhotosList': 1,
+                            'MemoCode': 1,
+                            'submitted': 1,
+                            'reason': 1,
+                            'subject': 1,
+                            'description': 1,
+                        })
         return memos
 
     def getEmployeeForDashboardAction(self, user):
         if 'canGetEmployeeForDashboard' not in user['roles']['User']:
-            raise ValueError('User does not have permission to get employee for dashboard')
+            raise ValueError(
+                'User does not have permission to get employee for dashboard')
 
-        employees = db.read(
-            {},
-            'Employee',
-            projection={
-                '_id': 1,
-                'name': 1,
-                'address': 1,
-                'phoneNumber': 1,
-                'company': 1,
-                'photoOfPerson': 1,
-            }
-        )
+        employees = db.read({},
+                            'Employee',
+                            projection={
+                                '_id': 1,
+                                'name': 1,
+                                'address': 1,
+                                'phoneNumber': 1,
+                                'company': 1,
+                                'photoOfPerson': 1,
+                                'dateJoined': 1,
+                                'isProductionEmployee': 1,
+                            })
         return employees
 
     def getAllMemoThatsNotSubmittedAction(self, user):
@@ -333,7 +338,8 @@ class UserActions(User):
 
     def getEmployeeDetailsAction(self, user, employeeId):
         if 'canViewEmployeeDetails' not in user['roles']['User']:
-            raise ValueError('User does not have permission to get employee for dashboard')
+            raise ValueError(
+                'User does not have permission to get employee for dashboard')
 
         employee = db.read({'_id': employeeId}, 'Employee')
         return employee[0]
@@ -352,12 +358,13 @@ class Memo(BaseModel):
     reason: Optional[str] = None
     version: int = Field(..., alias='_version')
 
-    @field_validator("date", mode='before' ,check_fields=True)
+    @field_validator("date", mode='before', check_fields=True)
     def parse_date(cls, value):
         if isinstance(value, datetime.datetime):
             return value
         elif isinstance(value, str):
-            for transformDate in ("%Y-%m-%dT%H:%M:%S", "%a, %d %b %Y %H:%M:%S %Z"):
+            for transformDate in ("%Y-%m-%dT%H:%M:%S",
+                                  "%a, %d %b %Y %H:%M:%S %Z"):
                 try:
                     return datetime.datetime.strptime(value, transformDate)
                 except ValueError:
@@ -435,6 +442,7 @@ class Memo(BaseModel):
         self.submitted = True
         return self.to_dict()
 
+
 class Employee(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
     name: str
@@ -451,12 +459,13 @@ class Employee(BaseModel):
     dailyWage: Optional[Union[float, int]]
     version: int = Field(..., alias='_version')
 
-    @field_validator("dateJoined", mode='before' ,check_fields=True)
+    @field_validator("dateJoined", mode='before', check_fields=True)
     def parse_date_joined(cls, value):
         if isinstance(value, datetime.datetime):
             return value
         elif isinstance(value, str):
-            for transformDate in ("%Y-%m-%dT%H:%M:%S", "%a, %d %b %Y %H:%M:%S %Z"):
+            for transformDate in ("%Y-%m-%dT%H:%M:%S",
+                                  "%a, %d %b %Y %H:%M:%S %Z"):
                 try:
                     return datetime.datetime.strptime(value, transformDate)
                 except ValueError:
@@ -464,7 +473,8 @@ class Employee(BaseModel):
             raise ValueError("dateJoined must be a valid datetime string")
         elif isinstance(value, (int, float)):
             return datetime.datetime.fromtimestamp(value)
-        raise ValueError("dateJoined must be a valid datetime, string, or timestamp")
+        raise ValueError(
+            "dateJoined must be a valid datetime, string, or timestamp")
 
     def to_dict(self):
         return {
@@ -557,8 +567,16 @@ class Offense(BaseModel):
 
         return self.to_dict()
 
+
 if __name__ == "__main__":
-    user = User(_id='123',createdAt=123,isApproved=True,displayName='test',email='test',roles=['test'],_version=1,image='test')
+    user = User(_id='123',
+                createdAt=123,
+                isApproved=True,
+                displayName='test',
+                email='test',
+                roles=['test'],
+                _version=1,
+                image='test')
     userDict = user.dict()
     x = user.json()
     schema = user.schema()

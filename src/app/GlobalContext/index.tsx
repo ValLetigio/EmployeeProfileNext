@@ -47,6 +47,8 @@ interface AppContextProps {
   memoForPrintModal: Memo;
   setMemoForPrintModal: (data: Memo) => void;
   handleMemoPrintModalClick: (data: Memo) => void; 
+  loading: boolean;
+  setLoading: (data: boolean) => void;
 }
 
 // Create the default context with proper types and default values
@@ -73,7 +75,9 @@ const AppContext = createContext<AppContextProps>({
   handleMemoTableModalClick: () => {}, 
   memoForPrintModal: {} as Memo,
   setMemoForPrintModal: () => {},
-  handleMemoPrintModalClick: () => {}
+  handleMemoPrintModalClick: () => {},
+  loading: false,
+  setLoading: () => {}
 });
 
 
@@ -97,6 +101,8 @@ export default function ContextProvider({
   const [userData, setUserData] = useState<User>({ } as User);
 
   const [sampleText] = useState<string>(''); 
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const cards = {
     "Employee": [
@@ -319,7 +325,8 @@ export default function ContextProvider({
     selectedEmployee, setSelectedEmployee,
     handleImageModalClick, imageListForModal, setImageListForModal,
     memoForTableModal, setMemoForTableModal, handleMemoTableModalClick,
-    memoForPrintModal, setMemoForPrintModal, handleMemoPrintModalClick
+    memoForPrintModal, setMemoForPrintModal, handleMemoPrintModalClick,
+    loading, setLoading
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

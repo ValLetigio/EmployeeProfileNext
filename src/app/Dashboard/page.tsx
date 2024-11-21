@@ -1,71 +1,45 @@
-
-'use client'
+//server side rendering copy
 
 import React from 'react';  
 
 import { Employee } from '@/app/schemas/EmployeeSchema';
 
-// import ServerRequests from '@/app/api/ServerRequests';
+import ServerRequests from '@/app/api/ServerRequests';
 
 import EmployeeTable from './EmployeeTable';
-import EmployeeDetails from './EmployeeDetails';  
+import EmployeeDetails from './EmployeeDetails';   
 
-import Link from 'next/link';
+import BackButton from './BackButton';
 
-import { useAppContext } from '@/app/GlobalContext';
+import Link from 'next/link'; 
+
+import getUserData from '../api/UserData';
  
-const Page = async () => { 
+const Page = async () => {  
 
-  // const serverRequests = new ServerRequests( );  
-  // const res = await serverRequests.fetchEmployeeList(); 
+  const serverRequests = new ServerRequests( );  
 
-  const { serverRequests, userData } = useAppContext();
-
-  const [ employeeListLength, setEmployeeListLength ] = React.useState(0);  
-  const [ productionEmployeeCount, setProductionEmployeeCount ] = React.useState(0);
-  const [ newlyJoinedEmployeeCount, setNewlyJoinedEmployeeCount ] = React.useState(0);
-
-  const [ employeeList, setEmployeeList ] = React.useState<Employee[]>([]);
-
-  const fetchEmployeeList = async () => {
-    const res = await serverRequests.getEmployeeForDashboardAction(userData)
-
-    if(res?.data){
-      setEmployeeList(res.data);  
-      setEmployeeListLength(res.data.length)
-      const prodEmp = await res.data.filter((employee: Employee) => employee.isProductionEmployee).length
-      setProductionEmployeeCount(prodEmp); 
-      const newEmp = res.data.filter((employee: Employee) => {
-        const daysSinceJoined = (new Date().getTime() - new Date(employee.dateJoined).getTime()) / (1000 * 60 * 60 * 24);
-          return daysSinceJoined <= 50;
-      }).length
-      setNewlyJoinedEmployeeCount(newEmp); 
-    }
-  }
-
-  React.useEffect(() => {
-    if(userData?._id && employeeList?.length == 0){
-      fetchEmployeeList();
-    }
-  }, [userData, employeeList]);
-
-  // let employeeList: Employee[] = [];
-
-  // let employeeListLength = 0;
-  // let productionEmployeeCount = 0;
-  // let newlyJoinedEmployeeCount = 0;
-  // let daysSinceJoined = 0;
+  const userData = await getUserData();   
+ 
+  const employeeResponse = await serverRequests.getEmployeeForDashboardAction(userData);  
   
-  // if(res.data){
-  //   employeeList = res.data;  
+  let employeeList: Employee[] = [];
 
-  //   employeeListLength = employeeList?.length
-  //   productionEmployeeCount = employeeList.filter((employee) => employee.isProductionEmployee)?.length; 
-  //   newlyJoinedEmployeeCount = employeeList.filter((employee) => {
-  //     daysSinceJoined = (new Date().getTime() - new Date(employee.dateJoined).getTime()) / (1000 * 60 * 60 * 24);
-  //       return daysSinceJoined <= 30;
-  //   })?.length; 
-  // }
+  let employeeListLength = 0;
+  let productionEmployeeCount = 0;
+  let newlyJoinedEmployeeCount = 0;
+  let daysSinceJoined = 0;
+  
+  if(employeeResponse.data){
+    employeeList = employeeResponse.data;  
+
+    employeeListLength = employeeList?.length
+    productionEmployeeCount = employeeList.filter((employee) => employee.isProductionEmployee)?.length; 
+    newlyJoinedEmployeeCount = employeeList.filter((employee) => {
+      daysSinceJoined = (new Date().getTime() - new Date(employee.dateJoined).getTime()) / (1000 * 60 * 60 * 24);
+        return daysSinceJoined <= 30;
+    })?.length; 
+  }
 
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
     overflow-y-auto hover:bg-gray-700 hover:text-white hover:border-transparent
@@ -74,6 +48,7 @@ const Page = async () => {
 
   return (
     <div className=" flex flex-col items-center justify-start">  
+      <BackButton/>
       <div className=' w-full h-[10vh] scale-0'> </div>
 
       <div 
