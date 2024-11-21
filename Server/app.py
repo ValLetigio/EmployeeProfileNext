@@ -468,6 +468,24 @@ def get_employee_for_dashboard_action():
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 
+@app.route('/getEmployeeDetailsAction', methods = ['POST'])
+def get_employee_details_action():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        employeeId = data['employeeId']
+        try:
+            res = UserActions(userData).getEmployeeDetailsAction(userData, employeeId)
+            return jsonify({
+                'message': 'Employee read successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error processing Employee: %s", e)
+            return e.args[0], 400
+    else:
+        return jsonify({"error": "Request must be JSON"}), 400
+
 
 @app.route('/getUserForTesting', methods=['GET'])
 def getUserForTesting():
