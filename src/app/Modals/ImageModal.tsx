@@ -11,8 +11,8 @@ const ImageModal = () => {
     const [hash, setHash] = React.useState('#item0'); 
 
   return (
-    <dialog id="imageModal" className="modal ">
-        <div className="modal-box bg-transparent shadow-none gap-2 flex flex-col w-full h-full justify-center items-center relative">  
+    <dialog id="imageModal" className="modal w-full ">
+        <div className="modal-box bg-transparent shadow-none gap-2 flex flex-col w-full h-full justify-center items-center relative ">  
             <form className='absolute top-2 right-2' method="dialog"> 
                 <button onClick={()=>setImageListForModal([])} 
                     className=" btn btn-error text-white btn-sm rounded-full h-8 w-8">X</button>

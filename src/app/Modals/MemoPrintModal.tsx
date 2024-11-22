@@ -112,9 +112,9 @@ const PrintMemorandumModal = () => {
     <dialog className=" modal " id="MemoPrintModal">
       <div
         style={style}
-        className={` relative h-[90vh] w-[95vw] sm:w-[500px] md:min-w-[50vw] border bg-white `}
+        className={` relative h-[90vh] w-[95vw] sm:w-[500px] md:min-w-[50vw] border bg-white text-black`}
       >
-        <div className="w-full h-full overflow-auto pt-8">
+        <div className="w-full h-full overflow-auto pt-8 ">
           <div 
             className=' gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom tooltip group opacity-50 hover:opacity-100' 
             data-tip={`(${resolution * 75}%) Quality`}> 
@@ -145,7 +145,7 @@ const PrintMemorandumModal = () => {
             </button>
           </form> 
 
-          <div className="h-max w-full pt-8 px-4 md:px-8 pb-20 " ref={memoRef}>
+          <div className="h-max w-full pt-8 px-4 md:px-8 pb-20 bg-white" ref={memoRef}>
             <h1 className="text-3xl"> Memorandum </h1>
 
             <br />
