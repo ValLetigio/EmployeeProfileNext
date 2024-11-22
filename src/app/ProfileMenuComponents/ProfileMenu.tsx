@@ -6,6 +6,7 @@ import { useAppContext } from '../GlobalContext';
 
 import ProfileButton from './ProfileButton';
 import ProfilePopUp from './ProfilePopUp';
+import ProfileMenuSkeleton from './ProfileMenuSkeleton';
 
 const ProfileMenu = () => {
 
@@ -19,12 +20,19 @@ const ProfileMenu = () => {
 
   return (
     <div 
-      className={` ${!userData._id || pathname == '/Dashboard' ? "scale-0" : "scale-100"}
+      className={` ${pathname == "/Dashboard"&&"hidden"}
         fixed top-2 right-2 md:top-4 md:right-4 h-16 w-16 duration-300 z-50
       `} 
     >   
-      <ProfileButton userData={userData} handleMenuClick={handleMenuClick} showMenu={showMenu}/>
-      <ProfilePopUp userData={userData} showMenu={showMenu} handleImageModalClick={handleImageModalClick}/>
+      {userData?._id ?
+        <>
+          <ProfileButton userData={userData} handleMenuClick={handleMenuClick} showMenu={showMenu}/>
+          <ProfilePopUp userData={userData} showMenu={showMenu} handleImageModalClick={handleImageModalClick}/>
+        </>
+        :
+        <ProfileMenuSkeleton/> 
+      }
+        
     </div>
   )
 }

@@ -16,7 +16,7 @@ interface CreateEmployeeFormProps {
 
 const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext() 
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router, handleImageModalClick } = useAppContext() 
 
     const formRef = useRef<HTMLFormElement>(null)
 
@@ -129,20 +129,26 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
         <div className='flex flex-wrap gap-3 justify-between w-full '>
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
-                <div className='flex justify-evenly items-center mb-1 gap-1 relative bg-gray-100 p-1 rounded-lg'>Photo Of Person    
-                    <Image src={formData?.photoOfPerson} className='h-[60px]' height={60} width={60} alt="photoOfPerson" />  
+                <div className='flex justify-evenly items-center mb-1 gap-1 relative bg-base-200 p-1 rounded-lg'>Photo Of Person    
+                    <Image src={formData?.photoOfPerson} className='h-[60px]' height={60} width={60} alt="photoOfPerson" 
+                        onClick={()=>handleImageModalClick([formData?.photoOfPerson])}
+                    />  
                 </div> 
             </label>
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-gray-100 rounded-lg '>Resume    
-                    <Image src={formData?.resumePhotosList[0]} className='h-[60px]' height={60} width={60} alt="resumePhotosList" />  
+                <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-base-200 rounded-lg '>Resume    
+                    <Image src={formData?.resumePhotosList[0]} className='h-[60px]' height={60} width={60} alt="resumePhotosList" 
+                        onClick={()=>handleImageModalClick(formData?.resumePhotosList)}
+                    />  
                 </div> 
             </label>
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-gray-100 rounded-lg '>Bio Data   
-                    <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />  
+                <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-base-200 rounded-lg '>Bio Data   
+                    <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" 
+                        onClick={()=>handleImageModalClick(formData?.biodataPhotosList)}
+                    />  
                 </div> 
             </label>
         </div> 

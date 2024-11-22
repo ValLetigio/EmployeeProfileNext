@@ -14,7 +14,7 @@ interface DeleteMemoFormProps {
  
 const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, handleImageModalClick } = useAppContext()
 
   const formRef = useRef<HTMLFormElement>(null)  
 
@@ -131,12 +131,16 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
 
       <div className='text-sm flex flex-col md:flex-row justify-evenly '>
         {/* medialist */}
-        <div className={`${!formData?.mediaList?.[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 pt-4 p-1 rounded-lg `}>   
+        <div className={`${!formData?.mediaList?.[0]&&"hidden"} cursor-pointer flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-base-200 pt-4 p-1 rounded-lg `}
+          onClick={()=>handleImageModalClick(formData?.mediaList)}
+        >   
           <Image src={formData?.mediaList?.[0]} className={`${!formData?.mediaList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />  
           Photo  
         </div>   
         {/* memoPhotosList */} 
-        <div className={`${!formData?.memoPhotosList?.[0]&&"hidden"} flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-gray-100 pt-4 p-1 rounded-lg `}>
+        <div className={`${!formData?.memoPhotosList?.[0]&&"hidden"} cursor-pointer flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-base-200 pt-4 p-1 rounded-lg `}
+          onClick={()=>handleImageModalClick(formData?.memoPhotosList)}
+        >
           <Image src={formData?.memoPhotosList?.[0]} className={`${!formData?.memoPhotosList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" />  
           Memo Photo    
         </div> 

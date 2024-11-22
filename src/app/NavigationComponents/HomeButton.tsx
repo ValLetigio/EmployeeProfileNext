@@ -9,7 +9,7 @@ interface HomeButtonProps {
 const HomeButton: FC<HomeButtonProps> = ({pathname}) => {
   return (
     <Link href={"/"}
-      className={` ${pathname == '/' ? "bg-blue-500 text-white" : "border-gray-400 text-gray-400  hover:border-blue-500 hover:text-blue-500"}
+      className={` ${pathname == '/' ? "bg-info text-white" : "border-gray-400 text-gray-400  hover:border-info hover:text-info"}
         tooltip tooltip-top 
         backdrop-blur-xl shadow-md shadow-gray-400
         p-3 border rounded-full

@@ -12,7 +12,7 @@ const BackButton = () => {
     <button onClick={() => router.back()}
         className=' 
           fixed top-2 left-2 md:top-4 md:left-4 h-12 w-12 text-xl border tooltip tooltip-right
-          bg-gray-100/80 hover:border-blue-500 hover:text-blue-500 z-40
+          bg-base-200/80 hover:border-info hover:text-info z-40
           shadow-sm shadow-gray-600 p-4 rounded-full flex items-center justify-normal 
         '
         data-tip="Back"

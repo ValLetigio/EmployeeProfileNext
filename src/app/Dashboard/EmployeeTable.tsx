@@ -30,7 +30,7 @@ const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
             {employeeList.map((employee) => (
             <tr key={employee._id} 
                 className={`
-                    ${selectedEmployee?._id == employee?._id ? "bg-gray-700 text-white" : "hover:bg-gray-200"} 
+                    ${selectedEmployee?._id == employee?._id ? "bg-base-300 " : "hover:bg-base-200 "} 
                     ${loading ? 'disabled cursor-wait' : ''}
                 `}
                 onClick={() => !loading&&setSelectedEmployee(employee)} data-tip={'View'}

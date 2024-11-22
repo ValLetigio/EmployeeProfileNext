@@ -36,7 +36,7 @@ export default function RootLayout({
       <body className={` ${poppins.variable} overflow-x-clip `}>
         <SessionProvider session={session}>
           <ContextProvider>
-            <ProfileMenu/>
+            <ProfileMenu/> 
             {children}  
             <NavBar/>
             <ImageModal/>

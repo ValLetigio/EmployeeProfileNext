@@ -27,7 +27,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
 
-      const confirmed = await handleConfirmation("Confirm Action?", `Submit ${formData?.description} for ${formData?.Employee?.name}`, "")
+      const confirmed = await handleConfirmation("Confirm Action?", `Submit ${formData?.subject} for ${formData?.Employee?.name}`, "")
 
       if(confirmed){
         try{
@@ -93,6 +93,8 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
     filterMemos(memoList) 
   },[memoList, submittedMemos]) 
 
+  console.log('formData:', formData)
+
   return (
     <form
       className={` form-style `} 
@@ -149,8 +151,8 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
         </label>
 
         {/* description */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Description" id='description' 
-        value={formData?.MemoCode?.description || ""} 
+        <textarea className="textarea textarea-bordered whitespace-pre-line mt-1 min-h-[30vh]" placeholder="Description" id='description' 
+         value={formData?.description || ""} 
         > 
         </textarea>  
       </div>
@@ -158,7 +160,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
       {/* Reason */}
       <div className='flex flex-col gap-2 text-sm'>Reason  
         {/* Reason */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason' required
+        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh] whitespace-pre-line" placeholder="Reason" id='reason' required
           onChange={
             (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
               setFormData({ ...formData, reason: e.target.value })

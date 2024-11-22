@@ -24,9 +24,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
 
   const formRef = useRef<HTMLFormElement>(null) 
 
-  const [ formData, setFormData ] = useState<Memo>({ reason: null } as Memo)
-
-  console.log('formData:', formData)
+  const [ formData, setFormData ] = useState<Memo>({ reason: null } as Memo) 
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   

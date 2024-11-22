@@ -42,8 +42,8 @@ const Page = async () => {
   }
 
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
-    overflow-y-auto hover:bg-gray-700 hover:text-white hover:border-transparent
-    pl-4 p-2 shadow-md shadow-gray-500 rounded-xl flex flex-col items-start justify-evenly gap-2 border tracking-tighter`;
+    overflow-y-auto hover:bg-base-300 hover:border-transparent
+    pl-4 p-2 shadow-lg rounded-xl flex flex-col items-start justify-evenly gap-2 border tracking-tighter`;
   
 
   return (
@@ -56,10 +56,10 @@ const Page = async () => {
       > 
         <div className=' h-12 w-[45%] lg:w-[85%] flex items-center pl-4 '><h1 className='text-2xl font-semibold tracking-wider'>Dashboard</h1></div>
 
-        {/* Register Button */}
+        {/* employee Button */}
         <div className=' h-12 w-[45%] lg:w-[10%] flex items-center justify-end mr-2 '>
           <Link className='h-12 w-12 text-xl border tooltip tooltip-left
-            bg-gray-100 hover:border-gray-700  hover:text-black
+            bg-base-200 hover:border-info hover:text-info
             shadow-sm shadow-gray-600 p-0 rounded-full flex items-center justify-center ' data-tip={"Create/Update/Delete an Employee"} href={"/Employee"}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
@@ -91,7 +91,7 @@ const Page = async () => {
           </div>
 
           {/* Table */}
-          <div className='w-[100%] max-h-[95vh] lg:h-[75%] p-4 shadow-md shadow-gray-500 rounded-xl flex flex-col items-start justify-between border '>
+          <div className='w-[100%] max-h-[95vh] lg:h-[75%] p-4 shadow-lg rounded-xl flex flex-col items-start justify-between border '>
             <div className=" w-full overflow-auto h-full">
               <h2 className='text-xl font-semibold tracking-tighter sticky left-0 top-0 mb-2'>Employees</h2>
               <EmployeeTable

@@ -36,13 +36,15 @@ const EmployeeDetails = () => {
   const [daysWithUs, setDaysWithUs] = React.useState<number>(0);
 
   const detailStyle = (item: boolean) =>
-    `${
-      !item && "hidden"
-    } tracking-widest flex grow flex-col-reverse text-center p-2 xl:p-3 border rounded-xl hover:bg-gray-700 hover:text-white`;
+    `${ !item && "hidden" } 
+    tracking-widest flex grow flex-col-reverse text-center p-2 xl:p-3 border border-base-300 rounded-xl bg-base-100 
+    hover:bg-base-300 
+  `;
 
-  const skeletonStyle = `${
-    selectedEmployeeDetails._id ? "hidden" : "block"
-  } skeleton shrink-0 `;
+  const skeletonStyle = `
+    ${ selectedEmployeeDetails._id ? " hidden " : " block " } 
+    ${ loading? " skeleton " : " bg-base-300 rounded-xl " } shrink-0 
+  `;
 
   const contentStyle = `${selectedEmployee._id ? "block" : "hidden"}`;
 
@@ -108,7 +110,7 @@ const EmployeeDetails = () => {
 
   return (
     <div
-      className={`${loading&&"cursor-wait"} relative h-full w-full flex flex-col justify-start items-center rounded-xl shadow-md shadow-gray-500 border p-4 `}
+      className={`${loading&&"cursor-wait"} relative h-full w-full flex flex-col justify-start items-center rounded-xl shadow-lg border p-4 `}
       ref={dummy}
     >
       <button
@@ -121,7 +123,7 @@ const EmployeeDetails = () => {
       </button>
 
       <div
-        className={skeletonStyle + " rounded-full h-32 md:h-40 w-32 md:w-40 "}
+        className={skeletonStyle + " !rounded-full h-32 md:h-40 w-32 md:w-40 "}
       ></div>
 
       <div
@@ -129,15 +131,18 @@ const EmployeeDetails = () => {
       >
         <div className=" indicator ">
           <span
-            className={`${loading&&"hidden"} ${fetchingMemos&&"animate-pulse"}
-              cursor-pointer tooltip-top tooltip indicator-item badge badge-error text-white absolute hover:bg-red-200`}
+            className={`
+              ${loading&&"hidden"} ${fetchingMemos&&"animate-pulse"} 
+              ${selectedEmployeeMemos.length?" badge-error hover:bg-red-200 ":" bg-green-500 "}
+              cursor-pointer tooltip-top tooltip indicator-item badge text-white absolute `}
             data-tip={`${fetchingMemos?"Fetching" : selectedEmployeeMemos?.length} Memos`}
             onClick={() => selectedEmployeeMemos?.length&&handleMemoTableModalClick(selectedEmployeeMemos)}
           > {fetchingMemos ? "..." : selectedEmployeeMemos?.length}
           </span>
 
           <div
-            className={`${!selectedEmployeeDetails?.photoOfPerson&&"hidden"} w-24 xl:w-36 h-24 xl:h-36 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip`}
+            className={`${!selectedEmployeeDetails?.photoOfPerson&&"hidden"} 
+              w-24 xl:w-36 h-24 xl:h-36 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer`}
             onClick={() =>
               handleImageModalClick([selectedEmployeeDetails?.photoOfPerson])
             }
@@ -166,10 +171,10 @@ const EmployeeDetails = () => {
       <div className="flex flex-wrap gap-3 items-stretch w-full h-max text-xs overflow-auto max-h-[50%] pb-2">
         <div
           className={
-            skeletonStyle + " p-4 w-full bg-opacity-55 text-xl text-center"
+            skeletonStyle + " p-4 w-full bg-opacity-55 text-lg text-center tracking-widest"
           }
         >
-          {!selectedEmployee?._id ? "Select an Employee" : selectedEmployee?._id && loading ? "Loading..." : "No Details Found"}
+          {!selectedEmployee?._id ? "Select an Employee" : selectedEmployee?._id && loading ? "Fetching..." : "No Details Found"}
         </div>
         <div className={skeletonStyle + " h-12 w-40 grow"}></div>
         <div className={skeletonStyle + " h-12 w-28 grow"}></div>
@@ -215,7 +220,7 @@ const EmployeeDetails = () => {
         <div className={detailStyle(Boolean(selectedEmployeeDetails?.dateJoined))}>
           Days with Us
           <strong className="text-base">
-            {daysWithUs}
+            {daysWithUs?.toLocaleString()}
           </strong>
         </div>
       </div>
@@ -226,7 +231,7 @@ const EmployeeDetails = () => {
             handleImageModalClick(selectedEmployeeDetails?.resumePhotosList)
           }
           className={`${!selectedEmployeeDetails?.resumePhotosList?.[0] && "hidden"} 
-                p-2 xl:p-4 flex items-center justify-evenly bg-gray-100 hover:bg-gray-700 hover:text-white w-full rounded-xl`}
+                p-2 xl:p-4 flex items-center justify-evenly bg-base-200 hover:bg-base-300 cursor-pointer hover:text-white w-full rounded-xl`}
         >
           Resume
           <Image
@@ -242,7 +247,7 @@ const EmployeeDetails = () => {
             handleImageModalClick(selectedEmployeeDetails?.biodataPhotosList)
           }
           className={`${!selectedEmployeeDetails?.biodataPhotosList?.[0] && "hidden"} 
-                p-2 xl:p-4 flex items-center justify-evenly bg-gray-100 hover:bg-gray-700 hover:text-white w-full rounded-xl`}
+            p-2 xl:p-4 flex items-center justify-evenly bg-base-200 hover:bg-base-300 cursor-pointer hover:text-white w-full rounded-xl`}
         >
           Bio-data
           <Image

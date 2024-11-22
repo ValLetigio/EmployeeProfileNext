@@ -32,7 +32,7 @@ const ImageModal = () => {
             <div className='flex absolute bottom-0 z-50 gap-2'>
                 {imageListForModal.map((item, index) => (
                     <a key={`item${index}`} href={`#item${index}`} onClick={()=>setHash(`#item${index}`)}
-                        className={`${hash==`#item${index}`&&'btn-error text-white'} btn btn-sm `} >{index + 1}</a>
+                        className={`${hash==`#item${index}`&&' border-info bg-info text-white'} btn btn-sm `} >{index + 1}</a>
                 ))} 
             </div>
  
