@@ -37,7 +37,7 @@ const ThemeControl = () => {
         <div className="form-control h-[20vh] duration-300 " > 
           {themes.map((theme, index) => (
             <label className="label cursor-pointer gap-4 hover:bg-base-100 rounded-lg"
-              onClick={() => setSelectedTheme(theme)} key={index}
+              key={index}
             >
               <span className="label-text">{theme}</span>
               <input
@@ -45,6 +45,7 @@ const ThemeControl = () => {
                 name="theme-radios"
                 className="radio theme-controller" 
                 checked={selectedTheme === theme}
+                onClick={() => setSelectedTheme(theme)} 
                 value={theme}
               />
             </label>

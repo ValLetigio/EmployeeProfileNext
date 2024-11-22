@@ -74,7 +74,7 @@ const Toast = () => {
             
             <progress 
                 className={`progress w-full ${getToastType()[1]} rounded-none -mt-2 `} 
-                value={(timer / toastOptions?.timer) * 100} 
+                value={(timer / toastOptions?.timer) * 100 || 0} 
                 max={100} 
             /> 
         </div>

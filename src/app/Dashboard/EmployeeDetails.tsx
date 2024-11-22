@@ -149,8 +149,8 @@ const EmployeeDetails = () => {
           >
             <Image
               className={` w-full h-full`}
-              src={selectedEmployeeDetails?.photoOfPerson || ""}
-              alt={selectedEmployeeDetails?.name || ""}
+              src={selectedEmployeeDetails?.photoOfPerson}
+              alt={selectedEmployeeDetails?.name }
               height={1}
               width={1}
             />
@@ -168,7 +168,7 @@ const EmployeeDetails = () => {
 
       <div className="w-full border-b my-4" />
 
-      <div className="flex flex-wrap gap-3 items-stretch w-full h-max text-xs overflow-auto max-h-[50%] pb-2">
+      <div className="flex flex-wrap gap-3 items-stretch w-full h-max text-xs overflow-auto max-h-[70%] pb-2 ">
         <div
           className={
             skeletonStyle + " p-4 w-full bg-opacity-55 text-lg text-center tracking-widest"
@@ -236,7 +236,7 @@ const EmployeeDetails = () => {
           Resume
           <Image
             className={`w-8 h-8`}
-            src={selectedEmployeeDetails?.resumePhotosList?.[0] || ""}
+            src={selectedEmployeeDetails?.resumePhotosList?.[0] }
             alt={selectedEmployeeDetails?.name}
             width={1}
             height={1}
@@ -252,7 +252,7 @@ const EmployeeDetails = () => {
           Bio-data
           <Image
             className={`w-8 h-8`}
-            src={selectedEmployeeDetails?.biodataPhotosList?.[0] || ""}
+            src={selectedEmployeeDetails?.biodataPhotosList?.[0] }
             alt={selectedEmployeeDetails?.name}
             width={1}
             height={1}

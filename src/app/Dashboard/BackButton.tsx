@@ -2,11 +2,11 @@
 
 import React from 'react'  
 
-import { useAppContext } from '@/app/GlobalContext';
+import { useAppContext } from '@/app/GlobalContext'; 
 
 const BackButton = () => {
 
-  const { router } = useAppContext();
+  const { router } = useAppContext(); 
 
   return ( 
     <button onClick={() => router.back()}

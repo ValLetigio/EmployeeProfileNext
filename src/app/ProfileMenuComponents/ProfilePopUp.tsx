@@ -12,12 +12,11 @@ import ThemeControl from './ThemeControl'
 
 export interface ProfilePopUpProps {
   userData: User, 
-  showMenu: boolean, 
-  handleImageModalClick: (data: string[]) => void
+  showMenu: boolean,  
 }
 
 
-const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, handleImageModalClick }) => {  
+const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {  
  
   const handleSignOut = async () => { 
     signOut()
@@ -34,7 +33,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, handleImageMo
       <div
         className='flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-base-300'  
         >
-        <Image src={userData?.image} width={100} height={100} className='rounded-lg' alt="userImage" />
+        <Image src={userData?.image } width={100} height={100} className='rounded-lg' alt="userImage" />
         <h1 className='text-xl font-semibold mt-5'>{userData?.displayName}</h1>
         <p className='text-sm mt-2 select-all italic'>{userData?.email}</p> 
       </div>

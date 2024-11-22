@@ -2,7 +2,7 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import ServerRequests from '../../ServerRequests';
 
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'; 
 dotenv.config(); 
 
 const SECRET = process.env.SECRET !;
@@ -26,7 +26,22 @@ declare module 'next-auth' {
             name?: string | null;
             email?: string | null;
             image?: string | null;
+            sensitiveInfo?: never;
         };
+    }
+
+    interface JWT {
+        firebaseUserId?: string;
+        roles?: {
+            User: string[];
+            Memo: string[];
+            Employee: string[];
+            Offense: string[];
+        };
+        createdAt?: string | Date;
+        isApproved?: boolean;
+        refreshToken?: string;
+        image?: string;
     }
 }
 
@@ -58,7 +73,7 @@ export const authOption: NextAuthOptions = {
                     token.createdAt = res.data.createdAt;
                     token.isApproved = res.data.isApproved;
                     token.refreshToken = account?.refresh_token;
-                    token.image = res.data.image;
+                    token.image = res.data.image; 
                 }
 
             }
@@ -67,39 +82,27 @@ export const authOption: NextAuthOptions = {
         },
 
         async session({ session, token }) {
-            if (session?.user) {
-                if (token.sub) {
-                    session.user._id = token.sub;
-                } 
-            
-                if (token.createdAt) {
-                    session.user.createdAt = typeof token.createdAt === 'string' || token.createdAt instanceof Date ? token.createdAt : undefined;
-                }
+            if (token) {
+                session.user._id = token.sub as string;
+                session.user.createdAt = token.createdAt as string | Date;
+                session.user.roles = token.roles as {
+                    User: string[];
+                    Memo: string[];
+                    Employee: string[];
+                    Offense: string[];
+                };
+                session.user.isApproved = token.isApproved as boolean | undefined;
+                session.user.image = token.image as string;
 
-                if (token.roles) {
-                    session.user.roles = token.roles as {
-                        User: string[];
-                        Memo: string[];
-                        Employee: string[];
-                        Offense: string[];
-                    };
-                }
-            
-                if (typeof token.isApproved !== "undefined") {
-                    session.user.isApproved = typeof token.isApproved === 'boolean' ? token.isApproved : undefined;
-                }
-            
-                if (token.image) {
-                    session.user.image = typeof token.image === 'string' ? token.image : '';
-                }
+                delete (session.user as Partial<typeof session.user>).sensitiveInfo;
             } 
 
-            return session;
+            return session; 
         }
     },
     secret: SECRET,
 }
 
-const handler = NextAuth(authOption);
+const handler = NextAuth(authOption);  
 
-export {handler as GET, handler as POST};
+export {handler as GET, handler as POST, handler as OPTIONS};
