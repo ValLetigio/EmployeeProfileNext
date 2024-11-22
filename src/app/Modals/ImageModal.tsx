@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 const ImageModal = () => {
 
-    const { imageListForModal, setImageListForModal } = useAppContext() 
+    const { imageListForModal, setImageListForModal, router } = useAppContext() 
 
     const [hash, setHash] = React.useState('#item0'); 
 
@@ -14,7 +14,11 @@ const ImageModal = () => {
     <dialog id="imageModal" className="modal w-full ">
         <div className="modal-box bg-transparent shadow-none gap-2 flex flex-col w-full h-full justify-center items-center relative ">  
             <form className='absolute top-2 right-2' method="dialog"> 
-                <button onClick={()=>setImageListForModal([])} 
+                <button onClick={()=>{
+                    router.replace(window.location.pathname, undefined);
+                    setHash('#item0')
+                    setImageListForModal([])
+                }} 
                     className=" btn btn-error text-white btn-sm rounded-full h-8 w-8">X</button>
             </form>
 

@@ -8,7 +8,7 @@ import Image from 'next/image'
 
 const CreateEmployeeForm = () => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext() 
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router, handleImageModalClick } = useAppContext() 
 
     const formRef = useRef<HTMLFormElement>(null)
 
@@ -99,6 +99,32 @@ const CreateEmployeeForm = () => {
         }
     };
 
+    const [ hovered, setHovered ] = useState(false);
+    const timerRef = useRef<NodeJS.Timeout | null>(null); 
+
+    const handleMouseEnter = (item: string[]) => {
+        console.log("Mouse entered");
+        setHovered((prev)=>{
+                timerRef.current = setTimeout(() => { 
+                    if (!prev) { 
+                        handleImageModalClick(item) 
+                    } 
+                }, 3000); 
+                return hovered
+            }
+        );  
+        
+    };
+
+    const handleMouseLeave = () => {
+        console.log("Mouse left");
+        setHovered(false); 
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+        }
+    };
+
   return (
     <form className={` form-style `}
         ref={formRef}
@@ -151,7 +177,10 @@ const CreateEmployeeForm = () => {
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person    
-                    <Image src={formData?.photoOfPerson} className='h-[60px]' height={60} width={60} alt="photoOfPerson" />
+                    <Image src={formData?.photoOfPerson} className='h-[60px] hover:animate-pulse hover:cursor-wait' height={60} width={60} alt="photoOfPerson" 
+                        onMouseEnter={()=>handleMouseEnter([formData?.photoOfPerson])}
+                        onMouseLeave={handleMouseLeave}
+                    />
                 </div>
                 <input type="file" className="file-input file-input-bordered sw-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*' required 
                     onChange={handleFileChange}/>
@@ -159,7 +188,10 @@ const CreateEmployeeForm = () => {
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Resume    
-                    <Image src={formData?.resumePhotosList[0]} className='h-[60px]' height={60} width={60} alt="resumePhotosList" />
+                    <Image src={formData?.resumePhotosList[0]} className='h-[60px] hover:animate-pulse hover:cursor-wait' height={60} width={60} alt="resumePhotosList" 
+                        onMouseEnter={()=>handleMouseEnter(formData?.resumePhotosList)}
+                        onMouseLeave={handleMouseLeave}
+                    />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='resumePhotosList' accept='image/*' 
                     onChange={handleFileChange} multiple/>
