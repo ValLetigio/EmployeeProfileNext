@@ -2,10 +2,12 @@ import { getServerSession, Session } from 'next-auth';
 
 import { authOption } from '../api/auth/[...nextauth]/route'; 
 
-import { User, Roles } from '../schemas/UserSchema';  
+import { User, Roles } from '../schemas/UserSchema';
 
 const getUserData = async( ) => {
-    const session: Session | null = await getServerSession(authOption);     
+    const session: Session | null = await getServerSession(authOption);
+
+    console.log(session)
 
     const sessionUserData = session?.user as Session["user"] & { 
       roles?: Roles;
@@ -14,7 +16,7 @@ const getUserData = async( ) => {
       createdAt?: object;
       isApproved?: boolean;
     };
-  
+
     const { name: displayName, email, image, roles, _id, _version, createdAt, isApproved } = sessionUserData; 
   
     const userData: User = {
