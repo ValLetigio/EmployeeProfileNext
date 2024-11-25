@@ -54,7 +54,7 @@ describe('Employee spec', () => {
 
       UpdateOffense({
         offense: "Employee was late to work",
-        description: "Employee was late to work multiple times",
+        description: " multiple times",
         offenseType: ["Probation"],
       })
 
