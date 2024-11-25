@@ -5,24 +5,13 @@ import React from "react";
 const ThemeControl = () => {
 
   const themes = [
-    "light",
-    "dark",
-    "synthwave",
-    "dracula",
-    "forest",
-    "snow",
-    "bumblebee",
-    "halloween",
-    "swiss",
-    "lofi",
-    "black",
-    "luxury",
-    "cupcake", 
-    "wireframe",
-    "cyberpunk",
-    "valentine",
-    "aqua",
-  ]; 
+    "light", "dark", "cupcake", "bumblebee", "emerald", "corporate", 
+    "synthwave", "retro", "cyberpunk", "valentine", "halloween", 
+    "garden", "forest", "aqua", "lofi", "pastel", "fantasy", 
+    "wireframe", "black", "luxury", "dracula", "cmyk", "autumn", 
+    "business", "acid", "lemonade", "night", "coffee", "winter", 
+    "dim", "nord", "sunset", "snow", "swiss"
+  ];
 
   const [ selectedTheme, setSelectedTheme ] = React.useState<string>(localStorage.getItem("theme") || "light");  
 
