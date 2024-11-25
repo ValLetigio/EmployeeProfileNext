@@ -13,14 +13,22 @@ import BackButton from './BackButton';
 
 import Link from 'next/link'; 
 
-import getUserData from '../api/UserData';
+import {getUserData, getTestUserData} from '../api/UserData';
  
-const Page = async () => {  
+const Page = async () => {
 
-  const serverRequests = new ServerRequests( );  
+  const isTest = process.env.NEXT_PUBLIC_CYPRESS_IS_TEST_ENV;
 
-  const userData = await getUserData();   
- 
+  const serverRequests = new ServerRequests( );
+
+  let userData
+
+  if(isTest){
+    userData = await getTestUserData();
+  } else {
+    userData = await getUserData();
+  }
+
   const employeeResponse = await serverRequests.getEmployeeForDashboardAction(userData);  
   
   let employeeList: Employee[] = [];

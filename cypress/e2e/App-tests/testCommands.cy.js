@@ -124,9 +124,9 @@ export function UpdateOffense({
   cy.location('pathname').should('include', '/Offense/Update')
   cy.wait(1000)
   cy.get('#select-offense').select(offense)
-  cy.get('#description').clear()
-  cy.wait(1000)
   cy.get('#description').type(description)
+  cy.wait(1000)
+  // cy.get('#description')
 
   offenseType.forEach((type) => {
     cy.get('#'+type).click()

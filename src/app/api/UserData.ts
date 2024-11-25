@@ -1,10 +1,12 @@
 import { getServerSession, Session } from 'next-auth';  
 
-import { authOption } from '../api/auth/[...nextauth]/route'; 
+import { authOption } from '../api/auth/[...nextauth]/route';
+
+import ServerRequests from './ServerRequests';
 
 import { User, Roles } from '../schemas/UserSchema';
 
-const getUserData = async( ) => {
+export async function getUserData(): Promise<User> {
     const session: Session | null = await getServerSession(authOption);
 
     console.log(session)
@@ -33,4 +35,11 @@ const getUserData = async( ) => {
     return userData
 }
 
-export default getUserData;
+export async function getTestUserData(): Promise<User> {
+  const serverRequests = new ServerRequests();
+
+  const userData = await serverRequests.getUserForTesting();
+  return userData.data;
+}
+
+// export default getUserData;
