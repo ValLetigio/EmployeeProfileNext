@@ -19,7 +19,7 @@ const ImageModal = () => {
                     setHash('#item0')
                     setImageListForModal([])
                 }} 
-                    className=" btn btn-error text-white btn-sm rounded-full h-8 w-8">X</button>
+                    className="close-button">X</button>
             </form>
 
             <div className="carousel h-[90%] w-full ">

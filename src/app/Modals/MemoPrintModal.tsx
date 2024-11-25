@@ -139,7 +139,7 @@ const PrintMemorandumModal = () => {
           >
             <button
               onClick={() => setMemoForPrintModal({} as Memo)}
-              className=" btn btn-error text-white btn-sm rounded-full h-8 w-8"
+              className=" close-button "
             >
               X
             </button>

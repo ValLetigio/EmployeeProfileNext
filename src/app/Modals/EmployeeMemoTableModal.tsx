@@ -18,7 +18,7 @@ const EmployeeMemoTableModal = () => {
           <form className='absolute top-2 right-2' method="dialog"> 
             <button 
               onClick={()=>setMemoForTableModal([] as Memo[])} 
-              className=" btn btn-error text-white btn-sm rounded-full h-8 w-8">X</button>
+              className=" close-button ">X</button>
           </form>
           
           <h3 className='text-xl font-semibold w-full text-start '>Memos <span className='text-base'>( {memoForTableModal?.[0]?.Employee?.name} )</span> </h3> 
