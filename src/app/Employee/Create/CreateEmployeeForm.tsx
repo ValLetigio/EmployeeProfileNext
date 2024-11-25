@@ -4,11 +4,13 @@ import React, { useState, useRef } from 'react'
 
 import { useAppContext } from '@/app/GlobalContext' 
 
-import Image from 'next/image' 
+// import Image from 'next/image' 
+
+import ImageInput from '@/app/InputComponents/ImageInput' 
 
 const CreateEmployeeForm = () => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router, handleImageModalClick } = useAppContext() 
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext() 
 
     const formRef = useRef<HTMLFormElement>(null)
 
@@ -69,61 +71,36 @@ const CreateEmployeeForm = () => {
         })
     }  
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
+    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const files = e.target.files;
     
-        if (files && files.length > 0) {
-            const fileReaders = [];
-            const fileDataUrls: string[] = [];
+    //     if (files && files.length > 0) {
+    //         const fileReaders = [];
+    //         const fileDataUrls: string[] = [];
             
-            for (let i = 0; i < files.length; i++) {
-                const reader = new FileReader();
-                fileReaders.push(reader);
+    //         for (let i = 0; i < files.length; i++) {
+    //             const reader = new FileReader();
+    //             fileReaders.push(reader);
                 
-                reader.readAsDataURL(files[i]);
+    //             reader.readAsDataURL(files[i]);
                 
-                reader.onloadend = () => {
-                    fileDataUrls.push(reader.result as string);
+    //             reader.onloadend = () => {
+    //                 fileDataUrls.push(reader.result as string);
     
-                    // Check if all files have been processed
-                    if (fileDataUrls.length === files.length) {
-                        const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+    //                 // Check if all files have been processed
+    //                 if (fileDataUrls.length === files.length) {
+    //                     const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
     
-                        setFormData({
-                            ...formData,
-                            [e.target.id]: finalResult
-                        }); 
-                    }
-                };
-            }
-        }
-    };
-
-    const [ hovered, setHovered ] = useState(false);
-    const timerRef = useRef<NodeJS.Timeout | null>(null); 
-
-    const handleMouseEnter = (item: string[]) => {
-        console.log("Mouse entered");
-        setHovered((prev)=>{
-                timerRef.current = setTimeout(() => { 
-                    if (!prev) { 
-                        handleImageModalClick(item) 
-                    } 
-                }, 3000); 
-                return hovered
-            }
-        );  
-        
-    };
-
-    const handleMouseLeave = () => {
-        console.log("Mouse left");
-        setHovered(false); 
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
-            timerRef.current = null;
-        }
-    };
+    //                     setFormData({
+    //                         ...formData,
+    //                         [e.target.id]: finalResult
+    //                     }); 
+    //                 }
+    //             };
+    //         }
+    //     }
+    // }; 
+ 
 
   return (
     <form className={` form-style `}
@@ -131,7 +108,7 @@ const CreateEmployeeForm = () => {
         onSubmit={(e)=>handleSubmit(e)}
     >
         <h2 className='font-semibold' 
-            onClick={async()=>await handleConfirmation("U Sure Bro?", "This that make you Weak", "")} >Employee Registry</h2>
+            onClick={async()=>await handleConfirmation("U Serious Bro?", "Your Aim is Terrible.", "")} >Employee Registry</h2>
 
         {/* name */}
         <div className='flex flex-col text-sm gap-2 '>Name
@@ -175,35 +152,62 @@ const CreateEmployeeForm = () => {
         {/* photoOfPerson, resume, bioData */}  
         <div className='flex flex-wrap gap-3 md:gap-2 justify-between w-full '>
             {/* photoOfPerson */}
-            <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
+            <ImageInput
+                id='photoOfPerson'
+                title="Photo Of Person" width='w-full'
+                inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
+                imgDimensions={{height:60, width:60}}
+                mediaList={[formData?.photoOfPerson]}
+                // onChangeHandler={handleFileChange}
+                setFunction={setFormData}
+            />
+            {/* <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person    
-                    <Image src={formData?.photoOfPerson} className='h-[60px] hover:animate-pulse hover:cursor-wait' height={60} width={60} alt="photoOfPerson" 
-                        onMouseEnter={()=>handleMouseEnter([formData?.photoOfPerson])}
-                        onMouseLeave={handleMouseLeave}
+                    <Image src={formData?.photoOfPerson} className='h-[60px] hover:animate-pulse hover:cursor-wait' height={60} width={60} alt="photoOfPerson"  
                     />
                 </div>
                 <input type="file" className="file-input file-input-bordered sw-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*' required 
                     onChange={handleFileChange}/>
-            </label>
+            </label> */}
+
             {/* resumePhotosList */}
-            <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
+            <ImageInput
+                id='resumePhotosList'
+                title="Resume" width='w-full md:w-[48%]'
+                inputStyle='file-input file-input-bordered w-full max-w-full file-input-xs h-10'
+                imgDimensions={{height:60, width:60}}
+                mediaList={formData?.resumePhotosList}
+                // onChangeHandler={handleFileChange}
+                setFunction={setFormData}
+            />
+            {/* <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Resume    
-                    <Image src={formData?.resumePhotosList[0]} className='h-[60px] hover:animate-pulse hover:cursor-wait' height={60} width={60} alt="resumePhotosList" 
-                        onMouseEnter={()=>handleMouseEnter(formData?.resumePhotosList)}
-                        onMouseLeave={handleMouseLeave}
+                    <Image src={formData?.resumePhotosList[0]} className='h-[60px] hover:animate-pulse hover:cursor-wait' height={60} width={60} alt="resumePhotosList"  
                     />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='resumePhotosList' accept='image/*' 
                     onChange={handleFileChange} multiple/>
-            </label>
+            </label> */}
+
+
             {/* biodataPhotosList */}
-            <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
+            <ImageInput
+                id='biodataPhotosList'
+                title="Bio Data" width='w-full md:w-[48%]'
+                inputStyle='file-input file-input-bordered w-full max-w-full file-input-xs h-10'
+                imgDimensions={{height:60, width:60}}
+                mediaList={formData?.biodataPhotosList}
+                // onChangeHandler={handleFileChange}
+                setFunction={setFormData}
+            />
+
+            {/* <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Bio Data   
                     <Image src={formData?.biodataPhotosList[0]} className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />
                 </div>
                 <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
                     onChange={handleFileChange} multiple/>
-            </label>
+            </label> */}
         </div> 
 
 

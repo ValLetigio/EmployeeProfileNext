@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 const ImageModal = () => {
 
-    const { imageListForModal, setImageListForModal, router } = useAppContext() 
+    const { imageListForModal, setImageListForModal, router } = useAppContext()  
 
     const [hash, setHash] = React.useState('#item0'); 
 

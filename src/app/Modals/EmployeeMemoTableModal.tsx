@@ -44,7 +44,7 @@ const EmployeeMemoTableModal = () => {
                 >
                   {/* print */}
                   <td className='w-max text-center '>
-                    <button className='hover:text-info tooltip-right tooltip' data-tip="Print"
+                    <button className='hover:text-blue-300 text-info tooltip-right tooltip' data-tip="Print"
                       onClick={()=>handleMemoPrintModalClick(memo)}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -81,7 +81,8 @@ const EmployeeMemoTableModal = () => {
                   <td> <p onClick={()=>handleMemoPrintModalClick(memo)}
                   className='whitespace-pre-line hover:underline decoration-wavy line-clamp-4' >{memo?.reason || "None"}</p> </td>
                   {/* isSubmitted */}
-                  <td className='font-bold text-center'> {memo?.submitted?"✔":"X"} </td>
+                  <td className='font-bold text-center text-xl'> 
+                    {memo?.submitted?<span className='text-success'>✔</span>:<span className='text-error'>X</span>} </td>
                 </tr>
                 ))}
               </tbody>

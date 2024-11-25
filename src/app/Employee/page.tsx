@@ -22,11 +22,11 @@ const page = () => {
                     </svg> 
                     
                 </figure>
-                <div className="card-body bg-white/70">
+                <div className="card-body bg-base/70">
                     <h2 className="card-title">Create</h2>
                     <p>Register an Employee!</p>
                     <div className="card-actions justify-end">
-                    <Link href={"/Employee/Create"} className="mt-2 btn btn-sm btn-neutral text-white"><span className='text-blue-400'>Create</span> Now</Link>
+                    <Link href={"/Employee/Create"} className="mt-2 btn btn-sm btn-neutral"><span className='text-blue-400'>Create</span>  </Link>
                     </div>
                 </div>
             </div>
@@ -37,11 +37,11 @@ const page = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.867 19.125h.008v.008h-.008v-.008Z" />
                     </svg> 
                 </figure>
-                <div className="card-body bg-white/70">
+                <div className="card-body bg-base/70">
                     <h2 className="card-title">Update</h2>
                     <p>Update Employee Details!</p>
                     <div className="card-actions justify-end">
-                    <Link href={"/Employee/Update"} className="mt-2 btn btn-sm btn-neutral text-white"><span className='text-violet-400'>Update</span> Now</Link>
+                    <Link href={"/Employee/Update"} className="mt-2 btn btn-sm btn-neutral "><span className='text-violet-400'>Update</span>  </Link>
                     </div>
                 </div>
             </div>
@@ -51,11 +51,11 @@ const page = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM4 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 10.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
                     </svg> 
                 </figure>
-                <div className="card-body bg-white/70">
+                <div className="card-body bg-base/70">
                     <h2 className="card-title">Delete</h2>
                     <p>Delete an Employee!</p>
                     <div className="card-actions justify-end">
-                    <Link href={"/Employee/Delete"} className="mt-2 btn btn-sm btn-neutral text-white"><span className='text-red-400'>Delete</span> Now</Link>
+                    <Link href={"/Employee/Delete"} className="mt-2 btn btn-sm btn-neutral "><span className='text-red-400'>Delete</span>  </Link>
                     </div>
                 </div>
             </div>
