@@ -130,7 +130,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
                 <div className='flex justify-evenly items-center mb-1 gap-1 relative bg-base-200 p-1 rounded-lg'>Photo Of Person    
-                    <Image src={formData?.photoOfPerson } className='h-[60px]' height={60} width={60} alt="photoOfPerson" 
+                    <Image src={formData?.photoOfPerson } className='h-[60px] cursor-pointer' height={60} width={60} alt="photoOfPerson" 
                         onClick={()=>handleImageModalClick([formData?.photoOfPerson])}
                     />  
                 </div> 
@@ -138,7 +138,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-base-200 rounded-lg '>Resume    
-                    <Image src={formData?.resumePhotosList[0] } className='h-[60px]' height={60} width={60} alt="resumePhotosList" 
+                    <Image src={formData?.resumePhotosList[0] } className='h-[60px] cursor-pointer' height={60} width={60} alt="resumePhotosList" 
                         onClick={()=>handleImageModalClick(formData?.resumePhotosList)}
                     />  
                 </div> 
@@ -146,7 +146,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-base-200 rounded-lg '>Bio Data   
-                    <Image src={formData?.biodataPhotosList[0] } className='h-[60px]' height={60} width={60} alt="biodataPhotosList" 
+                    <Image src={formData?.biodataPhotosList[0] } className='h-[60px] cursor-pointer' height={60} width={60} alt="biodataPhotosList" 
                         onClick={()=>handleImageModalClick(formData?.biodataPhotosList)}
                     />  
                 </div> 

@@ -25,8 +25,8 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
   return (
     <div  
       className={` ${showMenu ? "scale-100" : "scale-0"} duration-300 origin-top-right
-        absolute top-[86px] right-0 shadow-lg border backdrop-blur-sm 
-        w-[96vw] md:w-[330px] max-h-[70vh] rounded-2xl z-50
+        absolute top-[86px] right-0 shadow-lg border backdrop-blur-lg bg-base-100/70
+        w-[96vw] md:w-[330px] h-[80vh] md:max-h-[70vh] rounded-2xl z-50
         flex flex-col pb-8 
       `}
     > 
@@ -41,7 +41,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
       <div className=' w-full my-4 bg-base-100/80'/>
 
       <div
-        className='flex flex-col items-start justify-start max-h-[50vh] overflow-y-auto backdrop-blur-xl px-6 bg-base-100/80'
+        className='flex flex-col items-start justify-between max-h-full md:max-h-[50vh] h-full overflow-y-auto px-6 '
       > 
         <ThemeControl/>
         {/* {[1,2,3,4,5].map((item, index) => (
@@ -55,7 +55,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
 
         {/* logout */}
         <button
-          className='w-full flex items-center justify-center gap-3 h-12 border-gray-300 mt-2 hover:bg-red-400 hover:border-red-400 hover:text-white rounded-b-2xl'
+          className='bg-base-300 w-full flex items-center justify-center gap-3 h-12 border mt-2 hover:bg-error hover:text-white rounded-b-2xl'
           onClick={() => {handleSignOut()}}
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">

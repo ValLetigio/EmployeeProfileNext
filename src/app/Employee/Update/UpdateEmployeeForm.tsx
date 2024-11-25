@@ -135,9 +135,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
             setDataToUpdate({})
         }else{ 
             setDisableSaveButton(false)
-        }  
-
-        console.log('formData:', formData)
+        }   
     },[selectedEmployee, formData]) 
 
     const labelStyle = `${selectedEmployee?._id ? '': 'text-gray-300'}`
@@ -226,6 +224,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                 imgDimensions={{height:60, width:60}}
                 mediaList={[formData?.photoOfPerson]} 
                 setFunction={setFormData}
+                disable={disable}
             />
             {/* <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person  
@@ -243,6 +242,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                 imgDimensions={{height:60, width:60}}
                 mediaList={formData?.resumePhotosList} 
                 setFunction={setFormData}
+                disable={disable}
             />
             {/* <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative '>Resume  
@@ -258,9 +258,9 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                 title="Bio Data" width='w-full md:w-[48%]'
                 inputStyle='file-input file-input-bordered w-full max-w-full file-input-xs h-10'
                 imgDimensions={{height:60, width:60}}
-                mediaList={formData?.biodataPhotosList}
-                // onChangeHandler={handleFileChange}
+                mediaList={formData?.biodataPhotosList} 
                 setFunction={setFormData}
+                disable={disable}
             />
             {/* <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1  '>Bio Data  
