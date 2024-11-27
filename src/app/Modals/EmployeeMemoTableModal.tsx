@@ -8,17 +8,37 @@ import Image from 'next/image'
 
 const EmployeeMemoTableModal = () => {
 
-  const { memoForTableModal, setMemoForTableModal, handleImageModalClick, handleMemoPrintModalClick } = useAppContext()    
+  const { memoForTableModal, setMemoForTableModal, handleImageModalClick, handleMemoPrintModalClick } = useAppContext()   
+  
+  const memoTableModalRef = React.useRef<HTMLDialogElement>(null);
+
+  const handleClose = () => {
+    setMemoForTableModal([] as Memo[])
+  };
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose();  
+      }
+    };
+
+    memoTableModalRef.current?.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      memoTableModalRef.current?.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
-    <dialog id="EmployeeMemoModal" className="modal ">
+    <dialog id="EmployeeMemoModal" className="modal " ref={memoTableModalRef}>
       <div className=" bg-transparent shadow-none gap-2 p-0 w-max">   
         <div className=' max-h-[80vh] w-[98vw] md:w-[80vw] rounded-xl py-8 bg-base-200 px-6 flex justify-center items-center flex-col gap-2 relative '>
           {/*  */}
           <form className='absolute top-2 right-2' method="dialog"> 
             <button 
-              onClick={()=>setMemoForTableModal([] as Memo[])} 
-              className=" btn btn-error text-white btn-sm rounded-full h-8 w-8">X</button>
+              onClick={()=>handleClose()} 
+              className=" close-button ">X</button>
           </form>
           
           <h3 className='text-xl font-semibold w-full text-start '>Memos <span className='text-base'>( {memoForTableModal?.[0]?.Employee?.name} )</span> </h3> 
@@ -44,7 +64,7 @@ const EmployeeMemoTableModal = () => {
                 >
                   {/* print */}
                   <td className='w-max text-center '>
-                    <button className='hover:text-info tooltip-right tooltip' data-tip="Print"
+                    <button className='hover:text-blue-300 text-info tooltip-right tooltip' data-tip="Download"
                       onClick={()=>handleMemoPrintModalClick(memo)}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -81,7 +101,8 @@ const EmployeeMemoTableModal = () => {
                   <td> <p onClick={()=>handleMemoPrintModalClick(memo)}
                   className='whitespace-pre-line hover:underline decoration-wavy line-clamp-4' >{memo?.reason || "None"}</p> </td>
                   {/* isSubmitted */}
-                  <td className='font-bold text-center'> {memo?.submitted?"✔":"X"} </td>
+                  <td className='font-bold text-center text-xl'> 
+                    {memo?.submitted?<span className='text-success'>✔</span>:<span className='text-error'>X</span>} </td>
                 </tr>
                 ))}
               </tbody>

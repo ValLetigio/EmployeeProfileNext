@@ -1,6 +1,6 @@
 import { getServerSession, Session } from 'next-auth';  
 
-import { authOption } from '../api/auth/[...nextauth]/route';
+import { authOption } from './AuthOptions';
 
 import ServerRequests from './ServerRequests';
 

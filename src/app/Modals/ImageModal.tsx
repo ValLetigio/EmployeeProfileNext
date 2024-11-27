@@ -6,20 +6,38 @@ import Image from 'next/image'
 
 const ImageModal = () => {
 
-    const { imageListForModal, setImageListForModal, router } = useAppContext() 
+  const { imageListForModal, setImageListForModal, router } = useAppContext() 
+  
+  const imageModalRef = React.useRef<HTMLDialogElement>(null);
 
-    const [hash, setHash] = React.useState('#item0'); 
+  const [hash, setHash] = React.useState('#item0'); 
+
+  const handleClose = () => {
+    setHash('#item0');
+    router.replace(window.location.pathname, undefined);
+    setImageListForModal([]);
+  };
+  
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose(); 
+      }
+    };
+
+    imageModalRef.current?.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      imageModalRef.current?.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []); 
 
   return (
-    <dialog id="imageModal" className="modal w-full ">
+    <dialog id="imageModal" className="modal w-full " ref={imageModalRef}>
         <div className="modal-box bg-transparent shadow-none gap-2 flex flex-col w-full h-full justify-center items-center relative ">  
             <form className='absolute top-2 right-2' method="dialog"> 
-                <button onClick={()=>{
-                    router.replace(window.location.pathname, undefined);
-                    setHash('#item0')
-                    setImageListForModal([])
-                }} 
-                    className=" btn btn-error text-white btn-sm rounded-full h-8 w-8">X</button>
+                <button onClick={handleClose} 
+                    className="close-button">X</button>
             </form>
 
             <div className="carousel h-[90%] w-full ">
@@ -28,7 +46,7 @@ const ImageModal = () => {
                         <Image
                             src={item}
                             className="h-full w-full" width={1} height={1} alt={`#item${index}`} />
-                        {/* <span className='absolute top-2 left-3 font-bold bg-white rounded-full w-8 h-8 grid place-content-center'>{index + 1}</span> */}
+                            {/* <span className='absolute top-2 left-3 font-bold bg-white rounded-full w-8 h-8 grid place-content-center'>{index + 1}</span> */}
                     </div> 
                 ))} 
             </div> 

@@ -17,6 +17,20 @@ function NavBar() {
 
   const { cards, pathname, userData } = useAppContext();  
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowMenu(false); 
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []); 
+
   return (
     <div
       className={`shadow-lg shadow-gray-400 rounded-full backdrop-blur-sm

@@ -37,7 +37,7 @@ const EmployeeDetails = () => {
 
   const detailStyle = (item: boolean) =>
     `${ !item && "hidden" } 
-    tracking-widest flex grow flex-col-reverse text-center p-2 xl:p-3 border border-base-300 rounded-xl bg-base-100 
+    tracking-widest flex grow flex-col-reverse text-center p-2 2xl:p-3 border border-base-300 rounded-xl bg-base-100 
     hover:bg-base-300 
   `;
 
@@ -93,7 +93,7 @@ const EmployeeDetails = () => {
       if (selectedEmployee._id) {  
         getSelectedEmployeeDetails()
   
-        dummy.current?.scrollIntoView({ behavior: "smooth" }); 
+        dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" }); 
   
         const days = (new Date().getTime() - new Date(selectedEmployee.dateJoined).getTime()) / (1000 * 60 * 60 * 24); 
         setDaysWithUs(Math.floor(days));
@@ -132,12 +132,15 @@ const EmployeeDetails = () => {
         <div className=" indicator ">
           <span
             className={`
-              ${loading&&"hidden"} ${fetchingMemos&&"animate-pulse"} 
-              ${selectedEmployeeMemos.length?" badge-error hover:bg-red-200 ":" bg-green-500 "}
+              ${loading&&"hidden"} 
+              ${selectedEmployeeMemos.length?" badge-error hover:bg-red-200 "
+                : fetchingMemos ? " bg-warning animate-pulse " 
+                : " bg-success "}
               cursor-pointer tooltip-top tooltip indicator-item badge text-white absolute `}
             data-tip={`${fetchingMemos?"Fetching" : selectedEmployeeMemos?.length} Memos`}
             onClick={() => selectedEmployeeMemos?.length&&handleMemoTableModalClick(selectedEmployeeMemos)}
-          > {fetchingMemos ? "..." : selectedEmployeeMemos?.length}
+          > 
+            {fetchingMemos ? "..." : selectedEmployeeMemos?.length} 
           </span>
 
           <div

@@ -287,12 +287,12 @@ export default function ContextProvider({
     });
   };
 
-  const handleImageModalClick = (imageList: string[]) => {
-    const modal = document.getElementById('imageModal');
+  const handleImageModalClick = (imageList: string[]) => { 
+    const modal = document.getElementById('imageModal');  
     if (modal) {
       (modal as HTMLDialogElement).showModal();
     }
-    setImageListForModal(imageList);
+    setImageListForModal(imageList); 
   }
 
   const handleMemoTableModalClick = (selectedEmployeeMemos : Memo[]) => {
