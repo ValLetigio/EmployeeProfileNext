@@ -17,7 +17,7 @@ import {getUserData, getTestUserData} from '../api/UserData';
  
 const Page = async () => {
 
-  const isTest = process.env.NEXT_PUBLIC_CYPRESS_IS_TEST_ENV;
+  const isTest = process.env.NEXT_PUBLIC_CYPRESS_IS_TEST_ENV == 'true' ? true : false;
 
   const serverRequests = new ServerRequests( );
 
