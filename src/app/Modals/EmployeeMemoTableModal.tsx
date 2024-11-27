@@ -8,16 +8,36 @@ import Image from 'next/image'
 
 const EmployeeMemoTableModal = () => {
 
-  const { memoForTableModal, setMemoForTableModal, handleImageModalClick, handleMemoPrintModalClick } = useAppContext()    
+  const { memoForTableModal, setMemoForTableModal, handleImageModalClick, handleMemoPrintModalClick } = useAppContext()   
+  
+  const memoTableModalRef = React.useRef<HTMLDialogElement>(null);
+
+  const handleClose = () => {
+    setMemoForTableModal([] as Memo[])
+  };
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose();  
+      }
+    };
+
+    memoTableModalRef.current?.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      memoTableModalRef.current?.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
-    <dialog id="EmployeeMemoModal" className="modal ">
+    <dialog id="EmployeeMemoModal" className="modal " ref={memoTableModalRef}>
       <div className=" bg-transparent shadow-none gap-2 p-0 w-max">   
         <div className=' max-h-[80vh] w-[98vw] md:w-[80vw] rounded-xl py-8 bg-base-200 px-6 flex justify-center items-center flex-col gap-2 relative '>
           {/*  */}
           <form className='absolute top-2 right-2' method="dialog"> 
             <button 
-              onClick={()=>setMemoForTableModal([] as Memo[])} 
+              onClick={()=>handleClose()} 
               className=" close-button ">X</button>
           </form>
           

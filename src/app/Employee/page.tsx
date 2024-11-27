@@ -26,7 +26,7 @@ const page = () => {
                     <h2 className="card-title">Create</h2>
                     <p>Register an Employee!</p>
                     <div className="card-actions justify-end">
-                    <Link href={"/Employee/Create"} className="mt-2 btn btn-sm btn-neutral"><span className='text-blue-400'>Create</span>  </Link>
+                    <Link href={"/Employee/Create"} className="mt-2 btn btn-sm btn-outline btn-info group"><span className='group-hover:text-white'>Create </span>Now</Link>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,9 @@ const page = () => {
                     <h2 className="card-title">Update</h2>
                     <p>Update Employee Details!</p>
                     <div className="card-actions justify-end">
-                    <Link href={"/Employee/Update"} className="mt-2 btn btn-sm btn-neutral "><span className='text-violet-400'>Update</span>  </Link>
+                    <Link href={"/Employee/Update"} 
+                        className="mt-2 btn btn-sm btn-outline hover:bg-violet-500 border-violet-500 text-violet-500 group">
+                            <span className='group-hover:text-white'>Update </span>Now</Link>
                     </div>
                 </div>
             </div>
@@ -55,7 +57,7 @@ const page = () => {
                     <h2 className="card-title">Delete</h2>
                     <p>Delete an Employee!</p>
                     <div className="card-actions justify-end">
-                    <Link href={"/Employee/Delete"} className="mt-2 btn btn-sm btn-neutral "><span className='text-red-400'>Delete</span>  </Link>
+                    <Link href={"/Employee/Delete"} className="mt-2 btn btn-sm btn-outline btn-error group"><span className='group-hover:text-white'>Delete </span>Now</Link>
                     </div>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import { useAppContext } from '@/app/GlobalContext'
 // import Image from 'next/image' 
 
 import ImageInput from '@/app/InputComponents/ImageInput' 
+import { Employee } from '@/app/schemas/MemoSchema'
 
 const CreateEmployeeForm = () => {
 
@@ -30,7 +31,7 @@ const CreateEmployeeForm = () => {
     }
 
 
-    const [ formData, setFormData ] = useState(defaultFormData)
+    const [ formData, setFormData ] = useState<Employee>(defaultFormData as Employee)
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()   
@@ -52,7 +53,7 @@ const CreateEmployeeForm = () => {
                 if(res.message){
                     setToastOptions({ open: true, message: res.message, type: 'success', timer: 10 });
                     form.reset() 
-                    setFormData(defaultFormData)  
+                    setFormData(defaultFormData as Employee)  
                     formRef.current?.scrollIntoView({ behavior: 'smooth' })
                     router.refresh()
                 }
@@ -179,6 +180,7 @@ const CreateEmployeeForm = () => {
                 mediaList={formData?.resumePhotosList}
                 // onChangeHandler={handleFileChange}
                 setFunction={setFormData}
+                multiple={true}
             />
             {/* <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-between items-center mb-1 gap-1 relative'>Resume    
@@ -199,6 +201,7 @@ const CreateEmployeeForm = () => {
                 mediaList={formData?.biodataPhotosList}
                 // onChangeHandler={handleFileChange}
                 setFunction={setFormData}
+                multiple={true}
             />
 
             {/* <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>

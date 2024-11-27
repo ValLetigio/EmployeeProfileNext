@@ -1,11 +1,13 @@
-import React, { FC, useState, useRef } from "react";
+import React, { FC } from "react";
 
 import Image from "next/image";
 
 import { useAppContext } from "../GlobalContext";
 
+import { Employee } from "../schemas/EmployeeSchema";
+
 interface ImageInputProps {
-  id?: string;
+  id: string;
   title?: string;
   inputStyle?: string;
   width?: string;
@@ -13,9 +15,12 @@ interface ImageInputProps {
   imgDimensions?: { height: number; width: number };
   mediaList?: string[];
   onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  setFunction: (value: any) => void;
+  setFunction?: (value: (prev: Employee) => Employee) => void;
+  // setFunction?: (value: Employee) => void;
+
   disable?: boolean,
-  required?: boolean
+  required?: boolean,
+  multiple?: boolean;
 }
 
 const ImageInput: FC<ImageInputProps> = ({
@@ -28,7 +33,8 @@ const ImageInput: FC<ImageInputProps> = ({
   onChangeHandler,
   setFunction,
   disable,
-  required
+  required,
+  multiple
 }) => {
 
   const { handleImageModalClick } = useAppContext(); 
@@ -52,31 +58,39 @@ const ImageInput: FC<ImageInputProps> = ({
           // Check if all files have been processed
           if (fileDataUrls.length === files.length) {
             const finalResult =
-              e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+              e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls; 
 
-            setFunction((prev: object) => ({
-              ...prev,
-              [e.target.id]: finalResult,
-            }));
+            settingFunction(finalResult, e.target.id);
           }
         };
       }
     }
   };
 
+  const settingFunction = (value: string | string[], id: string) => {
+    if(setFunction){
+      setFunction((prev: Employee) => ({
+        ...prev,
+        [id]: value,
+      }));
+    }
+  }
+
   return (
     <div className={`flex flex-col ${width}`}>
-      <div className="flex justify-between items-end mb-1 gap-1 min-h-10">
-        <label htmlFor={id}>{title}</label>
-        <Image
-          className={`
-            ${mediaList?.[0] && "cursor-pointer border" } 
-            h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px]
-          `}
-          height={imgDimensions?.height || 60} width={imgDimensions?.width || 60} alt={"   "} 
-          src={mediaList?.[0] || ""}
-          onClick={()=>{mediaList?.[0] && handleImageModalClick(mediaList || [])}}
-        />
+      <div className="flex justify-between items-end mb-1 gap-1 min-h-10 " data-tip={`${mediaList?.length} images`}>
+        <label htmlFor={id}>{title}</label> 
+        <div className={` h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px] `} data-tip={`${mediaList?.length}`}>
+          <Image
+            className={`
+              ${mediaList?.[0] && "cursor-pointer border " } 
+              h-[${imgDimensions?.height}px] w-[${imgDimensions?.width}px]
+            `} 
+            height={imgDimensions?.height} width={imgDimensions?.width} alt={"   "} 
+            src={mediaList?.[0] || ""}
+            onClick={()=>mediaList?.[0] && handleImageModalClick(mediaList || [])} 
+          />  
+        </div>
       </div> 
 
       <input
@@ -84,8 +98,8 @@ const ImageInput: FC<ImageInputProps> = ({
         className={inputStyle}
         id={id}
         accept="image/*"
-        required={required} disabled={disable}
-        onChange={handleFileChange || onChangeHandler}
+        required={required} disabled={disable} multiple={multiple}
+        onChange={setFunction && handleFileChange || onChangeHandler}
       /> 
     </div>
   );

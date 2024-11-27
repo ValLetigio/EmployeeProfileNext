@@ -5,12 +5,10 @@ import React from "react";
 const ThemeControl = () => {
 
   const themes = [
-    "light", "dark", "cupcake", "bumblebee", "emerald", "corporate", 
-    "synthwave", "retro", "cyberpunk", "valentine", "halloween", 
-    "garden", "forest", "aqua", "lofi", "pastel", "fantasy", 
-    "wireframe", "black", "luxury", "dracula", "cmyk", "autumn", 
-    "business", "acid", "lemonade", "night", "coffee", "winter", 
-    "dim", "nord", "sunset", "snow", "swiss"
+    "light", "dark", "cupcake",  
+    "synthwave", "luxury", "black", "dim", 
+    "garden", "wireframe", "pastel", "lemonade", "winter",
+    "retro", "cyberpunk", "aqua", "lofi", "valentine", 
   ];
 
   const [ selectedTheme, setSelectedTheme ] = React.useState<string>(localStorage.getItem("theme") || "light");  
@@ -21,9 +19,9 @@ const ThemeControl = () => {
 
   return (
     <details className="collapse collapse-arrow flex flex-col bg-base-200 border  ">  
-      <summary className="collapse-title font-medium border-b select-none h-1 text-md">Themes ({selectedTheme})</summary> 
+      <summary className="collapse-title font-medium border-b select-none h-1 text-lg ">Themes ({selectedTheme})</summary> 
       <div className="collapse-content overflow-y-auto">
-        <div className="form-control h-[20vh] duration-300 " > 
+        <div className="form-control h-[25vh] duration-300 " > 
           {themes.map((theme, index) => (
             <label className="label cursor-pointer gap-4 hover:bg-base-100 rounded-lg"
               key={index}

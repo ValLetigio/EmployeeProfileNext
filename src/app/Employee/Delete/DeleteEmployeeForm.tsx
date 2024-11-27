@@ -193,12 +193,12 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
             {/* isRegular */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className="label-text text-base">Is Regular?</p>
-                <input type="checkbox" className="checkbox" id='isRegular' defaultChecked={formData?.isRegular} readOnly/>
+                <input type="checkbox" className="checkbox" id='isRegular' checked={formData?.isRegular} readOnly/>
             </label> 
             {/* isProductionEmployee */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className="label-text text-base">Is Production Employee?</p>
-                <input type="checkbox" className="checkbox"  id='isProductionEmployee' defaultChecked={formData?.isProductionEmployee} readOnly/>
+                <input type="checkbox" className="checkbox"  id='isProductionEmployee' checked={formData?.isProductionEmployee} readOnly/>
             </label> 
         </div>
 

@@ -33,8 +33,8 @@ const Confirmation = () => {
         <div 
             className={`gap-5 w-max rounded-lg
             shadow-2xl  
-            ${!confirmationOptions?.type? 'bg-white'
-               : confirmationOptions?.type != "warning" ? ` bg-${confirmationOptions?.type} text-white `
+            ${!confirmationOptions?.type? ''
+               : confirmationOptions?.type != "warning" ? ` bg-${confirmationOptions?.type} text-white bg-base-100`
                : confirmationOptions?.type == "warning" ? ` bg-${confirmationOptions?.type} text-black `
                : ` bg-${confirmationOptions?.type} `
             } 
@@ -42,13 +42,13 @@ const Confirmation = () => {
         `}
         > 
             <span 
-                className=' flex gap-2 justify-start text-start w-full font-bold text-lg px-10 border-b pt-8 pb-6 border-black' 
+                className=' bg-base-200 flex gap-2 justify-start text-start w-full font-bold text-lg px-10 border-b pt-8 pb-6 border-base-300' 
             >{confirmationOptions?.question}</span>
 
             <span className='text-start px-10 py-4'>{confirmationOptions?.consequence}</span>
 
             <div className='flex flex-col md:flex-row-reverse gap-2 justify-evenly w-full pt-4 pb-6 '>
-                <button className="btn bg-blue-500 text-white border-none" id='confirm-button' onClick={handleConfirm}>Confirm</button>
+                <button className="btn bg-info text-white border-none" id='confirm-button' onClick={handleConfirm}>Confirm</button>
                 <button className={`btn btn-ghost`} id='cancel-button' onClick={handleCancel}>Cancel</button>
             </div>
         </div>

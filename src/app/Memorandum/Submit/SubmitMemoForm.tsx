@@ -55,35 +55,35 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
       }
   } 
  
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = e.target.files;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
 
-  //   if (files && files.length > 0) {
-  //     const fileReaders = [];
-  //     const fileDataUrls: string[] = [];
+    if (files && files.length > 0) {
+      const fileReaders = [];
+      const fileDataUrls: string[] = [];
       
-  //     for (let i = 0; i < files.length; i++) {
-  //       const reader = new FileReader();
-  //       fileReaders.push(reader);
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        fileReaders.push(reader);
         
-  //       reader.readAsDataURL(files[i]);
+        reader.readAsDataURL(files[i]);
         
-  //       reader.onloadend = () => {
-  //         fileDataUrls.push(reader.result as string);
+        reader.onloadend = () => {
+          fileDataUrls.push(reader.result as string);
 
-  //         // Check if all files have been processed
-  //         if (fileDataUrls.length === files.length) {
-  //           const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+          // Check if all files have been processed
+          if (fileDataUrls.length === files.length) {
+            const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
 
-  //           setFormData({
-  //               ...formData,
-  //               [e.target.id]: finalResult
-  //           }); 
-  //         }
-  //       };
-  //     }
-  //   }
-  // };
+            setFormData({
+                ...formData,
+                [e.target.id]: finalResult
+            }); 
+          }
+        };
+      }
+    }
+  };
 
   const filterMemos = (memoList: Memo[]) => {
     const filteredMemos = memoList.filter(memo=>!submittedMemos?.includes(memo.description)&&!memo?.submitted) 
@@ -176,8 +176,9 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
         inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
         imgDimensions={{height:60, width:60}}
         mediaList={formData?.mediaList}
-        setFunction={setFormData}
+        onChangeHandler={handleFileChange} 
         required={!formData?.mediaList?.length}
+        multiple={true}
       />
       {/* <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
@@ -195,8 +196,10 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
         inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
         imgDimensions={{height:60, width:60}}
         mediaList={formData?.memoPhotosList}
-        setFunction={setFormData}
+        // setFunction={setFormData} 
+        onChangeHandler={handleFileChange} 
         required={!formData?.memoPhotosList?.length}
+        multiple={true}
       />
       {/* <label htmlFor="memoPhotosList" className='text-sm flex flex-col w-full'>
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    

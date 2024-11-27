@@ -52,7 +52,7 @@ const Toast = () => {
   
     return (
         <div 
-            className={` flex items-center justify-center 
+            className={` flex items-center justify-center cursor-cell
                 ${toastOptions?.open ? 'toast-top toast-center lg:toast-start lg:toast-bottom' : 'hidden'} toast z-[100]
             `}  
                 key={toastOptions?.message}
