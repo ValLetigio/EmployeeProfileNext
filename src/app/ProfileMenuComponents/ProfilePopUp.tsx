@@ -24,9 +24,9 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
 
   return (
     <div  
-      className={` ${showMenu ? "scale-100" : "scale-0"} duration-300 origin-top-right
+      className={` ${showMenu ? "scale-100" : "scale-0"} transition-all duration-300 ease-in 
         absolute top-[70px] md:top-[80px] right-0 shadow-lg border backdrop-blur-lg bg-base-100/70
-        w-[96vw] md:w-[330px] h-[80vh] md:max-h-[70vh] rounded-2xl z-50
+        w-[96vw] md:w-[330px] h-[80vh] md:max-h-[70vh] rounded-2xl z-50 origin-top-right
         flex flex-col justify-between pb-3 
       `}
     > 
@@ -41,27 +41,27 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
       {/* <div className=' w-full my-4 bg-base-100/80'/> */}
 
       <div
-        className='flex flex-col justify-between overflow-y-auto px-6 h-[40vh] my-2 mt-3'
+        className='flex flex-col justify-between overflow-y-auto px-6 h-[40vh] my-2 mt-3 '
       > 
         <div className='mt-2 w-full '>
           
-        <ThemeControl/>
-        
-        {[1,2,3,4,5,6].map((item, index) => (
-          <button
-            key={index} 
-            // onClick={()=>handleImageModalClick([""])}
-            className=' w-full h-12 border-gray-300 hover:bg-blue-400 hover:text-white rounded-2xl ' 
-          >   
-            <p className=' font-semibold'>Option {item}</p>
-          </button>
-        ))}
+          <ThemeControl/>
+          
+          {[1,2,3,4,5,6].map((item, index) => (
+            <button
+              key={index} 
+              // onClick={()=>handleImageModalClick([""])}
+              className='  w-full h-12 border-gray-300 hover:bg-base-300 hover:text-white ' 
+            >   
+              <p className=' font-semibold'>Option {item}</p>
+            </button>
+          ))}
         </div>
 
         {/* logout */}
       </div>
 
-      <div className='flex px-4 '>
+      <div className='flex px-6 '>
         <button
           className='shrink-0 bg-base-300 w-full flex items-center justify-center gap-3 h-12 border mt-2 hover:bg-error hover:text-white rounded-b-2xl'
           onClick={() => {handleSignOut()}}

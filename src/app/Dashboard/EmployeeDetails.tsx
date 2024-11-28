@@ -33,20 +33,20 @@ const EmployeeDetails = () => {
 
   const [fetchingMemos, setFetchingMemos] = React.useState<boolean>(false);
 
-  const [daysWithUs, setDaysWithUs] = React.useState<number>(0);
+  const [daysWithUs, setDaysWithUs] = React.useState<number>(0); 
 
   const detailStyle = (item: boolean) =>
     `${ !item && "hidden" } 
-    tracking-widest flex grow flex-col-reverse text-center p-2 2xl:p-3 border border-base-300 rounded-xl bg-base-100 
+    tracking-widest flex grow flex-col text-center p-2 2xl:p-3 border border-base-300 rounded-xl bg-base-100 
     hover:bg-base-300 
   `;
-
+  
   const skeletonStyle = `
-    ${ selectedEmployeeDetails._id ? " hidden " : " block " } 
+    ${ selectedEmployeeDetails?._id ? " hidden " : " block " } 
     ${ loading? " skeleton " : " bg-base-300 rounded-xl " } shrink-0 
-  `;
+  `; 
 
-  const contentStyle = `${selectedEmployee._id ? "block" : "hidden"}`;
+  const contentStyle = `${ loading? " !m-0 !p-0 !w-0 !scale-0 " : selectedEmployee._id? " block " : " hidden "}`;
 
   const getSelectedEmployeeDetails = async () => {
     setSelectedEmployeeDetails({} as Employee)
@@ -106,13 +106,14 @@ const EmployeeDetails = () => {
 
     return () => clearTimeout(timeout);
 
-  }, [selectedEmployee, userData]);
+  }, [selectedEmployee, userData]); 
 
   return (
     <div
       className={`${loading&&"cursor-wait"} relative h-full w-full flex flex-col justify-start items-center rounded-xl shadow-lg border p-4 `}
       ref={dummy}
     >
+      {/* clear button */}
       <button
         onClick={() => setSelectedEmployee({} as Employee)}
         className={`${
@@ -122,14 +123,14 @@ const EmployeeDetails = () => {
         X
       </button>
 
+      {/* avater skelly */}
       <div
-        className={skeletonStyle + " !rounded-full h-32 md:h-40 w-32 md:w-40 "}
+        className={skeletonStyle + " !rounded-full py-3 xl:py-8 w-24 xl:w-36 h-24 xl:h-36 mt-2 mb-4"}
       ></div>
 
-      <div
-        className={"w-full flex justify-center py-3 xl:py-8 " + contentStyle}
-      >
+      <div className={"w-full flex justify-center py-3 xl:py-8 " + contentStyle} >
         <div className=" indicator ">
+          {/* indicator */}
           <span
             className={`
               ${loading&&"hidden"} 
@@ -142,9 +143,9 @@ const EmployeeDetails = () => {
           > 
             {fetchingMemos ? "..." : selectedEmployeeMemos?.length} 
           </span>
-
+          
           <div
-            className={`${!selectedEmployeeDetails?.photoOfPerson&&"hidden"} 
+            className={`${!selectedEmployeeDetails?._id&&"hidden"} 
               w-24 xl:w-36 h-24 xl:h-36 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer`}
             onClick={() =>
               handleImageModalClick([selectedEmployeeDetails?.photoOfPerson])
@@ -160,6 +161,12 @@ const EmployeeDetails = () => {
           </div>
         </div>
       </div>
+
+      {/* employee name & address skelly*/}
+      <div className={skeletonStyle + " h-8 w-[40%] mb-1"}></div>
+      <div className={skeletonStyle + " h-6 w-[70%] "}></div>
+      
+      {/* employee name & address */} 
       <div className="">
         {selectedEmployeeDetails?.name && (
           <h2 className="text-2xl font-semibold">{selectedEmployeeDetails?.name}</h2>
@@ -167,9 +174,10 @@ const EmployeeDetails = () => {
       </div>
       <div>
         <h3>{selectedEmployeeDetails?.address}</h3>
-      </div>
+      </div> 
 
-      <div className="w-full border-b my-4" />
+
+      <div className="w-full border-b my-4 " />
 
       <div className="flex flex-wrap gap-3 items-stretch w-full h-max text-xs overflow-auto max-h-[70%] pb-2 ">
         <div
@@ -179,56 +187,64 @@ const EmployeeDetails = () => {
         >
           {!selectedEmployee?._id ? "Select an Employee" : selectedEmployee?._id && loading ? "Fetching..." : "No Details Found"}
         </div>
+
+        {/* details skelly */}
         <div className={skeletonStyle + " h-12 w-40 grow"}></div>
         <div className={skeletonStyle + " h-12 w-28 grow"}></div>
         <div className={skeletonStyle + " h-12 w-32 grow"}></div>
         <div className={skeletonStyle + " h-12 w-40 grow"}></div>
 
+        {/* details */}
         <div className={detailStyle(Boolean(selectedEmployeeDetails?.company))}>
-          Company
           <strong className="text-base">{selectedEmployeeDetails?.company}</strong>
+          Company
         </div>
         <div className={detailStyle(Boolean(selectedEmployeeDetails?.dateJoined))}>
-          Joined
           <strong className="text-base">
             {selectedEmployeeDetails?.dateJoined?.substring(5, 17)}
           </strong>
+          Joined
         </div>
         <div className={detailStyle(Boolean(selectedEmployeeDetails?.dailyWage))}>
-          Daily Wage
           <strong className="text-base">
             ₱ {selectedEmployeeDetails?.dailyWage?.toLocaleString()}
           </strong>
+          Daily Wage
         </div>
         <div className={detailStyle(Boolean(selectedEmployeeDetails?.email))}>
-          Email
           <strong className="text-base">{selectedEmployeeDetails?.email}</strong>
+          Email
         </div>
         <div className={detailStyle(Boolean(selectedEmployeeDetails?.phoneNumber))}>
-          Phone
           <strong className="text-base">{selectedEmployeeDetails?.phoneNumber}</strong>
+          Phone
         </div>
         <div
           className={detailStyle(
             Boolean(selectedEmployeeDetails?.isProductionEmployee)
           )}
         >
-          isProduction
           <strong className="text-base">✔</strong>
+          isProduction
         </div>
         <div className={detailStyle(Boolean(selectedEmployeeDetails?.isRegular))}>
-          isRegular
           <strong className="text-base">✔</strong>
+          isRegular
         </div>
         <div className={detailStyle(Boolean(selectedEmployeeDetails?.dateJoined))}>
-          Days with Us
           <strong className="text-base">
             {daysWithUs?.toLocaleString()}
           </strong>
+          Days with Us
         </div>
       </div>
 
       <div className="absolute flex justify-stretch bottom-2 gap-4 w-full text-center py-1 px-4">
+        {/* resumePhotosList && biodataPhotosList skelly */}
+        <div className={skeletonStyle + " h-12 w-[48%]"}></div>
+        <div className={skeletonStyle + " h-12 w-[48%]"}></div>
+
+        {/* resumePhotosList */}
         <div
           onClick={() =>
             handleImageModalClick(selectedEmployeeDetails?.resumePhotosList)
@@ -245,6 +261,7 @@ const EmployeeDetails = () => {
             height={1}
           ></Image>
         </div>
+        {/* biodataPhotosList */}
         <div
           onClick={() =>
             handleImageModalClick(selectedEmployeeDetails?.biodataPhotosList)

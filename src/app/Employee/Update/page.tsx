@@ -7,6 +7,11 @@ import { Employee } from '../../schemas/EmployeeSchema.ts'
 
 import ServerRequests from '@/app/api/ServerRequests';
 
+export const metadata = {
+  title: '| Update Employee Details',
+  description: 'Employee Update Form',
+} 
+
 const Page = async () => { 
 
   const serverRequests = new ServerRequests( ); 

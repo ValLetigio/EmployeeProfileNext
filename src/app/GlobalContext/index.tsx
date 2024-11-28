@@ -17,7 +17,8 @@ import { Session } from 'next-auth';
 import ServerRequests from '../api/ServerRequests';
 
 import firebaseConfig from '../api/firebase';
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app"; 
+
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
@@ -49,6 +50,7 @@ interface AppContextProps {
   handleMemoPrintModalClick: (data: Memo) => void; 
   loading: boolean;
   setLoading: (data: boolean) => void;
+  storage: ReturnType<typeof getStorage>;
 }
 
 // Create the default context with proper types and default values
@@ -77,7 +79,8 @@ const AppContext = createContext<AppContextProps>({
   setMemoForPrintModal: () => {},
   handleMemoPrintModalClick: () => {},
   loading: false,
-  setLoading: () => {}
+  setLoading: () => {},
+  storage: {} as ReturnType<typeof getStorage>
 });
 
 
@@ -202,7 +205,7 @@ export default function ContextProvider({
         roles: [], 
         }
     ]
-}
+  }
  
   const [toastOptions, setToastOptions] = useState({open:false, message: '', type: '', timer: 0}); 
   const [confirmationOptions, setConfirmationOptions] = useState({open:false, question: '', consequence: "", type: '', onConfirm: () => {}, onCancel: () => {}}); 
@@ -326,7 +329,8 @@ export default function ContextProvider({
     handleImageModalClick, imageListForModal, setImageListForModal,
     memoForTableModal, setMemoForTableModal, handleMemoTableModalClick,
     memoForPrintModal, setMemoForPrintModal, handleMemoPrintModalClick,
-    loading, setLoading
+    loading, setLoading,
+    storage
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

@@ -2,31 +2,58 @@
 
 import React from 'react'
 
-import { Employee } from '@/app/schemas/EmployeeSchema';
+import { useAppContext } from '../GlobalContext'
+
+import { useSearchParams } from 'next/navigation'
 
 
-interface SearchBarProps {
-    employeeList: Employee[];
-}
+// interface SearchBarProps {
+    
+// } 
 
+// const SearchBar :React.FC<SearchBarProps> = ({}) => {  
+const SearchBar = ( ) => {  
 
-const SearchBar :React.FC<SearchBarProps> = ({employeeList}) => { 
+    const { router, pathname, setLoading } = useAppContext(); 
+
+    const [debounceTimeout, setDebounceTimeout] = React.useState<NodeJS.Timeout | null>(null);
+
+    const searchParams = useSearchParams()
+
+    const search = searchParams.get('search')  
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const filteredObjects = employeeList.filter(obj => 
-            Object.values(obj).some(value => 
-                String(value).toLowerCase().includes(e.target.value.toLowerCase())
-            )
-        );
+        setLoading(true);
+        
+        if (debounceTimeout) {
+            clearTimeout(debounceTimeout);
+        }
+        
+        const timeout = setTimeout(() => {
+            const search = e.target.value?.toString();
+            const url = new URL(pathname, window.location.origin);
+            if(search){
+                url.searchParams.set("search", search);
+                router.push(url.toString());
+            }else{
+                url.searchParams.delete("search");
+                router.push(url.toString());
+            }
 
-        console.log(filteredObjects);
+            setLoading(false);
+        }, 1000);  
+
+        setDebounceTimeout(timeout);
     }
 
   return (
-    <label className=" input input-bordered flex items-center gap-2 z-[-1] " >
-        <input onMouseLeave={(e)=> (e.target as HTMLInputElement).blur()}
-            onChange={(e)=>handleSearch(e)} type="text" id='search' autoComplete='off'
-            className="grow w-16 focus:w-full placeholder:text-base h-full truncate" placeholder='Search' />
+    <label className=" input input-bordered flex items-center gap-2 " >
+        <input 
+            // onMouseLeave={(e)=> (e.target as HTMLInputElement).blur()} 
+            onChange={(e)=>handleSearch(e)} 
+            type="search" id='search' autoComplete='off' 
+            className="grow w-20 hover:w-full focus:w-full placeholder:text-base h-full truncate " 
+            placeholder='Search' defaultValue={search||""} />
         <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"

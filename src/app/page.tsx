@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata = {
   title: '| Home',
   description: 'Page Description',
-}
+} 
 
 export default function Home() {  
 

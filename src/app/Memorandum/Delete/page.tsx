@@ -6,6 +6,11 @@ import { Memo } from '@/app/schemas/MemoSchema';
 
 import ServerRequests from '@/app/api/ServerRequests'; 
 
+export const metadata = {
+  title: '| Delete Memorandum',
+  description: 'Delete Memo Form',
+} 
+
 const page = async () => { 
 
   const serverRequests = new ServerRequests( );  

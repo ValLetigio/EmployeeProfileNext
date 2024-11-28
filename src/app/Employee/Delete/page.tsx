@@ -7,6 +7,12 @@ import { Employee } from '../../schemas/EmployeeSchema.ts'
 
 import ServerRequests from '@/app/api/ServerRequests';
 
+export const metadata = {
+  title: '| Delete Employee',
+  description: 'Employee Deletion Form',
+} 
+
+
 const page = async () => {
 
   const serverRequests = new ServerRequests( ); 

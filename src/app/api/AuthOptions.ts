@@ -64,7 +64,7 @@ export const authOption: NextAuthOptions = {
                 session.user.isApproved = token.isApproved as boolean | undefined;
                 session.user.image = token.image as string;
 
-                delete (session.user as Partial<typeof session.user>).sensitiveInfo;
+                // delete (session.user as Partial<typeof session.user>).sensitiveInfo;
             } 
 
             return session; 

@@ -1,12 +1,14 @@
 'use client'
 
-import React from 'react' 
+import React, { useEffect } from 'react' 
 
 import { Employee } from '../schemas/EmployeeSchema';
 
 import { useAppContext } from '../GlobalContext';
 
-import Image from 'next/image';
+import { useSearchParams } from 'next/navigation'
+
+import Image from 'next/image'; 
 
 interface EmployeeTableProps {
     employeeList: Employee[]; 
@@ -15,6 +17,20 @@ interface EmployeeTableProps {
 const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
 
     const { selectedEmployee, setSelectedEmployee, loading } = useAppContext();   
+
+    const [ filteredEmployeeList, setFilteredEmployeeList ] = React.useState<Employee[]>(employeeList)
+
+    const searchParams = useSearchParams()
+
+    const search = searchParams.get('search')  
+
+    useEffect(()=>{
+        const filteredEmployeeList = employeeList.filter((employee) => 
+            JSON.stringify(employee).toLowerCase().includes(search || "")
+        )
+
+        setFilteredEmployeeList(filteredEmployeeList) 
+    },[search])
 
   return (
     <table className="table w-full table-pin-rows ">
@@ -27,16 +43,16 @@ const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
             </tr>
         </thead>
         <tbody>
-            {employeeList.map((employee) => (
+            {filteredEmployeeList.map((employee) => (
             <tr key={employee._id} 
                 className={`
                     ${selectedEmployee?._id == employee?._id ? "bg-base-300 " : "hover:bg-base-200 "} 
-                    ${loading ? 'disabled cursor-wait' : ''}
+                    ${loading ? 'disabled cursor-wait' : ''}  
                 `}
                 onClick={() => !loading&&setSelectedEmployee(employee)} data-tip={'View'}
             > 
                 <th className='bg-opacity-0 backdrop-blur-md ' >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 "  >
                         <div className="avatar ">
                             <div className="mask mask-squircle h-12 w-12 ">
                                 <Image 
