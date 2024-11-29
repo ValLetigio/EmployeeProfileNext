@@ -19,7 +19,7 @@ import MemoPrintModal from "./Modals/MemoPrintModal";
 
 import { Poppins } from "next/font/google"; 
 
-// import ImageUpload from "./ImageUpload";
+import ImageUpload from "./ImageUpload";
 
 const poppins = Poppins({ 
   subsets: ["latin"], display: "swap", variable: "--font-poppins", 
@@ -39,7 +39,7 @@ export default function RootLayout({
         <SessionProvider session={session}>
           <ContextProvider>
             <ProfileMenu/> 
-            {/* <ImageUpload/> */}
+            <ImageUpload/>
             {children}  
             <NavBar/>
             <ImageModal/>

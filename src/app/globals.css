@@ -30,5 +30,5 @@
 }
 
 .close-button {
-  @apply btn btn-error text-white btn-sm rounded-full h-8 w-8
+  @apply btn btn-error text-white btn-sm h-8 w-8 btn-circle
 }

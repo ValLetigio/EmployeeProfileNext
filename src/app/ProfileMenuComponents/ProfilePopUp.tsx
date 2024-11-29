@@ -24,14 +24,15 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
 
   return (
     <div  
-      className={` ${showMenu ? "scale-100" : "scale-0"} transition-all duration-300 ease-in 
+    // transition-all duration-300 ease-in 
+      className={` ${showMenu ? "scale-100" : "scale-0"}
         absolute top-[70px] md:top-[80px] right-0 shadow-lg border backdrop-blur-lg bg-base-100/70
         w-[96vw] md:w-[330px] h-[80vh] md:max-h-[70vh] rounded-2xl z-50 origin-top-right
-        flex flex-col justify-between pb-3 
+        flex flex-col justify-between pb-3 border-info
       `}
     > 
       <div
-        className='flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-base-300'  
+        className='flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-base-300 border-b border-info'  
         >
         <Image src={userData?.image } width={100} height={100} className='rounded-lg' alt="userImage" />
         <h1 className='text-xl font-semibold mt-5'>{userData?.displayName}</h1>
@@ -47,7 +48,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
           
           <ThemeControl/>
           
-          {[1,2,3,4,5,6].map((item, index) => (
+          {[1,2,3,4 ].map((item, index) => (
             <button
               key={index} 
               // onClick={()=>handleImageModalClick([""])}

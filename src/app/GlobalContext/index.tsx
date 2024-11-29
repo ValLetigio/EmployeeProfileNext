@@ -16,11 +16,13 @@ import { Session } from 'next-auth';
   
 import ServerRequests from '../api/ServerRequests';
 
-import firebaseConfig from '../api/firebase';
-import { initializeApp } from "firebase/app"; 
+// import firebaseConfig from '../api/firebase';
+// import { initializeApp } from "firebase/app"; 
 
 import { getStorage } from "firebase/storage";
-import { getAuth } from "firebase/auth";
+// import { getAuth } from "firebase/auth";
+
+import { storage, app } from '../api/firebase';
 
 
 // Define the properties of the context
@@ -95,9 +97,10 @@ export default function ContextProvider({
   const serverRequests = new ServerRequests( );
 
   const [environment, setEnvironment] = useState<string>('');
-  const app = initializeApp(firebaseConfig);
-  const storage = getStorage(app);
-  const auth = getAuth(app);
+  // const app = initializeApp(firebaseConfig);
+
+  // const storage = getStorage(app);
+  // const auth = getAuth(app);
   const isTestEnv =  process.env.NEXT_PUBLIC_CYPRESS_IS_TEST_ENV
 
   // User state initialized with an empty user object
