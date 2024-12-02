@@ -18,7 +18,7 @@ interface CreateMemoFormProps {
  
 const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation, loading, setLoading } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, setLoading } = useAppContext()
 
   const upload = new FirebaseUpload()
 

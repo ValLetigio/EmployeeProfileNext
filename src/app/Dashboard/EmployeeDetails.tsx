@@ -8,7 +8,7 @@ import { Employee } from "../schemas/EmployeeSchema";
 
 import { Memo } from "../schemas/MemoSchema";
 
-import Image from "next/image"; 
+import Image from "next/image";  
 
 const EmployeeDetails = () => {
   const {
@@ -108,6 +108,11 @@ const EmployeeDetails = () => {
 
   }, [selectedEmployee, userData]); 
 
+  const onClear = () => {
+    setSelectedEmployee({} as Employee)
+    setLoading(false)
+  }
+
   return (
     <div
       className={`${loading&&"cursor-wait"} relative h-full w-full flex flex-col justify-start items-center rounded-xl shadow-lg border p-4 `}
@@ -115,7 +120,7 @@ const EmployeeDetails = () => {
     >
       {/* clear button */}
       <button
-        onClick={() => {setSelectedEmployee({} as Employee), setLoading(false)}}
+        onClick={() => onClear()}
         className={`${
           !selectedEmployee?._id && "hidden"
         } absolute top-1 right-2 opacity-40`}
@@ -157,9 +162,7 @@ const EmployeeDetails = () => {
               alt={selectedEmployeeDetails?.name } 
               fill
               sizes="(max-width: 768px) 100vw, 700px"
-              loading="lazy"
-              // height={100}
-              // width={100}
+              loading="lazy" 
             />
           </div>
         </div>
