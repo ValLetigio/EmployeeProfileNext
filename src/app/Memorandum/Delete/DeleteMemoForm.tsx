@@ -134,14 +134,14 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
         <div className={`${!formData?.mediaList?.[0]&&"hidden"} cursor-pointer flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-base-200 pt-4 p-1 rounded-lg `}
           onClick={()=>handleImageModalClick(formData?.mediaList)}
         >   
-          <Image src={formData?.mediaList?.[0]} className={`${!formData?.mediaList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />  
+          <Image src={formData?.mediaList?.[0]} className={`${!formData?.mediaList?.[0]&&"hidden"} h-[60px]`} height={100} width={100} alt="mediaList" />  
           Photo  
         </div>   
         {/* memoPhotosList */} 
         <div className={`${!formData?.memoPhotosList?.[0]&&"hidden"} cursor-pointer flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-base-200 pt-4 p-1 rounded-lg `}
           onClick={()=>handleImageModalClick(formData?.memoPhotosList)}
         >
-          <Image src={formData?.memoPhotosList?.[0]} className={`${!formData?.memoPhotosList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="memoPhotosList" />  
+          <Image src={formData?.memoPhotosList?.[0]} className={`${!formData?.memoPhotosList?.[0]&&"hidden"} h-[60px]`} height={100} width={100} alt="memoPhotosList" />  
           Memo Photo    
         </div> 
       </div>

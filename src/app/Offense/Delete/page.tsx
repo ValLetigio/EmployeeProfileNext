@@ -6,6 +6,11 @@ import { Offense } from '@/app/schemas/OffenseSchema';
 
 import ServerRequests from '@/app/api/ServerRequests';
 
+export const metadata = {
+  title: '| Delete Offense',
+  description: 'Delete Offense Form',
+} 
+
 const page = async () => {
 
   const serverRequests = new ServerRequests( ); 

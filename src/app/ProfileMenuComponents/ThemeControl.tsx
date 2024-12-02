@@ -18,7 +18,7 @@ const ThemeControl = () => {
   },[selectedTheme])
 
   return (
-    <details className="collapse collapse-arrow flex flex-col bg-base-200 border  ">  
+    <details className="collapse collapse-arrow flex flex-col bg-base-200 border rounded-b-none ">  
       <summary className="collapse-title font-medium border-b select-none h-1 text-lg ">Themes ({selectedTheme})</summary> 
       <div className="collapse-content overflow-y-auto">
         <div className="form-control h-[25vh] duration-300 " > 

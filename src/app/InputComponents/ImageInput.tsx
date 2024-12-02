@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { useAppContext } from "../GlobalContext";
 
-import { Employee } from "../schemas/EmployeeSchema";
+import { Employee } from "../schemas/EmployeeSchema"; 
 
 interface ImageInputProps {
   id: string;
@@ -15,9 +15,7 @@ interface ImageInputProps {
   imgDimensions?: { height: number; width: number };
   mediaList?: string[];
   onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  setFunction?: (value: (prev: Employee) => Employee) => void;
-  // setFunction?: (value: Employee) => void;
-
+  setFunction?: (value: (prev: Employee) => Employee) => void; 
   disable?: boolean,
   required?: boolean,
   multiple?: boolean;
@@ -37,7 +35,7 @@ const ImageInput: FC<ImageInputProps> = ({
   multiple
 }) => {
 
-  const { handleImageModalClick } = useAppContext(); 
+  const { handleImageModalClick } = useAppContext();  
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;

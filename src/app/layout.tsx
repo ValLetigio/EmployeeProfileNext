@@ -17,7 +17,7 @@ import ImageModal from "./Modals/ImageModal";
 import EmployeeMemoTableModal from "./Modals/EmployeeMemoTableModal";
 import MemoPrintModal from "./Modals/MemoPrintModal";
 
-import { Poppins } from "next/font/google"; 
+import { Poppins } from "next/font/google";  
 
 const poppins = Poppins({ 
   subsets: ["latin"], display: "swap", variable: "--font-poppins", 
@@ -37,6 +37,7 @@ export default function RootLayout({
         <SessionProvider session={session}>
           <ContextProvider>
             <ProfileMenu/> 
+            {/* <ImageUpload/> */}
             {children}  
             <NavBar/>
             <ImageModal/>

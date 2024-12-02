@@ -12,7 +12,9 @@ const MenuButton: FC<MenuButtonProps> = ({ setOpen, open }) => {
         open
           ? "-translate-y-[50%] border-info text-info"
           : " md:tooltip border-gray-700 text-white hover:text-info"
-      } p-5 border-4 rounded-full duration-300 tooltip-top shadow-md shadow-gray-400 bg-gray-700 `}
+      } p-5 border-4 rounded-full tooltip-top shadow-md shadow-gray-400 bg-gray-700 
+        transition-all duration-200 ease-in
+      `}
       id='menu-button'
       onClick={() => setOpen(!open)}  data-tip="Menu"
     >

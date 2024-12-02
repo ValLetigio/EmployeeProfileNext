@@ -81,21 +81,23 @@ const EmployeeMemoTableModal = () => {
                       <p className='whitespace-pre-line hover:underline decoration-wavy line-clamp-4'>{memo?.description}</p> 
                   </td>
                   {/* Offense */}
-                  <td>
-                    <details className="collapse collapse-arrow bg-base-200 w-[70vw] min-[700px]:w-full"> 
-                      <summary className="collapse-title text-base font-bold">{memo?.MemoCode?.description}</summary>
-                      <div className="collapse-content flex flex-wrap gap-1 ">
-                        {memo?.MemoCode?.remedialActions?.map((action, index) => (
-                          <p className='btn btn-xs text-[.70rem] btn-neutral truncate' key={index}>{action}</p>
-                        ))} 
-                      </div>
-                    </details> 
+                  <td >
+                    <div className='tooltip tooltip-info' data-tip="Show remedial actions">
+                      <details className="collapse collapse-arrow bg-base-200 w-[70vw] min-[700px]:w-full " > 
+                        <summary className="collapse-title text-base font-bold">{memo?.MemoCode?.description}</summary>
+                        <div className="collapse-content flex flex-wrap gap-1 ">  
+                          {memo?.MemoCode?.remedialActions?.map((action, index) => (
+                            <p className='btn btn-xs text-[.70rem] btn-neutral truncate' key={index}>{action}</p>
+                          ))} 
+                        </div>
+                      </details> 
+                    </div>
                   </td> 
                   {/* Photos */}
-                  <td > <Image className='w-[150px] h-[150px] hover:border cursor-pointer' src={memo?.mediaList?.[0] } width={1} height={1} alt="mediaList" 
+                  <td > <Image className='w-[150px] h-[150px] hover:border cursor-pointer' src={memo?.mediaList?.[0] } width={100} height={100} alt="mediaList" 
                     onClick={()=>memo?.mediaList?.[0]&&handleImageModalClick(memo?.mediaList)}></Image> </td>
                   {/* Memo Photos */}
-                  <td> <Image className='w-[150px] h-[150px] hover:border cursor-pointer' src={memo?.memoPhotosList?.[0] } width={1} height={1} alt="memoPhotosList" 
+                  <td> <Image className='w-[150px] h-[150px] hover:border cursor-pointer' src={memo?.memoPhotosList?.[0] } width={100} height={100} alt="memoPhotosList" 
                     onClick={()=>memo?.memoPhotosList?.[0]&&handleImageModalClick(memo?.memoPhotosList)}></Image> </td>
                   {/* Reason */}
                   <td> <p onClick={()=>handleMemoPrintModalClick(memo)}

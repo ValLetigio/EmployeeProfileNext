@@ -7,9 +7,7 @@ import ServerRequests from './ServerRequests';
 import { User, Roles } from '../schemas/UserSchema';
 
 export async function getUserData(): Promise<User> {
-    const session: Session | null = await getServerSession(authOption);
-
-    console.log(session)
+    const session: Session | null = await getServerSession(authOption); 
 
     const sessionUserData = session?.user as Session["user"] & { 
       roles?: Roles;
@@ -38,8 +36,8 @@ export async function getUserData(): Promise<User> {
 export async function getTestUserData(): Promise<User> {
   const serverRequests = new ServerRequests();
 
-  const userData = await serverRequests.getUserForTesting();
-  return userData.data;
+  const { data } = await serverRequests.getUserForTesting();
+  return data;
 }
 
 // export default getUserData;

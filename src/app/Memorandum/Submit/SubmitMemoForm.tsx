@@ -10,13 +10,17 @@ import { Memo } from '@/app/schemas/MemoSchema.ts';
 
 import ImageInput from '@/app/InputComponents/ImageInput';
 
+import FirebaseUpload from '@/app/api/FirebaseUpload';
+
 interface CreateMemoFormProps {
   memoList: Memo[], 
 }
  
 const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, setLoading } = useAppContext()
+
+  const upload = new FirebaseUpload()
 
   const formRef = useRef<HTMLFormElement>(null) 
  
@@ -25,14 +29,34 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
   const [filteredMemos, setFilteredMemos] = useState<Memo[]>([])
 
   const [ submittedMemos, setSubmittedMemos ] = useState<string[]>([])
+
+  const [filesChanged, setFilesChanged] = useState<string[]>([])
+
+  console.log(formData)
  
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
 
       const confirmed = await handleConfirmation("Confirm Action?", `Submit ${formData?.subject} for ${formData?.Employee?.name}`, "")
 
+      setLoading(true)
+
       if(confirmed){
         try{
+          const finalFormData = {
+            ...formData, 
+          }
+
+          if(filesChanged.includes('mediaList')){ 
+            const res = await upload.Images(formData?.mediaList, `employees/${formData?.Employee?.name}`, 'mediaList')
+            finalFormData.mediaList = res || []
+          }
+
+          if(filesChanged.includes('memoPhotosList')) {
+            const res = await upload.Images(formData?.memoPhotosList, `employees/${formData?.Employee?.name}`, 'memoPhotosList')
+            finalFormData.memoPhotosList = res || []
+          }  
+
             const form = e.target as HTMLFormElement;   
 
             const res = await serverRequests.submitMemo(formData, formData.reason || "", userData)
@@ -51,7 +75,9 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
         }catch(e:unknown){ 
           console.error('Error Submitting Memo:', e)
           setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
-        }  
+        }finally{
+          setLoading(false)
+        }
       }
   } 
  
@@ -79,6 +105,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
                 ...formData,
                 [e.target.id]: finalResult
             }); 
+            setFilesChanged([...filesChanged, e.target.id])
           }
         };
       }
@@ -164,7 +191,9 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
           onChange={
             (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
               setFormData({ ...formData, reason: e.target.value })
-            }}> 
+            }}
+          value={formData?.reason || ""}
+            > 
         </textarea>  
       </div> 
 

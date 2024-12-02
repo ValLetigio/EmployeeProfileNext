@@ -6,6 +6,11 @@ import { Memo } from '@/app/schemas/MemoSchema';
 
 import ServerRequests from '@/app/api/ServerRequests'; 
 
+export const metadata = {
+  title: '| Submit Memorandum',
+  description: 'Submit Memo Form',
+} 
+
 const page = async () => { 
 
   const serverRequests = new ServerRequests( );  

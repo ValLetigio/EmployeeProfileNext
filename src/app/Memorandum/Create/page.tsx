@@ -7,6 +7,11 @@ import { Offense } from '@/app/schemas/OffenseSchema.ts';
 import { Employee } from '../../schemas/EmployeeSchema.ts'
 import ServerRequests from '@/app/api/ServerRequests';
 
+export const metadata = {
+  title: '| Create Memorandum',
+  description: 'Create Memo Form',
+} 
+
 const page = async () => { 
 
   const serverRequests = new ServerRequests( ); 

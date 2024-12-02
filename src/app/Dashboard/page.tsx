@@ -4,30 +4,32 @@ import React from 'react';
 
 import { Employee } from '@/app/schemas/EmployeeSchema';
 
+import { User } from '@/app/schemas/UserSchema';
+
 import ServerRequests from '@/app/api/ServerRequests';
 
 import EmployeeTable from './EmployeeTable';
 import EmployeeDetails from './EmployeeDetails';   
+import SearchBar from './SearchBar';
 
-import BackButton from './BackButton';
+import BackButton from '../NavigationComponents/BackButton';
 
-import Link from 'next/link'; 
+import { getUserData, getTestUserData } from '../api/UserData';
 
-import {getUserData, getTestUserData} from '../api/UserData';
+import Link from 'next/link';  
+
+export const metadata = {
+  title: '| Dashboard',
+  description: 'Employee Dashboard',
+} 
  
 const Page = async () => {
 
-  const isTest = process.env.NEXT_PUBLIC_CYPRESS_IS_TEST_ENV == 'true' ? true : false;
+  const isTest = process.env.NEXT_PUBLIC_CYPRESS_IS_TEST_ENV == "true" ? true : false;
 
   const serverRequests = new ServerRequests( );
 
-  let userData
-
-  if(isTest){
-    userData = await getTestUserData();
-  } else {
-    userData = await getUserData();
-  }
+  const userData: User = !isTest ?  await getUserData() : await getTestUserData();
 
   const employeeResponse = await serverRequests.getEmployeeForDashboardAction(userData);  
   
@@ -101,7 +103,11 @@ const Page = async () => {
           {/* Table */}
           <div className='w-[100%] max-h-[95vh] lg:h-[75%] p-4 shadow-lg rounded-xl flex flex-col items-start justify-between border '>
             <div className=" w-full overflow-auto h-full">
-              <h2 className='text-xl font-semibold tracking-tighter sticky left-0 top-0 mb-2'>Employees</h2>
+              <div className='flex flex-col md:flex-row p-1 justify-between items-center w-full'>
+                <h2 className='text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full'>Employees</h2>
+                <SearchBar/>
+              </div> 
+
               <EmployeeTable
                 employeeList={employeeList} 
               />
