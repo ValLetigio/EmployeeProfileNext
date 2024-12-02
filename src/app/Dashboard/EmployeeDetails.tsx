@@ -36,17 +36,17 @@ const EmployeeDetails = () => {
   const [daysWithUs, setDaysWithUs] = React.useState<number>(0); 
 
   const detailStyle = (item: boolean) =>
-    `${ !item && "hidden" } 
-    tracking-widest flex grow flex-col text-center p-2 2xl:p-3 border border-base-300 rounded-xl bg-base-100 
+    `${ !item && "hidden" } ${ loading && "hidden" } p-2 2xl:p-3
+    tracking-widest flex grow flex-col text-center  border border-base-300 rounded-xl bg-base-100 
     hover:bg-base-300 
   `;
   
   const skeletonStyle = `
-    ${ selectedEmployeeDetails?._id ? " hidden " : " block " } 
-    ${ loading? " skeleton " : " bg-base-300 rounded-xl " } shrink-0 
+    ${ selectedEmployeeDetails._id && !loading? " hidden " : " block " } 
+    ${ loading? " skeleton block" : " bg-base-300 rounded-xl " } shrink-0 
   `; 
 
-  const contentStyle = `${ loading? " !m-0 xl:!p-5 !p-0 !w-0 !scale-0 " : selectedEmployee._id? " block " : " hidden "}`;
+  const contentStyle = `${ loading? " hidden !m-0 xl:!p-5 !p-0 !w-0 !scale-0 " : selectedEmployee._id? " block " : " hidden "}`;
 
   const getSelectedEmployeeDetails = async () => {
     setSelectedEmployeeDetails({} as Employee)
@@ -112,6 +112,7 @@ const EmployeeDetails = () => {
     setSelectedEmployee({} as Employee)
     setLoading(false)
   }
+ 
 
   return (
     <div
@@ -133,6 +134,7 @@ const EmployeeDetails = () => {
         className={skeletonStyle + " !rounded-full py-3 xl:py-8 w-24 xl:w-36 h-24 xl:h-36 mt-2 mb-4"}
       ></div>
 
+      {/* avatar */}
       <div className={"w-full flex justify-center py-3 xl:py-8 " + contentStyle} >
         <div className=" indicator ">
           {/* indicator */}
@@ -148,9 +150,9 @@ const EmployeeDetails = () => {
           > 
             {fetchingMemos ? "..." : selectedEmployeeMemos?.length} 
           </span>
-          
+          {/* avatar Image */}
           <div
-            className={`${!selectedEmployeeDetails?._id&&"hidden"} 
+            className={`${!selectedEmployeeDetails?._id&&"hidden"} ${loading&&"hidden"}
               w-24 xl:w-36 h-24 xl:h-36 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
             onClick={() =>
               handleImageModalClick([selectedEmployeeDetails?.photoOfPerson])
@@ -162,23 +164,21 @@ const EmployeeDetails = () => {
               alt={selectedEmployeeDetails?.name } 
               fill
               sizes="(max-width: 768px) 100vw, 700px"
-              loading="lazy" 
+              loading="lazy"  
             />
           </div>
         </div>
       </div>
 
       {/* employee name & address skelly*/}
-      <div className={skeletonStyle + " h-8 w-[40%] mb-1 xl:mb-3"}></div>
+      <div className={skeletonStyle + " h-8 w-[40%] mb-1 xl:mb-3 xl:mt-4"}></div>
       <div className={skeletonStyle + " h-6 w-[70%] "}></div>
       
       {/* employee name & address */} 
-      <div className="">
-        {selectedEmployeeDetails?.name && (
-          <h2 className="text-2xl font-semibold">{selectedEmployeeDetails?.name}</h2>
-        )}
+      <div className={`${ !selectedEmployeeDetails?.name && "hidden" } ${ loading && "hidden" } `}> 
+          <h2 className="text-2xl font-semibold">{selectedEmployeeDetails?.name}</h2> 
       </div>
-      <div>
+      <div className={`${ !selectedEmployeeDetails?.address && "hidden" } ${ loading && "hidden" }`}>
         <h3>{selectedEmployeeDetails?.address}</h3>
       </div> 
 
@@ -255,7 +255,7 @@ const EmployeeDetails = () => {
           onClick={() =>
             handleImageModalClick(selectedEmployeeDetails?.resumePhotosList)
           }
-          className={`${!selectedEmployeeDetails?.resumePhotosList?.[0] && "hidden"} 
+          className={`${!selectedEmployeeDetails?.resumePhotosList?.[0] && "hidden"} ${loading && "hidden"} 
                 p-2 xl:p-4 flex items-center justify-evenly bg-base-200 hover:bg-base-300 cursor-pointer hover:text-white w-full rounded-xl`}
         >
           Resume
@@ -273,7 +273,7 @@ const EmployeeDetails = () => {
           onClick={() =>
             handleImageModalClick(selectedEmployeeDetails?.biodataPhotosList)
           }
-          className={`${!selectedEmployeeDetails?.biodataPhotosList?.[0] && "hidden"} 
+          className={`${!selectedEmployeeDetails?.biodataPhotosList?.[0] && "hidden"} ${loading && "hidden"} 
             p-2 xl:p-4 flex items-center justify-evenly bg-base-200 hover:bg-base-300 cursor-pointer hover:text-white w-full rounded-xl`}
         >
           Bio-data
