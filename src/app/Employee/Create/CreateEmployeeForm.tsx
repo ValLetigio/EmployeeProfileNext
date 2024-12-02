@@ -9,9 +9,13 @@ import { useAppContext } from '@/app/GlobalContext'
 import ImageInput from '@/app/InputComponents/ImageInput' 
 import { Employee } from '@/app/schemas/MemoSchema'
 
+import FirebaseUpload from '@/app/api/FirebaseUpload'
+
 const CreateEmployeeForm = () => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext() 
+    const upload = new FirebaseUpload()
+
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading } = useAppContext() 
 
     const formRef = useRef<HTMLFormElement>(null)
 
@@ -31,23 +35,40 @@ const CreateEmployeeForm = () => {
     }
 
 
-    const [ formData, setFormData ] = useState<Employee>(defaultFormData as Employee)
+    const [ formData, setFormData ] = useState<Employee>(defaultFormData as Employee);
+
+
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()   
+        e.preventDefault()    
 
         const confirmed = await handleConfirmation("Confirm Action?", `${formData?.name} will be Created as an Employee`, "")
+
+        setLoading(true)
  
         if(confirmed){
             try{
-                const form = e.target as HTMLFormElement;  
-    
                 const finalFormData = {
                     ...formData,
                     _id: "", 
-                    _version: 0, 
+                    _version: 0,    
                 }
-    
+
+                if(formData.photoOfPerson){
+                    const photoOfPerson = await upload.Images([formData.photoOfPerson], `employees/${formData.name}`, 'photoOfPerson')
+                    finalFormData.photoOfPerson = photoOfPerson[0]
+                }
+                if(formData.resumePhotosList[0]) {
+                    const resumePhotosList = await upload.Images(formData.resumePhotosList, `employees/${formData.name}`, 'resumePhotosList')
+                    finalFormData.resumePhotosList = resumePhotosList
+                }
+                if(formData.biodataPhotosList[0]) {
+                    const biodataPhotosList = await upload.Images(formData.biodataPhotosList, `employees/${formData.name}`, 'biodataPhotosList')
+                    finalFormData.biodataPhotosList = biodataPhotosList
+                }  
+
+                const form = e.target as HTMLFormElement;  
+     
                 const res = await serverRequests.createEmployee(finalFormData, userData) 
     
                 if(res.message){
@@ -61,7 +82,9 @@ const CreateEmployeeForm = () => {
             }catch(e:unknown){  
                 console.error('Error creating employee:', e)
                 setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
-            }  
+            } finally {
+                setLoading(false)
+            }
         }
     }
 
@@ -72,42 +95,13 @@ const CreateEmployeeForm = () => {
         })
     }  
 
-    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const files = e.target.files;
-    
-    //     if (files && files.length > 0) {
-    //         const fileReaders = [];
-    //         const fileDataUrls: string[] = [];
-            
-    //         for (let i = 0; i < files.length; i++) {
-    //             const reader = new FileReader();
-    //             fileReaders.push(reader);
-                
-    //             reader.readAsDataURL(files[i]);
-                
-    //             reader.onloadend = () => {
-    //                 fileDataUrls.push(reader.result as string);
-    
-    //                 // Check if all files have been processed
-    //                 if (fileDataUrls.length === files.length) {
-    //                     const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
-    
-    //                     setFormData({
-    //                         ...formData,
-    //                         [e.target.id]: finalResult
-    //                     }); 
-    //                 }
-    //             };
-    //         }
-    //     }
-    // }; 
- 
+    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
 
   return (
-    <form className={` form-style `}
+    <form className={` ${loading&&"cursor-wait"} form-style `}
         ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
-    >
+    > 
         <h2 className='font-semibold' 
             onClick={async()=>await handleConfirmation("U Serious Bro?", "Your Aim is Terrible.", "")} >Employee Registry</h2>
 
@@ -160,6 +154,7 @@ const CreateEmployeeForm = () => {
                 imgDimensions={{height:60, width:60}}
                 mediaList={[formData?.photoOfPerson]}
                 // onChangeHandler={handleFileChange}
+                required={true}
                 setFunction={setFormData}
             />
             {/* <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
@@ -281,7 +276,7 @@ const CreateEmployeeForm = () => {
         {/* submit */}
         <button 
             className='btn bg-blue-500 text-white w-full place-self-start my-6' 
-            type='submit'
+            type='submit' disabled={loading}
             id='submit'
         >Create</button>
 

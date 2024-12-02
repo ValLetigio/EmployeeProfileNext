@@ -1,58 +1,72 @@
-import { ref as storageRef, uploadBytes, getDownloadURL, uploadBytesResumable, UploadTaskSnapshot } from "firebase/storage"; 
+import { ref as storageRef, getDownloadURL, uploadBytesResumable, UploadTaskSnapshot } from "firebase/storage"; 
 
-import { storage, db } from "./firebase";
-
-import { collection, addDoc } from "firebase/firestore";
+import { storage } from "./firebase"; 
 
 class FirebaseUpload { 
+
+    async base64ToFile(base64: string, fileName: string, mimeType = '') {
+        // Decode Base64 string to binary data
+        const byteCharacters = atob(base64);
+        const byteNumbers = Array.from(byteCharacters).map(char => char.charCodeAt(0));
+        const byteArray = new Uint8Array(byteNumbers);
+      
+        // Create a Blob from the binary data
+        const blob = new Blob([byteArray], { type: mimeType });
+      
+        // Convert Blob to File
+        return new File([blob], fileName, { type: mimeType });
+      } 
     
-    async Image(image: File, foldername: string): Promise<string> {
+    async Images(images: string[], foldername: string, fileName: string): Promise<string[]> {
+        const downloadURLs: string[] = [];
+    
         try {
-            const refStorage = storageRef(storage, `${foldername}/${image.name}`);
-            console.log("Starting upload..."); 
+            for (const [index, image] of images.entries()) {
 
-            const uploadTask = uploadBytesResumable(refStorage, image); 
-            console.log(uploadTask)
-            
-            uploadTask.on(
-                "state_changed",
-                (snapshot: UploadTaskSnapshot) => {
-                    console.log("Upload is " + (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + "% done");
-                },
-                (error: unknown) => {
-                    console.error("Error during image upload:", error);
-                    throw new Error("Image upload failed. Please try again.");
-                },
-                () => {
-                    console.log("Upload completed successfully");
+                const base64String = image; 
+                const base64Data = base64String.split(",")[1]; 
+                const matchResult = base64String.match(/data:(.*?);base64/);
+                if (!matchResult) {
+                    throw new Error("Invalid base64 string");
                 }
-            )
+                const mimeType = matchResult[1];
+                
+                const file = await this.base64ToFile(base64Data, "example.jpg", mimeType);
 
-            return "test";
+                const refStorage = storageRef(storage, `${foldername}/${fileName}-${index}`);
+                console.log(`Starting upload for ${fileName}-${index}...`);
+    
+                await new Promise<void>((resolve, reject) => {
+                    const uploadTask = uploadBytesResumable(refStorage, file);
+    
+                    uploadTask.on(
+                        "state_changed",
+                        (snapshot: UploadTaskSnapshot) => {
+                            console.log(`${fileName}-${index} upload is ${((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2)}% done`);
+                        },
+                        (error: unknown) => {
+                            console.error(`Error during ${fileName}-${index} upload:`, error);
+                            reject(new Error(`Image upload failed for ${fileName}-${index}. Please try again.`));
+                        },
+                        () => {
+                            resolve(); 
+                        }
+                    );
+                });
+    
+                const downloadURL = await getDownloadURL(refStorage); 
+                downloadURLs.push(downloadURL); 
+            }
+
+            console.log("Files available at", downloadURLs);
+    
+            return downloadURLs;
+    
         } catch (error) {
             console.error("Error during image upload:", error);
-            throw new Error("Image upload failed. Please try again.");  
+            throw new Error("Image upload failed. Please try again.");
         }
-    }
-
-    async writeTest (name: string, email: string ) {    
-        const docRef = await addDoc(collection(db, `users`), {
-            username: name,
-            email: email,
-        });
-        console.log("Document written with ID: ", docRef.id);
-        return({res: docRef.id , message: "Data written successfully!"});
-        
-        // set(dbRef(db, 'users/' + name), {
-        //     username: name,
-        //     email: email, 
-        // }).then((res) => { 
-        //     return({res: res , message: "Data written successfully!"});
-        // }).catch((error) => {
-        //     console.error("Error writing data:", error);
-        //     throw new Error("Data write failed. Please try again.");  
-        // });     
-    }
+    } 
 }
 
 export default FirebaseUpload;

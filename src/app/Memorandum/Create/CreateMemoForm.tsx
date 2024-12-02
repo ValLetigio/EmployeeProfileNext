@@ -15,6 +15,8 @@ import { Memo } from '@/app/schemas/MemoSchema.ts';
 
 import ImageInput from '@/app/InputComponents/ImageInput.tsx';
 
+import FirebaseUpload from '@/app/api/FirebaseUpload.ts';
+
 interface CreateMemoFormProps {
   employeeList: Employee[],
   offenseList: Offense[]
@@ -22,7 +24,9 @@ interface CreateMemoFormProps {
 
 const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading } = useAppContext()
+
+  const upload = new FirebaseUpload()
 
   const formRef = useRef<HTMLFormElement>(null) 
 
@@ -33,26 +37,44 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
 
       const confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.subject} for ${formData?.Employee?.name}`, "")
 
+      setLoading(true)
+
       if(confirmed){
         try{
-            const form = e.target as HTMLFormElement;
+          const finalFormData = {
+            ...formData, 
+          }
 
-            const res = await serverRequests.createMemo(formData, userData)
+          if(formData?.mediaList){ 
+            const res = await upload.Images(formData?.mediaList, `employees/${formData?.Employee?.name}`, 'mediaList')
+            finalFormData.mediaList = res || []
+          }
 
-            if(res&&res.data){
-              setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
-    
-              form.reset()
-              setFormData({} as Memo)
+          if(formData?.memoPhotosList) {
+            const res = await upload.Images(formData?.memoPhotosList, `employees/${formData?.Employee?.name}`, 'memoPhotosList')
+            finalFormData.memoPhotosList = res || []
+          }  
 
-              router.refresh()
+          const form = e.target as HTMLFormElement;
 
-              formRef.current?.scrollIntoView({ behavior: 'smooth' })
-            }
+          const res = await serverRequests.createMemo(finalFormData, userData)
+
+          if(res&&res.data){
+            setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
+  
+            form.reset()
+            setFormData({} as Memo)
+
+            router.refresh()
+
+            formRef.current?.scrollIntoView({ behavior: 'smooth' })
+          }
         }catch(e:unknown){ 
           console.error('Error creating Memo:', e)
           setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }  
+        }finally{
+          setLoading(false)
+        }
       }
   }
   
@@ -95,7 +117,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
  
   return (
     <form
-      className={` form-style `} 
+      className={` ${loading&&"cursor-wait"} form-style `} 
       ref={formRef}
       onSubmit={handleSubmit}
     >
@@ -195,7 +217,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       </label> */}
 
 
-      {/* medialist */}
+      {/* memoPhotosList */}
       <ImageInput
         id='memoPhotosList'
         title="Memo Photo" width='w-full'
@@ -218,7 +240,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       {/* submit */}
       <button 
           className='btn bg-blue-500 text-white w-full place-self-start my-6' 
-          type='submit'
+          type='submit' disabled={loading}
           id='create-memo-btn'
         >Create</button>
 

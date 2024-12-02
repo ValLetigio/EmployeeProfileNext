@@ -39,7 +39,7 @@ export default function RootLayout({
         <SessionProvider session={session}>
           <ContextProvider>
             <ProfileMenu/> 
-            <ImageUpload/>
+            {/* <ImageUpload/> */}
             {children}  
             <NavBar/>
             <ImageModal/>

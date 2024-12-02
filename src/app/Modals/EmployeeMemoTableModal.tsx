@@ -94,10 +94,10 @@ const EmployeeMemoTableModal = () => {
                     </div>
                   </td> 
                   {/* Photos */}
-                  <td > <Image className='w-[150px] h-[150px] hover:border cursor-pointer' src={memo?.mediaList?.[0] } width={1} height={1} alt="mediaList" 
+                  <td > <Image className='w-[150px] h-[150px] hover:border cursor-pointer' src={memo?.mediaList?.[0] } width={100} height={100} alt="mediaList" 
                     onClick={()=>memo?.mediaList?.[0]&&handleImageModalClick(memo?.mediaList)}></Image> </td>
                   {/* Memo Photos */}
-                  <td> <Image className='w-[150px] h-[150px] hover:border cursor-pointer' src={memo?.memoPhotosList?.[0] } width={1} height={1} alt="memoPhotosList" 
+                  <td> <Image className='w-[150px] h-[150px] hover:border cursor-pointer' src={memo?.memoPhotosList?.[0] } width={100} height={100} alt="memoPhotosList" 
                     onClick={()=>memo?.memoPhotosList?.[0]&&handleImageModalClick(memo?.memoPhotosList)}></Image> </td>
                   {/* Reason */}
                   <td> <p onClick={()=>handleMemoPrintModalClick(memo)}

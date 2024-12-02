@@ -16,7 +16,7 @@ interface EmployeeTableProps {
 
 const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
 
-    const { selectedEmployee, setSelectedEmployee, loading } = useAppContext();   
+    const { selectedEmployee, setSelectedEmployee, loading, setLoading } = useAppContext();   
 
     const [ filteredEmployeeList, setFilteredEmployeeList ] = React.useState<Employee[]>(employeeList)
 
@@ -30,6 +30,7 @@ const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
         )
 
         setFilteredEmployeeList(filteredEmployeeList) 
+        setLoading(false);
     },[search])
 
   return (
@@ -56,8 +57,9 @@ const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
                         <div className="avatar ">
                             <div className="mask mask-squircle h-12 w-12 ">
                                 <Image 
-                                    src={employee?.photoOfPerson}
-                                    alt="Avatar Tailwind CSS Component" height={1} width={1}/>
+                                    src={employee?.photoOfPerson} 
+                                    loading="lazy" 
+                                    alt="Avatar Tailwind CSS Component" height={100} width={100}/>
                             </div>
                         </div>
                         <div className='text-start'>

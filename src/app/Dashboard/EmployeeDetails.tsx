@@ -46,7 +46,7 @@ const EmployeeDetails = () => {
     ${ loading? " skeleton " : " bg-base-300 rounded-xl " } shrink-0 
   `; 
 
-  const contentStyle = `${ loading? " !m-0 !p-0 !w-0 !scale-0 " : selectedEmployee._id? " block " : " hidden "}`;
+  const contentStyle = `${ loading? " !m-0 xl:!p-5 !p-0 !w-0 !scale-0 " : selectedEmployee._id? " block " : " hidden "}`;
 
   const getSelectedEmployeeDetails = async () => {
     setSelectedEmployeeDetails({} as Employee)
@@ -115,7 +115,7 @@ const EmployeeDetails = () => {
     >
       {/* clear button */}
       <button
-        onClick={() => setSelectedEmployee({} as Employee)}
+        onClick={() => {setSelectedEmployee({} as Employee), setLoading(false)}}
         className={`${
           !selectedEmployee?._id && "hidden"
         } absolute top-1 right-2 opacity-40`}
@@ -146,7 +146,7 @@ const EmployeeDetails = () => {
           
           <div
             className={`${!selectedEmployeeDetails?._id&&"hidden"} 
-              w-24 xl:w-36 h-24 xl:h-36 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer`}
+              w-24 xl:w-36 h-24 xl:h-36 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
             onClick={() =>
               handleImageModalClick([selectedEmployeeDetails?.photoOfPerson])
             }
@@ -154,16 +154,19 @@ const EmployeeDetails = () => {
             <Image
               className={` w-full h-full`}
               src={selectedEmployeeDetails?.photoOfPerson}
-              alt={selectedEmployeeDetails?.name }
-              height={1}
-              width={1}
+              alt={selectedEmployeeDetails?.name } 
+              fill
+              sizes="(max-width: 768px) 100vw, 700px"
+              loading="lazy"
+              // height={100}
+              // width={100}
             />
           </div>
         </div>
       </div>
 
       {/* employee name & address skelly*/}
-      <div className={skeletonStyle + " h-8 w-[40%] mb-1"}></div>
+      <div className={skeletonStyle + " h-8 w-[40%] mb-1 xl:mb-3"}></div>
       <div className={skeletonStyle + " h-6 w-[70%] "}></div>
       
       {/* employee name & address */} 
@@ -257,8 +260,9 @@ const EmployeeDetails = () => {
             className={`w-8 h-8`}
             src={selectedEmployeeDetails?.resumePhotosList?.[0] }
             alt={selectedEmployeeDetails?.name}
-            width={1}
-            height={1}
+            width={100}
+            height={100}
+            loading="lazy" 
           ></Image>
         </div>
         {/* biodataPhotosList */}
@@ -274,9 +278,10 @@ const EmployeeDetails = () => {
             className={`w-8 h-8`}
             src={selectedEmployeeDetails?.biodataPhotosList?.[0] }
             alt={selectedEmployeeDetails?.name}
-            width={1}
-            height={1}
-          ></Image>
+            width={100}
+            height={100}
+            loading="lazy" 
+            ></Image>
         </div>
       </div>
       <div className="py-6 pt-14 "> </div>

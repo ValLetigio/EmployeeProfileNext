@@ -13,13 +13,17 @@ import { useAppContext } from '@/app/GlobalContext'
 
 import ImageInput from '@/app/InputComponents/ImageInput'  
 
+import FirebaseUpload from '@/app/api/FirebaseUpload'
+
 interface CreateEmployeeFormProps {
     employeeList: Employee[]
 }
 
 const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {  
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading } = useAppContext()
+
+    const upload = new FirebaseUpload()
 
     const formRef = React.useRef<HTMLFormElement>(null)
 
@@ -53,8 +57,25 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
 
         const confirmed = await handleConfirmation("Confirm Action?", `Update changes you've made for ${formData?.name}`, "")
 
+        setLoading(true)
+
         if(confirmed){
             try{
+                if(dataToUpdate?.photoOfPerson){ 
+                    const res = await upload.Images([formData.photoOfPerson], `employees/${formData.name}`, 'photoOfPerson')
+                    dataToUpdate.photoOfPerson = res[0] || ""
+                }
+
+                if(dataToUpdate?.biodataPhotosList) {
+                    const res = await upload.Images(formData.biodataPhotosList, `employees/${formData.name}`, 'biodataPhotosList')
+                    dataToUpdate.biodataPhotosList = res || []
+                }
+
+                if(dataToUpdate?.resumePhotosList){ 
+                    const res = await upload.Images(formData.resumePhotosList, `employees/${formData.name}`, 'resumePhotosList')
+                    dataToUpdate.resumePhotosList = res || []
+                }
+
                 const form = e.target as HTMLFormElement;   
 
                 const res = await serverRequests.updateEmployee(selectedEmployee, dataToUpdate, userData)
@@ -68,10 +89,12 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
                     formRef.current?.scrollIntoView({ behavior: 'smooth' }) 
                     router.refresh() 
                 }
-            }catch(e:unknown){  
+            } catch(e:unknown) {  
                 console.error('Error Updating employee:', e)
                 setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
-            }  
+            } finally {
+                setLoading(false)
+            }
         }
     }
 
@@ -142,7 +165,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
     const labelStyle = `${selectedEmployee?._id ? '': 'text-gray-300'}` 
  
   return (
-    <form className={` form-style `} 
+    <form className={` ${loading&&"cursor-wait"} form-style `} 
         ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     >
@@ -355,7 +378,7 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
         {/* submit */}
         <button 
             className='btn bg-violet-500 text-white w-full place-self-start my-6 ' 
-            type='submit' disabled={disableSaveButton || !formData?._id} id='save'
+            type='submit' disabled={disableSaveButton || !formData?._id || loading} id='save'
             
         >Update</button>
 

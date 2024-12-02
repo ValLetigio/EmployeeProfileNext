@@ -24,9 +24,7 @@ const CreateOffenseForm = () => {
     "Mediation or Conflict Resolution",
     "Final Written Warning",
     "Termination of Employment"
-  ];
-  
-  console.log('formData:', formData)
+  ]; 
 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()   
