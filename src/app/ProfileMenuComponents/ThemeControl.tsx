@@ -18,10 +18,10 @@ const ThemeControl = () => {
   },[selectedTheme])
 
   return (
-    <details className="collapse collapse-arrow flex flex-col bg-base-200 border rounded-b-none ">  
+    <details className="collapse collapse-arrow flex flex-col bg-base-200 border ">  
       <summary className="collapse-title font-medium border-b select-none h-1 text-lg ">Themes ({selectedTheme})</summary> 
       <div className="collapse-content overflow-y-auto">
-        <div className="form-control h-[25vh] duration-300 " > 
+        <div className="form-control h-[25vh] duration-300  " > 
           {themes.map((theme, index) => (
             <label className="label cursor-pointer gap-4 hover:bg-base-100 rounded-lg"
               key={index}

@@ -30,6 +30,7 @@ export type Number = number;
 export type Description1 = string;
 export type Remedialactions = string[];
 export type Version1 = number;
+export type Title = string | null;
 export type Submitted = boolean;
 export type Reason = string | null;
 export type Version2 = number;
@@ -44,7 +45,7 @@ export interface Memo {
   description: Description;
   MemoCode: Offense;
   submitted: Submitted;
-  reason: Reason;
+  reason?: Reason;
   _version: Version2;
 }
 export interface Employee {
@@ -61,12 +62,15 @@ export interface Employee {
   isRegular: Isregular;
   isProductionEmployee: Isproductionemployee;
   dailyWage: Dailywage;
-  _version: Version; 
+  _version: Version;
+  [k: string]: unknown;
 }
 export interface Offense {
   _id?: Id2;
   number: Number;
   description: Description1;
   remedialActions: Remedialactions;
-  _version: Version1; 
+  _version: Version1;
+  title?: Title;
+  [k: string]: unknown;
 }

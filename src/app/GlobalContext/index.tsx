@@ -22,7 +22,7 @@ import ServerRequests from '../api/ServerRequests';
 import { getStorage } from "firebase/storage";
 // import { getAuth } from "firebase/auth";
 
-import { storage, app } from '../api/firebase';
+import { storage } from '../api/firebase'; 
 
 
 // Define the properties of the context
@@ -53,6 +53,8 @@ interface AppContextProps {
   loading: boolean;
   setLoading: (data: boolean) => void;
   storage: ReturnType<typeof getStorage>;
+  highlightText: (text: string ) => JSX.Element[]; 
+  setSearch: (data: string) => void;
 }
 
 // Create the default context with proper types and default values
@@ -82,7 +84,9 @@ const AppContext = createContext<AppContextProps>({
   handleMemoPrintModalClick: () => {},
   loading: false,
   setLoading: () => {},
-  storage: {} as ReturnType<typeof getStorage>
+  storage: {} as ReturnType<typeof getStorage>,
+  highlightText: () => [],  
+  setSearch: () => {}
 });
 
 
@@ -109,6 +113,8 @@ export default function ContextProvider({
   const [sampleText] = useState<string>(''); 
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [search, setSearch] = useState<string>('');
 
   const cards = {
     "Employee": [
@@ -317,6 +323,17 @@ export default function ContextProvider({
     setMemoForPrintModal(selectedMemo);
   }
 
+  const highlightText = (text: string ): JSX.Element[] => {
+      if (!search) return [<span key="0">{text}</span>];
+      const parts = text.split(new RegExp(`(${search})`, 'gi'));
+      return parts.map((part, index) => (
+        <span key={index} 
+          className={part.toLowerCase() === search.toLowerCase() && search.toLowerCase() !== " " ? 'bg-warning font-bold' : ''}>
+          {part}
+        </span>
+      ));
+    }
+
   // Define the global values to be shared across the context
   const globals = {
     userData,
@@ -333,7 +350,9 @@ export default function ContextProvider({
     memoForTableModal, setMemoForTableModal, handleMemoTableModalClick,
     memoForPrintModal, setMemoForPrintModal, handleMemoPrintModalClick,
     loading, setLoading,
-    storage
+    storage,
+    highlightText, 
+    setSearch
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

@@ -6,9 +6,10 @@ import { Employee } from '../schemas/EmployeeSchema';
 
 import { useAppContext } from '../GlobalContext';
 
-import { useSearchParams } from 'next/navigation'
+ 
 
 import Image from 'next/image'; 
+import { useSearchParams } from 'next/navigation';
 
 interface EmployeeTableProps {
     employeeList: Employee[]; 
@@ -16,22 +17,23 @@ interface EmployeeTableProps {
 
 const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
 
-    const { selectedEmployee, setSelectedEmployee, loading, setLoading } = useAppContext();   
+    const { selectedEmployee, setSelectedEmployee, loading, setLoading, highlightText, setSearch } = useAppContext();   
 
-    const [ filteredEmployeeList, setFilteredEmployeeList ] = React.useState<Employee[]>(employeeList)
+    const [ filteredEmployeeList, setFilteredEmployeeList ] = React.useState<Employee[]>(employeeList); 
 
     const searchParams = useSearchParams()
 
-    const search = searchParams.get('search')  
-
+    const search = searchParams.get('search') || ''   
+  
     useEffect(()=>{
+        setSearch(search)
         const filteredEmployeeList = employeeList.filter((employee) => 
-            JSON.stringify(employee).toLowerCase().includes(search || "")
-        )
-
+            JSON.stringify(employee).toLowerCase().includes(search?.toLowerCase() || "")
+        ) 
         setFilteredEmployeeList(filteredEmployeeList) 
         setLoading(false);
     },[search])
+    
 
   return (
     <table className="table w-full table-pin-rows ">
@@ -63,13 +65,13 @@ const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
                             </div>
                         </div>
                         <div className='text-start'>
-                            <div className="font-bold">{employee?.name}</div>
-                            <div className="text-sm opacity-80">{employee?.phoneNumber}</div>
+                            <div className="font-bold">{highlightText(employee?.name)}</div>
+                            <div className="text-sm opacity-80">{highlightText(employee.phoneNumber ? employee.phoneNumber.toString() : '')}</div>
                         </div>
                     </div>
                 </th>
-                <td>{employee.address}</td>
-                <td>{employee?.company}</td>  
+                <td>{highlightText(employee.address ? employee.address.toString() : '')}</td>
+                <td>{highlightText(employee.company ? employee.company.toString() : '')}</td>  
             </tr>
             ))}
         </tbody>

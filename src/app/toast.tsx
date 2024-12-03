@@ -16,16 +16,20 @@ const Toast = () => {
         const remainingTime = timer || 5; 
         const decrement = remainingTime / 1000;
 
-        const interval = setInterval(() => {
-            setTimer(prevTimer => {  
-                if (prevTimer <= 0) {
-                    clearInterval(interval);
-                    closeToast(); 
-                    return 0;
-                }
-                return prevTimer - decrement; 
-            });
-        }, decrement); 
+        try{
+            const interval = setInterval(() => {
+                setTimer(prevTimer => {  
+                    if (prevTimer <= 0) {
+                        clearInterval(interval);
+                        closeToast(); 
+                        return 0;
+                    }
+                    return prevTimer - decrement; 
+                });
+            }, decrement); 
+        }catch(e){
+            console.log(e)
+        }
     }, [timer])
 
     useEffect(() => {

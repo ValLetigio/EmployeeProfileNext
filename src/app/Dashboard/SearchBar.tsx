@@ -7,12 +7,11 @@ import { useAppContext } from '../GlobalContext'
 import { useSearchParams } from 'next/navigation'
 
 
-// interface SearchBarProps {
-    
-// } 
+interface SearchBarProps {
+    controlled?: boolean;
+} 
 
-// const SearchBar :React.FC<SearchBarProps> = ({}) => {  
-const SearchBar = ( ) => {  
+const SearchBar :React.FC<SearchBarProps> = ({controlled = false}) => {   
 
     const { router, pathname, setLoading, loading } = useAppContext(); 
 
@@ -40,7 +39,9 @@ const SearchBar = ( ) => {
                 router.push(url.toString());
             }
 
-            // setLoading(false);
+            if(!controlled){
+                setLoading(false);
+            }
         }, 1000);  
 
         setDebounceTimeout(timeout);
@@ -51,10 +52,10 @@ const SearchBar = ( ) => {
         <input  
             onChange={(e)=>handleSearch(e)} 
             type="search" id='search' autoComplete='off' 
-            className="grow w-full md:w-20 hover:w-full focus:w-full placeholder:text-base h-full truncate " 
+            className="grow w-full xl:w-32 md:w-20 hover:w-full md:hover:w-[15vw] md:focus:w-[15vw] focus:w-full placeholder:text-base h-full truncate " 
             placeholder='Search' defaultValue={search||""} />
         <div className='swap '>
-            <input checked={loading} type="checkbox" name="" id="" />
+            <input checked={loading} type="checkbox" name="" id="" autoComplete='on'/>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"

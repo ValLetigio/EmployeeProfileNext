@@ -103,7 +103,7 @@ class ServerRequests extends Server {
         body: JSON.stringify({ employeeData: employee, userData: userObject }),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to fetch data');
+      if (!res.ok) throw new Error('Failed to delete data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;

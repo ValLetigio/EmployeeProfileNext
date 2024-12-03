@@ -42,8 +42,8 @@ const page = () => {
                     <p>Update Employee Details!</p>
                     <div className="card-actions justify-end">
                     <Link href={"/Employee/Update"} 
-                        className="mt-2 btn btn-sm btn-outline hover:bg-violet-500 border-violet-500 text-violet-500 group">
-                            <span className='group-hover:text-white'>Update </span>Now</Link>
+                        className="mt-2 btn btn-sm btn-outline hover:bg-violet-500 border-violet-500 text-violet-500 group ">
+                            <span className='group-hover:text-white'>Update </span><span className=' group-hover:invert'>Now</span></Link>
                     </div>
                 </div>
             </div>

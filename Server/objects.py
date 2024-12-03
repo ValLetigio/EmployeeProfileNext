@@ -531,6 +531,7 @@ class Offense(BaseModel):
     description: str
     remedialActions: List[str]
     version: int = Field(..., alias='_version')
+    title: Optional[str] = Field(None, alias='title')
 
     def to_dict(self):
         return {
@@ -538,7 +539,8 @@ class Offense(BaseModel):
             'number': self.number,
             'description': self.description,
             'remedialActions': self.remedialActions,
-            '_version': self.version
+            '_version': self.version,
+            'title': self.title
         }
 
     def createOffense(self, user):

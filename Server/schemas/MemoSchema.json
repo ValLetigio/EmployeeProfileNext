@@ -155,6 +155,18 @@
                 "_version": {
                     "title": " Version",
                     "type": "integer"
+                },
+                "title": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Title"
                 }
             },
             "required": [
@@ -226,6 +238,7 @@
                     "type": "null"
                 }
             ],
+            "default": null,
             "title": "Reason"
         },
         "_version": {
@@ -242,7 +255,6 @@
         "description",
         "MemoCode",
         "submitted",
-        "reason",
         "_version"
     ],
     "title": "Memo",

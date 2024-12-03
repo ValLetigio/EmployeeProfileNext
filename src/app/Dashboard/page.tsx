@@ -78,7 +78,7 @@ const Page = async () => {
         </div>
 
         {/* cards and table */}
-        <div className='w-full lg:w-[65%] h-max lg:h-[92%] flex flex-wrap items-center justify-between p-4 gap-4 lg:gap-0 ' >
+        <div className='w-full 2xl:w-[60%] lg:w-[65%] h-max lg:h-[92%] flex flex-wrap items-center justify-between p-4 gap-4 lg:gap-0 ' >
           {/* Employee Length */}
           <div className={cardStyle}>
             <h3 className='text-lg font-semibold '>Employees</h3>
@@ -105,7 +105,7 @@ const Page = async () => {
             <div className=" w-full overflow-auto h-full">
               <div className='flex flex-col md:flex-row p-1 justify-between items-center w-full'>
                 <h2 className='text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full'>Employees</h2>
-                <SearchBar/>
+                <SearchBar controlled={true}/>
               </div> 
 
               <EmployeeTable
@@ -116,7 +116,7 @@ const Page = async () => {
         </div>
 
         {/* employee preview */}
-        <div className='w-full lg:w-[35%] max-h-[95vh] lg:h-[92%] flex flex-wrap justify-between py-6 px-4'>
+        <div className='w-full 2xl:w-[40%] lg:w-[35%] max-h-[95vh] lg:h-[92%] flex flex-wrap justify-between py-6 px-4'>
           <EmployeeDetails />
         </div>
  
