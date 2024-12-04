@@ -344,6 +344,24 @@ class UserActions(User):
         employee = db.read({'_id': employeeId}, 'Employee')
         return employee[0]
 
+    def getRemedialActionForEmployeeMemoAction(self, employeeId, offenseId):
+        employeeMemos = db.read({
+            'Employee._id': employeeId,
+            'submitted': True,
+            'MemoCode._id': offenseId
+        }, 'Memo')
+
+        offenseCount = len(employeeMemos)
+
+        offense = db.read({'_id': offenseId}, 'Offense')
+
+        remedialActions = offense[0]['remedialActions']
+
+        if offenseCount >= len(remedialActions):
+            return remedialActions[-1]
+
+        return remedialActions[offenseCount - 1]
+
 
 class Memo(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
