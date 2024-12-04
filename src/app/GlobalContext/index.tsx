@@ -55,7 +55,7 @@ interface AppContextProps {
   storage: ReturnType<typeof getStorage>;
   highlightText: (text: string ) => JSX.Element[]; 
   setSearch: (data: string) => void;
-  getOrdinal: (n: number) => string;
+  getOrdinal: (n: number) => string; 
 }
 
 // Create the default context with proper types and default values

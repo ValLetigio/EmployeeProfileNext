@@ -116,13 +116,13 @@ const PrintMemorandumModal = () => {
       >
         <div className="w-full h-full overflow-auto pt-8 ">
           <div 
-            className=' gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom tooltip group opacity-50 hover:opacity-100' 
-            data-tip={`(${resolution * 75}%) Quality`}> 
+            className=' gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom tooltip group ' 
+            data-tip={`Quality`}> 
             <input 
                 type="range"
                 min={1} max="3" step="1"
                 value={resolution} placeholder="Resolution" 
-                className="range  z-10 " 
+                className="range z-10 opacity-50 hover:opacity-100" 
                 onChange={(e) => setResolution(parseInt(e.target.value))}
             />  
             <div className='absolute -z-10 text-xs flex justify-between w-full px-2 font-bold'>
@@ -172,7 +172,8 @@ const PrintMemorandumModal = () => {
 
               <div className="col-span-1 font-semibold">Code:</div>
               <div className={headerTextStyle}>
-                {memoForPrintModal?.MemoCode?.description}
+                {`( ${memoForPrintModal?.MemoCode?.number} ) - `}
+                {memoForPrintModal?.MemoCode?.title}
               </div>
             </div>
 

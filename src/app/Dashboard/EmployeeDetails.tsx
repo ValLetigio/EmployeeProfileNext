@@ -131,13 +131,13 @@ const EmployeeDetails = () => {
         </svg> 
       </button>
 
-      {/* avater skelly */}
+      {/* avatar skelly */}
       <div
         className={skeletonStyle + " !rounded-full py-3 xl:py-8 w-24 xl:w-36 h-24 xl:h-36 mt-2 mb-4"}
       ></div>
 
       {/* avatar */}
-      <div className={"w-full flex justify-center py-3 xl:py-8 " + contentStyle} >
+      <div className={" w-full flex justify-center py-3 xl:py-8 " + contentStyle  } >
         <div className=" indicator ">
           {/* indicator */}
           <span

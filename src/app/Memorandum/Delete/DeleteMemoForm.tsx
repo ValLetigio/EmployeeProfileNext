@@ -117,7 +117,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
 
         {/* description */} 
         <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Description" id='description' 
-        value={formData?.MemoCode?.description || ""} 
+        value={formData?.description || ""} 
         > 
         </textarea>  
       </div>

@@ -14,6 +14,7 @@ import UpdateOffenseModal from "./Update/UpdateOffenseModal";
 
 
 const page = async () => {
+  
   const serverRequests = new ServerRequests();
 
   const res = await serverRequests.fetchOffenseList();
@@ -22,9 +23,9 @@ const page = async () => {
 
   return (
     <>
-        <CreateOffenseModal />
-        <UpdateOffenseModal />
-        <DeleteOffenseModal />
+      <CreateOffenseModal />
+      <UpdateOffenseModal />
+      <DeleteOffenseModal />
         
       <div
         className={`relative md:min-h-[90vh] flex flex-col md:justify-center md:items-center px-4 overflow-clip `}
@@ -47,9 +48,9 @@ const page = async () => {
         <div className="rounded-box md:max-h-[60vh] w-full md:w-[80vw] 2xl:w-[70vw] overflow-auto border shadow-2xl backdrop-blur-md " >
           <table className="w-full table table-pin-rows ">
             <thead>
-              <tr className="bg-gray-800 text-white/80">
+              <tr className=" bg-base-300 ">
                 <th className="border p-2">Code</th>
-                <th className="border p-2">Violation</th>
+                <th className="border p-2">Offense</th>
                 <th className="border p-2 min-w-[80vw] md:min-w-[50vw] xl:min-w-max">
                   Description
                 </th>
@@ -61,7 +62,7 @@ const page = async () => {
             <tbody>
               {offenseList?.map((offense) => (
                 <tr className=" hover:bg-base-200 " key={offense._id}>
-                  <td className="border p-2 text-center">{offense.number}</td>
+                  <td className="border p-2 text-center font-bold">{offense.number}</td>
                   <td className="border p-2">{offense.title}</td>
                   <td className="border p-2 whitespace-pre-line">
                     {offense.description}
@@ -72,6 +73,18 @@ const page = async () => {
                 </tr>
               ))}
             </tbody> 
+            <tfoot>
+              <tr className=" bg-base-300 ">
+                <th className="border p-2">Code</th>
+                <th className="border p-2">Violation</th>
+                <th className="border p-2 min-w-[80vw] md:min-w-[50vw] xl:min-w-max">
+                  Description
+                </th>
+                <th className="border p-2 min-w-[80vw] md:min-w-[40vw] xl:min-w-max">
+                  Remedial Actions
+                </th>
+              </tr>
+            </tfoot>
           </table>
         </div>
         <div className="h-[15vh] md:hidden " />
