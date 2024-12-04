@@ -173,6 +173,9 @@ def test_create_offense_employee_memo():
         memos = user.readCollection('Memo')
 
         # create another memo then submit it
+        memoObject['Employee'] = getEmployee
+        memoObject['MemoCode'] = getOffense
+
         memo3 = user.createMemoAction(userCreated, memoObject)
 
         reason = 'Reason for submission'
@@ -198,6 +201,10 @@ def test_create_offense_employee_memo():
         memos = user.readCollection('Memo')
 
         assert len(memos) == 4
+
+        getRemedialActionForEmployeeMemoAction = user.getRemedialActionForEmployeeMemoAction(getEmployee['_id'], offense['_id'])
+
+        assert getRemedialActionForEmployeeMemoAction
 
     finally:
         db.delete({},'User')
@@ -373,10 +380,10 @@ if __name__ == '__main__':
     # test_user_login()
     # test_duplicate_user_creation()
     # test_add_role_and_remove_role()
-    # test_create_offense_employee_memo()
+    test_create_offense_employee_memo()
     # test_update_offense()
     # test_delete_offense()
-    test_create_update_delete_employee()
+    # test_create_update_delete_employee()
     # test_submit_and_delete_memo()
     # test_submit_memo_without_reason()
     # test_delete_non_existent_offense()

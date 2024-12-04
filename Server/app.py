@@ -526,6 +526,24 @@ def getUserForTesting():
 
     else:
         return jsonify({"error": "Env is not in Local"}), 400
+    
+@app.route('/getRemedialActionForEmployeeMemoAction', methods=['POST'])
+def get_remedial_action_for_employee_memo_action():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        employeeId = data['employeeId']
+        offenseId = data['offenseId']
+        try:
+            res = UserActions(userData).getRemedialActionForEmployeeMemoAction(
+                 employeeId, offenseId)
+            return jsonify({
+                'message': 'Employee read successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error processing Employee: %s", e)
+            return e.args[0], 400
 
 
 if __name__ == '__main__':
