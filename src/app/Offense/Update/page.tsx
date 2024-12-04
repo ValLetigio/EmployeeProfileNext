@@ -20,15 +20,22 @@ const page = async () => {
   const offenseList: Offense[] = res.data;  
 
   const remedialActions = [
-    "Verbal Warning",
-    "Written Warning",
-    "Counseling or Training",
-    "Performance Improvement Plan (PIP)",
-    "Suspension",
-    "Probation",
-    "Mediation or Conflict Resolution",
-    "Final Written Warning",
-    "Termination of Employment"
+    "Written Reprimand",
+    "Verbal Reprimand",
+    "Verbal And Written Reprimand",
+    "1 Day Suspension",
+    "3 Days Suspension",
+    "5 Days Suspension",
+    "7 Days Suspension",
+    "15 Days Suspension",
+    "30 Days Suspension",
+    "3 Days Suspension And 7 Days Confiscation Of Phone Or Gadget",
+    "7 Days Suspension And 15 Days Confiscation Of Phone Or Gadget",
+    "15 Days Suspension And 30 Days Confiscation Of Phone Or Gadget",
+    "15 Days Suspension Or Management Discretion",
+    "Dismissal",
+    "Dismissal based on the severity or consequences of the offense", 
+    "Written Reprimand / Suspension / Dismissal",
   ];
 
   return (

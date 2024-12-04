@@ -25,12 +25,16 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
   return (
     <div  
     // transition-all duration-300 ease-in 
-      className={` ${showMenu ? "scale-100" : "scale-0"}
-        absolute top-[70px] md:top-[80px] right-0 shadow-lg border backdrop-blur-lg bg-base-100/70
-        w-[96vw] md:w-[330px] h-[80vh] md:max-h-[70vh] rounded-2xl z-50 origin-top-right
-        flex flex-col justify-between pb-3 border-info
+      className={` 
+        ${showMenu ? " top-[80px] " : " hidden "} right-0
+        absolute shadow-lg border backdrop-blur-lg bg-base-100/70 duration-300 transition-all
+        w-[96vw] md:w-[330px] h-[80vh] md:max-h-[70vh] rounded-2xl z-50 
+        flex flex-col justify-between pb-3 border-info 
       `}
     > 
+      <div 
+        className="-z-10 right-[.89rem] -top-3 absolute w-0 h-0 border-l-[16px] border-r-[16px] border-b-[20.5px] border-transparent border-b-info border-opacity-60"/>  
+      
       <div
         className='flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-base-300 border-b border-info'  
         >
@@ -50,9 +54,8 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
           
           {[1,2,3,4 ].map((item, index) => (
             <button
-              key={index} 
-              // onClick={()=>handleImageModalClick([""])}
-              className='  w-full h-12 border-gray-300 hover:bg-base-300 hover:text-white ' 
+              key={index}  
+              className=' border-x last:border-b mt-1 btn w-full h-12 border-gray-300 bg-base-100 hover:bg-base-200 hover:text-white ' 
             >   
               <p className=' font-semibold'>Option {item}</p>
             </button>
@@ -64,7 +67,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
 
       <div className='flex px-6 '>
         <button
-          className='shrink-0 bg-base-300 w-full flex items-center justify-center gap-3 h-12 border mt-2 hover:bg-error hover:text-white rounded-b-2xl'
+          className=' btn shrink-0 bg-base-300 w-full flex items-center justify-center gap-3 border mt-2 hover:bg-error hover:text-white'
           onClick={() => {handleSignOut()}}
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">

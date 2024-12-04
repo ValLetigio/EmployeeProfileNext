@@ -14,14 +14,14 @@ const ProfileButton: FC<ProfileButtonProps> = ({ userData, handleMenuClick, show
   return (
     <div 
         className={` 
-          cursor-pointer w-full h-full ${!showMenu && " tooltip-left tooltip "} 
+          z-[60] cursor-pointer w-full h-full ${!showMenu && " tooltip-left tooltip "} 
       `}
         onClick={()=>handleMenuClick()}
         data-tip="Profile"
     >
       <Image 
         fill={true}
-        className={`  
+        className={`  duration-100 transition-all ease-linear
           ${showMenu && "border-4 border-info"} 
           w-full h-full duration-300 shadow-xl rounded-full  
         `} 

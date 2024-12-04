@@ -248,7 +248,7 @@ const CreateEmployeeForm = () => {
             {/* isRegular */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className="label-text text-base">Is Regular?</p>
-                <input type="checkbox" className="checkbox" required id='isRegular'   
+                <input type="checkbox" className="checkbox" id='isRegular'   
                     onChange={(e)=>setFormData({...formData, isRegular:e.target.checked})}/>
             </label> 
             {/* isProductionEmployee */}

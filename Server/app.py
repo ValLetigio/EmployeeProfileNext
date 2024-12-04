@@ -262,9 +262,10 @@ def create_offense():
             res = UserActions(userData).createOffenseAction(
                 userData, {
                     '_id': None,
-                    'number': 0,
+                    'number': offense['number'],
                     'description': offense['description'],
                     'remedialActions': offense['remedialActions'],
+                    'title': offense['title'],
                     '_version': 0
                 })
 
@@ -438,7 +439,8 @@ def get_all_memo_thats_not_submitted():
         userData = data['userData']
 
         try:
-            res = UserActions(userData).getAllMemoThatsNotSubmittedAction(userData)
+            res = UserActions(userData).getAllMemoThatsNotSubmittedAction(
+                userData)
 
             return jsonify({
                 'message': 'Memo read successfully!',
@@ -450,8 +452,9 @@ def get_all_memo_thats_not_submitted():
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
-    
-@app.route('/getEmployeeForDashboardAction', methods = ['POST'])
+
+
+@app.route('/getEmployeeForDashboardAction', methods=['POST'])
 def get_employee_for_dashboard_action():
     if request.is_json:
         data = request.get_json()
@@ -468,14 +471,16 @@ def get_employee_for_dashboard_action():
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 
-@app.route('/getEmployeeDetailsAction', methods = ['POST'])
+
+@app.route('/getEmployeeDetailsAction', methods=['POST'])
 def get_employee_details_action():
     if request.is_json:
         data = request.get_json()
         userData = data['userData']
         employeeId = data['employeeId']
         try:
-            res = UserActions(userData).getEmployeeDetailsAction(userData, employeeId)
+            res = UserActions(userData).getEmployeeDetailsAction(
+                userData, employeeId)
             return jsonify({
                 'message': 'Employee read successfully!',
                 'data': res

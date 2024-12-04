@@ -25,8 +25,9 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
       const confirmed = await handleConfirmation("Confirm Action?", `${formData?.description} will be deleted FOREVER!`, "error")
 
       if(confirmed){
-        try{
-            const form = e.target as HTMLFormElement; 
+        try{ 
+
+          const form = e.target as HTMLFormElement; 
 
             const res = await serverRequests.deleteOffense(formData, userData)
 
@@ -44,6 +45,8 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
         } 
       } 
     }   
+
+    // console.log(formData)
 
   return (
     <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
@@ -67,9 +70,20 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
       </div>
 
       {/* description */} 
-      <div className='flex flex-col text-sm gap-2 mt-2'>Offense Description
+      <div className='flex flex-col text-sm gap-2 mt-2'>Offense
+
+        <div className='w-full flex flex-col md:flex-row justify-start gap-2'>
+          <input className="input input-bordered w-28 text-center " type="number" placeholder="Code" id='number'    
+            value={formData?.number} onClick={(e)=> e.currentTarget.blur()}
+            > 
+          </input>
+          <input className="input input-bordered w-full " type="text" placeholder="Offense Title" id='title'   
+            value={formData?.title || ""} onClick={(e)=> e.currentTarget.blur()}
+          > 
+          </input> 
+        </div>
         <textarea className="textarea textarea-bordered mt-1 min-h-[13vh]" placeholder="Offense Description" id='description'  
-          value={formData?.description} disabled={formData?.description==""} > 
+          value={formData?.description} onClick={(e)=> e.currentTarget.blur()} > 
         </textarea>  
       </div> 
 
@@ -80,7 +94,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
             <input 
                 className={` ${formData?.remedialActions?.includes(action) ? ' ' : ' hover:brightness-150'}
                  join-item btn btn-sm font-normal tracking-tight btn-neutral `} checked={formData?.remedialActions?.includes(action)}
-              disabled={formData?.description==""}
+              disabled
               type="checkbox" name="options" value={action} aria-label={action} key={index}/>
           ))} 
         </div>

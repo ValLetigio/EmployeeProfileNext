@@ -10,6 +10,7 @@ export type Number = number;
 export type Description = string;
 export type Remedialactions = string[];
 export type Version = number;
+export type Title = string | null;
 
 export interface Offense {
   _id?: Id;
@@ -17,4 +18,5 @@ export interface Offense {
   description: Description;
   remedialActions: Remedialactions;
   _version: Version;
+  title?: Title;
 }

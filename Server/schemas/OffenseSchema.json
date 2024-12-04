@@ -30,6 +30,18 @@
         "_version": {
             "title": " Version",
             "type": "integer"
+        },
+        "title": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "title": "Title"
         }
     },
     "required": [
