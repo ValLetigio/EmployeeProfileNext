@@ -17,7 +17,7 @@ const Menu: FC<MenuButtonProps> = ({ open, cards, pathname, setOpen }) => {
   return (
     <div 
       className={` ${!open? " opacity-0 bottom-20 scale-0 invisible" : "scale-100"}  transition-all duration-200 ease-in
-        fixed bottom-32 gap-4 origin-bottom 
+        fixed bottom-32 gap-4 origin-bottom z-[999]
         flex flex-wrap justify-center item-center 
         w-[90vw] md:w-[60vw] lg:w-[40vw] xl:w-[30vw] 2xl:w-[25vw] 
       `}

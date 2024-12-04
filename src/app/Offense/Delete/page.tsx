@@ -29,13 +29,13 @@ const page = async () => {
     "7 Days Suspension",
     "15 Days Suspension",
     "30 Days Suspension",
-    "3 Days Suspension And 7 Days Confiscation Of Phone Or Gadget",
-    "7 Days Suspension And 15 Days Confiscation Of Phone Or Gadget",
-    "15 Days Suspension And 30 Days Confiscation Of Phone Or Gadget",
     "15 Days Suspension Or Management Discretion",
     "Dismissal",
-    "Dismissal based on the severity or consequences of the offense", 
+    "Dismissal based on Offense Severity", 
     "Written Reprimand / Suspension / Dismissal",
+    "3 Days Suspension + 7 Days Gadget Confiscation",
+    "7 Days Suspension + 15 Days Gadget Confiscation",
+    "15 Days Suspension + 30 Days Gadget Confiscation",
   ];
 
   return (

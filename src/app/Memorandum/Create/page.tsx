@@ -1,10 +1,10 @@
 
 import React from 'react'
 
-import CreateMemoForm from './CreateMemoForm' 
+import CreateMemoForm from './CreateMemoForm'  
 
-import { Offense } from '@/app/schemas/OffenseSchema.ts';
-import { Employee } from '../../schemas/EmployeeSchema.ts'
+import { Offense, Employee } from '@/app/schemas/MemoSchema';
+
 import ServerRequests from '@/app/api/ServerRequests';
 
 export const metadata = {

@@ -6,9 +6,13 @@ import { useAppContext } from '@/app/GlobalContext';
 
 import { Offense } from '@/app/schemas/OffenseSchema';
 
-const CreateOffenseForm = () => {
+interface CreateOffenseFormProps {
+  confirmation?: boolean
+}
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
+const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({confirmation = true}) => {
+
+  const { setToastOptions, serverRequests, userData, handleConfirmation, router, getOrdinal } = useAppContext()
 
   const formRef = React.useRef<HTMLFormElement>(null)
 
@@ -24,24 +28,27 @@ const CreateOffenseForm = () => {
     "7 Days Suspension",
     "15 Days Suspension",
     "30 Days Suspension",
-    "15 Days Suspension / Management Discretion",
+    "15 Days Suspension Or Management Discretion",
     "Dismissal",
-    "Dismissal based on the severity or consequences of the offense", 
+    "Dismissal based on Offense Severity", 
     "Written Reprimand / Suspension / Dismissal",
-    "3 Days Suspension And 7 Days Confiscation Of Phone Or Gadget",
-    "7 Days Suspension And 15 Days Confiscation Of Phone Or Gadget",
-    "15 Days Suspension And 30 Days Confiscation Of Phone Or Gadget",
+    "3 Days Suspension + 7 Days Gadget Confiscation",
+    "7 Days Suspension + 15 Days Gadget Confiscation",
+    "15 Days Suspension + 30 Days Gadget Confiscation",
   ];
 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()   
 
-    const confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.description} Offense`, "")
+    let confirmed = true
 
+    if(confirmation){
+      confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.title} Offense`, "")
+    }
+     
     if(confirmed){
       try{
         const form = e.target as HTMLFormElement;    
-
 
         if(formData.remedialActions.length === 0){
           throw new Error('Remedial Actions must be selected')
@@ -76,9 +83,8 @@ const CreateOffenseForm = () => {
         : remedialActions.filter((action) => action !== value)
       };
     });
-  };
-
-  console.log(formData)
+  }; 
+ 
 
   return (
     <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
@@ -103,22 +109,53 @@ const CreateOffenseForm = () => {
         </div>
         
       {/* description */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[13vh]" placeholder="Offense Description" id='description' required
+        <textarea className="textarea textarea-bordered mt-1 min-h-[23vh]" placeholder="Offense Description" id='description' required
           onChange={
-            (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
+            (e:React.ChangeEvent<HTMLTextAreaElement>)=>{  
               setFormData({ ...formData, description: e.target.value })
-            }}> 
+            }}
+          onFocus={(e) => {
+            if(e.target.value === '') e.target.value = '• '
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              const textarea = e.target as HTMLTextAreaElement
+              const value = textarea.value
+              textarea.value = value + '\n• ' 
+            } 
+          }}
+            > 
         </textarea>  
       </div> 
 
       {/* Remedial Actions */} 
-      <div className='flex flex-col text-sm gap-2 mt-4 '>Remedial Actions
-        <div className=" flex flex-wrap gap-2 px-3 " id="remedialActions">
-          {remedialActions.map((action, index) => (
-            <input className="checked:bg-success flex join-item hyphens-auto h-max btn btn-sm btn-neutral grow" 
-              onChange={handleCheckboxChange}
-              type="checkbox" name="options" value={action} aria-label={action} key={index} id={action}/>
-          ))} 
+      <div className='flex flex-col text-sm gap-4 mt-4 '>
+        <div className='w-full flex items-center justify-between px-3'>
+          <h3>Remedial Actions</h3>
+          <button className={`${!formData?.remedialActions?.length&&"hidden"} btn btn-error btn-xs`}
+            onClick={(e)=>{
+              e.preventDefault()
+              setFormData({ ...formData, remedialActions: [] }) 
+              const checkboxes = document.querySelectorAll('input[type="checkbox"]') as NodeListOf<HTMLInputElement>
+              checkboxes.forEach((checkbox) => {
+                checkbox.checked = false
+              })
+            }}
+            >Clear</button>
+        </div>
+        <div className=" flex flex-wrap justify-stretch gap-2 px-3 " id="remedialActions">
+          {remedialActions.map((action, index) => {
+            const position = formData?.remedialActions?.indexOf(action) + 1  
+            return (
+              <div key={index} className={` indicator ${position&&"tooltip tooltip-accent"}`} data-tip={`Action on ${getOrdinal(position)} Offense`}>
+                <input className=" flex join-item hyphens-auto h-max btn btn-sm btn-neutral " 
+                  onChange={handleCheckboxChange} 
+                  type="checkbox" name="options" value={action} aria-label={action} key={index} id={action}/>
+                <span className={`${!position&&"hidden"} indicator-item badge badge-accent `}>{getOrdinal(position)}</span>
+              </div>
+            )
+          })} 
         </div>
       </div> 
 

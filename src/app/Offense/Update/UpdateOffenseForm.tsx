@@ -11,11 +11,12 @@ import { Offense } from '@/app/schemas/OffenseSchema.ts'
 interface UpdateOffenseFormProps {
   offenseList: Offense[]
   remedialActions: string[]
+  confirmation?: boolean
 }
 
-const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remedialActions}) => {
+const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remedialActions, confirmation = true}) => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router, getOrdinal } = useAppContext()
 
     const formRef = React.useRef<HTMLFormElement>(null) 
 
@@ -24,9 +25,13 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
     const [ dataToUpdate, setDataToUpdate ] = useState<DataToUpdate>({ } as DataToUpdate)  
     
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()   
+      e.preventDefault()    
 
-      const confirmed = await handleConfirmation("Confirm Action?", `Save changes you've made for ${formData?.description} Offense`, "")
+      let confirmed = true
+
+      if(confirmation){
+        confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.title} Offense`, "")
+      }
  
       if(confirmed){
         try{
@@ -73,9 +78,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
         return data;
       });
       setDataToUpdate((prev)=> ({...prev, [id]: value}))
-    }
-
-    console.log(dataToUpdate) 
+    } 
 
   return (
     <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
@@ -84,7 +87,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
       {/* Ofense to Update */} 
       <div className='flex flex-col text-sm gap-2 '>Offense to Update 
         <select className="select select-bordered w-full " id='select-offense' required
-          value={formData?.description || ''}
+          value={formData?.title || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
             setFormData(e.target.value=="null"?{} as Offense:offenseList[selectedIndex])
@@ -92,7 +95,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
         >
           <option disabled selected value={""}>Select Offense </option>
           {offenseList&&offenseList.map((employee, index) => (
-            <option key={index} value={employee?.description}>{employee?.description}</option>
+            <option key={index} value={employee?.title || ""}>{employee?.title}</option>
           ))}
           <option value="null">None</option>
         </select>
@@ -114,28 +117,66 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
               (e:React.ChangeEvent<HTMLInputElement>)=>{handleInputChange(e)}}> 
           </input> 
         </div>
-        <textarea className="textarea textarea-bordered mt-1 min-h-[13vh]" placeholder="Offense Description" id='description' required
+        <textarea className="textarea textarea-bordered mt-1 min-h-[23vh]" placeholder="Offense Description" id='description' required
           value={formData?.description}  
           disabled={!formData.description}
           onChange={
             (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
               setFormData({ ...formData, description: e.target.value })
               setDataToUpdate((prev)=>({...prev, description: e.target.value}))
-            }}> 
+            }}
+          onFocus={(e) => {
+            if(e.target.value === '') e.target.value = '• '
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              const textarea = e.target as HTMLTextAreaElement
+              const value = textarea.value
+              textarea.value = value + '\n• ' 
+            } 
+          }}
+            > 
         </textarea>  
       </div> 
 
       {/* Remedial Actions */} 
-      <div className='flex flex-col text-sm gap-2 mt-4'>Remedial Actions
+      <div className='flex flex-col text-sm gap-2 mt-4'>
+        <div className='w-full flex items-center justify-between px-3'>
+          <h3>Remedial Actions</h3>
+          <button className={`${!formData?.remedialActions?.length&&"hidden"} btn btn-error btn-xs`}
+            onClick={(e)=>{
+              e.preventDefault()
+              setFormData({ ...formData, remedialActions: [] }) 
+              const checkboxes = document.querySelectorAll('input[type="checkbox"]') as NodeListOf<HTMLInputElement>
+              checkboxes.forEach((checkbox) => {
+                checkbox.checked = false
+              })
+            }}
+            >Clear</button>
+        </div>
         <div className=" flex flex-wrap gap-2 px-3" id="remedialActions">
-          {remedialActions.map((action, index) => (
+          {remedialActions.map((action, index) => {
+            const position = formData?.remedialActions?.indexOf(action) + 1  
+            return (
+              <div key={index} className={` indicator ${position&&"tooltip tooltip-accent"}`} data-tip={`Action on ${getOrdinal(position)} Offense`}>
+                <input className=" flex join-item hyphens-auto h-max btn btn-sm btn-neutral " 
+                  onChange={handleCheckboxChange} 
+                  checked={formData?.remedialActions?.includes(action)}
+                  disabled={!formData.remedialActions}
+                  type="checkbox" name="options" value={action} aria-label={action} key={index} id={action}/>
+                <span className={`${!position&&"hidden"} indicator-item badge-accent badge   `}>{getOrdinal(position)}</span>
+              </div>
+            )
+          })} 
+          {/* {remedialActions.map((action, index) => (
             <input 
                 className={` ${formData?.remedialActions?.includes(action) ? ' ' : ' hover:brightness-150'}
                  join-item btn btn-sm font-normal tracking-tight btn-neutral disabled:bg-gray-300 `} 
               onChange={handleCheckboxChange} checked={formData?.remedialActions?.includes(action)}
               disabled={!formData.remedialActions}
               type="checkbox" name="options" value={action} aria-label={action} key={index} id={action}/>
-          ))} 
+          ))}  */}
         </div>
       </div> 
 

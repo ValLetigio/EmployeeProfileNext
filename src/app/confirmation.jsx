@@ -23,21 +23,14 @@ const Confirmation = () => {
 
   return (
     <div 
-        className={` ${confirmationOptions.open ? 'fixed' : 'hidden'}
-            w-[99vw] h-[99vh] z-[100] top-[0%] left-1/2 right-1/2 translate-x-[-50%]  
-            flex justify-center items-center
-            backdrop-blur-sm bg-inherit  
+        className={` ${confirmationOptions.open ? ' fixed !z-[9999] ' : ' hidden '}
+            w-[99vw] h-[99vh] z-[999] top-[0%] left-1/2 right-1/2 translate-x-[-50%]  
+            flex justify-center items-center backdrop-blur-sm bg-inherit alert
         `}
         role="alert" 
-    >
-        {/* ${!confirmationOptions?.type? ''
-           : confirmationOptions?.type != "warning" ? ` bg-${confirmationOptions?.type} text-white bg-base-100`
-           : confirmationOptions?.type == "warning" ? ` bg-${confirmationOptions?.type} text-black `
-           : ` bg-${confirmationOptions?.type} `
-        }  */}
+    > 
         <div 
-            className={`gap-5 w-max rounded-lg
-            shadow-2xl bg-base-300
+            className={`gap-5 w-max rounded-lg shadow-2xl bg-base-300 !z-[9999]
             flex flex-col justify-center items-center overflow-clip
         `}
         > 

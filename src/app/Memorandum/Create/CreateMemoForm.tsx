@@ -2,13 +2,9 @@
 
 import React, { useState, useRef } from 'react';
 
-import { useAppContext } from '@/app/GlobalContext';
+import { useAppContext } from '@/app/GlobalContext'; 
 
-// import { Offense } from '@/app/Schema'
-import { Offense } from '@/app/schemas/OffenseSchema.ts'
-import { Employee } from '../../schemas/EmployeeSchema.ts'
-
-import { Memo } from '@/app/schemas/MemoSchema.ts';
+import { Memo, Employee, Offense } from '@/app/schemas/MemoSchema.ts';
 
 
 // import Image from 'next/image'; 

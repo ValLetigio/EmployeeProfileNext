@@ -36,6 +36,7 @@ export default function RootLayout({
       <body className={` ${poppins.variable} overflow-x-clip `}>
         <SessionProvider session={session}>
           <ContextProvider>
+            <Confirmation />
             <ProfileMenu/> 
             {/* <ImageUpload/> */}
             {children}  
@@ -44,7 +45,6 @@ export default function RootLayout({
             <EmployeeMemoTableModal/>
             <MemoPrintModal/>
             <Toast />
-            <Confirmation />
           </ContextProvider>
         </SessionProvider>
       </body>

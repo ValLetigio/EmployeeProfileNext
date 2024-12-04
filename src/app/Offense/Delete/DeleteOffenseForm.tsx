@@ -9,11 +9,12 @@ import { Offense } from '@/app/schemas/OffenseSchema.ts'
 interface DeleteOffenseFormProps {
   offenseList: Offense[]
   remedialActions: string[]
+  confirmation?: boolean
 }
 
-const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remedialActions}) => {
+const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remedialActions, confirmation = true}) => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router, getOrdinal } = useAppContext()
 
     const formRef = React.useRef<HTMLFormElement>(null) 
 
@@ -21,8 +22,12 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
    
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()  
+  
+      let confirmed = true
 
-      const confirmed = await handleConfirmation("Confirm Action?", `${formData?.description} will be deleted FOREVER!`, "error")
+      if(confirmation){
+        confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.title} Offense`, "")
+      }
 
       if(confirmed){
         try{ 
@@ -55,7 +60,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
       {/* Offense to Update */} 
       <div className='flex flex-col text-sm gap-2 '>Offense to Delete 
         <select className="select select-bordered w-full " id='select-offense' required
-          value={formData?.description || ''}
+          value={formData?.title || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
             setFormData(e.target.value=="null"?{} as Offense:offenseList[selectedIndex])
@@ -63,7 +68,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
         >
           <option disabled selected value={""}>Select Offense </option>
           {offenseList&&offenseList.map((Offense, index) => (
-            <option key={index} value={Offense?.description}>{Offense?.description}</option>
+            <option key={index} value={Offense?.title || ""}>{Offense?.title}</option>
           ))}
           <option value="null">None</option>
         </select>
@@ -82,7 +87,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
           > 
           </input> 
         </div>
-        <textarea className="textarea textarea-bordered mt-1 min-h-[13vh]" placeholder="Offense Description" id='description'  
+        <textarea className="textarea textarea-bordered mt-1 min-h-[23vh]" placeholder="Offense Description" id='description'  
           value={formData?.description} onClick={(e)=> e.currentTarget.blur()} > 
         </textarea>  
       </div> 
@@ -90,13 +95,25 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
       {/* Remedial Actions */} 
       <div className='flex flex-col text-sm gap-2 mt-4'>Remedial Actions
         <div className=" flex flex-wrap gap-2 px-3" id="remedialActions">
-          {remedialActions.map((action, index) => (
+          {remedialActions.map((action, index) => {
+            const position = formData?.remedialActions?.indexOf(action) + 1  
+            return (
+              <div key={index} className={` indicator ${position&&"tooltip tooltip-accent"}`} data-tip={`Action on ${getOrdinal(position)} Offense`}>
+                <input className=" flex join-item hyphens-auto h-max btn btn-sm btn-neutral "  
+                  checked={formData?.remedialActions?.includes(action)}
+                  disabled={!formData.remedialActions}
+                  type="checkbox" name="options" value={action} aria-label={action} key={index} id={action}/>
+                <span className={`${!position&&"hidden"} indicator-item badge-accent badge   `}>{getOrdinal(position)}</span>
+              </div>
+            )
+          })} 
+          {/* {remedialActions.map((action, index) => (
             <input 
                 className={` ${formData?.remedialActions?.includes(action) ? ' ' : ' hover:brightness-150'}
                  join-item btn btn-sm font-normal tracking-tight btn-neutral `} checked={formData?.remedialActions?.includes(action)}
               disabled
               type="checkbox" name="options" value={action} aria-label={action} key={index}/>
-          ))} 
+          ))}  */}
         </div>
       </div> 
 
