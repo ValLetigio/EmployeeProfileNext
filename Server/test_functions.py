@@ -158,6 +158,9 @@ def test_create_offense_employee_memo():
 
         assert getEmployee['name'] == employee['name']
 
+        memoObject['Employee'] = getEmployee
+        memoObject['MemoCode'] = getOffense
+
         # create memo
         memo = user.createMemoAction(userCreated, memoObject)
 
@@ -173,8 +176,6 @@ def test_create_offense_employee_memo():
         memos = user.readCollection('Memo')
 
         # create another memo then submit it
-        memoObject['Employee'] = getEmployee
-        memoObject['MemoCode'] = getOffense
 
         memo3 = user.createMemoAction(userCreated, memoObject)
 
@@ -201,10 +202,6 @@ def test_create_offense_employee_memo():
         memos = user.readCollection('Memo')
 
         assert len(memos) == 4
-
-        getRemedialActionForEmployeeMemoAction = user.getRemedialActionForEmployeeMemoAction(getEmployee['_id'], offense['_id'])
-
-        assert getRemedialActionForEmployeeMemoAction
 
     finally:
         db.delete({},'User')
@@ -300,6 +297,12 @@ def test_submit_and_delete_memo():
         user = UserActions(userObject)
         userCreated = user.createFirstUserAction('id8')
 
+        offense = user.createOffenseAction(userCreated, offenseObject)
+        employee = user.createEmployeeAction(userCreated, employeeObject)
+
+        memoObject['Employee'] = employee
+        memoObject['MemoCode'] = offense
+
         memo = user.createMemoAction(userCreated ,memoObject)
 
         getMemo = db.read({'_id':memo['_id']},'Memo',findOne=True)
@@ -346,6 +349,13 @@ def test_submit_memo_without_reason():
     try:
         user = UserActions(userObject)
         userCreated = user.createFirstUserAction('id1')
+
+        employee = user.createEmployeeAction(userCreated, employeeObject)
+        offense = user.createOffenseAction(userCreated, offenseObject)
+
+        memoObject['Employee'] = employee
+        memoObject['MemoCode'] = offense
+
         memo = user.createMemoAction(userCreated, memoObject)
 
         with pytest.raises(ValueError, match='Reason must be provided'):
@@ -373,6 +383,37 @@ def test_delete_non_existent_offense():
         db.delete({}, 'User')
         db.delete({}, 'Offense')
 
+def test_getRemedialActionForEmployeeMemoAction():
+    try:
+        user = UserActions(userObject)
+        userCreated = user.createFirstUserAction('id1')
+
+        employee = user.createEmployeeAction(userCreated, employeeObject)
+        offense = user.createOffenseAction(userCreated, offenseObject)
+
+        memoObject['Employee'] = employee
+        memoObject['MemoCode'] = offense
+
+        memo = user.createMemoAction(userCreated, memoObject)
+
+        assert memo['MemoCode']['remedialActions'][0] == 'Verbal Warning'
+
+        memo2 = user.createMemoAction(userCreated, memoObject)
+
+        assert memo2['MemoCode']['remedialActions'][0] == 'Written Warning'
+
+        memoList = db.read({}, 'Memo')
+
+        assert len(memoList) == 2
+
+
+    finally:
+        db.delete({}, 'User')
+        db.delete({}, 'Memo')
+        db.delete({}, 'Offense')
+        db.delete({}, 'Employee')
+        pass
+
 
 if __name__ == '__main__':
     if AppConfig().getIsProductionEnvironment():
@@ -380,11 +421,12 @@ if __name__ == '__main__':
     # test_user_login()
     # test_duplicate_user_creation()
     # test_add_role_and_remove_role()
-    test_create_offense_employee_memo()
+    # test_create_offense_employee_memo()
     # test_update_offense()
     # test_delete_offense()
     # test_create_update_delete_employee()
     # test_submit_and_delete_memo()
     # test_submit_memo_without_reason()
     # test_delete_non_existent_offense()
+    test_getRemedialActionForEmployeeMemoAction()
     pass

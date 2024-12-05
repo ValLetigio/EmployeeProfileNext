@@ -344,24 +344,6 @@ class UserActions(User):
         employee = db.read({'_id': employeeId}, 'Employee')
         return employee[0]
 
-    def getRemedialActionForEmployeeMemoAction(self, employeeId, offenseId):
-        employeeMemos = db.read({
-            'Employee._id': employeeId,
-            'submitted': True,
-            'MemoCode._id': offenseId
-        }, 'Memo')
-
-        offenseCount = len(employeeMemos)
-
-        offense = db.read({'_id': offenseId}, 'Offense')
-
-        remedialActions = offense[0]['remedialActions']
-
-        if offenseCount >= len(remedialActions):
-            return remedialActions[-1]
-
-        return remedialActions[offenseCount - 1]
-
 
 class Memo(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
@@ -407,22 +389,38 @@ class Memo(BaseModel):
             '_version': self.version
         }
 
-    def _countPastOffenses(self, employeeId, offenseId):
+    def getRemedialActionForEmployeeMemoAction(self, employeeId, offenseId):
         employeeMemos = db.read({
             'Employee._id': employeeId,
-            'submitted': True
+            'MemoCode._id': offenseId
         }, 'Memo')
 
-        specificOffenseMemos = [
-            memo for memo in employeeMemos
-            if memo['MemoCode']['_id'] == offenseId
-        ]
+        offenseCount = len(employeeMemos)
 
-        return len(specificOffenseMemos)
+        offense = db.read({'_id': offenseId}, 'Offense')
+
+        remedialActions = offense[0]['remedialActions']
+
+        if offenseCount >= len(remedialActions):
+            return remedialActions[-1]
+
+        return {
+            'remedialAction': remedialActions[offenseCount],
+            'offenseCount': offenseCount
+        }
 
     def createMemo(self, user):
         if 'canCreateMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to create a memo')
+
+        employeeId = self.Employee.id
+        offenseId = self.MemoCode.id
+
+        remedialAction = self.getRemedialActionForEmployeeMemoAction(
+            employeeId, offenseId)
+
+        self.MemoCode.number = remedialAction['offenseCount'] + 1
+        self.MemoCode.remedialActions = [remedialAction['remedialAction']]
 
         self.id = generateRandomString()
         self.submitted = False
@@ -446,10 +444,10 @@ class Memo(BaseModel):
         if len(self.memoPhotosList) == 0:
             raise ValueError('Memo must have at least one photo')
 
-        pastOffenses = self._countPastOffenses(self.Employee.id,
-                                               self.MemoCode.id)
+        # pastOffenses = self._countPastOffenses(self.Employee.id,
+        #                                        self.MemoCode.id)
 
-        self.MemoCode.number = pastOffenses + 1
+        # self.MemoCode.number = pastOffenses + 1
 
         self.reason = reason
         self.submitted = True
