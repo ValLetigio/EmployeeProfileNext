@@ -109,7 +109,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({confirmation = tru
         </div>
         
       {/* description */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[23vh]" placeholder="Offense Description" id='description' required
+        <textarea className="textarea textarea-bordered mt-1 min-h-[30vh]" placeholder="Offense Description" id='description' required
           onChange={
             (e:React.ChangeEvent<HTMLTextAreaElement>)=>{  
               setFormData({ ...formData, description: e.target.value })
@@ -117,12 +117,12 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({confirmation = tru
           onFocus={(e) => {
             if(e.target.value === '') e.target.value = '• '
           }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+          onKeyDown={(e) => { 
+            if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault()
               const textarea = e.target as HTMLTextAreaElement
               const value = textarea.value
-              textarea.value = value + '\n• ' 
+              textarea.value = value + '\n\n• ' 
             } 
           }}
             > 

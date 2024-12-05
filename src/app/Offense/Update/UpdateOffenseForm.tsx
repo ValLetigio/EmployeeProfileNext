@@ -117,7 +117,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
               (e:React.ChangeEvent<HTMLInputElement>)=>{handleInputChange(e)}}> 
           </input> 
         </div>
-        <textarea className="textarea textarea-bordered mt-1 min-h-[23vh]" placeholder="Offense Description" id='description' required
+        <textarea className="textarea textarea-bordered mt-1 min-h-[30vh] " placeholder="Offense Description" id='description' required
           value={formData?.description}  
           disabled={!formData.description}
           onChange={
@@ -128,12 +128,12 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
           onFocus={(e) => {
             if(e.target.value === '') e.target.value = '• '
           }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+          onKeyDown={(e) => { 
+            if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault()
               const textarea = e.target as HTMLTextAreaElement
               const value = textarea.value
-              textarea.value = value + '\n• ' 
+              textarea.value = value + '\n\n• ' 
             } 
           }}
             > 

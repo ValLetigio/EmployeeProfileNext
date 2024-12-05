@@ -19,7 +19,9 @@ const page = async () => {
 
   const res = await serverRequests.fetchOffenseList();
 
-  const offenseList: Offense[] = res.data || [];
+  let offenseList: Offense[] = res.data || [];
+
+  offenseList = offenseList.sort((a, b) => a.number - b.number);
 
   return (
     <>
@@ -64,8 +66,10 @@ const page = async () => {
                 <tr className=" hover:bg-base-200 " key={offense._id}>
                   <td className="border p-2 text-center font-bold">{offense.number}</td>
                   <td className="border p-2">{offense.title}</td>
-                  <td className="border p-2 whitespace-pre-line">
-                    {offense.description}
+                  <td className="border whitespace-pre-line max-h-[60vh] md:max-h-[30vh] p-4">
+                    <div className="max-h-[55vh] md:max-h-[30vh] md:overscroll-contain overflow-y-auto bg-base-300 rounded-box p-4"> 
+                      {offense.description}
+                    </div>
                   </td>
                   <td className="border p-2 whitespace-pre-line">
                     {offense.remedialActions.map((action) => `• ${action}\n`)}

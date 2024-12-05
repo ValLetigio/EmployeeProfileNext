@@ -67,7 +67,7 @@ const EmployeeMemoTableModal = () => {
                 </tr>
               </thead>
               <tbody>
-                {memoForTableModal?.map((memo, index) => (
+                {memoForTableModal?.map((memo) => (
                     <tr key={memo._id} className="hover:bg-base-100">
                       {/* print */}
                       <td className="w-max text-center ">
@@ -108,17 +108,20 @@ const EmployeeMemoTableModal = () => {
                       {/* Offense */}
                       <td>
                         <div  >
-                          <details className="collapse collapse-arrow bg-base-200 w-[70vw] min-[700px]:w-full ">
-                            <summary className="collapse-title text-base font-bold">
+                          <div tabIndex={0} className="collapse collapse-open bg-base-300 w-[70vw] min-[700px]:w-full ">
+                            <div className="collapse-title text-base font-bold">
                               {memo?.MemoCode?.title}
-                            </summary>
+                            </div>
+                            {/* <summary className="collapse-title text-base font-bold">
+                              {memo?.MemoCode?.title}
+                            </summary> */}
                             {/* <p className='btn btn-xs text-[.70rem] btn-neutral truncate' >{"remedialAction"}</p> */}
                             <div className="collapse-content flex flex-wrap gap-1 "> 
                               {memo?.MemoCode?.remedialActions?.map((action: string, index: number) => (
                                 <p className='btn btn-xs text-[.70rem] btn-neutral truncate' key={index}>{action}</p>
                               ))} 
                             </div>
-                          </details>
+                          </div>
                         </div>
                       </td>
                       {/* Photos */}

@@ -235,6 +235,18 @@ const PrintMemorandumModal = () => {
               <br />
             </div>
 
+            {/* remedial actions */}
+            <div className="px-2 border-t-2">
+              <br />
+              <div className="flex">Remedial Action:
+                {memoForPrintModal?.MemoCode?.remedialActions[0] && (
+                  <p className="indent-4 whitespace-pre-line underline underline-offset-8 text-red-500">
+                     {memoForPrintModal?.MemoCode?.remedialActions[0]} 
+                  </p>
+                )}
+              </div> 
+            </div>
+
             {/*  */}
             <div className="mt-8 w-full border-b-2" />
             <div className=" text-center w-full mt-2">
