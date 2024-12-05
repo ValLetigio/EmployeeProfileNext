@@ -11,30 +11,14 @@ const EmployeeMemoTableModal = () => {
     memoForTableModal,
     setMemoForTableModal,
     handleImageModalClick,
-    handleMemoPrintModalClick,
-    serverRequests,
-    userData,
-    selectedEmployee,
+    handleMemoPrintModalClick, 
   } = useAppContext();
 
   const memoTableModalRef = React.useRef<HTMLDialogElement>(null); 
 
   const handleClose = () => {
     setMemoForTableModal([] as Memo[]);
-  };
-
-  const getRemedialAction = () => {
-    const employeeId = selectedEmployee?._id || "";  
-
-    memoForTableModal.map((memo)=>{
-      const offense = memo?.MemoCode 
-      console.log(memo)
-    })
-  };
-
-  React.useEffect(() => {
-    getRemedialAction()
-  },[memoForTableModal])
+  }; 
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

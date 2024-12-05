@@ -91,7 +91,7 @@ const EmployeeDetails = () => {
                   ...memo,
                   MemoCode: {
                     ...memo.MemoCode,
-                    remedialActions: res.data.length? res.data : memo.MemoCode.remedialActions
+                    remedialActions: res.data.length? [res.data] : memo.MemoCode.remedialActions
                   }
                 }
               }else{
