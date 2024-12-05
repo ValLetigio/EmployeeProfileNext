@@ -34,8 +34,6 @@ const page = async () => {
       >
         <div className="h-[10vh] md:hidden " />
 
-        {/* <h1 className='blur-[3px] absolute text-3xl md:text-6xl lg:text-8xl font-semibold mb-6 tracking-[15px] md:tracking-[35px] lg:tracking-[55px] opacity-80'>Offenses</h1> */}
-
         <h2 className="text-3xl tracking-wider font-semibold mb-4">
           Offenses and Remedial Actions
         </h2>
@@ -50,13 +48,13 @@ const page = async () => {
         <div className="rounded-box md:max-h-[60vh] w-full md:w-[80vw] 2xl:w-[70vw] overflow-auto border shadow-2xl backdrop-blur-md " >
           <table className="w-full table table-pin-rows ">
             <thead>
-              <tr className=" bg-base-300 ">
+              <tr className=" bg-base-200 ">
                 <th className="border p-2">Code</th>
                 <th className="border p-2">Offense</th>
                 <th className="border p-2 min-w-[80vw] md:min-w-[50vw] xl:min-w-max">
                   Description
                 </th>
-                <th className="border p-2 min-w-[80vw] md:min-w-[40vw] xl:min-w-max">
+                <th className="border p-2 min-w-[70vw] md:min-w-[25vw] xl:min-w-max">
                   Remedial Actions
                 </th>
               </tr>
@@ -78,13 +76,13 @@ const page = async () => {
               ))}
             </tbody> 
             <tfoot>
-              <tr className=" bg-base-300 ">
+              <tr className=" bg-base-200 ">
                 <th className="border p-2">Code</th>
                 <th className="border p-2">Violation</th>
                 <th className="border p-2 min-w-[80vw] md:min-w-[50vw] xl:min-w-max">
                   Description
                 </th>
-                <th className="border p-2 min-w-[80vw] md:min-w-[40vw] xl:min-w-max">
+                <th className="border p-2 min-w-[70vw] md:min-w-[25vw] xl:min-w-max">
                   Remedial Actions
                 </th>
               </tr>
