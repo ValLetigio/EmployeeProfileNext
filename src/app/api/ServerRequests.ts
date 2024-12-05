@@ -383,6 +383,29 @@ class ServerRequests extends Server {
       return (error as Error).message;
     }
   }
+
+  async getRemedialActionForEmployeeMemoAction(userObject: User, employeeId: string, offenseId: number): Promise<any> { 
+
+    const data = {
+      userData: userObject,
+      employeeId: employeeId,
+      offenseId: offenseId
+    };
+
+    try {
+      const res = await fetch(`${this.url}/getRemedialActionForEmployeeMemoAction`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error('Failed to fetch data');
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
+
 }
 
 export default ServerRequests;
