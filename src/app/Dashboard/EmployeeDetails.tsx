@@ -73,9 +73,34 @@ const EmployeeDetails = () => {
       const res = await serverRequests.getMemoList(
         userData,
         selectedEmployee?._id || ""
-      );
-      if (res?.data) {
-        setSelectedEmployeeMemos(res.data);
+      ); 
+      if (res?.data) {  
+
+        if(res.data.length === 0){
+          setSelectedEmployeeMemos([]);
+        } else {
+          const newMemos = await Promise.all(
+            res.data.map(async (memo: Memo) => {
+              const res = await serverRequests.getRemedialActionForEmployeeMemoAction(
+                userData,
+                selectedEmployee?._id || "",
+                memo?.MemoCode?.number
+              );
+              if(res?.data){
+                return {
+                  ...memo,
+                  MemoCode: {
+                    ...memo.MemoCode,
+                    remedialActions: res.data.length? res.data : memo.MemoCode.remedialActions
+                  }
+                }
+              }else{
+                return memo;
+              }
+            })
+          ); 
+          setSelectedEmployeeMemos(newMemos); 
+        } 
       }
     } catch (e) {
       console.error(e);
