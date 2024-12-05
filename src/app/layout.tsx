@@ -15,7 +15,7 @@ import Confirmation from "./confirmation";
 
 import ImageModal from "./Modals/ImageModal";
 import EmployeeMemoTableModal from "./Modals/EmployeeMemoTableModal";
-import MemoPrintModal from "./Modals/MemoPrintModal";
+import MemoPrintModal from "./Modals/MemoPrintModal"; 
 
 import { Poppins } from "next/font/google";  
 
@@ -36,15 +36,14 @@ export default function RootLayout({
       <body className={` ${poppins.variable} overflow-x-clip `}>
         <SessionProvider session={session}>
           <ContextProvider>
-            <ProfileMenu/> 
-            {/* <ImageUpload/> */}
+            <Confirmation />
+            <ProfileMenu/>   
             {children}  
             <NavBar/>
             <ImageModal/>
             <EmployeeMemoTableModal/>
             <MemoPrintModal/>
             <Toast />
-            <Confirmation />
           </ContextProvider>
         </SessionProvider>
       </body>

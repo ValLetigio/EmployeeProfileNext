@@ -424,11 +424,6 @@ class Memo(BaseModel):
         if 'canCreateMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to create a memo')
 
-        pastOffenses = self._countPastOffenses(self.Employee.id,
-                                               self.MemoCode.id)
-
-        self.MemoCode.number = pastOffenses
-
         self.id = generateRandomString()
         self.submitted = False
         return self.to_dict()

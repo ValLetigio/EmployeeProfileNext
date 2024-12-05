@@ -2,13 +2,9 @@
 
 import React, { useState, useRef } from 'react';
 
-import { useAppContext } from '@/app/GlobalContext';
+import { useAppContext } from '@/app/GlobalContext'; 
 
-// import { Offense } from '@/app/Schema'
-import { Offense } from '@/app/schemas/OffenseSchema.ts'
-import { Employee } from '../../schemas/EmployeeSchema.ts'
-
-import { Memo } from '@/app/schemas/MemoSchema.ts';
+import { Memo, Employee, Offense } from '@/app/schemas/MemoSchema.ts';
 
 
 // import Image from 'next/image'; 
@@ -39,11 +35,12 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
 
       setLoading(true)
 
+      
       if(confirmed){
         try{
           const finalFormData = {
             ...formData, 
-          }
+          } 
 
           if(formData?.mediaList){ 
             const res = await upload.Images(formData?.mediaList, `employees/${formData?.Employee?.name}`, 'mediaList')
@@ -114,6 +111,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       }
     }
   }; 
+
+  // console.log(formData)
  
   return (
     <form
@@ -150,7 +149,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       {/* Offense */} 
       <div className='flex flex-col text-sm gap-2 '>Memo Code
         <select className="select select-bordered w-full " id='MemoCode' required
-          value={formData?.MemoCode?.description || ''}
+          value={formData?.MemoCode?.title || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
               const selectedIndex = e.target.options.selectedIndex - 1
             setFormData({...formData, MemoCode: offenseList[selectedIndex]})
@@ -158,7 +157,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         >
           <option disabled selected value={""}>Select Offense</option>
           {offenseList&&offenseList.map((code, index) => (
-            <option key={index} value={code?.description}>{code?.description}</option>
+            <option key={index} value={code?.title || ""}>{code?.title}</option>
           ))}
           <option value="null">None</option>
         </select>

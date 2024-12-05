@@ -82,9 +82,9 @@ const EmployeeMemoTableModal = () => {
                   </td>
                   {/* Offense */}
                   <td >
-                    <div className='tooltip tooltip-info' data-tip="Show remedial actions">
+                    <div className='tooltip ' data-tip="Remedial actions">
                       <details className="collapse collapse-arrow bg-base-200 w-[70vw] min-[700px]:w-full " > 
-                        <summary className="collapse-title text-base font-bold">{memo?.MemoCode?.description}</summary>
+                        <summary className="collapse-title text-base font-bold">{memo?.MemoCode?.title}</summary>
                         <div className="collapse-content flex flex-wrap gap-1 ">  
                           {memo?.MemoCode?.remedialActions?.map((action, index) => (
                             <p className='btn btn-xs text-[.70rem] btn-neutral truncate' key={index}>{action}</p>

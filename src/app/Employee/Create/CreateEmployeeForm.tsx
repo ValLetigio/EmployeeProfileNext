@@ -4,10 +4,9 @@ import React, { useState, useRef } from 'react'
 
 import { useAppContext } from '@/app/GlobalContext' 
 
-// import Image from 'next/image' 
-
 import ImageInput from '@/app/InputComponents/ImageInput' 
-import { Employee } from '@/app/schemas/MemoSchema'
+
+import { Employee } from '@/app/schemas/EmployeeSchema'
 
 import FirebaseUpload from '@/app/api/FirebaseUpload'
 

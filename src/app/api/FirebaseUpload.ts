@@ -5,17 +5,14 @@ import { storage } from "./firebase";
 class FirebaseUpload { 
 
     async base64ToFile(base64: string, fileName: string, mimeType = '') {
-        // Decode Base64 string to binary data
         const byteCharacters = atob(base64);
         const byteNumbers = Array.from(byteCharacters).map(char => char.charCodeAt(0));
         const byteArray = new Uint8Array(byteNumbers);
       
-        // Create a Blob from the binary data
         const blob = new Blob([byteArray], { type: mimeType });
       
-        // Convert Blob to File
         return new File([blob], fileName, { type: mimeType });
-      } 
+    } 
     
     async Images(images: string[], foldername: string, fileName: string): Promise<string[]> {
         const downloadURLs: string[] = [];

@@ -21,8 +21,8 @@ const ProfileButton: FC<ProfileButtonProps> = ({ userData, handleMenuClick, show
     >
       <Image 
         fill={true}
-        className={`  duration-100 transition-all ease-linear
-          ${showMenu && "border-4 border-info"} 
+        className={` border-4
+          ${showMenu && " border-info"} 
           w-full h-full duration-300 shadow-xl rounded-full  
         `} 
           src={userData?.image} alt={userData?.displayName} 

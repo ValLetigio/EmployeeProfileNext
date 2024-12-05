@@ -32,8 +32,6 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
 
   const [filesChanged, setFilesChanged] = useState<string[]>([])
 
-  console.log(formData)
- 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
 

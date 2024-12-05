@@ -15,11 +15,11 @@ import ImageInput from '@/app/InputComponents/ImageInput'
 
 import FirebaseUpload from '@/app/api/FirebaseUpload'
 
-interface CreateEmployeeFormProps {
+interface UpdateEmployeeForm {
     employeeList: Employee[]
 }
 
-const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {  
+const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {  
 
     const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading } = useAppContext()
 
@@ -387,5 +387,5 @@ const CreateEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList}) => {
   )
 }
 
-export default CreateEmployeeForm
+export default UpdateEmployeeForm
 

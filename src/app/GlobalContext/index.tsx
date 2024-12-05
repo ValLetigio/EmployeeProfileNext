@@ -55,6 +55,7 @@ interface AppContextProps {
   storage: ReturnType<typeof getStorage>;
   highlightText: (text: string ) => JSX.Element[]; 
   setSearch: (data: string) => void;
+  getOrdinal: (n: number) => string; 
 }
 
 // Create the default context with proper types and default values
@@ -86,7 +87,8 @@ const AppContext = createContext<AppContextProps>({
   setLoading: () => {},
   storage: {} as ReturnType<typeof getStorage>,
   highlightText: () => [],  
-  setSearch: () => {}
+  setSearch: () => {},
+  getOrdinal: () => '',
 });
 
 
@@ -235,6 +237,7 @@ export default function ContextProvider({
     }).catch((error) => {
       console.error('error', error);
     });
+    setLoading(true)
   }, [])   
 
   useEffect(() => {  
@@ -261,6 +264,8 @@ export default function ContextProvider({
         email: email || '',
         displayName: displayName || ''
       });
+
+      setLoading(false)
  
       // setToastOptions({open:true, message: `Welcome ${displayName}`, type: 'success', timer: 5});
     } 
@@ -324,15 +329,26 @@ export default function ContextProvider({
   }
 
   const highlightText = (text: string ): JSX.Element[] => {
-      if (!search) return [<span key="0">{text}</span>];
-      const parts = text.split(new RegExp(`(${search})`, 'gi'));
-      return parts.map((part, index) => (
-        <span key={index} 
-          className={part.toLowerCase() === search.toLowerCase() && search.toLowerCase() !== " " ? 'bg-warning font-bold' : ''}>
-          {part}
-        </span>
-      ));
+    if (!search) return [<span key="0">{text}</span>];
+    const parts = text.split(new RegExp(`(${search})`, 'gi'));
+    return parts.map((part, index) => (
+      <span key={index} 
+        className={part.toLowerCase() === search.toLowerCase() && search.toLowerCase() !== " " ? 'bg-warning font-bold' : ''}>
+        {part}
+      </span>
+    ));
+  }
+
+  const getOrdinal = (number: number): string => {
+    const suffixes = ["th", "st", "nd", "rd"];
+    const remainder = number % 100;
+  
+    if (remainder >= 11 && remainder <= 13) {
+      return `${number}th`;
     }
+  
+    return `${number}${suffixes[number % 10] || "th"}`;
+  }
 
   // Define the global values to be shared across the context
   const globals = {
@@ -352,7 +368,8 @@ export default function ContextProvider({
     loading, setLoading,
     storage,
     highlightText, 
-    setSearch
+    setSearch,
+    getOrdinal
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

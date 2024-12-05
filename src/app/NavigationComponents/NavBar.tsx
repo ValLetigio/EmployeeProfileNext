@@ -7,7 +7,7 @@ import MenuButton from "./MenuButton";
 import HomeButton from "./HomeButton";
 import DashboardButton from "./DashboardButton"; 
 
-import NavBarSkeleton from "./NavBarSkeleton"; 
+import NavBarSkeleton from "./NavBarSkeleton";  
 
 import { useAppContext } from "../GlobalContext"; 
 
@@ -41,7 +41,8 @@ function NavBar() {
       `}
     >
       {userData?._id && pathname != "/Dashboard" ? (
-        <> 
+        <>  
+
           {/* home button */}
           <HomeButton pathname={pathname}/>
 
