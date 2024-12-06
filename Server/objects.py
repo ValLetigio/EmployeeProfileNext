@@ -390,10 +390,11 @@ class Memo(BaseModel):
         }
 
     def getRemedialActionForEmployeeMemoAction(self, employeeId, offenseId):
-        employeeMemos = db.read({
-            'Employee._id': employeeId,
-            'MemoCode._id': offenseId
-        }, 'Memo')
+        employeeMemos = db.read(
+            {
+                'Employee._id': employeeId,
+                'MemoCode._id': offenseId
+            }, 'Memo')
 
         offenseCount = len(employeeMemos)
 
@@ -402,7 +403,10 @@ class Memo(BaseModel):
         remedialActions = offense[0]['remedialActions']
 
         if offenseCount >= len(remedialActions):
-            return remedialActions[-1]
+            return {
+                'remedialAction': remedialActions[-1],
+                'offenseCount': offenseCount
+            }
 
         return {
             'remedialAction': remedialActions[offenseCount],
@@ -419,7 +423,6 @@ class Memo(BaseModel):
         remedialAction = self.getRemedialActionForEmployeeMemoAction(
             employeeId, offenseId)
 
-        self.MemoCode.number = remedialAction['offenseCount'] + 1
         self.MemoCode.remedialActions = [remedialAction['remedialAction']]
 
         self.id = generateRandomString()

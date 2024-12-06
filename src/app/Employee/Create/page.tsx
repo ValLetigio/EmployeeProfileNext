@@ -2,6 +2,8 @@ import React from 'react';
 
 import CreateEmployeeForm from './CreateEmployeeForm';
 
+import Breadcrumbs from '@/app/NavigationComponents/Breadcrumbs';
+
 export const metadata = {
   title: '| Create Employee',
   description: 'Employee Creation Form',
@@ -9,13 +11,11 @@ export const metadata = {
 
 const page = () => {
   return (
-    <div className='w-screen h-screen flex items-center justify-center '> 
-      {/* CreateEmployeeForm container */}
+    <div className='w-screen h-screen flex flex-col items-center justify-center relative'> 
+      {/* CreateEmployeeForm container */} 
       <div className={` form-container `} >
         <CreateEmployeeForm/>
-      </div>
-
-
+      </div> 
     </div>
   )
 }
