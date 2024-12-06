@@ -69,8 +69,12 @@ const page = async () => {
                       {offense.description}
                     </div>
                   </td>
-                  <td className="border p-2 whitespace-pre-line">
-                    {offense.remedialActions.map((action) => `• ${action}\n`)}
+                  <td className="border p-4"> 
+                    {offense.remedialActions.map((action) => (
+                      <p key={action} className="w-max my-1 md:my-2">
+                        • {action}
+                      </p>
+                    ))} 
                   </td>
                 </tr>
               ))}

@@ -29,7 +29,7 @@ const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
         setSearch(search)
         const filteredEmployeeList = employeeList.filter((employee) => 
             JSON.stringify(employee).toLowerCase().includes(search?.toLowerCase() || "")
-        ) 
+        )  
         setFilteredEmployeeList(filteredEmployeeList) 
         setLoading(false);
     },[search])

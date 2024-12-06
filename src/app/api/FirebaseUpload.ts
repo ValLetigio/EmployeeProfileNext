@@ -15,9 +15,9 @@ class FirebaseUpload {
     } 
     
     async Images(images: string[], foldername: string, fileName: string): Promise<string[]> {
-        const downloadURLs: string[] = [];
-    
+        
         try {
+            const downloadURLs: string[] = [];
             for (const [index, image] of images.entries()) {
 
                 const base64String = image; 
@@ -30,8 +30,9 @@ class FirebaseUpload {
                 
                 const file = await this.base64ToFile(base64Data, "example.jpg", mimeType);
 
-                const refStorage = storageRef(storage, `${foldername}/${fileName}-${index}`);
-                console.log(`Starting upload for ${fileName}-${index}...`);
+                const randomNumber = Math.floor(10000 + Math.random() * 90000);
+
+                const refStorage = storageRef(storage, `${foldername}/${fileName}-${randomNumber}-${index}`);
     
                 await new Promise<void>((resolve, reject) => {
                     const uploadTask = uploadBytesResumable(refStorage, file);
