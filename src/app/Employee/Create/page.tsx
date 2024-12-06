@@ -1,8 +1,6 @@
 import React from 'react'; 
 
-import CreateEmployeeForm from './CreateEmployeeForm';
-
-import Breadcrumbs from '@/app/NavigationComponents/Breadcrumbs';
+import CreateEmployeeForm from './CreateEmployeeForm'; 
 
 export const metadata = {
   title: '| Create Employee',
