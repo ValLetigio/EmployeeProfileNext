@@ -82,29 +82,7 @@ const PrintMemorandumModal = () => {
       // Dispatch resize event to revert layout back to mobile (if necessary)
       window.dispatchEvent(new Event("resize"));
     }
-  };
-
-  // const convertToPdf = async () => {
-
-  //     const element = memoRef.current;
-  //     if (!element) return;
-
-  //     const canvas = await html2canvas(element, {
-  //         scale: 1, // Higher scale for better quality
-  //         useCORS: true, // Handles cross-origin images
-  //     });
-
-  //     // Get image data from the canvas
-  //     const imgData = canvas.toDataURL('image/png');
-  //     const pdf = new jsPDF({
-  //         orientation: 'portrait',
-  //         unit: 'px',
-  //         format: [canvas.width, canvas.height], // Match the canvas size
-  //     });
-
-  //     pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-  //     pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
-  // };
+  }; 
 
   const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
 
@@ -238,13 +216,21 @@ const PrintMemorandumModal = () => {
             {/* remedial actions */}
             <div className="px-2 border-t-2">
               <br />
-              <div className="flex">Remedial Action:
+              <br />
+              <div className=" flex flex-wrap ">
+                <span className="grow-0">Gravity of Offense: </span>
+                <span className="grow border-b border-black p-3"></span>
+              </div> 
+              <br />
+              <br />
+              <div className="flex flex-wrap">Remedial Action:
                 {memoForPrintModal?.MemoCode?.remedialActions[0] && (
                   <p className="indent-4 whitespace-pre-line underline underline-offset-8 text-red-500">
                      {memoForPrintModal?.MemoCode?.remedialActions[0]} 
                   </p>
                 )}
               </div> 
+              <br />
             </div>
 
             {/*  */}

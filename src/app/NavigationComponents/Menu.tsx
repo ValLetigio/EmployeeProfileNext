@@ -33,7 +33,7 @@ const Menu: FC<MenuButtonProps> = ({ open, cards, pathname, setOpen }) => {
                     ${isActive? 'border-info bg-info text-white ' 
                       : 'border-gray-400 bg-base-100/85 text-gray-400 hover:border-info hover:text-info  '
                     } 
-                    w-full h-full border rounded-full shadow-md shadow-gray-400
+                    w-full h-full border rounded-box shadow-md shadow-gray-400
                     flex items-center justify-center 
                   `} data-tip={card.title}
                   onClick={()=>setOpen(false)}

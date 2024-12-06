@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
 import React from "react";
 
-import Link from "next/link"; 
+import Link from "next/link";
 
 import { useAppContext } from "../GlobalContext";
 
@@ -13,55 +13,58 @@ interface BreadcrumbsProps {
 }
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
-    pathName,
+  pathName,
   fixed,
   position = { x: "", y: "" },
-}) => { 
+}) => {
+  const { pathname } = useAppContext();
 
-    const { pathname } = useAppContext();  
+  const [pathArray, setPathArray] = React.useState<string[] | null>(null);
 
-    const [pathArray, setPathArray] = React.useState<string[] | null>(null);
-
-    React.useEffect(() => {
-      if (pathName) {
-        setPathArray(pathName.split("/").filter((path) => path !== ""));
-      }else{
-        setPathArray(pathname.split("/").filter((path) => path)); 
-      }
-    }, [pathName, pathname]); 
+  React.useEffect(() => {
+    if (pathName) {
+      setPathArray(pathName.split("/").filter((path) => path !== ""));
+    } else {
+      setPathArray(pathname.split("/").filter((path) => path));
+    }
+  }, [pathName, pathname]);
 
   if (fixed && position?.x === "" && position?.y === "") {
     throw new Error("Position prop is required when fixed is true");
   }
 
-  return pathArray && (
-    <div
-      className={`
-            ${fixed && `${position.x} ${position.y} fixed z-30`} 
-            breadcrumbs text-sm h-16
-            flex items-center overflow-hidden
-        `}
-    >
-      <ul>
-        <li>
-          <Link href="/">Home</Link>
-        </li>
-        {pathArray?.map((path, index) => {
-          const href = "/" + pathArray.slice(0, index + 1).join("/");
-          const isLast = index === pathArray.length - 1;
+  return (
+    pathArray && (
+      <div
+        className={`
+        ${fixed && `${position.x} ${position.y} fixed z-30`} 
+        breadcrumbs text-sm h-16
+        flex items-center overflow-hidden
+      `}
+      >
+        <ul>
+          <li className=" hover:text-info ">
+            <Link href="/">Home</Link>
+          </li>
+          {pathArray?.map((path, index) => {
+            const href = "/" + pathArray.slice(0, index + 1).join("/");
+            const isLast = index === pathArray.length - 1;
 
-          return (
-            <li key={index}>
-              {!isLast ? (
-                <Link href={href}>{path.replace(/-/g, " ")}</Link>
-              ) : (
-                <span>{path.replace(/-/g, " ")}</span>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+            return (
+              <li key={index}>
+                {!isLast ? (
+                  <Link className=" hover:text-info " href={href}>
+                    {path.replace(/-/g, " ")}
+                  </Link>
+                ) : (
+                  <span>{path.replace(/-/g, " ")}</span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    )
   );
 };
 

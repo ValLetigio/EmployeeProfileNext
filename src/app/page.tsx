@@ -16,7 +16,7 @@ export default function Home() {
     <>
       <div 
         className={` h-[95vh] w-full flex flex-col items-center justify-center  `} >  
-        <p className=" text-xl md:text-3xl tracking-[0.8rem] font-semibold mb-8" >Employee Records</p>
+        <p className=" text-xl md:text-3xl tracking-[0.5rem] md:tracking-[0.8rem] font-semibold mb-8" >Employee Records</p>
         {/* <h1 className='blur-[1px] absolute text-4xl font-semibold tracking-[33px] opacity-80'>Employee  Records</h1> */}
 
         <div className="join join-vertical md:join-horizontal flex w-[90vw] md:w-[50vw] justify-evenly  ">
