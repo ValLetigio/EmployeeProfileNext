@@ -41,7 +41,7 @@ export function CreateEmployee(
   cy.get('#isRegular').check()
   cy.get('#isProductionEmployee').uncheck()
   cy.get('#dailyWage').type(dailyWage)
-
+  cy.wait(1000)
   cy.get('#submit').click()
   cy.wait(1000)
   cy.get('#confirm-button').click()
@@ -101,6 +101,8 @@ export function CreateOffense(
   cy.get('#menu-button').click()
   cy.get('#create-offense').click()
   cy.location('pathname').should('include', '/Offense/Create')
+  cy.get('#number').type('1')
+  cy.get('#title').type('Employee was late to work')
   cy.get('#description').type(description)
 
   offenseType.forEach((type) => {
@@ -115,6 +117,8 @@ export function CreateOffense(
 
 export function UpdateOffense({
   offense = "Employee was late to work",
+  number = "1",
+  title = "Employee was late to work",
   description = "Employee was late to work and was rude to customers",
   offenseType = ["Suspension"]
 }={}){
@@ -124,6 +128,8 @@ export function UpdateOffense({
   cy.location('pathname').should('include', '/Offense/Update')
   cy.wait(1000)
   cy.get('#select-offense').select(offense)
+  cy.get('#number').type(number)
+  cy.get('#title').type(title)
   cy.get('#description').type(description)
   cy.wait(1000)
   // cy.get('#description')

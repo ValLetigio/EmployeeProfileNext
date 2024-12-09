@@ -18,6 +18,8 @@ const CreateEmployeeForm = () => {
 
     const formRef = useRef<HTMLFormElement>(null)
 
+    console.log('loading:', loading)
+
     const defaultFormData = {
         name: '',
         address: '',

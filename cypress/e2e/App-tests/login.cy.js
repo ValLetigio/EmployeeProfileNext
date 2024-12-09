@@ -49,13 +49,15 @@ describe('Employee spec', () => {
       // Offense
       CreateOffense(
         "Employee was late to work",
-        ['Suspension', 'Written-Warning'],
+        ['Dismissal'],
       )
 
       UpdateOffense({
         offense: "Employee was late to work",
+        number: '2',
+        title: " multiple times",
         description: " multiple times",
-        offenseType: ["Probation"],
+        offenseType: ["Written-Reprimand"],
       })
 
       // Memo

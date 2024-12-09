@@ -277,6 +277,7 @@ export default function ContextProvider({
     if (status === 'unauthenticated' && isTestEnv === 'true') {
       console.log('ran')
       router.push('/');
+      setLoading(false)
       // serverRequests.deleteAllDataInCollection('User')
       serverRequests.getUserForTesting().then((res) => { 
         setUserData(res.data);

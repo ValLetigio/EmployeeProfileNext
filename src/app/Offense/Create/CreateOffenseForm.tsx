@@ -19,7 +19,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({confirmation = tru
   const [ formData, setFormData ] = useState<Offense>({ } as Offense)
 
   const remedialActions = [
-    "Written Reprimand",
+    "Written-Reprimand",
     "Verbal Reprimand",
     "Verbal And Written Reprimand",
     "1 Day Suspension",
