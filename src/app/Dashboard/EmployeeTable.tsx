@@ -59,7 +59,7 @@ const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
                         <div className="avatar ">
                             <div className="mask mask-squircle h-12 w-12 ">
                                 <Image 
-                                    src={employee?.photoOfPerson} 
+                                    src={employee?.photoOfPerson || '/avatar.png'} 
                                     loading="lazy" 
                                     alt="Avatar Tailwind CSS Component" height={100} width={100}/>
                             </div>

@@ -348,9 +348,9 @@ class UserActions(User):
 class Memo(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
     date: datetime.datetime
-    mediaList: List[str]
+    mediaList: Optional[List[str]]
     Employee: 'Employee'
-    memoPhotosList: List[str]
+    memoPhotosList: Optional[List[str]]
     subject: str
     description: str
     MemoCode: 'Offense'
@@ -463,8 +463,8 @@ class Employee(BaseModel):
     address: Optional[str]
     phoneNumber: Optional[str]
     photoOfPerson: str
-    resumePhotosList: List[str]
-    biodataPhotosList: List[str]
+    resumePhotosList: Optional[List[str]]
+    biodataPhotosList: Optional[List[str]]
     email: Optional[str]
     dateJoined: datetime.datetime
     company: str

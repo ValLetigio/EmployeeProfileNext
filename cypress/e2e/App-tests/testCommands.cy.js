@@ -135,7 +135,8 @@ export function UpdateOffense({
   // cy.get('#description')
 
   offenseType.forEach((type) => {
-    cy.get('#'+type).click()
+    console.log(type)
+    // cy.get('#'+type).click()
   })
 
   cy.get('#update-offense-button').click()

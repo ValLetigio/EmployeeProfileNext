@@ -205,7 +205,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         imgDimensions={{height:60, width:60}}
         mediaList={formData?.mediaList}
         onChangeHandler={handleFileChange}
-        multiple={true} required={true}
+        multiple={true} required={false}
         />
       {/* <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
@@ -225,7 +225,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         mediaList={formData?.memoPhotosList}
         // setFunction={setFormData}
         onChangeHandler={handleFileChange} 
-        multiple={true} required={true}
+        multiple={true} required={false}
       />
       {/* <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    

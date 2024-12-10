@@ -199,7 +199,7 @@ const EmployeeDetails = () => {
           >
             <Image
               className={` w-full h-full`}
-              src={selectedEmployeeDetails?.photoOfPerson}
+              src={selectedEmployeeDetails?.photoOfPerson || "/avatar.png"}
               alt={selectedEmployeeDetails?.name}
               fill
               sizes="(max-width: 768px) 100vw, 700px"
