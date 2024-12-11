@@ -26,7 +26,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
 
   const formRef = useRef<HTMLFormElement>(null) 
 
-  const [ formData, setFormData ] = useState<Memo>({ reason: null } as Memo) 
+  const [ formData, setFormData ] = useState<Memo>({ reason: null, mediaList: null, memoPhotosList: null } as Memo) 
   
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
@@ -53,6 +53,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           }  
 
           const form = e.target as HTMLFormElement;
+
+          console.log('finalFormData:', finalFormData)
 
           const res = await serverRequests.createMemo(finalFormData, userData)
 
@@ -203,7 +205,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         title="Photo" width='w-full'
         inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
         imgDimensions={{height:60, width:60}}
-        mediaList={formData?.mediaList}
+        mediaList={formData?.mediaList || []}
         onChangeHandler={handleFileChange}
         multiple={true} required={false}
         />
@@ -222,7 +224,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         title="Memo Photo" width='w-full'
         inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
         imgDimensions={{height:60, width:60}}
-        mediaList={formData?.memoPhotosList}
+        mediaList={formData?.memoPhotosList || []}
         // setFunction={setFormData}
         onChangeHandler={handleFileChange} 
         multiple={true} required={false}

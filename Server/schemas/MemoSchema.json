@@ -45,18 +45,32 @@
                     "type": "string"
                 },
                 "resumePhotosList": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "title": "Resumephotoslist",
-                    "type": "array"
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Resumephotoslist"
                 },
                 "biodataPhotosList": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "title": "Biodataphotoslist",
-                    "type": "array"
+                    "anyOf": [
+                        {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Biodataphotoslist"
                 },
                 "email": {
                     "anyOf": [
@@ -198,21 +212,35 @@
             "type": "string"
         },
         "mediaList": {
-            "items": {
-                "type": "string"
-            },
-            "title": "Medialist",
-            "type": "array"
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Medialist"
         },
         "Employee": {
             "$ref": "#/$defs/Employee"
         },
         "memoPhotosList": {
-            "items": {
-                "type": "string"
-            },
-            "title": "Memophotoslist",
-            "type": "array"
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Memophotoslist"
         },
         "subject": {
             "title": "Subject",
@@ -240,6 +268,18 @@
             ],
             "default": null,
             "title": "Reason"
+        },
+        "remedialAction": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "title": "Remedialaction"
         },
         "_version": {
             "title": " Version",

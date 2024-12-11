@@ -43,18 +43,32 @@
             "type": "string"
         },
         "resumePhotosList": {
-            "items": {
-                "type": "string"
-            },
-            "title": "Resumephotoslist",
-            "type": "array"
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Resumephotoslist"
         },
         "biodataPhotosList": {
-            "items": {
-                "type": "string"
-            },
-            "title": "Biodataphotoslist",
-            "type": "array"
+            "anyOf": [
+                {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "title": "Biodataphotoslist"
         },
         "email": {
             "anyOf": [

@@ -396,13 +396,13 @@ def test_getRemedialActionForEmployeeMemoAction():
 
         memo = user.createMemoAction(userCreated, memoObject)
 
-        assert memo['MemoCode']['remedialActions'][0] == 'Verbal Warning'
+        assert memo['remedialAction'] == 'Verbal Warning'
 
         memo2 = user.createMemoAction(userCreated, memoObject)
 
-        assert memo2['MemoCode']['remedialActions'][0] == 'Written Warning'
+        assert memo2['remedialAction'] == 'Written Warning'
 
-        memoList = db.read({}, 'Memo')
+        memoList = user.getMemoListAction(userCreated, employee['_id'])
 
         assert len(memoList) == 2
 

@@ -7,14 +7,14 @@
 
 export type Id = string | null;
 export type Date = string;
-export type Medialist = string[];
+export type Medialist = string[] | null;
 export type Id1 = string | null;
 export type Name = string;
 export type Address = string | null;
 export type Phonenumber = string | null;
 export type Photoofperson = string;
-export type Resumephotoslist = string[];
-export type Biodataphotoslist = string[];
+export type Resumephotoslist = string[] | null;
+export type Biodataphotoslist = string[] | null;
 export type Email = string | null;
 export type Datejoined = string;
 export type Company = string;
@@ -22,7 +22,7 @@ export type Isregular = boolean;
 export type Isproductionemployee = boolean;
 export type Dailywage = number | null;
 export type Version = number;
-export type Memophotoslist = string[];
+export type Memophotoslist = string[] | null;
 export type Subject = string;
 export type Description = string;
 export type Id2 = string | null;
@@ -33,6 +33,7 @@ export type Version1 = number;
 export type Title = string | null;
 export type Submitted = boolean;
 export type Reason = string | null;
+export type Remedialaction = string | null;
 export type Version2 = number;
 
 export interface Memo {
@@ -46,6 +47,7 @@ export interface Memo {
   MemoCode: Offense;
   submitted: Submitted;
   reason?: Reason;
+  remedialAction?: Remedialaction;
   _version: Version2;
 }
 export interface Employee {

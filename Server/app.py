@@ -339,15 +339,16 @@ def create_memo():
             res = UserActions(userData).createMemoAction(
                 userData, {
                     'date': datetime.now(timezone.utc),
-                    'mediaList': memo['mediaList'],
+                    'mediaList': memo['mediaList'] or None,
                     'Employee': memo['Employee'],
-                    'memoPhotosList': memo['memoPhotosList'],
+                    'memoPhotosList': memo['memoPhotosList'] or None,
                     'subject': memo['subject'],
                     'description': memo['description'],
                     '_id': None,
                     'MemoCode': memo['MemoCode'],
                     'submitted': False,
                     'reason': memo['reason'] or None,
+                    'remedialActions': None,
                     '_version': 0
                 })
 

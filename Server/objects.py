@@ -307,7 +307,12 @@ class UserActions(User):
                             'reason': 1,
                             'subject': 1,
                             'description': 1,
+                            'remedialAction': 1,
                         })
+
+        if not memos:
+            raise ValueError(f'No memos found for employee {employeeId}')
+
         return memos
 
     def getEmployeeForDashboardAction(self, user):
@@ -356,6 +361,7 @@ class Memo(BaseModel):
     MemoCode: 'Offense'
     submitted: bool
     reason: Optional[str] = None
+    remedialAction: Optional[str] = None
     version: int = Field(..., alias='_version')
 
     @field_validator("date", mode='before', check_fields=True)
@@ -386,6 +392,7 @@ class Memo(BaseModel):
             'MemoCode': self.MemoCode.to_dict(),
             'submitted': self.submitted,
             'reason': self.reason,
+            'remedialAction': self.remedialAction,
             '_version': self.version
         }
 
@@ -420,10 +427,12 @@ class Memo(BaseModel):
         employeeId = self.Employee.id
         offenseId = self.MemoCode.id
 
-        remedialAction = self.getRemedialActionForEmployeeMemoAction(
+        getRemedialAction = self.getRemedialActionForEmployeeMemoAction(
             employeeId, offenseId)
 
-        self.MemoCode.remedialActions = [remedialAction['remedialAction']]
+        remedialActionToString = getRemedialAction['remedialAction']
+
+        self.remedialAction = remedialActionToString
 
         self.id = generateRandomString()
         self.submitted = False
@@ -446,11 +455,6 @@ class Memo(BaseModel):
             raise ValueError('Reason must be provided')
         if len(self.memoPhotosList) == 0:
             raise ValueError('Memo must have at least one photo')
-
-        # pastOffenses = self._countPastOffenses(self.Employee.id,
-        #                                        self.MemoCode.id)
-
-        # self.MemoCode.number = pastOffenses + 1
 
         self.reason = reason
         self.submitted = True
