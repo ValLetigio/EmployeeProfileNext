@@ -62,7 +62,7 @@ def delete_all_data_in_collection():
             }), 200
         except Exception as e:
             logging.exception("Error deleting data: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
 
 @app.route('/readAllDataInCollection', methods=['POST'])
@@ -78,7 +78,7 @@ def read_all_data_in_collection():
             # Log the error with exception information
             logging.exception("Error reading purchase order: %s", e)
             # Respond with an error message
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
         # If everything went fine
         return jsonify({
@@ -97,7 +97,7 @@ def firebase_login():
             user = firebaseAuthenticator(userObject).login()
         except Exception as e:
             logging.exception("Error logging in: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
         return jsonify({
             "message": "User logged in successfully",
@@ -190,7 +190,7 @@ def create_employee():
             }), 200
         except Exception as e:
             logging.exception("Error processing Employee: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
@@ -222,7 +222,7 @@ def update_employee():
             }), 200
         except Exception as e:
             logging.exception("Error processing Employee: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
@@ -245,7 +245,7 @@ def delete_employee():
             }), 200
         except Exception as e:
             logging.exception("Error processing Employee: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
@@ -275,7 +275,7 @@ def create_offense():
             }), 200
         except Exception as e:
             logging.exception("Error processing Offense: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
@@ -299,7 +299,7 @@ def update_offense():
             }), 200
         except Exception as e:
             logging.exception("Error processing Offense: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
@@ -322,7 +322,7 @@ def delete_offense():
             }), 200
         except Exception as e:
             logging.exception("Error processing Offense: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
@@ -358,8 +358,7 @@ def create_memo():
             }), 200
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
-            return e.args[0], 400
-
+            return jsonify({'error': e.args[0]}), 400
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 
@@ -382,7 +381,7 @@ def submit_memo():
             }), 200
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
@@ -403,8 +402,7 @@ def get_memo_list():
             }), 200
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
-            return e.args[0], 400
-
+            return jsonify({'error': e.args[0]}), 400
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 
@@ -427,7 +425,7 @@ def delete_memo():
             }), 200
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
@@ -449,7 +447,7 @@ def get_all_memo_thats_not_submitted():
             }), 200
         except Exception as e:
             logging.exception("Error processing Memo: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
@@ -468,7 +466,7 @@ def get_employee_for_dashboard_action():
             }), 200
         except Exception as e:
             logging.exception("Error processing Employee: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 
@@ -488,7 +486,7 @@ def get_employee_details_action():
             }), 200
         except Exception as e:
             logging.exception("Error processing Employee: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 
@@ -544,7 +542,7 @@ def get_remedial_action_for_employee_memo_action():
             }), 200
         except Exception as e:
             logging.exception("Error processing Employee: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
 
 if __name__ == '__main__':
