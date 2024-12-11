@@ -65,7 +65,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
             router.refresh()
 
             formRef.current?.scrollIntoView({ behavior: 'smooth' })
-          }else{
+          }else{ 
             setToastOptions({ open: true, message: res.error, type: 'error', timer: 5 });
           }
         }catch(e:unknown){ 

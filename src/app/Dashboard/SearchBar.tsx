@@ -55,7 +55,7 @@ const SearchBar :React.FC<SearchBarProps> = ({controlled = false}) => {
             className="grow w-full xl:w-32 md:w-20 hover:w-full md:hover:w-[15vw] md:focus:w-[15vw] focus:w-full placeholder:text-base h-full truncate " 
             placeholder='Search' defaultValue={search||""} />
         <div className='swap '>
-            <input checked={loading} type="checkbox" name="" id="" autoComplete='on'/>
+            <input checked={loading} type="checkbox" name="" id="" readOnly autoComplete='on'/>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"

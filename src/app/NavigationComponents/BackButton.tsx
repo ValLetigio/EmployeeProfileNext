@@ -10,8 +10,7 @@ const BackButton = () => {
 
   return ( 
     <button 
-      onClick={() => 
-        // router.back()
+      onClick={() =>  
         router.push('/')
       }
         className=' 
