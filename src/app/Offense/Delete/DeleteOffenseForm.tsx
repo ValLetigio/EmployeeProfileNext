@@ -14,7 +14,7 @@ interface DeleteOffenseFormProps {
 
 const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remedialActions, confirmation = true}) => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router, getOrdinal } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation, getOrdinal } = useAppContext()
 
     const formRef = React.useRef<HTMLFormElement>(null) 
 

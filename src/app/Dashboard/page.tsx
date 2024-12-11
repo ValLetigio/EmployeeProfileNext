@@ -11,7 +11,7 @@ import ServerRequests from "@/app/api/ServerRequests";
 import EmployeeTable from "./EmployeeTable";
 import EmployeeDetails from "./EmployeeDetails";
 import SearchBar from "./SearchBar";
-import NotAuthorized from "./NotAuthorized";
+import NotAuthorized from "../NotAuthorized";
 
 import BackButton from "../NavigationComponents/BackButton";
 
