@@ -52,11 +52,9 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
             finalFormData.memoPhotosList = res || []
           }  
 
-          const form = e.target as HTMLFormElement;
+          const form = e.target as HTMLFormElement; 
 
-          console.log('finalFormData:', finalFormData)
-
-          const res = await serverRequests.createMemo(finalFormData, userData)
+          const res = await serverRequests.createMemo(finalFormData, userData) 
 
           if(res&&res.data){
             setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
@@ -67,6 +65,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
             router.refresh()
 
             formRef.current?.scrollIntoView({ behavior: 'smooth' })
+          }else{
+            setToastOptions({ open: true, message: res.error, type: 'error', timer: 5 });
           }
         }catch(e:unknown){ 
           console.error('Error creating Memo:', e)

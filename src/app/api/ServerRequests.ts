@@ -69,9 +69,7 @@ class ServerRequests extends Server {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ employee: employee, userData: userObject }),
-      });
-
-      if (!res.ok) throw new Error('Failed to fetch data');
+      }); 
 
       return await res.json();
 
@@ -88,7 +86,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ employeeData: employee, dataToUpdate, userData: userObject }),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to fetch data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -103,7 +100,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ employeeData: employee, userData: userObject }),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to delete data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -151,7 +147,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ offense: offense, userData: userObject }),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to fetch data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -165,8 +160,7 @@ class ServerRequests extends Server {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ offenseData: offense, dataToUpdate, userData: userObject }),
         cache: 'no-store',
-      });
-      if (!res.ok) throw new Error('Failed to fetch data');
+      }); 
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -180,8 +174,7 @@ class ServerRequests extends Server {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ offenseData: offense, userData: userObject }),
         cache: 'no-store',
-      });
-      if (!res.ok) throw new Error('Failed to fetch data');
+      }); 
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -195,8 +188,7 @@ class ServerRequests extends Server {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ memo: memo, userData: userObject }),
         cache: 'no-store',
-      });
-      if (!res.ok) throw new Error('Failed to fetch data');
+      }); 
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -211,7 +203,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ memoData: memo, reason, userData: userObject }),
         cache: 'no-store',
       });
-      if (!res.ok) {console.log(res) ; throw new Error('Failed to fetch data')};
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -247,7 +238,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ memoData: memo, userData: userObject }),
         cache: 'no-store',
       });
-      if (!res.ok) {console.log(res) ; throw new Error('Failed to fetch data')};
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -262,7 +252,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ userData: userObject, employeeId }),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to fetch data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -298,7 +287,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ collection: "Memo" }),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to fetch data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -332,7 +320,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ collection: "Employee" }),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to fetch data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -347,7 +334,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ collection: "Offense" }),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to fetch data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -362,7 +348,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ userData: userObject }),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to fetch data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -377,7 +362,6 @@ class ServerRequests extends Server {
         body: JSON.stringify({ userData: userObject, employeeId }),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to fetch data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;
@@ -399,7 +383,6 @@ class ServerRequests extends Server {
         body: JSON.stringify(data),
         cache: 'no-store',
       });
-      if (!res.ok) throw new Error('Failed to fetch data');
       return await res.json();
     } catch (error:unknown) {
       return (error as Error).message;

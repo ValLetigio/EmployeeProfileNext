@@ -36,14 +36,14 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({offenseList, remed
 
             const res = await serverRequests.deleteOffense(formData, userData)
 
-            setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 }); 
+            if(res.message) {
+              setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
+              form.reset()
+              setFormData({} as Offense)
+            } else {
+              setToastOptions({ open: true, message: res.error, type: 'error', timer: 5 }); 
+            }
 
-            form.reset()
-            setFormData({} as Offense)  
-
-            router.refresh()
-
-            formRef.current?.scrollIntoView({ behavior: 'smooth' })
         }catch(e:unknown){ 
           console.error('Error Deleting Offense:', e)
           setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });

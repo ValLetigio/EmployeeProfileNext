@@ -16,9 +16,7 @@ const CreateEmployeeForm = () => {
 
     const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading } = useAppContext() 
 
-    const formRef = useRef<HTMLFormElement>(null)
-
-    console.log('loading:', loading)
+    const formRef = useRef<HTMLFormElement>(null) 
 
     const defaultFormData = {
         name: '',
@@ -36,9 +34,7 @@ const CreateEmployeeForm = () => {
     }
 
 
-    const [ formData, setFormData ] = useState<Employee>(defaultFormData as Employee);
-
-
+    const [ formData, setFormData ] = useState<Employee>(defaultFormData as Employee); 
 
     const handleSubmit = async(e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()    
@@ -59,11 +55,11 @@ const CreateEmployeeForm = () => {
                     const photoOfPerson = await upload.Images([formData.photoOfPerson], `employees/${formData.name}`, 'photoOfPerson')
                     finalFormData.photoOfPerson = photoOfPerson[0]
                 }
-                if(formData.resumePhotosList[0]) {
+                if(formData.resumePhotosList && formData.resumePhotosList[0]) {
                     const resumePhotosList = await upload.Images(formData.resumePhotosList, `employees/${formData.name}`, 'resumePhotosList')
                     finalFormData.resumePhotosList = resumePhotosList
                 }
-                if(formData.biodataPhotosList[0]) {
+                if(formData?.biodataPhotosList && formData?.biodataPhotosList[0]) {
                     const biodataPhotosList = await upload.Images(formData.biodataPhotosList, `employees/${formData.name}`, 'biodataPhotosList')
                     finalFormData.biodataPhotosList = biodataPhotosList
                 }  
@@ -78,6 +74,8 @@ const CreateEmployeeForm = () => {
                     setFormData(defaultFormData as Employee)  
                     formRef.current?.scrollIntoView({ behavior: 'smooth' })
                     router.refresh()
+                }else {
+                    setToastOptions({ open: true, message: res.error, type: 'error', timer: 15 });
                 }
     
             }catch(e:unknown){  
@@ -173,7 +171,7 @@ const CreateEmployeeForm = () => {
                 title="Resume" width='w-full md:w-[48%]'
                 inputStyle='file-input file-input-bordered w-full max-w-full file-input-xs h-10'
                 imgDimensions={{height:60, width:60}}
-                mediaList={formData?.resumePhotosList}
+                mediaList={formData?.resumePhotosList || []}
                 // onChangeHandler={handleFileChange}
                 setFunction={setFormData}
                 multiple={true}
@@ -194,7 +192,7 @@ const CreateEmployeeForm = () => {
                 title="Bio Data" width='w-full md:w-[48%]'
                 inputStyle='file-input file-input-bordered w-full max-w-full file-input-xs h-10'
                 imgDimensions={{height:60, width:60}}
-                mediaList={formData?.biodataPhotosList}
+                mediaList={formData?.biodataPhotosList || []}
                 // onChangeHandler={handleFileChange}
                 setFunction={setFormData}
                 multiple={true}

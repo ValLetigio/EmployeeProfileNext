@@ -42,6 +42,8 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
           form.reset()
           setFormData({} as Memo) 
           formRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }else{
+          setToastOptions({ open: true, message: res.error, type: 'error', timer: 5 });
         }
       }catch(e:unknown){ 
         console.error('Error Deleting Memo:', e)
@@ -132,16 +134,16 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
       <div className='text-sm flex flex-col md:flex-row justify-evenly '>
         {/* medialist */}
         <div className={`${!formData?.mediaList?.[0]&&"hidden"} cursor-pointer flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-base-200 pt-4 p-1 rounded-lg `}
-          onClick={()=>handleImageModalClick(formData?.mediaList)}
+          onClick={()=>handleImageModalClick(formData?.mediaList||[])}
         >   
-          <Image src={formData?.mediaList?.[0]} className={`${!formData?.mediaList?.[0]&&"hidden"} h-[60px]`} height={100} width={100} alt="mediaList" />  
+          <Image src={formData?.mediaList?.[0] || ""} className={`${!formData?.mediaList?.[0]&&"hidden"} h-[60px]`} height={100} width={100} alt="mediaList" />  
           Photo  
         </div>   
         {/* memoPhotosList */} 
         <div className={`${!formData?.memoPhotosList?.[0]&&"hidden"} cursor-pointer flex flex-col items-center mb-1 gap-1 w-full md:w-[48%] bg-base-200 pt-4 p-1 rounded-lg `}
-          onClick={()=>handleImageModalClick(formData?.memoPhotosList)}
+          onClick={()=>handleImageModalClick(formData?.memoPhotosList || [])}
         >
-          <Image src={formData?.memoPhotosList?.[0]} className={`${!formData?.memoPhotosList?.[0]&&"hidden"} h-[60px]`} height={100} width={100} alt="memoPhotosList" />  
+          <Image src={formData?.memoPhotosList?.[0] || ""} className={`${!formData?.memoPhotosList?.[0]&&"hidden"} h-[60px]`} height={100} width={100} alt="memoPhotosList" />  
           Memo Photo    
         </div> 
       </div>

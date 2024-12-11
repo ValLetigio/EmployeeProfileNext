@@ -57,8 +57,9 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
                     setFormData(defaultFormData)   
                     formRef.current?.scrollIntoView({ behavior: 'smooth' })
                     router.refresh()
+                }else {
+                    setToastOptions({ open: true, message: res.error, type: 'error', timer: 15 });
                 }
-
             }catch(e:unknown){  
                 console.error('Error deleting employee:', e)
                 setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
@@ -138,16 +139,16 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
             {/* resumePhotosList */}
             <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-base-200 rounded-lg '>Resume    
-                    <Image src={formData?.resumePhotosList[0] } className='h-[60px] cursor-pointer' height={100} width={100} alt="resumePhotosList" 
-                        onClick={()=>handleImageModalClick(formData?.resumePhotosList)}
+                    <Image src={formData?.resumePhotosList?.[0] || "" } className='h-[60px] cursor-pointer' height={100} width={100} alt="resumePhotosList" 
+                        onClick={()=>handleImageModalClick(formData?.resumePhotosList||[])}
                     />  
                 </div> 
             </label>
             {/* biodataPhotosList */}
             <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
                 <div className='flex justify-evenly items-center mb-1 gap-1 p-1 bg-base-200 rounded-lg '>Bio Data   
-                    <Image src={formData?.biodataPhotosList[0] } className='h-[60px] cursor-pointer' height={100} width={100} alt="biodataPhotosList" 
-                        onClick={()=>handleImageModalClick(formData?.biodataPhotosList)}
+                    <Image src={formData?.biodataPhotosList?.[0] || "" } className='h-[60px] cursor-pointer' height={100} width={100} alt="biodataPhotosList" 
+                        onClick={()=>handleImageModalClick(formData?.biodataPhotosList || [])}
                     />  
                 </div> 
             </label>

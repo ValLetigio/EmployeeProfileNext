@@ -53,17 +53,20 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({confirmation = tru
         if(formData.remedialActions.length === 0){
           throw new Error('Remedial Actions must be selected')
         }else{ 
-          const res = await serverRequests.createOffense(formData, userData)
-          console.log(res)
+          const res = await serverRequests.createOffense(formData, userData) 
 
-          setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
+          if (res.message) {
+            setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
 
-          form.reset()
-          setFormData({} as Offense) 
+            form.reset()
+            setFormData({} as Offense) 
 
-          router.refresh()
+            router.refresh()
 
-          formRef.current?.scrollIntoView({ behavior: 'smooth' })
+            formRef.current?.scrollIntoView({ behavior: 'smooth' })
+          }else {
+            setToastOptions({ open: true, message: res.error, type: 'error', timer: 5 });
+          }
         }
       }catch(e:unknown){ 
         console.error('Error creating Offense:', e)

@@ -35,20 +35,26 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({offenseList, remed
  
       if(confirmed){
         try{
-            const form = e.target as HTMLFormElement;    
-
-            console.log(dataToUpdate)
+            const form = e.target as HTMLFormElement;     
             
-            const res = await serverRequests.updateOffense(formData, dataToUpdate, userData)
+            if(formData.remedialActions.length === 0){
+              throw new Error('Remedial Actions must be selected')
+            } else {
+              const res = await serverRequests.updateOffense(formData, dataToUpdate, userData)
 
-            setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
+              if(res.message){
+                setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 });
 
-            form.reset()
-            setFormData({} as Offense)  
+                form.reset()
+                setFormData({} as Offense)  
 
-            router.refresh() 
+                router.refresh() 
 
-            formRef.current?.scrollIntoView({ behavior: 'smooth' })
+                formRef.current?.scrollIntoView({ behavior: 'smooth' })
+              }else{
+                setToastOptions({ open: true, message: res.error, type: 'error', timer: 5 });
+              }
+            } 
             
         }catch(e:unknown){ 
           console.error('Error Updating Offense:', e)

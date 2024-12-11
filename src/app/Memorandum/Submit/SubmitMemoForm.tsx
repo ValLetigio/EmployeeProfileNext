@@ -46,12 +46,12 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
           }
 
           if(filesChanged.includes('mediaList')){ 
-            const res = await upload.Images(formData?.mediaList, `employees/${formData?.Employee?.name}`, 'mediaList')
+            const res = await upload.Images(formData?.mediaList || [], `employees/${formData?.Employee?.name}`, 'mediaList')
             finalFormData.mediaList = res || []
           }
 
           if(filesChanged.includes('memoPhotosList')) {
-            const res = await upload.Images(formData?.memoPhotosList, `employees/${formData?.Employee?.name}`, 'memoPhotosList')
+            const res = await upload.Images(formData?.memoPhotosList || [], `employees/${formData?.Employee?.name}`, 'memoPhotosList')
             finalFormData.memoPhotosList = res || []
           }  
 
@@ -67,7 +67,8 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
               setSubmittedMemos([...submittedMemos, formData.description])
 
               formRef.current?.scrollIntoView({ behavior: 'smooth' })
-            }else{
+            }else{ 
+              setToastOptions({ open: true, message: res.error, type: 'error', timer: 5 }); 
               throw new Error('Error Submitting Memo')
             } 
         }catch(e:unknown){ 
@@ -202,7 +203,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
         title="Photo" width='w-full'
         inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
         imgDimensions={{height:60, width:60}}
-        mediaList={formData?.mediaList}
+        mediaList={formData?.mediaList || []}
         onChangeHandler={handleFileChange} 
         required={!formData?.mediaList?.length}
         multiple={true}
@@ -222,7 +223,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
         title="Memo Photo" width='w-full'
         inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
         imgDimensions={{height:60, width:60}}
-        mediaList={formData?.memoPhotosList}
+        mediaList={formData?.memoPhotosList || []}
         // setFunction={setFormData} 
         onChangeHandler={handleFileChange} 
         required={!formData?.memoPhotosList?.length}

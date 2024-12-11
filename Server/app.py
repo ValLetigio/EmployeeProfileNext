@@ -322,7 +322,7 @@ def delete_offense():
             }), 200
         except Exception as e:
             logging.exception("Error processing Offense: %s", e)
-            return e.args[0], 400
+            return jsonify({'error': e.args[0]}), 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
@@ -527,7 +527,8 @@ def getUserForTesting():
 
     else:
         return jsonify({"error": "Env is not in Local"}), 400
-    
+
+
 @app.route('/getRemedialActionForEmployeeMemoAction', methods=['POST'])
 def get_remedial_action_for_employee_memo_action():
     if request.is_json:
@@ -537,7 +538,7 @@ def get_remedial_action_for_employee_memo_action():
         offenseId = data['offenseId']
         try:
             res = UserActions(userData).getRemedialActionForEmployeeMemoAction(
-                 employeeId, offenseId)
+                employeeId, offenseId)
             return jsonify({
                 'message': 'Employee read successfully!',
                 'data': res

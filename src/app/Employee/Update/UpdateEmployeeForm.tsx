@@ -67,12 +67,12 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
                 }
 
                 if(dataToUpdate?.biodataPhotosList) {
-                    const res = await upload.Images(formData.biodataPhotosList, `employees/${formData.name}`, 'biodataPhotosList')
+                    const res = await upload.Images(formData.biodataPhotosList||[], `employees/${formData.name}`, 'biodataPhotosList')
                     dataToUpdate.biodataPhotosList = res || []
                 }
 
                 if(dataToUpdate?.resumePhotosList){ 
-                    const res = await upload.Images(formData.resumePhotosList, `employees/${formData.name}`, 'resumePhotosList')
+                    const res = await upload.Images(formData.resumePhotosList||[], `employees/${formData.name}`, 'resumePhotosList')
                     dataToUpdate.resumePhotosList = res || []
                 }
 
@@ -88,7 +88,11 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
                     setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 }); 
                     formRef.current?.scrollIntoView({ behavior: 'smooth' }) 
                     router.refresh() 
+                }else {
+                    setToastOptions({ open: true, message: res.error, type: 'error', timer: 15 });
                 }
+
+
             } catch(e:unknown) {  
                 console.error('Error Updating employee:', e)
                 setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
@@ -264,7 +268,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
                 title="Resume" width='w-full md:w-[48%]'
                 inputStyle='file-input file-input-bordered w-full max-w-full file-input-xs h-10'
                 imgDimensions={{height:60, width:60}}
-                mediaList={formData?.resumePhotosList}  
+                mediaList={formData?.resumePhotosList || []}  
                 onChangeHandler={handleFileChange}
                 disable={disable}
                 multiple={true}
@@ -283,7 +287,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
                 title="Bio Data" width='w-full md:w-[48%]'
                 inputStyle='file-input file-input-bordered w-full max-w-full file-input-xs h-10'
                 imgDimensions={{height:60, width:60}}
-                mediaList={formData?.biodataPhotosList}  
+                mediaList={formData?.biodataPhotosList || []}  
                 onChangeHandler={handleFileChange}
                 disable={disable}
                 multiple={true}
