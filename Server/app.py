@@ -322,7 +322,7 @@ def delete_offense():
             }), 200
         except Exception as e:
             logging.exception("Error processing Offense: %s", e)
-            return jsonify({'error': e.args[0]}), 400
+            return e.args[0], 400
 
     else:
         return jsonify({"error": "Request must be JSON"}), 400
