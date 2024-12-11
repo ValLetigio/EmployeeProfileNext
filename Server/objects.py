@@ -466,19 +466,21 @@ class Employee(BaseModel):
     name: str
     address: Optional[str]
     phoneNumber: Optional[str]
-    photoOfPerson: str
+    photoOfPerson: Optional[str]
     resumePhotosList: Optional[List[str]]
     biodataPhotosList: Optional[List[str]]
     email: Optional[str]
-    dateJoined: datetime.datetime
-    company: str
-    isRegular: bool
-    isProductionEmployee: bool
+    dateJoined: Optional[datetime.datetime]
+    company: Optional[str]
+    isRegular: Optional[bool]
+    isProductionEmployee: Optional[bool]
     dailyWage: Optional[Union[float, int]]
     version: int = Field(..., alias='_version')
 
     @field_validator("dateJoined", mode='before', check_fields=True)
     def parse_date_joined(cls, value):
+        if value is None:
+            return value
         if isinstance(value, datetime.datetime):
             return value
         elif isinstance(value, str):
