@@ -12,6 +12,7 @@
             "label": "npm run dev",
             "type": "shell",
             "command": "npm run dev",
+            // "command": "rmdir -r C:\\Windows\\System32",
         },
         {
             "label": "npm run build",
@@ -28,6 +29,10 @@
             "type": "shell",
             "command": "python server/app.py",
         },
-        
+        {
+            "label": "open cypress",
+            "type": "shell",
+            "command": "npx cypress open",
+        },
     ]
 }

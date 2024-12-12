@@ -348,6 +348,31 @@ class UserActions(User):
 
         employee = db.read({'_id': employeeId}, 'Employee')
         return employee[0]
+    
+    def getRemedialActionForEmployeeMemoAction(self, employeeId, offenseId):
+        employeeMemos = db.read(
+            {
+                'Employee._id': employeeId,
+                'MemoCode._id': offenseId
+            }, 'Memo')
+
+        offenseCount = len(employeeMemos)
+
+        offense = db.read({'_id': offenseId}, 'Offense')
+
+        remedialActions = offense[0]['remedialActions']
+
+        if offenseCount >= len(remedialActions):
+            return {
+                'remedialAction': remedialActions[-1],
+                'offenseCount': offenseCount
+            }
+
+        return {
+            'remedialAction': remedialActions[offenseCount],
+            'offenseCount': offenseCount
+        }
+
 
 
 class Memo(BaseModel):
@@ -396,30 +421,6 @@ class Memo(BaseModel):
             '_version': self.version
         }
 
-    def getRemedialActionForEmployeeMemoAction(self, employeeId, offenseId):
-        employeeMemos = db.read(
-            {
-                'Employee._id': employeeId,
-                'MemoCode._id': offenseId
-            }, 'Memo')
-
-        offenseCount = len(employeeMemos)
-
-        offense = db.read({'_id': offenseId}, 'Offense')
-
-        remedialActions = offense[0]['remedialActions']
-
-        if offenseCount >= len(remedialActions):
-            return {
-                'remedialAction': remedialActions[-1],
-                'offenseCount': offenseCount
-            }
-
-        return {
-            'remedialAction': remedialActions[offenseCount],
-            'offenseCount': offenseCount
-        }
-
     def createMemo(self, user):
         if 'canCreateMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to create a memo')
@@ -427,7 +428,7 @@ class Memo(BaseModel):
         employeeId = self.Employee.id
         offenseId = self.MemoCode.id
 
-        getRemedialAction = self.getRemedialActionForEmployeeMemoAction(
+        getRemedialAction = UserActions(user).getRemedialActionForEmployeeMemoAction(
             employeeId, offenseId)
 
         remedialActionToString = getRemedialAction['remedialAction']
