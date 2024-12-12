@@ -104,57 +104,6 @@ def firebase_login():
             "data": user
         }), 200
 
-
-# @app.route('/createUser', methods=['POST'])
-# def create_user():
-#     if request.is_json:
-#         data = request.get_json()
-
-#         try:
-#             res = UserActions({
-#                 '_id': None,
-#                 'password': data['password'],
-#                 'email': data['email'],
-#                 'phone': data['phone'],
-#                 'roles': [],
-#                 '_version': 0}
-#             ).createUserAction()
-
-#             return jsonify({'message': 'User created successfully!', 'data': res}), 200
-#         except Exception as e:
-#             logging.exception("Error processing User: %s", e)
-#             return e.args[0], 400
-
-#     else:
-#         return jsonify({"error": "Request must be JSON"}), 400
-
-# @app.route('/userLogin', methods=['POST'])
-# def user_login():
-#     if request.is_json:
-#         data = request.get_json()
-
-#         if 'email' not in data or 'password' not in data:
-#             return jsonify({"error": "Email and password are required"}), 400
-
-#         try:
-#             res = UserActions({
-#                 'email': data['email'],
-#                 'password': data['password']}
-#             ).userLoginAction()
-
-#             if res:
-#                 return jsonify({'message': 'User logged in successfully!', 'data': res}), 200
-#             else:
-#                 return jsonify({"error": "Invalid email or password"}), 401
-
-#         except Exception as e:
-#             logging.exception("Error processing User: %s", e)
-#             return jsonify({"error": str(e)}), 400
-
-#     else:
-#         return jsonify({"error": "Request must be JSON"}), 400
-
-
 @app.route('/createEmployee', methods=['POST'])
 def create_employee():
     if request.is_json:
@@ -163,6 +112,10 @@ def create_employee():
         data = employeeData['employee']
 
         try:
+
+            if data['dateJoined'] is None:
+                pass
+
             if data['dateJoined']:
                 data['dateJoined'] = datetime.strptime(data['dateJoined'],
                                                        "%Y-%m-%d")
