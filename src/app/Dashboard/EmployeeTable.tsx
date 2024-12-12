@@ -58,10 +58,13 @@ const EmployeeTable:React.FC<EmployeeTableProps> = ({employeeList}) => {
                     <div className="flex items-center gap-3 "  >
                         <div className="avatar ">
                             <div className="mask mask-squircle h-12 w-12 ">
-                                <Image 
-                                    src={employee?.photoOfPerson || '/avatar.png'} 
-                                    loading="lazy" 
-                                    alt="Avatar Tailwind CSS Component" height={100} width={100}/>
+                                {employee?.photoOfPerson ? (
+                                        <Image 
+                                        src={employee?.photoOfPerson || ''} 
+                                        loading="lazy" 
+                                        alt="Avatar Tailwind CSS Component" height={100} width={100}/>
+                                    ) : <div className='h-12 w-12 bg-base-200 grid place-items-center'> ? </div>
+                                }
                             </div>
                         </div>
                         <div className='text-start'>

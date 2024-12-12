@@ -32,25 +32,24 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
 
     const [dataToUpdate, setDataToUpdate] = useState<DataToUpdate>({})
 
-    const EmployeeValue = {
+    const defaultFormData = {
         _id: '',
-        _version: 0,
         name: '',
-        address: '',
-        phoneNumber: '',
-        photoOfPerson: '',
-        resumePhotosList: [''],
-        biodataPhotosList: [''],
-        email: '',
-        dateJoined: '',
-        company: '',
-        isRegular: false,
-        isProductionEmployee: false,
-        dailyWage: 0
+        address: null,
+        phoneNumber: null,
+        photoOfPerson: null,
+        resumePhotosList: null,
+        biodataPhotosList: null,
+        email: null,
+        dateJoined: null,
+        company: null,
+        isRegular: null,
+        isProductionEmployee: null,
+        dailyWage: null
     }
     
-    const [selectedEmployee, setSelectedEmployee] = useState<Employee>(EmployeeValue as Employee) 
-    const [ formData, setFormData ] = useState<Employee>(EmployeeValue as Employee)
+    const [selectedEmployee, setSelectedEmployee] = useState<Employee>(defaultFormData as Employee) 
+    const [ formData, setFormData ] = useState<Employee>(defaultFormData as Employee)
 
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()   
@@ -82,8 +81,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
 
                 if(res&&res.message){ 
                     form.reset() 
-                    setFormData(EmployeeValue) 
-                    setSelectedEmployee(EmployeeValue) 
+                    setFormData(defaultFormData as Employee) 
+                    setSelectedEmployee(defaultFormData as Employee) 
                     setDataToUpdate({}) 
                     setToastOptions({ open: true, message: res.message, type: 'success', timer: 5 }); 
                     formRef.current?.scrollIntoView({ behavior: 'smooth' }) 
