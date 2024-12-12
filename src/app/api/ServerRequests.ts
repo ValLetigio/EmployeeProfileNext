@@ -368,7 +368,7 @@ class ServerRequests extends Server {
     }
   }
 
-  async getRemedialActionForEmployeeMemoAction(userObject: User, employeeId: string, offenseId: number): Promise<any> { 
+  async getRemedialActionForEmployeeMemoAction(userObject: User, employeeId: string, offenseId: string): Promise<any> { 
 
     const data = {
       userData: userObject,

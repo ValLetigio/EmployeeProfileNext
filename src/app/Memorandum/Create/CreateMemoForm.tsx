@@ -22,6 +22,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
 
   const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading } = useAppContext()
 
+  const [remedialAction, setRemedialAction] = useState<string>("")
+
   const upload = new FirebaseUpload()
 
   const formRef = useRef<HTMLFormElement>(null) 
@@ -116,16 +118,20 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
     }
   }; 
 
-  const testtest = async (id: string, number: number) => {
+  const getRemedialAction = async (id: string, number: string) => {
     const res = await serverRequests.getRemedialActionForEmployeeMemoAction(userData, id, number)
-    console.log(res)
+    if(res?.data?.remedialAction) {
+      setRemedialAction(res.data.remedialAction)
+    } 
   }
 
   React.useEffect(() => {
     if(formData?.Employee?._id && formData?.MemoCode?.number){
-      testtest(formData?.Employee?._id, formData?.MemoCode?.number)
+      getRemedialAction(formData?.Employee?._id, formData?.MemoCode?._id || "") 
+    }else{
+      setRemedialAction("")
     }
-  }, [userData, formData])
+  }, [userData, formData]) 
  
   return (
     <form
@@ -159,7 +165,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         </select>
       </div>
 
-      {/* Offense */} 
+      {/* Memo Code */} 
       <div className='flex flex-col text-sm gap-2 '>Memo Code
         <select className="select select-bordered w-full " id='MemoCode' required
           value={formData?.MemoCode?.title || ''}
@@ -175,6 +181,10 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           <option value="null">None</option>
         </select>
       </div>
+
+      {remedialAction&&(<div className='flex flex-col text-sm gap-2 '>Memo Remedial Action
+        <div className='input input-bordered flex items-center w-max bg-neutral text-base-100' >{remedialAction}</div>
+      </div>)}
 
       {/* memo */}
       <div className='flex flex-col gap-2 text-sm'>Memo
