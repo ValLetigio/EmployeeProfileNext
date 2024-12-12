@@ -414,6 +414,41 @@ def test_getRemedialActionForEmployeeMemoAction():
         db.delete({}, 'Employee')
         pass
 
+def test_create_employee_with_name_only():
+    try:
+        user = UserActions(userObject)
+        userCreated = user.createFirstUserAction('id1')
+
+        # create full employee object
+        employeeObject={
+            '_id': None,
+            'name': 'name',
+            'email': None,
+            'address': None,
+            'phoneNumber': None,
+            'photoOfPerson': None,
+            'resumePhotosList': None,
+            'biodataPhotosList': None,
+            'dateJoined': None,
+            'company': None,
+            'isRegular': None,
+            'isProductionEmployee': None,
+            'dailyWage': None,
+            '_version': 0
+        }
+
+        employee = user.createEmployeeAction(userCreated, employeeObject)
+
+        employeeList = user.readCollection('Employee')
+
+        assert len(employeeList) == 1
+
+        assert employeeList[0]['name'] == employee['name']
+    finally:
+        db.delete({}, 'User')
+        db.delete({}, 'Employee')
+        pass
+
 
 if __name__ == '__main__':
     if AppConfig().getIsProductionEnvironment():
@@ -428,5 +463,6 @@ if __name__ == '__main__':
     # test_submit_and_delete_memo()
     # test_submit_memo_without_reason()
     # test_delete_non_existent_offense()
-    test_getRemedialActionForEmployeeMemoAction()
+    # # test_getRemedialActionForEmployeeMemoAction()
+    test_create_employee_with_name_only()
     pass
