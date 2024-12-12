@@ -37,9 +37,9 @@ export default function RootLayout({
         <SessionProvider session={session}>
           <ContextProvider>
             <Confirmation />
-            <ProfileMenu/>   
+            {/* <ProfileMenu/>    */}
             {children}  
-            <NavBar/>
+            {/* <NavBar/> */}
             <ImageModal/>
             <EmployeeMemoTableModal/>
             <MemoPrintModal/>
