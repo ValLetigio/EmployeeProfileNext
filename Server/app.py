@@ -163,8 +163,9 @@ def create_employee():
         data = employeeData['employee']
 
         try:
-            data['dateJoined'] = datetime.strptime(data['dateJoined'],
-                                                   "%Y-%m-%d")
+            if data['dateJoined']:
+                data['dateJoined'] = datetime.strptime(data['dateJoined'],
+                                                       "%Y-%m-%d")
 
             res = UserActions(userData).createEmployeeAction(
                 userData, {

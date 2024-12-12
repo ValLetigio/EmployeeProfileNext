@@ -333,7 +333,7 @@ const EmployeeDetails = () => {
           Resume
           <Image
             className={`w-8 h-8`}
-            src={selectedEmployeeDetails?.resumePhotosList?.[0]}
+            src={selectedEmployeeDetails?.resumePhotosList?.[0] || ""}
             alt={selectedEmployeeDetails?.name}
             width={100}
             height={100}
@@ -343,7 +343,7 @@ const EmployeeDetails = () => {
         {/* biodataPhotosList */}
         <div
           onClick={() =>
-            handleImageModalClick(selectedEmployeeDetails?.biodataPhotosList)
+            handleImageModalClick(selectedEmployeeDetails?.biodataPhotosList || [])
           }
           className={`${
             !selectedEmployeeDetails?.biodataPhotosList?.[0] && "hidden"
@@ -353,7 +353,7 @@ const EmployeeDetails = () => {
           Bio-data
           <Image
             className={`w-8 h-8`}
-            src={selectedEmployeeDetails?.biodataPhotosList?.[0]}
+            src={selectedEmployeeDetails?.biodataPhotosList?.[0] || ""}
             alt={selectedEmployeeDetails?.name}
             width={100}
             height={100}

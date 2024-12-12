@@ -4,23 +4,28 @@ import React, { FC } from 'react'
 
 import { User } from '../schemas/UserSchema'
 
+import { CardsSchema } from '../Schema';
+
 import { signOut } from 'next-auth/react'
 
 import Image from 'next/image' 
+import Link from 'next/link';
 
 import ThemeControl from './ThemeControl'
 
 export interface ProfilePopUpProps {
   userData: User, 
   showMenu: boolean,  
+  cards: CardsSchema
 }
 
 
-const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {  
+const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, cards }) => {  
  
   const handleSignOut = async () => { 
     signOut()
-  }
+  } 
+ 
 
   return (
     <div  
@@ -49,17 +54,24 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu }) => {
         className='flex flex-col justify-between overflow-y-auto px-6 h-[40vh] my-2 mt-3 '
       > 
         <div className='mt-2 w-full '>
-          
-          <ThemeControl/>
-          
-          {[1,2,3,4 ].map((item, index) => (
-            <button
-              key={index}  
-              className=' border-x last:border-b mt-1 btn w-full h-12 border-gray-300 bg-base-100 hover:bg-base-200 hover:text-white ' 
-            >   
-              <p className=' font-semibold'>Option {item}</p>
-            </button>
-          ))}
+            
+          {Object.keys(cards).map((key, index) => {
+            return <div key={index} className='mt-3 w-full '> 
+              <Link href={`/${key}`} className=' hover:text-info hover:underline '>{key}</Link>
+              {cards[key].map((card, index)=>{
+                return <Link href={card.path} key={index}
+                    className='flex justify-start border-x mt-1 btn w-full h-12 border-gray-300 bg-base-100 hover:bg-base-200 hover:text-white '
+                  >
+                    <span className=' flex justify-center w-[20%]'>{card.icon}</span> 
+                    <span className='w-[75%] text-start'>{`${card.title}`}</span>
+                </Link>
+              })}
+            </div>
+          })}
+
+          <div className='mb-5'></div>
+
+          <ThemeControl/> 
         </div>
 
         {/* logout */}

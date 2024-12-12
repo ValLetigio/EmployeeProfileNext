@@ -10,7 +10,7 @@ import ProfileMenuSkeleton from './ProfileMenuSkeleton';
 
 const ProfileMenu = () => {
 
-  const { userData, pathname } = useAppContext(); 
+  const { userData, pathname, cards } = useAppContext(); 
 
   const [ showMenu, setShowMenu ] = useState(false);
 
@@ -41,7 +41,7 @@ const ProfileMenu = () => {
       {userData?._id ?
         <>
           <ProfileButton userData={userData} handleMenuClick={handleMenuClick} showMenu={showMenu}/>
-          <ProfilePopUp userData={userData} showMenu={showMenu} />
+          <ProfilePopUp userData={userData} showMenu={showMenu} cards={cards}/>
         </>
         :
         <ProfileMenuSkeleton/> 

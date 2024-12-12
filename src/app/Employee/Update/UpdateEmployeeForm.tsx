@@ -62,7 +62,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
         if(confirmed){
             try{
                 if(dataToUpdate?.photoOfPerson){ 
-                    const res = await upload.Images([formData.photoOfPerson], `employees/${formData.name}`, 'photoOfPerson')
+                    const res = await upload.Images([formData.photoOfPerson || ""], `employees/${formData.name}`, 'photoOfPerson')
                     dataToUpdate.photoOfPerson = res[0] || ""
                 }
 
@@ -250,7 +250,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
                 title="Photo Of Person" width='w-full'
                 inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
                 imgDimensions={{height:60, width:60}}
-                mediaList={[formData?.photoOfPerson]} 
+                mediaList={[formData?.photoOfPerson || ""]} 
                 onChangeHandler={handleFileChange}
                 disable={disable}
             />
@@ -345,7 +345,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className={"label-text text-base " + labelStyle}>Is Regular?</p>
                 <input type="checkbox" className="checkbox" id='isRegular' disabled={disable}
-                    checked={formData?.isRegular}
+                    checked={formData?.isRegular || false}
                     onChange={(e)=>{
                         setFormData({...formData, isRegular:e.target.checked})
                         setDataToUpdate({...dataToUpdate, isRegular:e.target.checked})
@@ -355,7 +355,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className={"label-text text-base " + labelStyle}>Is Production Employee?</p>
                 <input type="checkbox" className="checkbox"   id='isProductionEmployee' disabled={disable}  
-                    checked={formData?.isProductionEmployee}
+                    checked={formData?.isProductionEmployee || false}
                     onChange={(e)=>{
                         setFormData({...formData, isProductionEmployee:e.target.checked})
                         setDataToUpdate({...dataToUpdate, isProductionEmployee:e.target.checked})
