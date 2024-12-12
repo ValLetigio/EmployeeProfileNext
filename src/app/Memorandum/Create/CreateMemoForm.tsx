@@ -74,6 +74,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         }finally{
           setLoading(false)
         }
+      }else{
+        setLoading(false)
       }
   }
   
@@ -114,7 +116,16 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
     }
   }; 
 
-  // console.log(formData)
+  const testtest = async (id: string, number: number) => {
+    const res = await serverRequests.getRemedialActionForEmployeeMemoAction(userData, id, number)
+    console.log(res)
+  }
+
+  React.useEffect(() => {
+    if(formData?.Employee?._id && formData?.MemoCode?.number){
+      testtest(formData?.Employee?._id, formData?.MemoCode?.number)
+    }
+  }, [userData, formData])
  
   return (
     <form

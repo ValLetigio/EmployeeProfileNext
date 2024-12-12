@@ -156,9 +156,6 @@ def update_employee():
         dataToUpdate = data['dataToUpdate']
         try:
 
-            employeeData['dateJoined'] = datetime.strptime(
-                employeeData['dateJoined'], '%a, %d %b %Y %H:%M:%S %Z')
-
             if 'dateJoined' in dataToUpdate:
                 dataToUpdate['dateJoined'] = datetime.strptime(
                     dataToUpdate['dateJoined'], "%Y-%m-%d")

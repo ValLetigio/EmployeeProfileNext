@@ -25,51 +25,68 @@ const PrintMemorandumModal = () => {
 
   const { memoForPrintModal, setMemoForPrintModal } = useAppContext();
 
-  const [resolution, setResolution] = React.useState(1);
+  const [resolution, setResolution] = React.useState(3);
 
   const convertToPdf = async () => {
     // Desktop dimensions to simulate
     const desktopWidth = 1200; // Adjust as needed for desktop
     const desktopHeight = 800; // Adjust as needed for desktop
-
+  
     // Store the original dimensions of the window
     const originalWidth = window.innerWidth;
     const originalHeight = window.innerHeight;
-
+  
     // Resize the window to simulate a desktop view
     window.innerWidth = desktopWidth;
     window.innerHeight = desktopHeight;
-
+  
     // Trigger resize event to adjust the layout (if necessary)
     window.dispatchEvent(new Event("resize"));
-
+  
     // Ensure element exists before proceeding
     const element = memoRef.current;
     if (!element) {
       console.error("Element not found");
       return;
     }
-
+  
     try {
       // Capture the element with html2canvas
       const canvas = await html2canvas(element, {
         scale: resolution, // Higher scale for better quality
         useCORS: true, // Handles cross-origin images
       });
-
+  
       // Get the image data from the canvas
       const imgData = canvas.toDataURL("image/png");
-
-      // Create a new jsPDF instance, setting the format to match the canvas size
+  
+      // Define A4 paper dimensions in points (1 point = 1/72 inch)
+      const A4_WIDTH = 595.28; // A4 width in points
+      const A4_HEIGHT = 841.89; // A4 height in points
+  
+      // Calculate scaling to fit content within A4 size while maintaining aspect ratio
+      const scaleX = A4_WIDTH / canvas.width;
+      const scaleY = A4_HEIGHT / canvas.height;
+      const scale = Math.min(scaleX, scaleY);
+  
+      // Calculate scaled dimensions
+      const scaledWidth = canvas.width * scale;
+      const scaledHeight = canvas.height * scale;
+  
+      // Create a new jsPDF instance with A4 format
       const pdf = new jsPDF({
         orientation: "portrait",
-        unit: "px",
-        format: [canvas.width, canvas.height], // Match the canvas size
+        unit: "pt", // Points (1 pt = 1/72 inch)
+        format: "a4", // Set to A4
       });
-
-      // Add the image data to the PDF, with appropriate scaling
-      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-
+  
+      // Center the content on the A4 page
+      const xOffset = (A4_WIDTH - scaledWidth) / 2;
+      const yOffset = (A4_HEIGHT - scaledHeight) / 2;
+  
+      // Add the image to the PDF, scaled and centered
+      pdf.addImage(imgData, "PNG", xOffset, yOffset, scaledWidth, scaledHeight);
+  
       // Save the PDF with a filename based on the employee's name
       pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
     } catch (error) {
@@ -78,11 +95,69 @@ const PrintMemorandumModal = () => {
       // Restore the original window dimensions after the process
       window.innerWidth = originalWidth;
       window.innerHeight = originalHeight;
-
+  
       // Dispatch resize event to revert layout back to mobile (if necessary)
       window.dispatchEvent(new Event("resize"));
     }
-  }; 
+  };
+  
+
+  // const convertToPdf = async () => {
+  //   // Desktop dimensions to simulate
+  //   const desktopWidth = 1200; // Adjust as needed for desktop
+  //   const desktopHeight = 800; // Adjust as needed for desktop
+
+  //   // Store the original dimensions of the window
+  //   const originalWidth = window.innerWidth;
+  //   const originalHeight = window.innerHeight;
+
+  //   // Resize the window to simulate a desktop view
+  //   window.innerWidth = desktopWidth;
+  //   window.innerHeight = desktopHeight;
+
+  //   // Trigger resize event to adjust the layout (if necessary)
+  //   window.dispatchEvent(new Event("resize"));
+
+  //   // Ensure element exists before proceeding
+  //   const element = memoRef.current;
+  //   if (!element) {
+  //     console.error("Element not found");
+  //     return;
+  //   }
+
+  //   try {
+  //     // Capture the element with html2canvas
+  //     const canvas = await html2canvas(element, {
+  //       scale: resolution, // Higher scale for better quality
+  //       useCORS: true, // Handles cross-origin images
+  //     });
+
+  //     // Get the image data from the canvas
+  //     const imgData = canvas.toDataURL("image/png");
+
+  //     // Create a new jsPDF instance, setting the format to match the canvas size
+  //     const pdf = new jsPDF({
+  //       orientation: "portrait",
+  //       unit: "px",
+  //       format: [canvas.width, canvas.height], // Match the canvas size
+  //     });
+
+  //     // Add the image data to the PDF, with appropriate scaling
+  //     pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+
+  //     // Save the PDF with a filename based on the employee's name
+  //     pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
+  //   } catch (error) {
+  //     console.error("Error generating PDF:", error);
+  //   } finally {
+  //     // Restore the original window dimensions after the process
+  //     window.innerWidth = originalWidth;
+  //     window.innerHeight = originalHeight;
+
+  //     // Dispatch resize event to revert layout back to mobile (if necessary)
+  //     window.dispatchEvent(new Event("resize"));
+  //   }
+  // }; 
 
   const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
 
@@ -97,7 +172,7 @@ const PrintMemorandumModal = () => {
             className=' gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom tooltip group ' 
             data-tip={`Quality`}> 
             <input 
-                type="range"
+                type="range" defaultValue={3}
                 min={1} max="3" step="1"
                 value={resolution} placeholder="Resolution" 
                 className="range z-10 opacity-50 hover:opacity-100" 
@@ -123,13 +198,11 @@ const PrintMemorandumModal = () => {
             </button>
           </form> 
 
-          <div className="h-max w-full pt-8 px-4 md:px-8 pb-20 bg-white" ref={memoRef}>
+          <div className="h-max w-full pt-3 px-4 pb-3 bg-white" ref={memoRef}>
             <h1 className="text-3xl"> Memorandum </h1>
 
-            <br />
-
             {/* Header */}
-            <div className="my-8 border-l pl-4 grid grid-cols-1 lg:grid-cols-5 items-center lg:gap-4">
+            <div className="my-5 border-l pl-4 grid grid-cols-1 lg:grid-cols-5 items-center lg:gap-4">
               <div className="col-span-1 font-semibold">To:</div>
               <div className={headerTextStyle}>
                 {memoForPrintModal?.Employee?.name}
@@ -169,7 +242,6 @@ const PrintMemorandumModal = () => {
                 {memoForPrintModal?.description}
               </p>
               <br />
-              <br />
               <div className="float-end w-[75%] md:w-[50%] xl:w-[35%] border-b text-center pb-2 border-black">
                   THE MANAGEMENT  
               </div>
@@ -191,15 +263,13 @@ const PrintMemorandumModal = () => {
                   {memoForPrintModal?.reason}
                 </p>
               ) : (
-                [0, 1, 2, 3, 4, 5, 6].map((i) => (
+                [0, 1, 2, 3, 4].map((i) => (
                   <div key={i}>
                     <div className="w-full border-b border-gray-500 mb-1.5 " />
                     <br />
                   </div>
                 ))
               )}
-              <br />
-              <br />
               <br />
               <br />
               <div className="float-end w-[75%] md:w-[50%] xl:w-[35%]  ">
@@ -216,12 +286,10 @@ const PrintMemorandumModal = () => {
             {/* remedial actions */}
             <div className="px-2 border-t-2">
               <br />
-              <br />
               <div className=" flex flex-wrap ">
                 <span className="grow-0">Gravity of Offense: </span>
                 <span className="grow border-b border-black p-3"></span>
               </div> 
-              <br />
               <br />
               <div className="flex flex-wrap">Remedial Action:
                 {memoForPrintModal?.MemoCode?.remedialActions[0] && (
@@ -230,7 +298,6 @@ const PrintMemorandumModal = () => {
                   </p>
                 )}
               </div> 
-              <br />
             </div>
 
             {/*  */}
@@ -245,7 +312,7 @@ const PrintMemorandumModal = () => {
         {/* Print Memo Button */}
         <div className="w-full absolute bottom-5 flex justify-center">
           <button
-            className=" w-max btn bg-blue-500 text-white"
+            className=" w-max btn btn-info text-white opacity-50 hover:opacity-100"
             onClick={() => convertToPdf()}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">

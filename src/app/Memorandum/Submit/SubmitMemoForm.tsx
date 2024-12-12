@@ -77,6 +77,8 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
         }finally{
           setLoading(false)
         }
+      }else{
+        setLoading(false)
       }
   } 
  

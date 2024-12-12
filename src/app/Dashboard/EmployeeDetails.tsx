@@ -81,8 +81,7 @@ const EmployeeDetails = () => {
         userData,
         selectedEmployee?._id || ""
       );
-      if (res?.data) {
-        console.log("res.data:", res.data);
+      if (res?.data) { 
         setSelectedEmployeeMemos(res.data);
       }
     } catch (e) {
@@ -103,10 +102,15 @@ const EmployeeDetails = () => {
 
         dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
 
-        const days =
-          (new Date().getTime() -
-            new Date(selectedEmployee.dateJoined).getTime()) /
-          (1000 * 60 * 60 * 24);
+        let days = 0;
+
+        if (selectedEmployeeDetails.dateJoined) {
+          days =
+            (new Date().getTime() -
+              new Date(selectedEmployee.dateJoined || "").getTime()) /
+            (1000 * 60 * 60 * 24);
+        }
+
         setDaysWithUs(Math.floor(days));
       }
 
@@ -195,17 +199,26 @@ const EmployeeDetails = () => {
             }
               w-24 xl:w-36 h-24 xl:h-36 ring-gray-700 ring-offset-base-100 ring-2 ring-offset-0 rounded-full overflow-clip cursor-pointer relative`}
             onClick={() =>
-              handleImageModalClick([selectedEmployeeDetails?.photoOfPerson])
+              selectedEmployeeDetails?.photoOfPerson &&
+              handleImageModalClick([
+                selectedEmployeeDetails?.photoOfPerson || "",
+              ])
             }
           >
-            <Image
-              className={` w-full h-full`}
-              src={selectedEmployeeDetails?.photoOfPerson || "/avatar.png"}
-              alt={selectedEmployeeDetails?.name}
-              fill
-              sizes="(max-width: 768px) 100vw, 700px"
-              loading="lazy"
-            />
+            {selectedEmployeeDetails?.photoOfPerson ? (
+              <Image
+                className={` w-full h-full`}
+                src={selectedEmployeeDetails?.photoOfPerson || "/avatar.png"}
+                alt={selectedEmployeeDetails?.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 700px"
+                loading="lazy"
+              />
+            ) : (
+              <div className="h-full w-full bg-base-100 grid place-items-center text-2xl font-bold">
+                ?
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -323,7 +336,9 @@ const EmployeeDetails = () => {
         {/* resumePhotosList */}
         <div
           onClick={() =>
-            handleImageModalClick(selectedEmployeeDetails?.resumePhotosList || [])
+            handleImageModalClick(
+              selectedEmployeeDetails?.resumePhotosList || []
+            )
           }
           className={`${
             !selectedEmployeeDetails?.resumePhotosList?.[0] && "hidden"
@@ -343,7 +358,9 @@ const EmployeeDetails = () => {
         {/* biodataPhotosList */}
         <div
           onClick={() =>
-            handleImageModalClick(selectedEmployeeDetails?.biodataPhotosList || [])
+            handleImageModalClick(
+              selectedEmployeeDetails?.biodataPhotosList || []
+            )
           }
           className={`${
             !selectedEmployeeDetails?.biodataPhotosList?.[0] && "hidden"

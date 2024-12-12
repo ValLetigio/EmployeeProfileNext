@@ -11,6 +11,7 @@ import { Employee } from '@/app/schemas/EmployeeSchema'
 import FirebaseUpload from '@/app/api/FirebaseUpload'
 
 const CreateEmployeeForm = () => {
+    const [show, setShow] = useState(false);
 
     const upload = new FirebaseUpload()
 
@@ -84,6 +85,8 @@ const CreateEmployeeForm = () => {
             } finally {
                 setLoading(false)
             }
+        }else{
+            setLoading(false)
         }
     }
 
@@ -92,12 +95,10 @@ const CreateEmployeeForm = () => {
             ...formData,
             [e.target.id]: e.target.id != 'dailyWage' ? e.target.value : parseFloat(e.target.value)
         })
-    }  
-
-    // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
+    }   
 
   return (
-    <form className={` ${loading&&"cursor-wait"} form-style `}
+    <form className={` ${loading&&"cursor-wait"} ${!show&&" !justify-center "} form-style `}
         ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     > 
@@ -115,6 +116,13 @@ const CreateEmployeeForm = () => {
             </label>
         </div>
 
+
+        <label className='flex justify-center items-center gap-2' htmlFor="show">
+            <input className='checkbox' type="checkbox" name="show" id="show" onChange={(e) => setShow(e.target.checked)} />  
+            More Details
+        </label>
+
+        <div className={`${show?"flex flex-col w-full gap-4 opacity-100":" -z-20 hidden "} `}>
 
         {/* address */} 
         <div className='flex flex-col text-sm gap-2 '>Address
@@ -270,6 +278,9 @@ const CreateEmployeeForm = () => {
                     onChange={handleInputChange}/>
             </label>
         </div> 
+
+        </div>
+
 
         {/* submit */}
         <button 
