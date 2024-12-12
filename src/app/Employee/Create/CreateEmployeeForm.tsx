@@ -98,7 +98,7 @@ const CreateEmployeeForm = () => {
     }   
 
   return (
-    <form className={` ${loading&&"cursor-wait"} form-style `}
+    <form className={` ${loading&&"cursor-wait"} ${!show&&" !justify-center "} form-style `}
         ref={formRef}
         onSubmit={(e)=>handleSubmit(e)}
     > 
@@ -122,7 +122,7 @@ const CreateEmployeeForm = () => {
             More Details
         </label>
 
-        <div className={`${show?"flex flex-col w-full gap-4":"hidden"}`}>
+        <div className={`${show?"flex flex-col w-full gap-4 opacity-100":" -z-20 hidden "} `}>
 
         {/* address */} 
         <div className='flex flex-col text-sm gap-2 '>Address
