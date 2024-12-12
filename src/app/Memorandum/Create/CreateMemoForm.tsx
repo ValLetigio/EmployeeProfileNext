@@ -74,6 +74,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         }finally{
           setLoading(false)
         }
+      }else{
+        setLoading(false)
       }
   }
   

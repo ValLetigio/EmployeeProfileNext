@@ -99,6 +99,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
             } finally {
                 setLoading(false)
             }
+        }else{
+            setLoading(false)
         }
     }
 
