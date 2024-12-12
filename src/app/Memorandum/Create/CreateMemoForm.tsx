@@ -183,7 +183,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       </div>
 
       {remedialAction&&(<div className='flex flex-col text-sm gap-2 '>Memo Remedial Action
-        <div className='input input-bordered flex items-center w-max bg-neutral text-base-100' >{remedialAction}</div>
+        <div className='input input-bordered flex items-center w-max text-error input-error' >{remedialAction}</div>
       </div>)}
 
       {/* memo */}

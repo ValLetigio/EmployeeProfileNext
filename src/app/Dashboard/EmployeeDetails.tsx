@@ -215,7 +215,7 @@ const EmployeeDetails = () => {
                 loading="lazy"
               />
             ) : (
-              <div className="h-full w-full bg-base-100 grid place-items-center text-2xl font-bold">
+              <div className="h-full w-full bg-base-300 grid place-items-center text-2xl font-bold">
                 ?
               </div>
             )}
