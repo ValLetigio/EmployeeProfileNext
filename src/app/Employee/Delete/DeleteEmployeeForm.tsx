@@ -131,8 +131,8 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
             {/* photoOfPerson */}
             <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
                 <div className='flex justify-evenly items-center mb-1 gap-1 relative bg-base-200 p-1 rounded-lg'>Photo Of Person    
-                    <Image src={formData?.photoOfPerson } className='h-[60px] cursor-pointer' height={100} width={100} alt="photoOfPerson" 
-                        onClick={()=>handleImageModalClick([formData?.photoOfPerson])}
+                    <Image src={formData?.photoOfPerson || "" } className='h-[60px] cursor-pointer' height={100} width={100} alt="photoOfPerson" 
+                        onClick={()=>handleImageModalClick([formData?.photoOfPerson || ""])}
                     />  
                 </div> 
             </label>
@@ -185,7 +185,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
                         d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z" clipRule="evenodd" />
                 </svg> 
                 <input type="text" className="grow" placeholder="Company" id='company' 
-                    value={formData?.company} />
+                    value={formData?.company || ""} />
             </label>
         </div>
 
@@ -194,12 +194,12 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
             {/* isRegular */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className="label-text text-base">Is Regular?</p>
-                <input type="checkbox" className="checkbox" id='isRegular' checked={formData?.isRegular} readOnly/>
+                <input type="checkbox" className="checkbox" id='isRegular' checked={formData?.isRegular || false} readOnly/>
             </label> 
             {/* isProductionEmployee */}
             <label className="label cursor-pointer flex justify-start gap-2 w-max">
                 <p className="label-text text-base">Is Production Employee?</p>
-                <input type="checkbox" className="checkbox"  id='isProductionEmployee' checked={formData?.isProductionEmployee} readOnly/>
+                <input type="checkbox" className="checkbox"  id='isProductionEmployee' checked={formData?.isProductionEmployee || false} readOnly/>
             </label> 
         </div>
 

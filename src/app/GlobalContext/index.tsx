@@ -295,10 +295,12 @@ export default function ContextProvider({
         type: type, 
         onConfirm: () => {
           setConfirmationOptions((prev) => ({ ...prev, open: false, confirmed: true }));
+          setLoading(false)
           resolve(true); 
         },
         onCancel: () => {
           setConfirmationOptions((prev) => ({ ...prev, open: false, confirmed: false }));
+          setLoading(false)
           resolve(false); 
         }
       });
