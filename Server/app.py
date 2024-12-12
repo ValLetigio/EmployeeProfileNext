@@ -112,10 +112,6 @@ def create_employee():
         data = employeeData['employee']
 
         try:
-
-            if data['dateJoined'] is None:
-                pass
-
             if data['dateJoined']:
                 data['dateJoined'] = datetime.strptime(data['dateJoined'],
                                                        "%Y-%m-%d")
