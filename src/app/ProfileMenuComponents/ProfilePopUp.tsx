@@ -11,6 +11,8 @@ import { signOut } from 'next-auth/react'
 import Image from 'next/image' 
 import Link from 'next/link';
 
+import Select from 'react-select'
+
 import ThemeControl from './ThemeControl'
 
 export interface ProfilePopUpProps {
@@ -24,8 +26,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, cards }) => {
  
   const handleSignOut = async () => { 
     signOut()
-  } 
- 
+  }   
 
   return (
     <div  
@@ -53,7 +54,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, cards }) => {
       <div
         className='flex flex-col justify-between overflow-y-auto px-6 h-[40vh] my-2 mt-3 '
       > 
-        <div className='mt-2 w-full '>
+        <div className='mt-2 w-full '> 
             
           {Object.keys(cards).map((key, index) => {
             return <div key={index} className='mt-3 w-full '> 

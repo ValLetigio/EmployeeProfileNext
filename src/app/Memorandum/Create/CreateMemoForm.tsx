@@ -13,6 +13,8 @@ import ImageInput from '@/app/InputComponents/ImageInput.tsx';
 
 import FirebaseUpload from '@/app/api/FirebaseUpload.ts';
 
+import Select from 'react-select';
+
 interface CreateMemoFormProps {
   employeeList: Employee[],
   offenseList: Offense[]
@@ -149,7 +151,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       </label>   
 
       {/* employee */} 
-      <div className='flex flex-col text-sm gap-2 '>Employee 
+      {/* <div className='flex flex-col text-sm gap-2 '>Employee 
         <select className="select select-bordered w-full " id='select-employee' required
           value={formData?.Employee?._id || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
@@ -163,10 +165,20 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           ))}
           <option value="null">None</option>
         </select>
-      </div>
+      </div> */}
+
+      <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+        options={employeeList}
+        placeholder="Select Employee"
+        getOptionLabel={(option) => option.name || ""}
+        isClearable
+        onChange={(selectedOption) => {
+          setFormData({...formData, Employee: selectedOption as Employee});
+        }}
+      />
 
       {/* Memo Code */} 
-      <div className='flex flex-col text-sm gap-2 '>Memo Code
+      {/* <div className='flex flex-col text-sm gap-2 '>Memo Code
         <select className="select select-bordered w-full " id='MemoCode' required
           value={formData?.MemoCode?.title || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
@@ -180,7 +192,16 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           ))}
           <option value="null">None</option>
         </select>
-      </div>
+      </div> */}
+      <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+        options={offenseList}
+        placeholder="Select Offense"
+        getOptionLabel={(option) => option.title || ""}
+        isClearable
+        onChange={(selectedOption) => {
+          setFormData({...formData, MemoCode: selectedOption as Offense});
+        }}
+      />
 
       {remedialAction&&(<div className='flex flex-col text-sm gap-2 '>Memo Remedial Action
         <div className='input input-bordered flex items-center w-max text-error input-error' >{remedialAction}</div>

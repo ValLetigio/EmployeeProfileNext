@@ -8,6 +8,7 @@ import { Employee } from '@/app/schemas/EmployeeSchema.ts'
 import { useAppContext } from '@/app/GlobalContext' 
 
 import Image from 'next/image'
+import Select from 'react-select'
 
 interface CreateEmployeeFormProps {
     employeeList: Employee[]
@@ -74,7 +75,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
         <h2 className='font-semibold'>Employee Deletion</h2>
 
         {/* employee */} 
-        <div className='flex flex-col text-sm gap-2 '>Employee to Edit
+        {/* <div className='flex flex-col text-sm gap-2 '>Employee to Edit
             <select className="select select-bordered w-full " id='Employee'  
                 value={formData?._id || ''}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
@@ -88,7 +89,18 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
                 ))}
                 <option value="null">None</option>
             </select>
-        </div>
+        </div> */}
+
+        <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+            options={employeeList}
+            placeholder="Select Employee"
+            getOptionLabel={(option) => option.name}
+            isClearable 
+            onChange={(selectedOption) => { 
+                setFormData(selectedOption as Employee)
+            }} 
+        />
+
 
         {/* name */}
         <div className='flex flex-col text-sm gap-2 '>Name

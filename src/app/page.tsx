@@ -12,11 +12,7 @@ import EmployeeTable from "./Dashboard/EmployeeTable";
 import EmployeeDetails from "./Dashboard/EmployeeDetails";
 import SearchBar from "./Dashboard/SearchBar";
 
-import ProfileMenu from "./ProfileMenuComponents/ProfileMenu";
-
-// import NotAuthorized from "./NotAuthorized";
-
-// import BackButton from "./NavigationComponents/BackButton";
+import ProfileMenu from "./ProfileMenuComponents/ProfileMenu";  
 
 import { getUserData, getTestUserData } from "./api/UserData"; 
 
@@ -55,7 +51,7 @@ const Page = async () => {
     )?.length;
     newlyJoinedEmployeeCount = employeeList.filter((employee) => {
       daysSinceJoined =
-        (new Date().getTime() - new Date(employee.dateJoined).getTime()) /
+        (new Date().getTime() - new Date(employee.dateJoined || "").getTime()) /
         (1000 * 60 * 60 * 24);
       return daysSinceJoined <= 30;
     })?.length;
@@ -63,12 +59,12 @@ const Page = async () => {
 
   const cardStyle = `h-[25%] lg:h-[20%] first:w-full lg:first:w-[30%] w-full sm:w-[48%] lg:w-[30%] 
     overflow-y-auto hover:bg-base-300 hover:border-transparent
-    pl-4 p-2 shadow-lg rounded-xl flex flex-col items-start justify-evenly gap-2 border tracking-tighter`;
+    pl-4 p-2 shadow-lg rounded-xl flex flex-col items-start justify-evenly gap-2 border tracking-tighter`; 
 
   return (
     <div className=" flex flex-col items-center justify-center h-max md:h-[100vh] ">  
 
-      <ProfileMenu /> 
+      <ProfileMenu />  
 
       <div className=" md:h-[93vh] overflow-auto w-[99vw] lg:w-[97vw] justify-between flex flex-wrap ">
         <div className=" h-12 w-[45%] lg:w-[85%] flex items-center pl-4 ">

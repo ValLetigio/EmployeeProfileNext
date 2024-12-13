@@ -8,6 +8,8 @@ import { Memo } from '@/app/schemas/MemoSchema.ts';
 
 import Image from 'next/image';
 
+import Select from 'react-select';
+
 interface DeleteMemoFormProps {
   memoList: Memo[], 
 }
@@ -71,7 +73,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
       <h2 className='font-semibold'>Memorandum Deletion</h2>
 
       {/* Memorandum to Submit */} 
-      <div className='flex flex-col text-sm gap-2 '>Memo to Delete 
+      {/* <div className='flex flex-col text-sm gap-2 '>Memo to Delete 
         <select className="select select-bordered w-full " id='select-memo' required
           value={formData?.subject || ''}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
@@ -85,7 +87,16 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
           ))}
           <option value="null">None</option>
         </select>
-      </div>
+      </div> */}
+      <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+        options={filteredMemos}
+        placeholder="Select Offense"
+        getOptionLabel={(option) => `${option.Employee?.name}, ${option?.MemoCode?.title} (${option?.date?.substring(5,16)})` || ""}
+        isClearable
+        onChange={(selectedOption) => {
+          setFormData(selectedOption as Memo );
+        }}
+      />
 
 
       {/* date */}
@@ -114,7 +125,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
                 <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
             </svg>
     
-            <input type="text" className="grow placeholder:font-light" placeholder="Subject" id="subject" value={formData?.subject}/>
+            <input type="text" className="grow placeholder:font-light" placeholder="Subject" id="subject" value={formData?.subject || ""}/>
         </label>
 
         {/* description */} 

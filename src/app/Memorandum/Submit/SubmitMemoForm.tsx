@@ -12,6 +12,8 @@ import ImageInput from '@/app/InputComponents/ImageInput';
 
 import FirebaseUpload from '@/app/api/FirebaseUpload';
 
+import Select from 'react-select'
+
 interface CreateMemoFormProps {
   memoList: Memo[], 
 }
@@ -132,7 +134,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
       <h2 className='font-semibold'>Memorandum Submition</h2>
 
       {/* Memorandum to Submit */} 
-      <div className='flex flex-col text-sm gap-2 '>Memo to Submit 
+      {/* <div className='flex flex-col text-sm gap-2 '>Memo to Submit 
         <select className="select select-bordered w-full " id='select-memo' required
             value={formData?.subject || ''}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
@@ -146,7 +148,16 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
           ))}
           <option value="null">None</option>
         </select>
-      </div>
+      </div> */}
+      <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+        options={filteredMemos}
+        placeholder="Select Offense"
+        getOptionLabel={(option) => `${option.Employee?.name}, ${option?.MemoCode?.title} (${option?.date?.substring(5,16)})` || ""}
+        isClearable
+        onChange={(selectedOption) => {
+          setFormData(selectedOption as Memo );
+        }}
+      />
 
 
       {/* date */}
@@ -175,7 +186,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
                 <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
             </svg>
     
-            <input type="text" className="grow placeholder:font-light" placeholder="Subject" id="subject" value={formData?.subject}/>
+            <input type="text" className="grow placeholder:font-light" placeholder="Subject" id="subject" value={formData?.subject || ""}/>
         </label>
 
         {/* description */} 

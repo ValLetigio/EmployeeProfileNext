@@ -14,6 +14,7 @@ import { useAppContext } from '@/app/GlobalContext'
 import ImageInput from '@/app/InputComponents/ImageInput'  
 
 import FirebaseUpload from '@/app/api/FirebaseUpload'
+import Select from 'react-select'
 
 interface UpdateEmployeeForm {
     employeeList: Employee[]
@@ -177,7 +178,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
         <h2 className='font-semibold' >Update Employee</h2>
 
         {/* employee */} 
-        <div className='flex flex-col text-sm gap-2 '>Employee to Edit
+        {/* <div className='flex flex-col text-sm gap-2 '>Employee to Edit
             <select className="select select-bordered w-full " id='Employee' required
                 value={formData?._id || ''}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
@@ -192,7 +193,19 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
                 ))}
                 <option value="null">None</option>
             </select>
-        </div>
+        </div> */}
+
+        <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+            options={employeeList}
+            placeholder="Select Employee"
+            getOptionLabel={(option) => option.name}
+            isClearable
+            onChange={(selectedOption) => {
+                setSelectedEmployee(selectedOption as Employee)
+                setFormData(selectedOption as Employee)
+            }}
+            isLoading={loading}
+        />
 
         <h2 
             className=" text-center my-9 text-red-400 tracking-widest select-none"
