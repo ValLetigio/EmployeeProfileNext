@@ -104,6 +104,7 @@ def firebase_login():
             "data": user
         }), 200
 
+
 @app.route('/createEmployee', methods=['POST'])
 def create_employee():
     if request.is_json:
@@ -490,6 +491,59 @@ def get_remedial_action_for_employee_memo_action():
             }), 200
         except Exception as e:
             logging.exception("Error processing Employee: %s", e)
+            return jsonify({'error': e.args[0]}), 400
+
+
+@app.route('/getAllRoles', methods=['GET'])
+def get_all_roles():
+    try:
+        res = Roles().getAllRoles()
+        return jsonify({
+            'message': 'Roles read successfully!',
+            'data': res
+        }), 200
+    except Exception as e:
+        logging.exception("Error reading Roles: %s", e)
+        return jsonify({'error': e.args[0]}), 400
+
+
+@app.route('/addRoleToUser', methods=['POST'])
+def addRoleToUser():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        userDataToEdit = data['userDataToEdit']
+        category = data['category']
+        roleToAdd = data['roleToAdd']
+        try:
+            res = UserActions(userData).addRoleAction(userDataToEdit, category,
+                                                      roleToAdd)
+            return jsonify({
+                'message': 'Roles added successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error adding Role: %s", e)
+            return jsonify({'error': e.args[0]}), 400
+
+
+@app.route('/removeRolefromUser', methods=['POST'])
+def removeRolefromUser():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        userDataToEdit = data['userDataToEdit']
+        category = data['category']
+        roleToRemove = data['roleToRemove']
+        try:
+            res = UserActions(userData).removeRoleAction(
+                userDataToEdit, category, roleToRemove)
+            return jsonify({
+                'message': 'Roles removed successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error removing Role: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
 

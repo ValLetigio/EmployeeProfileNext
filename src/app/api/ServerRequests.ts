@@ -389,6 +389,77 @@ class ServerRequests extends Server {
     }
   }
 
+  async getAllRoles () {
+    try {
+      const res = await fetch(`${this.url}/getAllRoles`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+      }); 
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
+
+  async addRoleToUser (userData: User, userToEdit: User, category: string, roleToAdd: string): Promise<any> {
+
+    const data = {
+      userData: userData,
+      userDataToEdit: userToEdit,
+      category: category,
+      roleToAdd: roleToAdd
+    }; 
+
+    try {
+      const res = await fetch(`${this.url}/addRoleToUser`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
+
+  async removeRolefromUser (userData: User, userToEdit: User, category: string, roleToRemove: string): Promise<any> {
+
+    const data = {
+      userData: userData,
+      userDataToEdit: userToEdit,
+      category: category,
+      roleToRemove: roleToRemove
+    }; 
+
+    try {
+      const res = await fetch(`${this.url}/removeRolefromUser`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    }
+  }
+
+  async getAllUsers(): Promise<any> {
+    try {
+      const res = await fetch(`${this.url}/readAllDataInCollection`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ collection: "User" }),
+        cache: 'no-store',
+      });
+      return await res.json();
+    } catch (error:unknown) {
+      return (error as Error).message;
+    } 
+  }
+
 }
 
 export default ServerRequests;

@@ -1,100 +1,157 @@
-'use client'
+"use client";
 
-import React, { FC } from 'react'
+import React, { FC } from "react";
 
-import { User } from '../schemas/UserSchema'
+import { User } from "../schemas/UserSchema";
 
-import { CardsSchema } from '../Schema';
+import { CardsSchema } from "../Schema";
 
-import { signOut } from 'next-auth/react'
+import { signOut } from "next-auth/react";
 
-import Image from 'next/image' 
-import Link from 'next/link'; 
+import Image from "next/image";
+import Link from "next/link";
 
-import ThemeControl from './ThemeControl'
+import ThemeControl from "./ThemeControl";
 
 export interface ProfilePopUpProps {
-  userData: User, 
-  showMenu: boolean,  
-  cards: CardsSchema,
-  pathname?: string
+  userData: User;
+  showMenu: boolean;
+  cards: CardsSchema;
+  pathname?: string;
 }
 
-
-const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, cards, pathname }) => {  
- 
-  const handleSignOut = async () => { 
-    signOut()
-  }   
+const ProfilePopUp: FC<ProfilePopUpProps> = ({
+  userData,
+  showMenu,
+  cards,
+  pathname,
+}) => {
+  const handleSignOut = async () => {
+    signOut();
+  };
 
   return (
-    <div  
-    // transition-all duration-300 ease-in 
+    <div
+      // transition-all duration-300 ease-in
       className={` 
         ${showMenu ? " top-[80px] " : " hidden "} right-0
         absolute shadow-lg border backdrop-blur-lg bg-base-100/70 duration-300 transition-all
-        w-[96vw] md:w-[330px] h-[80vh] md:max-h-[70vh] rounded-2xl z-50 
+        w-[96vw] md:w-[330px] h-[80vh] md:max-h-[73vh] rounded-2xl z-50 
         flex flex-col justify-between pb-3 border-info 
       `}
-    > 
-      <div 
-        className="-z-10 right-[.89rem] -top-3 absolute w-0 h-0 border-l-[16px] border-r-[16px] border-b-[20.5px] border-transparent border-b-info border-opacity-60"/>  
-      
-      <div
-        className='flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-base-300 border-b border-info'  
-        >
-        <Image src={userData?.image } width={100} height={100} className='rounded-lg' alt="userImage" />
-        <h1 className='text-xl font-semibold mt-5'>{userData?.displayName}</h1>
-        <p className='text-sm mt-2 select-all italic'>{userData?.email}</p> 
+    >
+      {Array.isArray(userData?.roles?.User) &&
+        userData.roles.User.includes("canUpdateUser") && (
+          <Link href="/User"
+            className="absolute top-3 left-3 tooltip hover:text-info cursor-pointer"
+            data-tip="Users"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="size-6"
+            >
+              <path
+                fillRule="evenodd"
+                d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z"
+                clipRule="evenodd"
+              />
+              <path d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" />
+            </svg>
+          </Link>
+        )}
+
+      <div className="-z-10 right-[.89rem] -top-3 absolute w-0 h-0 border-l-[16px] border-r-[16px] border-b-[20.5px] border-transparent border-b-info border-opacity-60" />
+
+      <div className="flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-base-300 border-b border-info">
+        <Image
+          src={userData?.image}
+          width={100}
+          height={100}
+          className="rounded-lg"
+          alt="userImage"
+        />
+        <h1 className="text-xl font-semibold mt-5">{userData?.displayName}</h1>
+        <p className="text-sm mt-2 select-all italic">{userData?.email}</p>
       </div>
 
       {/* <div className=' w-full my-4 bg-base-100/80'/> */}
 
-      <div
-        className='flex flex-col justify-between overflow-y-auto px-6 h-[40vh] my-2 mt-3 '
-      > 
-        <div className='mt-2 w-full '> 
-            
+      <div className="flex flex-col justify-between overflow-y-auto px-6 h-[40vh] my-2 mt-3 ">
+        <div className="mt-2 w-full ">
           {Object.keys(cards).map((key, index) => {
-            return <div key={index} className='mt-3 w-full '> 
-              <Link href={`/${key}`} className={`${pathname === `/${key}` ? ' text-info underline ' : 'hover:text-info hover:underline'} font-semibold `}>{key}</Link>
-              {cards[key].map((card, index)=>{
-                return <Link href={card.path} key={index}
-                    className={` ${pathname === card.path ? 'border-info text-info' : 'text-black'}
-                      flex justify-start border-x mt-1 btn w-full h-12 border-gray-300 bg-base-100 hover:bg-base-200 hover:text-white 
-                    `}
-                  >
-                    <span className=' flex justify-center w-[20%]'>{card.icon}</span> 
-                    <span className='w-[75%] text-start'>{`${card.title}`}</span>
+            return (
+              <div key={index} className="mt-3 w-full ">
+                <Link
+                  href={`/${key}`}
+                  className={`${
+                    pathname === `/${key}`
+                      ? " text-info underline "
+                      : "hover:text-info hover:underline"
+                  } font-semibold `}
+                >
+                  {key}
                 </Link>
-              })}
-            </div>
+                {cards[key].map((card, index) => {
+                  return (
+                    <Link
+                      href={card.path}
+                      key={index}
+                      className={` ${
+                        pathname === card.path
+                          ? " border-info text-info"
+                          : " hover:bg-base-200 hover:text-white border-gray-300 "
+                      }
+                        flex justify-start mt-1 btn w-full h-12 border bg-base-100 
+                      `}
+                    >
+                      <span className=" flex justify-center w-[20%]">
+                        {card.icon}
+                      </span>
+                      <span className="w-[75%] text-start">{`${card.title}`}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            );
           })}
 
-          <div className='mb-5'></div>
+          <div className="mb-5"></div>
 
-          <ThemeControl/> 
+          <ThemeControl />
         </div>
 
         {/* logout */}
       </div>
 
-      <div className='flex px-6 '>
+      <div className="flex px-6 ">
         <button
-          className=' btn shrink-0 bg-base-300 w-full flex items-center justify-center gap-3 border mt-2 hover:bg-error hover:text-white'
-          onClick={() => {handleSignOut()}}
+          className=" btn shrink-0 bg-base-300 w-full flex items-center justify-center gap-3 border mt-2 hover:bg-error hover:text-white"
+          onClick={() => {
+            handleSignOut();
+          }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15"
+            />
           </svg>
 
-          <p className=' font-semibold'>Sign out</p>
+          <p className=" font-semibold">Sign out</p>
         </button>
       </div>
-
-
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePopUp
+export default ProfilePopUp;
