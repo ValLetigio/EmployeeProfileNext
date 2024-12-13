@@ -5,8 +5,18 @@ import ServerRequests from "@/app/api/ServerRequests";
 
 import UserTableBody from "./UserTableBody";
 
+import { getUserData } from "../api/UserData"; 
+
+import {User} from "../schemas/UserSchema";
+
 
 const page = async () => {
+
+  const userData: User = await getUserData();
+
+  if(!Array.isArray(userData?.roles?.User) || !userData.roles.User.includes('canUpdateUser')){
+    return <div>You do not have permission to view this page</div>
+  } 
   
   const serverRequests = new ServerRequests();
 

@@ -10,9 +10,7 @@ import ServerRequests from "@/app/api/ServerRequests";
 
 import EmployeeTable from "./Dashboard/EmployeeTable";
 import EmployeeDetails from "./Dashboard/EmployeeDetails";
-import SearchBar from "./Dashboard/SearchBar";
-
-import ProfileMenu from "./ProfileMenuComponents/ProfileMenu";  
+import SearchBar from "./Dashboard/SearchBar"; 
 
 import { getUserData, getTestUserData } from "./api/UserData"; 
 
