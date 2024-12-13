@@ -28,6 +28,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
     handleConfirmation,
     router,
     getOrdinal,
+    selectStyle
   } = useAppContext();
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -146,7 +147,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
         </select>
       </div> */}
 
-      <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+      <Select styles={selectStyle}
         options={offenseList}
         placeholder="Select Employee"
         getOptionLabel={(option) => option.title || ""}

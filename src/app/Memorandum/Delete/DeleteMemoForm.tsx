@@ -16,7 +16,7 @@ interface DeleteMemoFormProps {
  
 const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation, handleImageModalClick } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, handleImageModalClick, selectStyle } = useAppContext()
 
   const formRef = useRef<HTMLFormElement>(null)  
 
@@ -88,7 +88,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({memoList}) => {
           <option value="null">None</option>
         </select>
       </div> */}
-      <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+      <Select styles={selectStyle}
         options={filteredMemos}
         placeholder="Select Offense"
         getOptionLabel={(option) => `${option.Employee?.name}, ${option?.MemoCode?.title} (${option?.date?.substring(5,16)})` || ""}

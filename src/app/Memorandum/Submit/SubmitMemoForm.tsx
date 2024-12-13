@@ -20,7 +20,7 @@ interface CreateMemoFormProps {
  
 const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation, setLoading } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, setLoading, selectStyle } = useAppContext()
 
   const upload = new FirebaseUpload()
 
@@ -149,7 +149,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
           <option value="null">None</option>
         </select>
       </div> */}
-      <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+      <Select styles={selectStyle}
         options={filteredMemos}
         placeholder="Select Offense"
         getOptionLabel={(option) => `${option.Employee?.name}, ${option?.MemoCode?.title} (${option?.date?.substring(5,16)})` || ""}

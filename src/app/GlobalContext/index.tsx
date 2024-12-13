@@ -56,6 +56,7 @@ interface AppContextProps {
   highlightText: (text: string ) => JSX.Element[]; 
   setSearch: (data: string) => void;
   getOrdinal: (n: number) => string; 
+  selectStyle: { control: (base: any) => any; singleValue: (base: any) => any; }
 }
 
 // Create the default context with proper types and default values
@@ -89,6 +90,7 @@ const AppContext = createContext<AppContextProps>({
   highlightText: () => [],  
   setSearch: () => {},
   getOrdinal: () => '',
+  selectStyle: { control: () => ``, singleValue: () => `` }
 });
 
 
@@ -353,6 +355,21 @@ export default function ContextProvider({
     return `${number}${suffixes[number % 10] || "th"}`;
   }
 
+  interface SelectStyle {
+    control: (base: any) => any;
+    singleValue: (base: any) => any;
+  }
+
+
+
+  const selectStyle: SelectStyle = { 
+    control: (base) => ({ ...base, height: '3rem', backgroundColor: "transparent", borderRadius:"10px" }), 
+    singleValue: (base) => ({
+      ...base,
+      color: 'invert',
+    }), 
+  }
+
   // Define the global values to be shared across the context
   const globals = {
     userData,
@@ -372,7 +389,8 @@ export default function ContextProvider({
     storage,
     highlightText, 
     setSearch,
-    getOrdinal
+    getOrdinal,
+    selectStyle
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

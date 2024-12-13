@@ -41,7 +41,7 @@ const ProfileMenu = () => {
       {userData?._id ?
         <>
           <ProfileButton userData={userData} handleMenuClick={handleMenuClick} showMenu={showMenu}/>
-          <ProfilePopUp userData={userData} showMenu={showMenu} cards={cards}/>
+          <ProfilePopUp userData={userData} showMenu={showMenu} cards={cards} pathname={pathname}/>
         </>
         :
         <ProfileMenuSkeleton/> 

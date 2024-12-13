@@ -24,6 +24,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
     userData,
     handleConfirmation,
     getOrdinal,
+    selectStyle
   } = useAppContext();
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -101,7 +102,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
         </select>
       </div> */}
 
-      <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+      <Select styles={selectStyle}
         options={offenseList}
         placeholder="Select Employee"
         getOptionLabel={(option) => option.title || ""}

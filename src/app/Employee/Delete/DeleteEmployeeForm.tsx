@@ -17,7 +17,7 @@ interface CreateEmployeeFormProps {
 
 const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router, handleImageModalClick } = useAppContext() 
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router, handleImageModalClick, selectStyle } = useAppContext() 
 
     const formRef = useRef<HTMLFormElement>(null)
 
@@ -91,7 +91,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({employeeList})  => {
             </select>
         </div> */}
 
-        <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+        <Select styles={selectStyle}
             options={employeeList}
             placeholder="Select Employee"
             getOptionLabel={(option) => option.name}

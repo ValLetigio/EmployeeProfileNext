@@ -9,20 +9,19 @@ import { CardsSchema } from '../Schema';
 import { signOut } from 'next-auth/react'
 
 import Image from 'next/image' 
-import Link from 'next/link';
-
-import Select from 'react-select'
+import Link from 'next/link'; 
 
 import ThemeControl from './ThemeControl'
 
 export interface ProfilePopUpProps {
   userData: User, 
   showMenu: boolean,  
-  cards: CardsSchema
+  cards: CardsSchema,
+  pathname?: string
 }
 
 
-const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, cards }) => {  
+const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, cards, pathname }) => {  
  
   const handleSignOut = async () => { 
     signOut()
@@ -58,10 +57,12 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({ userData, showMenu, cards }) => {
             
           {Object.keys(cards).map((key, index) => {
             return <div key={index} className='mt-3 w-full '> 
-              <Link href={`/${key}`} className=' hover:text-info hover:underline '>{key}</Link>
+              <Link href={`/${key}`} className={`${pathname === `/${key}` ? ' text-info underline ' : 'hover:text-info hover:underline'} font-semibold `}>{key}</Link>
               {cards[key].map((card, index)=>{
                 return <Link href={card.path} key={index}
-                    className='flex justify-start border-x mt-1 btn w-full h-12 border-gray-300 bg-base-100 hover:bg-base-200 hover:text-white '
+                    className={` ${pathname === card.path ? 'border-info text-info' : 'text-black'}
+                      flex justify-start border-x mt-1 btn w-full h-12 border-gray-300 bg-base-100 hover:bg-base-200 hover:text-white 
+                    `}
                   >
                     <span className=' flex justify-center w-[20%]'>{card.icon}</span> 
                     <span className='w-[75%] text-start'>{`${card.title}`}</span>

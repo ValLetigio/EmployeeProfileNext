@@ -22,7 +22,7 @@ interface UpdateEmployeeForm {
 
 const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {  
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading, selectStyle } = useAppContext()
 
     const upload = new FirebaseUpload()
 
@@ -195,7 +195,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
             </select>
         </div> */}
 
-        <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+        <Select styles={selectStyle}
             options={employeeList}
             placeholder="Select Employee"
             getOptionLabel={(option) => option.name}

@@ -22,7 +22,7 @@ interface CreateMemoFormProps {
 
 const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading, selectStyle } = useAppContext()
 
   const [remedialAction, setRemedialAction] = useState<string>("")
 
@@ -167,7 +167,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         </select>
       </div> */}
 
-      <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+      <Select styles={selectStyle}
         options={employeeList}
         placeholder="Select Employee"
         getOptionLabel={(option) => option.name || ""}
@@ -193,7 +193,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           <option value="null">None</option>
         </select>
       </div> */}
-      <Select styles={{ control: (base) => ({ ...base, height: '3rem' })}}
+      <Select styles={selectStyle}
         options={offenseList}
         placeholder="Select Offense"
         getOptionLabel={(option) => option.title || ""}

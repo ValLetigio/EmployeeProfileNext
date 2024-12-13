@@ -64,7 +64,7 @@ const Page = async () => {
   return (
     <div className=" flex flex-col items-center justify-center h-max md:h-[100vh] ">  
 
-      <ProfileMenu />  
+      {/* <ProfileMenu />   */}
 
       <div className=" md:h-[93vh] overflow-auto w-[99vw] lg:w-[97vw] justify-between flex flex-wrap ">
         <div className=" h-12 w-[45%] lg:w-[85%] flex items-center pl-4 ">

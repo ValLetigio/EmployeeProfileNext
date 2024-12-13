@@ -8,18 +8,7 @@
   transition: opacity 0.5s ease-in-out; 
   scrollbar-width: thin; 
 }
-
-:root {
-  --background: #ffffff;
-  /* --foreground: #171717; */
-}
-/* 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}  */
+  
 
 .form-container {
   @apply h-[75vh] overflow-y-auto shadow-md shadow-gray-400 rounded-2xl border w-[90%] md:w-[75%] lg:w-[55%] xl:w-[45%] 2xl:w-[40%] mb-8;
