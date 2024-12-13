@@ -32,7 +32,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
 
   const [ submittedMemos, setSubmittedMemos ] = useState<string[]>([])
 
-  const [filesChanged, setFilesChanged] = useState<string[]>([])
+  const [filesChanged, setFilesChanged] = useState<string[]>([]) 
 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()   
@@ -136,7 +136,8 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
       ...base || {},
       color: 'inherit', 
     }),
-};
+}; 
+ 
 
   return (
     <form
@@ -189,6 +190,10 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
             <input type="text" className="grow" placeholder="Name" id="name" value={formData?.Employee?.name || ""}  />
         </label>  
       </div> 
+
+      {formData?.remedialAction&&(<div className='flex flex-col text-sm gap-2 '>Memo Remedial Action
+        <div className='input input-bordered flex items-center w-max text-error input-error' >{formData?.remedialAction}</div>
+      </div>)}
 
       {/* memo */}
       <div className='flex flex-col gap-2 text-sm'>Memo
