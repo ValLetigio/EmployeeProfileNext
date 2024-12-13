@@ -8,7 +8,6 @@ import html2canvas from "html2canvas-pro";
 
 import jsPDF from "jspdf";
 
-
 const style: React.CSSProperties = {
   position: "absolute",
   top: "50%",
@@ -18,7 +17,6 @@ const style: React.CSSProperties = {
   outline: 0,
   overflow: "clip",
 };
-
 
 const PrintMemorandumModal = () => {
   const memoRef = useRef(null);
@@ -31,62 +29,62 @@ const PrintMemorandumModal = () => {
     // Desktop dimensions to simulate
     const desktopWidth = 1200; // Adjust as needed for desktop
     const desktopHeight = 800; // Adjust as needed for desktop
-  
+
     // Store the original dimensions of the window
     const originalWidth = window.innerWidth;
     const originalHeight = window.innerHeight;
-  
+
     // Resize the window to simulate a desktop view
     window.innerWidth = desktopWidth;
     window.innerHeight = desktopHeight;
-  
+
     // Trigger resize event to adjust the layout (if necessary)
     window.dispatchEvent(new Event("resize"));
-  
+
     // Ensure element exists before proceeding
     const element = memoRef.current;
     if (!element) {
       console.error("Element not found");
       return;
     }
-  
+
     try {
       // Capture the element with html2canvas
       const canvas = await html2canvas(element, {
         scale: resolution, // Higher scale for better quality
         useCORS: true, // Handles cross-origin images
       });
-  
+
       // Get the image data from the canvas
       const imgData = canvas.toDataURL("image/png");
-  
+
       // Define A4 paper dimensions in points (1 point = 1/72 inch)
       const A4_WIDTH = 595.28; // A4 width in points
       const A4_HEIGHT = 841.89; // A4 height in points
-  
+
       // Calculate scaling to fit content within A4 size while maintaining aspect ratio
       const scaleX = A4_WIDTH / canvas.width;
       const scaleY = A4_HEIGHT / canvas.height;
       const scale = Math.min(scaleX, scaleY);
-  
+
       // Calculate scaled dimensions
       const scaledWidth = canvas.width * scale;
       const scaledHeight = canvas.height * scale;
-  
+
       // Create a new jsPDF instance with A4 format
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "pt", // Points (1 pt = 1/72 inch)
         format: "a4", // Set to A4
       });
-  
+
       // Center the content on the A4 page
       const xOffset = (A4_WIDTH - scaledWidth) / 2;
       const yOffset = (A4_HEIGHT - scaledHeight) / 2;
-  
+
       // Add the image to the PDF, scaled and centered
       pdf.addImage(imgData, "PNG", xOffset, yOffset, scaledWidth, scaledHeight);
-  
+
       // Save the PDF with a filename based on the employee's name
       pdf.save(`${memoForPrintModal?.Employee?.name}-Memorandum.pdf`);
     } catch (error) {
@@ -95,12 +93,11 @@ const PrintMemorandumModal = () => {
       // Restore the original window dimensions after the process
       window.innerWidth = originalWidth;
       window.innerHeight = originalHeight;
-  
+
       // Dispatch resize event to revert layout back to mobile (if necessary)
       window.dispatchEvent(new Event("resize"));
     }
   };
-  
 
   // const convertToPdf = async () => {
   //   // Desktop dimensions to simulate
@@ -157,7 +154,7 @@ const PrintMemorandumModal = () => {
   //     // Dispatch resize event to revert layout back to mobile (if necessary)
   //     window.dispatchEvent(new Event("resize"));
   //   }
-  // }; 
+  // };
 
   const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
 
@@ -168,21 +165,26 @@ const PrintMemorandumModal = () => {
         className={` relative h-[90vh] w-[95vw] sm:w-[500px] md:min-w-[50vw] border bg-white text-black`}
       >
         <div className="w-full h-full overflow-auto pt-8 ">
-          <div 
-            className=' gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom tooltip group ' 
-            data-tip={`Quality`}> 
-            <input 
-                type="range" defaultValue={3}
-                min={1} max="3" step="1"
-                value={resolution} placeholder="Resolution" 
-                className="range z-10 opacity-50 hover:opacity-100" 
-                onChange={(e) => setResolution(parseInt(e.target.value))}
-            />  
-            <div className='absolute -z-10 text-xs flex justify-between w-full px-2 font-bold'>
+          <div
+            className=" gap-2 flex flex-col justify-center items-center absolute top-3 left-2 tooltip-bottom tooltip group "
+            data-tip={`Quality`}
+          >
+            <input
+              type="range"
+              defaultValue={3}
+              min={1}
+              max="3"
+              step="1"
+              value={resolution}
+              placeholder="Resolution"
+              className="range z-10 opacity-50 hover:opacity-100"
+              onChange={(e) => setResolution(parseInt(e.target.value))}
+            />
+            <div className="absolute -z-10 text-xs flex justify-between w-full px-2 font-bold">
               <p className="text-xs">|</p>
               <p className="text-xs">|</p>
               <p className="text-xs">|</p>
-            </div> 
+            </div>
           </div>
 
           <form
@@ -196,7 +198,7 @@ const PrintMemorandumModal = () => {
             >
               X
             </button>
-          </form> 
+          </form>
 
           <div className="h-max w-full pt-3 px-4 pb-3 bg-white" ref={memoRef}>
             <h1 className="text-3xl"> Memorandum </h1>
@@ -250,7 +252,7 @@ const PrintMemorandumModal = () => {
             </div>
 
             <div className="my-8 w-full border-b-2" />
-  
+
             {/* employee explanation */}
             <div className=" w-full ">
               <span>Please write your explanation:</span>
@@ -289,15 +291,16 @@ const PrintMemorandumModal = () => {
               <div className=" flex flex-wrap ">
                 <span className="grow-0">Gravity of Offense: </span>
                 <span className="grow border-b border-black p-3"></span>
-              </div> 
+              </div>
               <br />
-              <div className="flex flex-wrap">Remedial Action:
+              <div className="flex flex-wrap">
+                Remedial Action:
                 {memoForPrintModal?.MemoCode?.remedialActions[0] && (
                   <p className="indent-4 whitespace-pre-line underline underline-offset-8 text-red-500">
                      {memoForPrintModal?.MemoCode?.remedialActions[0]} 
                   </p>
                 )}
-              </div> 
+              </div>
             </div>
 
             {/*  */}
@@ -315,9 +318,20 @@ const PrintMemorandumModal = () => {
             className=" w-max btn btn-info text-white opacity-50 hover:opacity-100"
             onClick={() => convertToPdf()}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-            </svg> 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+              />
+            </svg>
             <span className=" ">Download</span>
           </button>
         </div>

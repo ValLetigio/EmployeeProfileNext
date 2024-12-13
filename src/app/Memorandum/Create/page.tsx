@@ -1,20 +1,18 @@
+import React from "react";
 
-import React from 'react'
+import CreateMemoForm from "./CreateMemoForm";
 
-import CreateMemoForm from './CreateMemoForm'  
+import { Offense, Employee } from "@/app/schemas/MemoSchema";
 
-import { Offense, Employee } from '@/app/schemas/MemoSchema';
-
-import ServerRequests from '@/app/api/ServerRequests';
+import ServerRequests from "@/app/api/ServerRequests";
 
 export const metadata = {
-  title: '| Create Memorandum',
-  description: 'Create Memo Form',
-} 
+  title: "| Create Memorandum",
+  description: "Create Memo Form",
+};
 
-const page = async () => { 
-
-  const serverRequests = new ServerRequests( ); 
+const page = async () => {
+  const serverRequests = new ServerRequests();
 
   const [employeeRes, offenseRes] = await Promise.all([
     serverRequests.fetchEmployeeList(),
@@ -22,15 +20,15 @@ const page = async () => {
   ]);
 
   const employeeList: Employee[] = employeeRes?.data || [];
-  const offenseList: Offense[] = offenseRes?.data || []; 
+  const offenseList: Offense[] = offenseRes?.data || [];
 
   return (
-    <div className='w-screen h-screen flex items-center justify-center '>  
-      <div className={` form-container `} >
-        <CreateMemoForm employeeList={employeeList} offenseList={offenseList}/>
-      </div> 
+    <div className="w-screen h-screen flex items-center justify-center ">
+      <div className={` form-container `}>
+        <CreateMemoForm employeeList={employeeList} offenseList={offenseList} />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

@@ -1,169 +1,219 @@
-'use client'
+"use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 
-import { useAppContext } from '@/app/GlobalContext'; 
+import { useAppContext } from "@/app/GlobalContext";
 
-import { Memo, Employee, Offense } from '@/app/schemas/MemoSchema.ts';
+import { Memo, Employee, Offense } from "@/app/schemas/MemoSchema.ts";
 
+// import Image from 'next/image';
 
-// import Image from 'next/image'; 
+import ImageInput from "@/app/InputComponents/ImageInput.tsx";
 
-import ImageInput from '@/app/InputComponents/ImageInput.tsx';
+import FirebaseUpload from "@/app/api/FirebaseUpload.ts";
 
-import FirebaseUpload from '@/app/api/FirebaseUpload.ts';
-
-import Select from 'react-select';
+import Select from "react-select";
 
 interface CreateMemoFormProps {
-  employeeList: Employee[],
-  offenseList: Offense[]
+  employeeList: Employee[];
+  offenseList: Offense[];
 }
 
-const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseList}) => {
+const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
+  employeeList,
+  offenseList,
+}) => {
+  const {
+    setToastOptions,
+    serverRequests,
+    userData,
+    handleConfirmation,
+    router,
+    loading,
+    setLoading,
+  } = useAppContext();
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading,   } = useAppContext()
+  const [remedialAction, setRemedialAction] = useState<string>("");
 
-  const [remedialAction, setRemedialAction] = useState<string>("")
+  const upload = new FirebaseUpload();
 
-  const upload = new FirebaseUpload()
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const formRef = useRef<HTMLFormElement>(null) 
+  const [formData, setFormData] = useState<Memo>({
+    reason: null,
+    mediaList: null,
+    memoPhotosList: null,
+  } as Memo);
 
-  const [ formData, setFormData ] = useState<Memo>({ reason: null, mediaList: null, memoPhotosList: null } as Memo) 
-  
-  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()   
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-      const confirmed = await handleConfirmation("Confirm Action?", `Create ${formData?.subject} for ${formData?.Employee?.name}`, "")
+    const confirmed = await handleConfirmation(
+      "Confirm Action?",
+      `Create ${formData?.subject} for ${formData?.Employee?.name}`,
+      ""
+    );
 
-      setLoading(true)
+    setLoading(true);
 
-      
-      if(confirmed){
-        try{
-          const finalFormData = {
-            ...formData, 
-          } 
-
-          if(formData?.mediaList){ 
-            const res = await upload.Images(formData?.mediaList, `employees/${formData?.Employee?.name}`, 'mediaList')
-            finalFormData.mediaList = res || []
-          }
-
-          if(formData?.memoPhotosList) {
-            const res = await upload.Images(formData?.memoPhotosList, `employees/${formData?.Employee?.name}`, 'memoPhotosList')
-            finalFormData.memoPhotosList = res || []
-          }  
-
-          const form = e.target as HTMLFormElement; 
-
-          const res = await serverRequests.createMemo(finalFormData, userData) 
-
-          if(res&&res.data){
-            setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 });
-  
-            form.reset()
-            setFormData({} as Memo)
-
-            router.refresh()
-
-            formRef.current?.scrollIntoView({ behavior: 'smooth' })
-          }else{ 
-            setToastOptions({ open: true, message: res.error, type: 'error', timer: 5 });
-          }
-        }catch(e:unknown){ 
-          console.error('Error creating Memo:', e)
-          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 5 });
-        }finally{
-          setLoading(false)
-        }
-      }else{
-        setLoading(false)
-      }
-  }
-  
-  const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({
+    if (confirmed) {
+      try {
+        const finalFormData = {
           ...formData,
-          [e.target.id]: e.target.value
-      })
-  }  
-  
+        };
+
+        if (formData?.mediaList) {
+          const res = await upload.Images(
+            formData?.mediaList,
+            `employees/${formData?.Employee?.name}`,
+            "mediaList"
+          );
+          finalFormData.mediaList = res || [];
+        }
+
+        if (formData?.memoPhotosList) {
+          const res = await upload.Images(
+            formData?.memoPhotosList,
+            `employees/${formData?.Employee?.name}`,
+            "memoPhotosList"
+          );
+          finalFormData.memoPhotosList = res || [];
+        }
+
+        const form = e.target as HTMLFormElement;
+
+        const res = await serverRequests.createMemo(finalFormData, userData);
+
+        if (res && res.data) {
+          setToastOptions({
+            open: true,
+            message: res?.message || "Memo created successfully",
+            type: "success",
+            timer: 5,
+          });
+
+          form.reset();
+          setFormData({} as Memo);
+
+          router.refresh();
+
+          formRef.current?.scrollIntoView({ behavior: "smooth" });
+        } else {
+          setToastOptions({
+            open: true,
+            message: res.error,
+            type: "error",
+            timer: 5,
+          });
+        }
+      } catch (e: unknown) {
+        console.error("Error creating Memo:", e);
+        setToastOptions({
+          open: true,
+          message: (e as Error).message || "Error",
+          type: "error",
+          timer: 5,
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
     if (files && files?.length > 0) {
       const fileReaders = [];
       const fileDataUrls: string[] = [];
-      
+
       for (let i = 0; i < files?.length; i++) {
         const reader = new FileReader();
         fileReaders.push(reader);
-        
+
         reader.readAsDataURL(files[i]);
-        
+
         reader.onloadend = () => {
           fileDataUrls.push(reader.result as string);
 
           // Check if all files have been processed
           if (fileDataUrls?.length === files?.length) {
-            const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+            const finalResult =
+              e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
 
             setFormData({
               ...formData,
-              [e.target.id]: finalResult
-            }); 
+              [e.target.id]: finalResult,
+            });
           }
         };
       }
     }
-  }; 
+  };
 
   const getRemedialAction = async (id: string, number: string) => {
-    const res = await serverRequests.getRemedialActionForEmployeeMemoAction(userData, id, number)
-    if(res?.data?.remedialAction) {
-      setRemedialAction(res.data.remedialAction)
-    } 
-  }
+    const res = await serverRequests.getRemedialActionForEmployeeMemoAction(
+      userData,
+      id,
+      number
+    );
+    if (res?.data?.remedialAction) {
+      setRemedialAction(res.data.remedialAction);
+    }
+  };
 
   React.useEffect(() => {
-    if(formData?.Employee?._id && formData?.MemoCode?.number){
-      getRemedialAction(formData?.Employee?._id, formData?.MemoCode?._id || "") 
-    }else{
-      setRemedialAction("")
+    if (formData?.Employee?._id && formData?.MemoCode?.number) {
+      getRemedialAction(formData?.Employee?._id, formData?.MemoCode?._id || "");
+    } else {
+      setRemedialAction("");
     }
-  }, [userData, formData]) 
+  }, [userData, formData]);
 
   const selectStyle = {
-    control: (base : unknown) => ({
-      ...base || {},
-      height: '3rem',
-      backgroundColor: 'transparent',
-      borderRadius: '10px',
+    control: (base: unknown) => ({
+      ...(base || {}),
+      height: "3rem",
+      backgroundColor: "transparent",
+      borderRadius: "10px",
     }),
-    singleValue: (base : unknown) => ({
-      ...base || {},
-      color: 'inherit', 
+    singleValue: (base: unknown) => ({
+      ...(base || {}),
+      color: "inherit",
     }),
-};
- 
+  };
+
   return (
     <form
-      className={` ${loading&&"cursor-wait"} form-style `} 
+      className={` ${loading && "cursor-wait"} form-style `}
       ref={formRef}
       onSubmit={handleSubmit}
     >
-      <h2 className='font-semibold'>Memorandum Creation</h2>
+      <h2 className="font-semibold">Memorandum Creation</h2>
 
       {/* date */}
       <label className="flex flex-col items-start gap-2 text-sm">
         Date
-        <input type="date" className="grow input input-bordered w-full" placeholder="Date" id='date' required
-          onChange={handleInputChange}/>
-      </label>   
+        <input
+          type="date"
+          className="grow input input-bordered w-full"
+          placeholder="Date"
+          id="date"
+          required
+          onChange={handleInputChange}
+        />
+      </label>
 
-      {/* employee */} 
+      {/* employee */}
       {/* <div className='flex flex-col text-sm gap-2 '>Employee 
         <select className="select select-bordered w-full " id='select-employee' required
           value={formData?.Employee?._id || ''}
@@ -180,17 +230,18 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
         </select>
       </div> */}
 
-      <Select styles={selectStyle}
+      <Select
+        styles={selectStyle}
         options={employeeList}
         placeholder="Select Employee"
         getOptionLabel={(option) => option.name || ""}
         isClearable
         onChange={(selectedOption) => {
-          setFormData({...formData, Employee: selectedOption as Employee});
+          setFormData({ ...formData, Employee: selectedOption as Employee });
         }}
       />
 
-      {/* Memo Code */} 
+      {/* Memo Code */}
       {/* <div className='flex flex-col text-sm gap-2 '>Memo Code
         <select className="select select-bordered w-full " id='MemoCode' required
           value={formData?.MemoCode?.title || ''}
@@ -206,64 +257,92 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           <option value="null">None</option>
         </select>
       </div> */}
-      <Select styles={selectStyle}
+      <Select
+        styles={selectStyle}
         options={offenseList}
         placeholder="Select Offense"
         getOptionLabel={(option) => option.title || ""}
         isClearable
         onChange={(selectedOption) => {
-          setFormData({...formData, MemoCode: selectedOption as Offense});
+          setFormData({ ...formData, MemoCode: selectedOption as Offense });
         }}
       />
 
-      {remedialAction&&(<div className='flex flex-col text-sm gap-2 '>Memo Remedial Action
-        <div className='input input-bordered flex items-center w-max text-error input-error' >{remedialAction}</div>
-      </div>)}
+      {remedialAction && (
+        <div className="flex flex-col text-sm gap-2 ">
+          Memo Remedial Action
+          <div className="input input-bordered flex items-center w-max text-error input-error">
+            {remedialAction}
+          </div>
+        </div>
+      )}
 
       {/* memo */}
-      <div className='flex flex-col gap-2 text-sm'>Memo
+      <div className="flex flex-col gap-2 text-sm">
+        Memo
         {/* subject */}
         <label className="input input-bordered flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6 text-gray-500">
-          <path fillRule="evenodd" d="M4.125 3C3.089 3 2.25 3.84 2.25 4.875V18a3 3 0 0 0 3 3h15a3 3 0 0 1-3-3V4.875C17.25 3.839 16.41 3 15.375 3H4.125ZM12 9.75a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H12Zm-.75-2.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H12a.75.75 0 0 1-.75-.75ZM6 12.75a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5H6Zm-.75 3.75a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75ZM6 6.75a.75.75 0 0 0-.75.75v3c0 .414.336.75.75.75h3a.75.75 0 0 0 .75-.75v-3A.75.75 0 0 0 9 6.75H6Z" clipRule="evenodd" />
-          <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
-        </svg>
-  
-        <input type="text" className="grow placeholder:font-light" placeholder="Subject" id="subject" required 
-            onChange={handleInputChange}/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-6 text-gray-500"
+          >
+            <path
+              fillRule="evenodd"
+              d="M4.125 3C3.089 3 2.25 3.84 2.25 4.875V18a3 3 0 0 0 3 3h15a3 3 0 0 1-3-3V4.875C17.25 3.839 16.41 3 15.375 3H4.125ZM12 9.75a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H12Zm-.75-2.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H12a.75.75 0 0 1-.75-.75ZM6 12.75a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5H6Zm-.75 3.75a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75ZM6 6.75a.75.75 0 0 0-.75.75v3c0 .414.336.75.75.75h3a.75.75 0 0 0 .75-.75v-3A.75.75 0 0 0 9 6.75H6Z"
+              clipRule="evenodd"
+            />
+            <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
+          </svg>
+
+          <input
+            type="text"
+            className="grow placeholder:font-light"
+            placeholder="Subject"
+            id="subject"
+            required
+            onChange={handleInputChange}
+          />
         </label>
-
-        {/* description */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Description" id='description' required
-          onChange={
-            (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
-              setFormData({ ...formData, description: e.target.value })
-            }}> 
-        </textarea>  
+        {/* description */}
+        <textarea
+          className="textarea textarea-bordered mt-1 min-h-[20vh]"
+          placeholder="Description"
+          id="description"
+          required
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setFormData({ ...formData, description: e.target.value });
+          }}
+        ></textarea>
       </div>
-      
-      {/* Reason */}
-      <div className='flex flex-col gap-2 text-sm'>Reason  
-        {/* Reason */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh]" placeholder="Reason" id='reason'  
-          onChange={
-            (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
-              setFormData({ ...formData, reason: e.target.value })
-            }}> 
-        </textarea>  
-      </div> 
 
+      {/* Reason */}
+      <div className="flex flex-col gap-2 text-sm">
+        Reason
+        {/* Reason */}
+        <textarea
+          className="textarea textarea-bordered mt-1 min-h-[20vh]"
+          placeholder="Reason"
+          id="reason"
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setFormData({ ...formData, reason: e.target.value });
+          }}
+        ></textarea>
+      </div>
 
       {/* medialist */}
       <ImageInput
-        id='mediaList'
-        title="Photo" width='w-full'
-        inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
-        imgDimensions={{height:60, width:60}}
+        id="mediaList"
+        title="Photo"
+        width="w-full"
+        inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
+        imgDimensions={{ height: 60, width: 60 }}
         mediaList={formData?.mediaList || []}
         onChangeHandler={handleFileChange}
-        multiple={true} required={false}
-        />
+        multiple={true}
+        required={false}
+      />
       {/* <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
         <div className='flex items-end justify-between mb-1 gap-1 '>Photo    
           <Image src={formData?.mediaList?.[0]} className={`${!formData?.mediaList?.[0]&&"hidden"} h-[60px]`} height={60} width={60} alt="mediaList" />   
@@ -272,17 +351,18 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           onChange={handleFileChange} multiple required/>
       </label> */}
 
-
       {/* memoPhotosList */}
       <ImageInput
-        id='memoPhotosList'
-        title="Memo Photo" width='w-full'
-        inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
-        imgDimensions={{height:60, width:60}}
+        id="memoPhotosList"
+        title="Memo Photo"
+        width="w-full"
+        inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
+        imgDimensions={{ height: 60, width: 60 }}
         mediaList={formData?.memoPhotosList || []}
         // setFunction={setFormData}
-        onChangeHandler={handleFileChange} 
-        multiple={true} required={false}
+        onChangeHandler={handleFileChange}
+        multiple={true}
+        required={false}
       />
       {/* <label htmlFor="mediaList" className='text-sm flex flex-col w-full'>
       <div className='flex items-end justify-between mb-1 gap-1 '>Memo Photo    
@@ -292,17 +372,17 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
           onChange={handleFileChange} multiple required/>
       </label> */}
 
-
       {/* submit */}
-      <button 
-          className='btn bg-blue-500 text-white w-full place-self-start my-6' 
-          type='submit' disabled={loading}
-          id='create-memo-btn'
-        >Create</button>
-
-
+      <button
+        className="btn bg-blue-500 text-white w-full place-self-start my-6"
+        type="submit"
+        disabled={loading}
+        id="create-memo-btn"
+      >
+        Create
+      </button>
     </form>
-  )
-}
+  );
+};
 
-export default CreateMemoForm
+export default CreateMemoForm;

@@ -1,27 +1,25 @@
+import React from "react";
 
-import React from 'react';
+import UpdateEmployeeForm from "./UpdateEmployeeForm";
 
-import UpdateEmployeeForm from './UpdateEmployeeForm';
+import { Employee } from "../../schemas/EmployeeSchema.ts";
 
-import { Employee } from '../../schemas/EmployeeSchema.ts'
-
-import ServerRequests from '@/app/api/ServerRequests';
+import ServerRequests from "@/app/api/ServerRequests";
 
 export const metadata = {
-  title: '| Update Employee Details',
-  description: 'Employee Update Form',
-} 
+  title: "| Update Employee Details",
+  description: "Employee Update Form",
+};
 
-const Page = async () => { 
+const Page = async () => {
+  const serverRequests = new ServerRequests();
 
-  const serverRequests = new ServerRequests( ); 
-  
   const res = await serverRequests.fetchEmployeeList();
 
-  const employeeList: Employee[] = res.data; 
+  const employeeList: Employee[] = res.data;
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center"> 
+    <div className="w-screen h-screen flex items-center justify-center">
       <div className="form-container">
         <UpdateEmployeeForm employeeList={employeeList} />
       </div>

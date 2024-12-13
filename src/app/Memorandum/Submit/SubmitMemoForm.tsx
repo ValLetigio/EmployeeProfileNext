@@ -1,114 +1,151 @@
-'use client'
+"use client";
 
-import React, { useState, useRef, useEffect, } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 
-import { useAppContext } from '@/app/GlobalContext'; 
+import { useAppContext } from "@/app/GlobalContext";
 
-import { Memo } from '@/app/schemas/MemoSchema.ts'; 
+import { Memo } from "@/app/schemas/MemoSchema.ts";
 
-// import Image from 'next/image';  
+// import Image from 'next/image';
 
-import ImageInput from '@/app/InputComponents/ImageInput';
+import ImageInput from "@/app/InputComponents/ImageInput";
 
-import FirebaseUpload from '@/app/api/FirebaseUpload';
+import FirebaseUpload from "@/app/api/FirebaseUpload";
 
-import Select from 'react-select'
+import Select from "react-select";
 
 interface CreateMemoFormProps {
-  memoList: Memo[], 
+  memoList: Memo[];
 }
- 
-const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation, setLoading, } = useAppContext()
+const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
+  const {
+    setToastOptions,
+    serverRequests,
+    userData,
+    handleConfirmation,
+    setLoading,
+  } = useAppContext();
 
-  const upload = new FirebaseUpload()
+  const upload = new FirebaseUpload();
 
-  const formRef = useRef<HTMLFormElement>(null) 
- 
-  const [ formData, setFormData ] = useState<Memo>({} as Memo)  
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const [filteredMemos, setFilteredMemos] = useState<Memo[]>([])
+  const [formData, setFormData] = useState<Memo>({} as Memo);
 
-  const [ submittedMemos, setSubmittedMemos ] = useState<string[]>([])
+  const [filteredMemos, setFilteredMemos] = useState<Memo[]>([]);
 
-  const [filesChanged, setFilesChanged] = useState<string[]>([]) 
+  const [submittedMemos, setSubmittedMemos] = useState<string[]>([]);
 
-  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()   
+  const [filesChanged, setFilesChanged] = useState<string[]>([]);
 
-      const confirmed = await handleConfirmation("Confirm Action?", `Submit ${formData?.subject} for ${formData?.Employee?.name}`, "")
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-      setLoading(true)
+    const confirmed = await handleConfirmation(
+      "Confirm Action?",
+      `Submit ${formData?.subject} for ${formData?.Employee?.name}`,
+      ""
+    );
 
-      if(confirmed){
-        try{
-          const finalFormData = {
-            ...formData, 
-          }
+    setLoading(true);
 
-          if(filesChanged.includes('mediaList')){ 
-            const res = await upload.Images(formData?.mediaList || [], `employees/${formData?.Employee?.name}`, 'mediaList')
-            finalFormData.mediaList = res || []
-          }
+    if (confirmed) {
+      try {
+        const finalFormData = {
+          ...formData,
+        };
 
-          if(filesChanged.includes('memoPhotosList')) {
-            const res = await upload.Images(formData?.memoPhotosList || [], `employees/${formData?.Employee?.name}`, 'memoPhotosList')
-            finalFormData.memoPhotosList = res || []
-          }  
-
-            const form = e.target as HTMLFormElement;   
-
-            const res = await serverRequests.submitMemo(formData, formData.reason || "", userData)
-
-            if(res&&res.data){
-              setToastOptions({ open: true, message: res?.message || "Memo created successfully", type: 'success', timer: 5 }); 
-    
-              form.reset()
-              setFormData({} as Memo) 
-              setSubmittedMemos([...submittedMemos, formData.description])
-
-              formRef.current?.scrollIntoView({ behavior: 'smooth' })
-            }else{ 
-              setToastOptions({ open: true, message: res.error, type: 'error', timer: 5 }); 
-              throw new Error('Error Submitting Memo')
-            } 
-        }catch(e:unknown){ 
-          console.error('Error Submitting Memo:', e)
-          setToastOptions({ open: true, message: (e as Error).message || "Error", type: 'error', timer: 15 });
-        }finally{
-          setLoading(false)
+        if (filesChanged.includes("mediaList")) {
+          const res = await upload.Images(
+            formData?.mediaList || [],
+            `employees/${formData?.Employee?.name}`,
+            "mediaList"
+          );
+          finalFormData.mediaList = res || [];
         }
-      }else{
-        setLoading(false)
+
+        if (filesChanged.includes("memoPhotosList")) {
+          const res = await upload.Images(
+            formData?.memoPhotosList || [],
+            `employees/${formData?.Employee?.name}`,
+            "memoPhotosList"
+          );
+          finalFormData.memoPhotosList = res || [];
+        }
+
+        const form = e.target as HTMLFormElement;
+
+        const res = await serverRequests.submitMemo(
+          formData,
+          formData.reason || "",
+          userData
+        );
+
+        if (res && res.data) {
+          setToastOptions({
+            open: true,
+            message: res?.message || "Memo created successfully",
+            type: "success",
+            timer: 5,
+          });
+
+          form.reset();
+          setFormData({} as Memo);
+          setSubmittedMemos([...submittedMemos, formData.description]);
+
+          formRef.current?.scrollIntoView({ behavior: "smooth" });
+        } else {
+          setToastOptions({
+            open: true,
+            message: res.error,
+            type: "error",
+            timer: 5,
+          });
+          throw new Error("Error Submitting Memo");
+        }
+      } catch (e: unknown) {
+        console.error("Error Submitting Memo:", e);
+        setToastOptions({
+          open: true,
+          message: (e as Error).message || "Error",
+          type: "error",
+          timer: 15,
+        });
+      } finally {
+        setLoading(false);
       }
-  } 
- 
+    } else {
+      setLoading(false);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
     if (files && files.length > 0) {
       const fileReaders = [];
       const fileDataUrls: string[] = [];
-      
+
       for (let i = 0; i < files.length; i++) {
         const reader = new FileReader();
         fileReaders.push(reader);
-        
+
         reader.readAsDataURL(files[i]);
-        
+
         reader.onloadend = () => {
           fileDataUrls.push(reader.result as string);
 
           // Check if all files have been processed
           if (fileDataUrls.length === files.length) {
-            const finalResult = e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
+            const finalResult =
+              e.target.id === "photoOfPerson" ? fileDataUrls[0] : fileDataUrls;
 
             setFormData({
-                ...formData,
-                [e.target.id]: finalResult
-            }); 
-            setFilesChanged([...filesChanged, e.target.id])
+              ...formData,
+              [e.target.id]: finalResult,
+            });
+            setFilesChanged([...filesChanged, e.target.id]);
           }
         };
       }
@@ -116,38 +153,35 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
   };
 
   const filterMemos = (memoList: Memo[]) => {
-    const filteredMemos = memoList.filter(memo=>!submittedMemos?.includes(memo.description)&&!memo?.submitted) 
-    
-    setFilteredMemos(filteredMemos)
-  }
+    const filteredMemos = memoList.filter(
+      (memo) => !submittedMemos?.includes(memo.description) && !memo?.submitted
+    );
+
+    setFilteredMemos(filteredMemos);
+  };
 
   useEffect(() => {
-    filterMemos(memoList) 
-  },[memoList, submittedMemos])  
+    filterMemos(memoList);
+  }, [memoList, submittedMemos]);
 
   const selectStyle = {
-    control: (base : unknown) => ({
-      ...base || {},
-      height: '3rem',
-      backgroundColor: 'transparent',
-      borderRadius: '10px',
+    control: (base: unknown) => ({
+      ...(base || {}),
+      height: "3rem",
+      backgroundColor: "transparent",
+      borderRadius: "10px",
     }),
-    singleValue: (base : unknown) => ({
-      ...base || {},
-      color: 'inherit', 
+    singleValue: (base: unknown) => ({
+      ...(base || {}),
+      color: "inherit",
     }),
-}; 
- 
+  };
 
   return (
-    <form
-      className={` form-style `} 
-      ref={formRef}
-      onSubmit={handleSubmit}
-    >
-      <h2 className='font-semibold'>Memorandum Submition</h2>
+    <form className={` form-style `} ref={formRef} onSubmit={handleSubmit}>
+      <h2 className="font-semibold">Memorandum Submition</h2>
 
-      {/* Memorandum to Submit */} 
+      {/* Memorandum to Submit */}
       {/* <div className='flex flex-col text-sm gap-2 '>Memo to Submit 
         <select className="select select-bordered w-full " id='select-memo' required
             value={formData?.subject || ''}
@@ -163,79 +197,133 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
           <option value="null">None</option>
         </select>
       </div> */}
-      <Select styles={selectStyle}
+      <Select
+        styles={selectStyle}
         options={filteredMemos}
         placeholder="Select Offense"
-        getOptionLabel={(option) => `${option.Employee?.name}, ${option?.MemoCode?.title} (${option?.date?.substring(5,16)})` || ""}
+        getOptionLabel={(option) =>
+          `${option.Employee?.name}, ${
+            option?.MemoCode?.title
+          } (${option?.date?.substring(5, 16)})` || ""
+        }
         isClearable
         onChange={(selectedOption) => {
-          setFormData(selectedOption as Memo );
+          setFormData(selectedOption as Memo);
         }}
       />
-
 
       {/* date */}
       <label className="flex flex-col items-start gap-2 text-sm">
         Date
-        <input type="date" className="grow input input-bordered w-full" placeholder="Date" id='date' 
-        value={formData?.date?new Date(formData?.date).toISOString().split('T')[0]:''}/>
-      </label>   
+        <input
+          type="date"
+          className="grow input input-bordered w-full"
+          placeholder="Date"
+          id="date"
+          value={
+            formData?.date
+              ? new Date(formData?.date).toISOString().split("T")[0]
+              : ""
+          }
+        />
+      </label>
 
-      {/* employee */} 
-      <div className='flex flex-col text-sm gap-2 '>Employee  
+      {/* employee */}
+      <div className="flex flex-col text-sm gap-2 ">
+        Employee
         <label className="input input-bordered flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 text-gray-500">
-                <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
-            </svg> 
-            <input type="text" className="grow" placeholder="Name" id="name" value={formData?.Employee?.name || ""}  />
-        </label>  
-      </div> 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-4 text-gray-500"
+          >
+            <path
+              fillRule="evenodd"
+              d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <input
+            type="text"
+            className="grow"
+            placeholder="Name"
+            id="name"
+            value={formData?.Employee?.name || ""}
+          />
+        </label>
+      </div>
 
-      {formData?.remedialAction&&(<div className='flex flex-col text-sm gap-2 '>Memo Remedial Action
-        <div className='input input-bordered flex items-center w-max text-error input-error' >{formData?.remedialAction}</div>
-      </div>)}
+      {formData?.remedialAction && (
+        <div className="flex flex-col text-sm gap-2 ">
+          Memo Remedial Action
+          <div className="input input-bordered flex items-center w-max text-error input-error">
+            {formData?.remedialAction}
+          </div>
+        </div>
+      )}
 
       {/* memo */}
-      <div className='flex flex-col gap-2 text-sm'>Memo
+      <div className="flex flex-col gap-2 text-sm">
+        Memo
         {/* subject */}
         <label className="input input-bordered flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6 text-gray-500">
-                <path fillRule="evenodd" d="M4.125 3C3.089 3 2.25 3.84 2.25 4.875V18a3 3 0 0 0 3 3h15a3 3 0 0 1-3-3V4.875C17.25 3.839 16.41 3 15.375 3H4.125ZM12 9.75a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H12Zm-.75-2.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H12a.75.75 0 0 1-.75-.75ZM6 12.75a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5H6Zm-.75 3.75a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75ZM6 6.75a.75.75 0 0 0-.75.75v3c0 .414.336.75.75.75h3a.75.75 0 0 0 .75-.75v-3A.75.75 0 0 0 9 6.75H6Z" clipRule="evenodd" />
-                <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
-            </svg>
-    
-            <input type="text" className="grow placeholder:font-light" placeholder="Subject" id="subject" value={formData?.subject || ""}/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-6 text-gray-500"
+          >
+            <path
+              fillRule="evenodd"
+              d="M4.125 3C3.089 3 2.25 3.84 2.25 4.875V18a3 3 0 0 0 3 3h15a3 3 0 0 1-3-3V4.875C17.25 3.839 16.41 3 15.375 3H4.125ZM12 9.75a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H12Zm-.75-2.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 0 1.5H12a.75.75 0 0 1-.75-.75ZM6 12.75a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5H6Zm-.75 3.75a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5H6a.75.75 0 0 1-.75-.75ZM6 6.75a.75.75 0 0 0-.75.75v3c0 .414.336.75.75.75h3a.75.75 0 0 0 .75-.75v-3A.75.75 0 0 0 9 6.75H6Z"
+              clipRule="evenodd"
+            />
+            <path d="M18.75 6.75h1.875c.621 0 1.125.504 1.125 1.125V18a1.5 1.5 0 0 1-3 0V6.75Z" />
+          </svg>
+
+          <input
+            type="text"
+            className="grow placeholder:font-light"
+            placeholder="Subject"
+            id="subject"
+            value={formData?.subject || ""}
+          />
         </label>
-
-        {/* description */} 
-        <textarea className="textarea textarea-bordered whitespace-pre-line mt-1 min-h-[30vh]" placeholder="Description" id='description' 
-         value={formData?.description || ""} 
-        > 
-        </textarea>  
+        {/* description */}
+        <textarea
+          className="textarea textarea-bordered whitespace-pre-line mt-1 min-h-[30vh]"
+          placeholder="Description"
+          id="description"
+          value={formData?.description || ""}
+        ></textarea>
       </div>
-      
-      {/* Reason */}
-      <div className='flex flex-col gap-2 text-sm'>Reason  
-        {/* Reason */} 
-        <textarea className="textarea textarea-bordered mt-1 min-h-[20vh] whitespace-pre-line" placeholder="Reason" id='reason' required
-          onChange={
-            (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
-              setFormData({ ...formData, reason: e.target.value })
-            }}
-          value={formData?.reason || ""}
-            > 
-        </textarea>  
-      </div> 
 
+      {/* Reason */}
+      <div className="flex flex-col gap-2 text-sm">
+        Reason
+        {/* Reason */}
+        <textarea
+          className="textarea textarea-bordered mt-1 min-h-[20vh] whitespace-pre-line"
+          placeholder="Reason"
+          id="reason"
+          required
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setFormData({ ...formData, reason: e.target.value });
+          }}
+          value={formData?.reason || ""}
+        ></textarea>
+      </div>
 
       {/* medialist */}
       <ImageInput
-        id='mediaList'
-        title="Photo" width='w-full'
-        inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
-        imgDimensions={{height:60, width:60}}
+        id="mediaList"
+        title="Photo"
+        width="w-full"
+        inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
+        imgDimensions={{ height: 60, width: 60 }}
         mediaList={formData?.mediaList || []}
-        onChangeHandler={handleFileChange} 
+        onChangeHandler={handleFileChange}
         required={!formData?.mediaList?.length}
         multiple={true}
       />
@@ -247,16 +335,16 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
           onChange={handleFileChange} multiple/>
       </label> */}
 
-
       {/* memoPhotosList */}
       <ImageInput
-        id='memoPhotosList'
-        title="Memo Photo" width='w-full'
-        inputStyle='file-input file-input-bordered sw-full max-w-full file-input-xs h-10'
-        imgDimensions={{height:60, width:60}}
+        id="memoPhotosList"
+        title="Memo Photo"
+        width="w-full"
+        inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
+        imgDimensions={{ height: 60, width: 60 }}
         mediaList={formData?.memoPhotosList || []}
-        // setFunction={setFormData} 
-        onChangeHandler={handleFileChange} 
+        // setFunction={setFormData}
+        onChangeHandler={handleFileChange}
         required={!formData?.memoPhotosList?.length}
         multiple={true}
       />
@@ -268,17 +356,17 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
           onChange={handleFileChange} multiple/>
       </label> */}
 
-
       {/* submit */}
-      <button 
-          className='btn bg-blue-500 text-white w-full place-self-start my-6' 
-          type='submit' disabled={formData?.subject?false:true}
-          id='submit-memo-btn'
-        >Submit</button>
-
-
+      <button
+        className="btn bg-blue-500 text-white w-full place-self-start my-6"
+        type="submit"
+        disabled={formData?.subject ? false : true}
+        id="submit-memo-btn"
+      >
+        Submit
+      </button>
     </form>
-  )
-}
+  );
+};
 
-export default SubmitMemoForm
+export default SubmitMemoForm;
