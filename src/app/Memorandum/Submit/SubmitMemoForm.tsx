@@ -20,7 +20,7 @@ interface CreateMemoFormProps {
  
 const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation, setLoading, selectStyle } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, setLoading, } = useAppContext()
 
   const upload = new FirebaseUpload()
 
@@ -124,6 +124,19 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({memoList}) => {
   useEffect(() => {
     filterMemos(memoList) 
   },[memoList, submittedMemos])  
+
+  const selectStyle = {
+    control: (base : unknown) => ({
+      ...base || {},
+      height: '3rem',
+      backgroundColor: 'transparent',
+      borderRadius: '10px',
+    }),
+    singleValue: (base : unknown) => ({
+      ...base || {},
+      color: 'inherit', 
+    }),
+};
 
   return (
     <form

@@ -9,7 +9,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import { ToastOptionsSchema, ConfirmationOptionsSchema, CardsSchema } from '../Schema';
 import { Employee } from '../schemas/EmployeeSchema';
 import { User, Roles } from '../schemas/UserSchema';  
-import { Memo } from '../schemas/MemoSchema';
+import { Memo, Offense } from '../schemas/MemoSchema';
+
+import { StylesConfig } from 'react-select';
 
 import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
@@ -22,8 +24,7 @@ import ServerRequests from '../api/ServerRequests';
 import { getStorage } from "firebase/storage";
 // import { getAuth } from "firebase/auth";
 
-import { storage } from '../api/firebase'; 
-
+import { storage } from '../api/firebase';  
 
 // Define the properties of the context
 interface AppContextProps {
@@ -55,8 +56,7 @@ interface AppContextProps {
   storage: ReturnType<typeof getStorage>;
   highlightText: (text: string ) => JSX.Element[]; 
   setSearch: (data: string) => void;
-  getOrdinal: (n: number) => string; 
-  selectStyle: { control: (base: any) => any; singleValue: (base: any) => any; }
+  getOrdinal: (n: number) => string;  
 }
 
 // Create the default context with proper types and default values
@@ -89,8 +89,7 @@ const AppContext = createContext<AppContextProps>({
   storage: {} as ReturnType<typeof getStorage>,
   highlightText: () => [],  
   setSearch: () => {},
-  getOrdinal: () => '',
-  selectStyle: { control: () => ``, singleValue: () => `` }
+  getOrdinal: () => '', 
 });
 
 
@@ -245,8 +244,7 @@ export default function ContextProvider({
   useEffect(() => {  
     if (session?.user) {
       
-      const user = session.user as Session["user"] & {
-        // roles?: { [k: string]: any };
+      const user = session.user as Session["user"] & { 
         roles?: Roles;
         _id?: string;
         _version?: number;
@@ -356,19 +354,17 @@ export default function ContextProvider({
   }
 
   interface SelectStyle {
-    control: (base: any) => any;
-    singleValue: (base: any) => any;
-  }
-
-
-
-  const selectStyle: SelectStyle = { 
-    control: (base) => ({ ...base, height: '3rem', backgroundColor: "transparent", borderRadius:"10px" }), 
-    singleValue: (base) => ({
-      ...base,
-      color: 'invert',
-    }), 
-  }
+    control: (base: Record<string, unknown>) => unknown;
+    singleValue: (base: Record<string, unknown>) => unknown;
+  } 
+ 
+  // const selectStyle: SelectStyle = { 
+  //   control: (base: Record<string, unknown>) => ({ ...base, height: '3rem', backgroundColor: "transparent", borderRadius: "10px" }), 
+  //   singleValue: (base: Record<string, unknown>) => ({
+  //     ...base,
+  //     color: 'invert',
+  //   }), 
+  // }
 
   // Define the global values to be shared across the context
   const globals = {
@@ -389,8 +385,7 @@ export default function ContextProvider({
     storage,
     highlightText, 
     setSearch,
-    getOrdinal,
-    selectStyle
+    getOrdinal, 
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;

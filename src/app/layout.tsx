@@ -6,9 +6,8 @@ import { SessionProvider } from "next-auth/react";
 
 import "./globals.css"; 
 
-import ContextProvider from "./GlobalContext/index"; 
+import ContextProvider from "./GlobalContext/index";  
 
-import NavBar from "./NavigationComponents/NavBar"; 
 import ProfileMenu from "./ProfileMenuComponents/ProfileMenu";
 import Toast from "./toast";
 import Confirmation from "./confirmation";

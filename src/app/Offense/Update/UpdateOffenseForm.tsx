@@ -27,8 +27,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
     userData,
     handleConfirmation,
     router,
-    getOrdinal,
-    selectStyle
+    getOrdinal, 
   } = useAppContext();
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -125,6 +124,19 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
     });
     setDataToUpdate((prev) => ({ ...prev, [id]: value }));
   };
+
+  const selectStyle = {
+    control: (base : unknown) => ({
+      ...base || {},
+      height: '3rem',
+      backgroundColor: 'transparent',
+      borderRadius: '10px',
+    }),
+    singleValue: (base : unknown) => ({
+      ...base || {},
+      color: 'inherit', 
+    }),
+};
 
   return (
     <form className="form-style" onSubmit={handleSubmit} ref={formRef}>

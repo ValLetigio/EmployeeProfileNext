@@ -22,7 +22,7 @@ interface UpdateEmployeeForm {
 
 const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {  
 
-    const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading, selectStyle } = useAppContext()
+    const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading,   } = useAppContext()
 
     const upload = new FirebaseUpload()
 
@@ -169,6 +169,19 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({employeeList}) => {
     },[selectedEmployee, formData]) 
 
     const labelStyle = `${selectedEmployee?._id ? '': 'text-gray-300'}` 
+
+    const selectStyle = {
+        control: (base : unknown) => ({
+          ...base || {},
+          height: '3rem',
+          backgroundColor: 'transparent',
+          borderRadius: '10px',
+        }),
+        singleValue: (base : unknown) => ({
+          ...base || {},
+          color: 'inherit', 
+        }),
+    };
  
   return (
     <form className={` ${loading&&"cursor-wait"} form-style `} 

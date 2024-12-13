@@ -22,7 +22,7 @@ interface CreateMemoFormProps {
 
 const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseList}) => {
 
-  const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading, selectStyle } = useAppContext()
+  const { setToastOptions, serverRequests, userData, handleConfirmation, router, loading, setLoading,   } = useAppContext()
 
   const [remedialAction, setRemedialAction] = useState<string>("")
 
@@ -134,6 +134,19 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({employeeList, offenseLis
       setRemedialAction("")
     }
   }, [userData, formData]) 
+
+  const selectStyle = {
+    control: (base : unknown) => ({
+      ...base || {},
+      height: '3rem',
+      backgroundColor: 'transparent',
+      borderRadius: '10px',
+    }),
+    singleValue: (base : unknown) => ({
+      ...base || {},
+      color: 'inherit', 
+    }),
+};
  
   return (
     <form
