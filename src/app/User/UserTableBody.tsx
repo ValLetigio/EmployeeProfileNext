@@ -71,8 +71,8 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
       {userRes.data.map((user: User, idx: number) => (
         <tr key={user._id || "" + idx} className="border-b">
           {/* <td className="border p-2">{user.displayName}</td> */}
-          <td>
-          <div className="flex flex-col justify-start items-start gap-3 ">
+          <td className=" bg-base-200 bg-opacity-90 border-b"> 
+          <div className="flex justify-start items-start gap-3">
             <div className="flex gap-2 items-center justify-center">
               <div className="mask mask-squircle h-12 w-12 ">
                 {user?.image ? (
@@ -90,10 +90,10 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
                   </div>
                 )}
               </div>
-              <div className="font-bold text-lg">{user?.displayName}</div>
             </div>
             <div className="text-start">
               <div className="text-sm opacity-80 tracking-tighter">
+              <div className="font-bold text-lg">{user?.displayName}</div>
                 {user.email ? user.email.toString() : ""}
               </div>
             </div>

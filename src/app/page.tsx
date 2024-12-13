@@ -100,7 +100,7 @@ const Page = async () => {
                 <h2 className="text-xl font-semibold tracking-tighter text-start sticky left-0 top-0 mb-2 w-full">
                   Employees
                 </h2>
-                <SearchBar controlled={true} />
+                <SearchBar controlled={false} />
               </div>
 
               <EmployeeTable employeeList={employeeList} />
