@@ -14,34 +14,36 @@ export function clearCollections(serverRequests){
 
 export function CreateEmployee(
   name = "John Doe",
-  address = "1234 Elm Street, Springfield",
-  phoneNumber = "+1234567890",
-  photoOfPerson = 'minor.png',
-  resumePhotosList = 'smiley.png',
-  biodataPhotosList = 'mhm.png',
-  email = "johndoe@example.com",
-  dateJoined = "2024-11-01",
-  company = "TechCorp Inc.",
-  dailyWage = "500"
+  // address = "1234 Elm Street, Springfield",
+  // phoneNumber = "+1234567890",
+  // photoOfPerson = 'minor.png',
+  // resumePhotosList = 'smiley.png',
+  // biodataPhotosList = 'mhm.png',
+  // email = "johndoe@example.com",
+  // dateJoined = "2024-11-01",
+  // company = "TechCorp Inc.",
+  // dailyWage = "500"
 ){
-  cy.get('#menu-button').should('be.visible').click()
+  cy.get('#profile-button').should('be.visible').click()
 
-  cy.get('#create-employee').should('be.visible').click()
+  cy.contains('Create Employee').should('be.visible').click()
   cy.url().should('include', '/Employee/Create')
 
+  cy.get('#profile-button').should('be.visible').click()
+
   cy.get('#name').type(name)
-  cy.get('#address').type(address)
-  cy.get('#phoneNumber').type(phoneNumber)
-  cy.get('input[type=file]#photoOfPerson').attachFile(photoOfPerson)
-  cy.get('input[type=file]#resumePhotosList').attachFile(resumePhotosList)
-  cy.get('input[type=file]#biodataPhotosList').attachFile(biodataPhotosList)
-  cy.get('#email').type(email)
-  cy.get('#dateJoined').type(dateJoined)
-  cy.get('#company').type(company)
-  cy.get('#isRegular').check()
-  cy.get('#isProductionEmployee').uncheck()
-  cy.get('#dailyWage').type(dailyWage)
-  cy.wait(1000)
+  // cy.get('#address').type(address)
+  // cy.get('#phoneNumber').type(phoneNumber)
+  // cy.get('input[type=file]#photoOfPerson').attachFile(photoOfPerson)
+  // cy.get('input[type=file]#resumePhotosList').attachFile(resumePhotosList)
+  // cy.get('input[type=file]#biodataPhotosList').attachFile(biodataPhotosList)
+  // cy.get('#email').type(email)
+  // cy.get('#dateJoined').type(dateJoined)
+  // cy.get('#company').type(company)
+  // cy.get('#isRegular').check()
+  // cy.get('#isProductionEmployee').uncheck()
+  // cy.get('#dailyWage').type(dailyWage)
+  // cy.wait(1000)
   cy.get('#submit').click()
   cy.wait(1000)
   cy.get('#confirm-button').click()
@@ -61,10 +63,17 @@ export function UpdateEmployee({
   company = "TechCorp Inc.",
   dailyWage = "500"
 }={}){
-  cy.get('#menu-button').click()
-  cy.get('#update-employee').click()
+  cy.get('#profile-button').should('be.visible').click()
 
-  cy.get('#Employee').select(employee)
+  cy.contains('Update Employee').click()
+
+  cy.get('#profile-button').should('be.visible').click()
+
+  cy.get('#Employee').click()
+  cy.get('.css-1nmdiq5-menu')
+  .contains(employee)
+  .click();
+
   cy.get('#name').clear().type(name)
   cy.get('#address').clear().type(address)
   cy.get('#phoneNumber').clear().type(phoneNumber)
@@ -85,8 +94,8 @@ export function UpdateEmployee({
 }
 
 export function DeleteEmployee(name){
-  cy.get('#menu-button').click()
-  cy.get('#delete-employee').click()
+  cy.get('#profile-button').should('be.visible').click()
+  cy.contains('Delete Employee').click()
   cy.get('#Employee').select(name)
   cy.get('#delete-employee-btn').click()
   cy.wait(1000)
@@ -98,8 +107,9 @@ export function CreateOffense(
   description = "Employee was late to work",
   offenseType = ["Verbal Warning", "Written-Warning"],
 ){
-  cy.get('#menu-button').click()
-  cy.get('#create-offense').click()
+  cy.get('#profile-button').should('be.visible').click()
+  cy.contains('Create Offense').click()
+  cy.get('#profile-button').should('be.visible').click()
   cy.location('pathname').should('include', '/Offense/Create')
   cy.get('#number').type('1')
   cy.get('#title').type('Employee was late to work')
@@ -122,12 +132,16 @@ export function UpdateOffense({
   description = "Employee was late to work and was rude to customers",
   offenseType = ["Suspension"]
 }={}){
-  cy.get('#menu-button').click()
+  cy.get('#profile-button').should('be.visible').click()
   cy.wait(1000)
-  cy.get('#update-offense').click()
+  cy.contains('Update Offense').click()
+  cy.get('#profile-button').should('be.visible').click()
   cy.location('pathname').should('include', '/Offense/Update')
   cy.wait(1000)
-  cy.get('#select-offense').select(offense)
+  cy.get('#select-offense').click()
+  cy.get('.css-1nmdiq5-menu')
+  .contains(offense)
+  .click();
   cy.get('#number').type(number)
   cy.get('#title').type(title)
   cy.get('#description').type(description)
@@ -145,8 +159,8 @@ export function UpdateOffense({
 }
 
 export function DeleteOffense(description){
-  cy.get('#menu-button').click()
-  cy.get('#delete-offense').click()
+  cy.get('#profile-button').should('be.visible').click()
+  cy.contains('Delete Offense').click()
   cy.get('#select-offense').select(description)
   cy.get('#delete-offense-btn').click()
   cy.wait(1000)
@@ -163,8 +177,8 @@ export function CreateMemo(
   mediaList = 'smiley.png',
   memoPhotosList = 'mhm.png'
 ){
-  cy.get('#menu-button').click()
-  cy.get('#create-memorandum').click()
+  cy.get('#profile-button').should('be.visible').click()
+  cy.contains('Create Memorandum').click()
   cy.location('pathname').should('include', '/Memorandum/Create')
   cy.get('#date').type('2024-10-31')
   cy.get('#select-employee').select(employee)

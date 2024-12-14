@@ -161,12 +161,13 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
 
       <Select styles={selectStyle}
         options={offenseList}
-        placeholder="Select Employee"
+        placeholder="Select Offense"
         getOptionLabel={(option) => option.title || ""}
         isClearable
         onChange={(selectedOption) => {
           setFormData(selectedOption as Offense);
         }}
+        id="select-offense"
       />
 
       {/* description */}

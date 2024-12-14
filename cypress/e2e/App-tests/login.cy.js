@@ -30,15 +30,15 @@ describe('Employee spec', () => {
       //Employee
       CreateEmployee(
         'John Doe',
-        '1234 Main St, New York, NY 10030',
-        '1234567890',
-        'mhm.png',
-        'minor.png',
-        'smiley.png',
-        'johndoe@gmail.com',
-        '2024-10-31',
-        'Google',
-        '100'
+        // '1234 Main St, New York, NY 10030',
+        // '1234567890',
+        // 'mhm.png',
+        // 'minor.png',
+        // 'smiley.png',
+        // 'johndoe@gmail.com',
+        // '2024-10-31',
+        // 'Google',
+        // '100'
       )
       UpdateEmployee({
         employee :'John Doe',

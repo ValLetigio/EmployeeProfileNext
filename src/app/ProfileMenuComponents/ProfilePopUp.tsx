@@ -72,6 +72,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
                       ? " text-info underline "
                       : "hover:text-info hover:underline"
                   } font-semibold `}
+                  id={`${key}-button`}
                 >
                   {key}
                 </Link>
@@ -87,6 +88,7 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
                       }
                         flex justify-start mt-1 btn w-full h-12 border bg-base-100 
                       `}
+                      id={`${card.path}-button`}
                     >
                       <span className=" flex justify-center w-[20%]">
                         {card.icon}

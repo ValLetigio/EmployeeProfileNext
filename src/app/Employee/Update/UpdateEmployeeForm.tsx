@@ -267,6 +267,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           setFormData(selectedOption as Employee);
         }}
         isLoading={loading}
+        id="Employee"
       />
 
       <h2

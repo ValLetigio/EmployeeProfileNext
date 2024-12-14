@@ -18,6 +18,7 @@ const ProfileButton: FC<ProfileButtonProps> = ({ userData, handleMenuClick, show
       `}
         onClick={()=>handleMenuClick()}
         data-tip="Profile"
+        id='profile-button'
     >
       <Image 
         fill={true}
