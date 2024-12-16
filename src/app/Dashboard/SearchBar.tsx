@@ -47,7 +47,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ controlled = false }) => {
   };
 
   return (
-    <label className=" input input-bordered flex items-center gap-2 ">
+    <label className=" input input-bordered flex items-center gap-2 w-full md:w-max ">
       <input
         onChange={(e) => handleSearch(e)}
         type="search"

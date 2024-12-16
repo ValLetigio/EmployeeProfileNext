@@ -20,6 +20,7 @@ const EmployeeDetails = () => {
     userData,
     loading,
     setLoading,
+    setToastOptions
   } = useAppContext();
 
   const dummy = React.useRef<HTMLDivElement>(null);
@@ -126,6 +127,11 @@ const EmployeeDetails = () => {
     setSelectedEmployee({} as Employee);
     setLoading(false);
   };
+
+  const handleDetailsClick = (textToCopy:string) => {
+    setToastOptions({open: true, message: "Copied to clipboard", type: "success", timer: 2})
+    navigator.clipboard.writeText(textToCopy)
+  }
 
   return (
     <div
@@ -235,7 +241,7 @@ const EmployeeDetails = () => {
           loading && " hidden"
         } `}
       >
-        <h2 className="text-2xl font-semibold">
+        <h2 className="text-2xl font-semibold select-all" onClick={() => handleDetailsClick(selectedEmployeeDetails?.name)}>
           {selectedEmployeeDetails?.name}
         </h2>
       </div>
@@ -244,12 +250,12 @@ const EmployeeDetails = () => {
           loading && " hidden"
         }`}
       >
-        <h3>{selectedEmployeeDetails?.address}</h3>
+        <h3 className="select-all" onClick={() => handleDetailsClick(selectedEmployeeDetails?.address||"")}>{selectedEmployeeDetails?.address}</h3>
       </div>
 
       <div className="w-full border-b my-4 " />
 
-      <div className="flex flex-wrap gap-3 items-stretch w-full h-max text-xs overflow-auto max-h-[70%] pb-2 ">
+      <div className="flex flex-wrap gap-3 items-stretch w-full overflow-x-hidden h-max text-xs overflow-auto max-h-[70%] pb-2 ">
         <div
           className={
             skeletonStyle +
@@ -292,8 +298,8 @@ const EmployeeDetails = () => {
           </strong>
           Daily Wage
         </div>
-        <div className={detailStyle(Boolean(selectedEmployeeDetails?.email))}>
-          <strong className="text-base">
+        <div className={detailStyle(Boolean(selectedEmployeeDetails?.email))} >
+          <strong className="text-base select-all" onClick={() => handleDetailsClick(selectedEmployeeDetails?.email||"")}>
             {selectedEmployeeDetails?.email}
           </strong>
           Email
@@ -301,7 +307,7 @@ const EmployeeDetails = () => {
         <div
           className={detailStyle(Boolean(selectedEmployeeDetails?.phoneNumber))}
         >
-          <strong className="text-base">
+          <strong className="text-base select-all" onClick={() => handleDetailsClick(selectedEmployeeDetails?.phoneNumber||"")}>
             {selectedEmployeeDetails?.phoneNumber}
           </strong>
           Phone

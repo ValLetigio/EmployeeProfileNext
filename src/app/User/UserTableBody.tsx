@@ -14,7 +14,7 @@ interface UserTableBodyProps {
 }
 
 const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
-  const { userData, serverRequests, router } = useAppContext();
+  const { userData, serverRequests, router, handleConfirmation, setToastOptions } = useAppContext();
 
   const handleRoleClick = async (
     user: User,
@@ -22,24 +22,34 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
     roleToAdd: string,
     checked: boolean
   ) => {
-    if (!checked) {
-      const res = await serverRequests.addRoleToUser(
-        userData,
-        user,
-        category,
-        roleToAdd
-      );
-      router.refresh();
-      console.log(res);
-    } else {
-      const res = await serverRequests.removeRolefromUser(
-        userData,
-        user,
-        category,
-        roleToAdd
-      );
-      router.refresh();
-      console.log(res);
+    const confirmed = await handleConfirmation(`Confirm Action?`, `Add ${roleToAdd} to ${user.displayName}?`, `${checked ? "error" : "success"}`);
+
+    if(confirmed){
+      try{
+        let res;
+        if (!checked) {
+          res = await serverRequests.addRoleToUser(
+            userData,
+            user,
+            category,
+            roleToAdd
+          );
+          router.refresh(); 
+        } else {
+          res = await serverRequests.removeRolefromUser(
+            userData,
+            user,
+            category,
+            roleToAdd
+          );
+          router.refresh();
+        }
+        console.log(res);
+        setToastOptions({open: true, message: res?.message, type: "success", timer: 5})
+      }catch (e) {
+        console.error(e)
+        setToastOptions({open: true, message: (e as Error).message, type: "error", timer: 5})
+      }
     }
   };
 
@@ -72,32 +82,32 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
         <tr key={user._id || "" + idx} className="border-b">
           {/* <td className="border p-2">{user.displayName}</td> */}
           <td className=" bg-base-200 bg-opacity-90 border-b"> 
-          <div className="flex justify-start items-start gap-3">
-            <div className="flex gap-2 items-center justify-center">
-              <div className="mask mask-squircle h-12 w-12 ">
-                {user?.image ? (
-                  <Image
-                    src={user?.image || ""}
-                    loading="lazy"
-                    alt={user?.displayName}
-                    height={100}
-                    width={100}
-                  />
-                ) : (
-                  <div className="h-12 w-12 bg-base-200 grid place-items-center">
-                    {" "}
-                    ?{" "}
-                  </div>
-                )}
+            <div className="flex justify-start items-start gap-3">
+              <div className="flex gap-2 items-center justify-center">
+                <div className="mask mask-squircle h-12 w-12 ">
+                  {user?.image ? (
+                    <Image
+                      src={user?.image || ""}
+                      loading="lazy"
+                      alt={user?.displayName}
+                      height={100}
+                      width={100}
+                    />
+                  ) : (
+                    <div className="h-12 w-12 bg-base-200 grid place-items-center">
+                      {" "}
+                      ?{" "}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="text-start">
+                <div className="text-sm opacity-80 tracking-tighter">
+                <div className="font-bold text-lg">{user?.displayName}</div>
+                  {user.email ? user.email.toString() : ""}
+                </div>
               </div>
             </div>
-            <div className="text-start">
-              <div className="text-sm opacity-80 tracking-tighter">
-              <div className="font-bold text-lg">{user?.displayName}</div>
-                {user.email ? user.email.toString() : ""}
-              </div>
-            </div>
-          </div>
           </td>
           {Object?.keys(res?.data || {}).map((key: string) => (
             <td key={key} className="border px-4">

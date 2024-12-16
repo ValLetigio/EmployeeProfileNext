@@ -40,6 +40,10 @@ const page = async () => {
           <table className="w-full table table-pin-rows ">
             <thead>
               <tr className=" bg-base-200 ">
+                <th className=" "></th>
+                <th className="border p-2 text-[1.02rem] " colSpan={4}>Roles</th>
+              </tr>
+              <tr className=" bg-base-200 ">
                 <th className="border p-2">Name</th>
                 {Object.keys(res.data).map((key) => (
                   <th key={key} className="border p-2">
@@ -59,7 +63,7 @@ const page = async () => {
                     {key}
                   </th>
                 ))}
-              </tr>
+              </tr> 
             </tfoot>
           </table>
         </div>
