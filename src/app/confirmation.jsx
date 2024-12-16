@@ -30,12 +30,13 @@ const Confirmation = () => {
         role="alert" 
     > 
         <div 
-            className={`gap-5 w-max rounded-lg shadow-2xl bg-base-300 !z-[9999]
-            flex flex-col justify-center items-center overflow-clip
+            className={`${confirmationOptions.open ? ' scale-100 ' : ' scale-0 '}  selection:
+            gap-5 w-max rounded-box shadow-2xl !z-[9999]
+            flex flex-col justify-center items-center overflow-clip bg-base-100
         `}
         > 
             <span 
-                className='  flex gap-2 justify-start text-start w-full font-bold text-lg px-10 border-b pt-8 pb-6 ' 
+                className={`text-${confirmationOptions.type} flex gap-2 justify-start text-start w-full font-bold text-xl px-10 border-b pt-8 pb-6 `}
             >{confirmationOptions?.question}</span>
 
             <span className='text-start px-10 py-4'>{confirmationOptions?.consequence}</span>
