@@ -10,7 +10,7 @@ const CreateOffenseModal = () => {
     > 
         <div className={` form-container relative`}>
             <form className="absolute top-2 right-2" method="dialog">
-                <button className="close-button">X</button>
+                <button className="close-button"></button>
             </form>  
             <CreateOffenseForm confirmation={false}/>
         </div> 

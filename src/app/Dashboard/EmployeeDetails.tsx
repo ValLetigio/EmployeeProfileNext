@@ -129,7 +129,7 @@ const EmployeeDetails = () => {
   };
 
   const handleDetailsClick = (textToCopy:string) => {
-    setToastOptions({open: true, message: "Copied to clipboard", type: "success", timer: 2})
+    setToastOptions({open: true, message: "Copied to clipboard", type: "info", timer: 2})
     navigator.clipboard.writeText(textToCopy)
   }
 

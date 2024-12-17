@@ -190,16 +190,19 @@ const CreateEmployeeForm = () => {
         </label>
       </div>
 
-      <label className="flex justify-center items-center gap-2" htmlFor="show">
-        <input
-          className="checkbox"
-          type="checkbox"
-          name="show"
-          id="show"
-          onChange={(e) => setShow(e.target.checked)}
-        />
-        More Details
-      </label>
+      {/* more details */}
+      <div className="w-full flex justify-center">
+        <label className="w-max flex justify-center items-center gap-2" htmlFor="show">
+          <input
+            className="checkbox"
+            type="checkbox"
+            name="show"
+            id="show"
+            onChange={(e) => setShow(e.target.checked)}
+          />
+          More Details
+        </label>
+      </div>
 
       <div
         className={`${
