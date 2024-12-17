@@ -36,7 +36,7 @@ const ImageModal = () => {
       <div className="modal-box bg-transparent shadow-none gap-2 flex flex-col w-full h-full justify-center items-center relative ">
         <form className="absolute top-2 right-2" method="dialog">
           <button onClick={handleClose} className="close-button">
-            X
+            
           </button>
         </form>
 
