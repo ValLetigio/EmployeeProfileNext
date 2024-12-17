@@ -44,7 +44,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
       >
         <ul>
           <li className=" hover:text-info ">
-            <Link href="/">Home</Link>
+            <Link href="/" id="Home">Home</Link>
           </li>
           {pathArray?.map((path, index) => {
             const href = "/" + pathArray.slice(0, index + 1).join("/");

@@ -10,7 +10,7 @@ import {
   SubmitMemo,
   DeleteMemo,
   clearCollections,
-  Dashboard,
+  Home
 } from './testCommands.cy'
 
 let serverRequests ;
@@ -72,9 +72,10 @@ describe('Employee spec', () => {
       )
 
       // Delete memo
-      DeleteMemo(
-        "John Doe Letigio, (late again bro)",
-      )
+      DeleteMemo({
+        employee: "John Doe Letigio",
+        memo: "Employee was late to work multiple times",
+      })
 
       // create another memo with different data
       CreateMemo(
@@ -88,12 +89,10 @@ describe('Employee spec', () => {
       )
 
       // Submit memo
-      SubmitMemo(
-        "John Doe Letigio, (Employee was late to work nasad)",
-        "stuck in traffic",
-        "smiley.png",
-        "minor.png",
-      )
+      SubmitMemo({
+        employee: "John Doe Letigio",
+        memo: "Employee was late to work multiple times",
+      })
 
       // Delete Employee
       // DeleteEmployee(
@@ -101,11 +100,8 @@ describe('Employee spec', () => {
       // )
 
       // Delete Offense
-      DeleteOffense(
-        "Employee was late to work multiple times"
-      )
-
-      Dashboard()
+      DeleteOffense('Employee was late to work multiple times')
+      Home()
     })
   })
 })

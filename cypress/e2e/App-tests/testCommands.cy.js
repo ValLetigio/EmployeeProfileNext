@@ -12,6 +12,17 @@ export function clearCollections(serverRequests){
   });
 }
 
+export function formattedDate(){
+  const date = new Date();
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const day = date.getDate();
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+  const formattedDate = `${day} ${month} ${year}`;
+  return formattedDate;
+}
+
 export function CreateEmployee(
   name = "John Doe",
   // address = "1234 Elm Street, Springfield",
@@ -159,9 +170,17 @@ export function UpdateOffense({
 }
 
 export function DeleteOffense(description){
+  cy.wait(1000)
   cy.get('#profile-button').should('be.visible').click()
   cy.contains('Delete Offense').click()
-  cy.get('#select-offense').select(description)
+  cy.get('#profile-button').should('be.visible').click()
+  cy.wait(1000)
+  cy.get('#select-memo').click()
+  cy.wait(1000)
+  cy.get('.css-1nmdiq5-menu')
+  .contains(description)
+  .click();
+  cy.wait(1000)
   cy.get('#delete-offense-btn').click()
   cy.wait(1000)
   cy.get('#confirm-button').click()
@@ -179,10 +198,17 @@ export function CreateMemo(
 ){
   cy.get('#profile-button').should('be.visible').click()
   cy.contains('Create Memorandum').click()
+  cy.get('#profile-button').should('be.visible').click()
   cy.location('pathname').should('include', '/Memorandum/Create')
   cy.get('#date').type('2024-10-31')
-  cy.get('#select-employee').select(employee)
-  cy.get('#MemoCode').select(memoCode)
+  cy.get('#select-employee').click()
+  cy.get('.css-1nmdiq5-menu')
+  .contains(employee)
+  .click();
+  cy.get('#MemoCode').click()
+  cy.get('.css-1nmdiq5-menu')
+  .contains(memoCode)
+  .click();
   cy.get('#subject').type(subject)
   cy.get('#description').type(description)
   // cy.get('#reason').type(reason)
@@ -196,15 +222,21 @@ export function CreateMemo(
   cy.wait(4000)
 }
 
-export function SubmitMemo(
-  memo,
-  reason,
-  mediaList,
-  memoPhotosList
-){
-  cy.get('#menu-button').click()
-  cy.get('#submit-memorandum').click()
-  cy.get('#select-memo').select(memo)
+export function SubmitMemo({
+  employee = 'John Doe Jr',
+  memo = 'Employee was late to work and was rude to customers',
+  reason = 'Employee was stuck in traffic',
+  mediaList = 'smiley.png',
+  memoPhotosList = 'mhm.png'
+} = {}){
+  const date = formattedDate();
+  cy.get('#profile-button').should('be.visible').click()
+  cy.contains('Submit Memorandum').click()
+  cy.get('#profile-button').should('be.visible').click()
+  cy.get('#select-offense').click()
+  cy.get('.css-1nmdiq5-menu')
+  .contains(employee + ', '+ memo + ' ('+ date +')')
+  .click();
   cy.get('#reason').type(reason)
   cy.get('#mediaList').attachFile(mediaList)
   cy.get('#memoPhotosList').attachFile(memoPhotosList)
@@ -215,16 +247,24 @@ export function SubmitMemo(
   cy.wait(4000)
 }
 
-export function DeleteMemo(memo){
-  cy.get('#menu-button').click()
-  cy.get('#delete-memorandum').click()
-  cy.get('#select-memo').select(memo)
+export function DeleteMemo({
+  employee = 'John Doe Jr',
+  memo = 'Employee was late to work and was rude to customers'
+} = {}) {
+  // console.log(formattedDate);
+  const dateStr = formattedDate();
+  cy.get('#profile-button').should('be.visible').click()
+  cy.contains('Delete Memorandum').click()
+  cy.get('#profile-button').should('be.visible').click()
+  cy.get('#select-offense').click()
+  cy.get('.css-1nmdiq5-menu')
+    .contains(employee + ', '+ memo + ' ('+ dateStr +')')
+    .click();
   cy.get('#delete-memo-btn').click()
   cy.wait(1000)
   cy.get('#confirm-button').click()
 }
 
-export function Dashboard(){
-  cy.get('#dashboard-button').click()
-  cy.location('pathname').should('include', '/Dashboard')
+export function Home(){
+  cy.get('#Home').click()
 }

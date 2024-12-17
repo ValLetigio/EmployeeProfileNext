@@ -120,6 +120,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
         onChange={(selectedOption) => {
           setFormData(selectedOption as Offense);
         }}
+        id="select-memo"
       />
 
       {/* description */}

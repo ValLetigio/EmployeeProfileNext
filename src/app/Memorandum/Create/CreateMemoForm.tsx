@@ -239,6 +239,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         onChange={(selectedOption) => {
           setFormData({ ...formData, Employee: selectedOption as Employee });
         }}
+        id="select-employee"
       />
 
       {/* Memo Code */}
@@ -266,6 +267,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         onChange={(selectedOption) => {
           setFormData({ ...formData, MemoCode: selectedOption as Offense });
         }}
+        id="MemoCode"
       />
 
       {remedialAction && (

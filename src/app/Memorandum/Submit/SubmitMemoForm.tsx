@@ -210,6 +210,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         onChange={(selectedOption) => {
           setFormData(selectedOption as Memo);
         }}
+        id="select-offense"
       />
 
       {/* date */}

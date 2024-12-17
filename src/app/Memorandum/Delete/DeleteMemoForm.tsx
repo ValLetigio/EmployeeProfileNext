@@ -136,6 +136,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
         onChange={(selectedOption) => {
           setFormData(selectedOption as Memo);
         }}
+        id="select-offense"
       />
 
       {/* date */}
