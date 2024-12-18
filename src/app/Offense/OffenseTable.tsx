@@ -24,12 +24,13 @@ const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
 
   useEffect(() => {
     setSearch(search);
-    const filteredList = offenseList.filter((offense) =>
+    const cleanedList = offenseList.map(({ _id, _version, ...rest }) => rest);
+    const filteredList = cleanedList.filter((offense) =>
       JSON.stringify(offense)
         .toLowerCase()
         .includes(search?.toLowerCase() || "")
     );
-    setFilteredOffenseList(filteredList);
+    setFilteredOffenseList(filteredList as Offense[]);
     setLoading(false);
   }, [search]);
 
@@ -66,7 +67,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
                 {offense?.remedialActions?.map((action, index) => (
                   <div
                     key={action + index}
-                    className=" flex flex-col text-start px-2 py-1 bg-neutral text-white rounded-box tooltip tooltip-accent"
+                    className=" flex flex-col text-start px-2 py-1 rounded-box bg-neutral text-neutral-content shadow-base-content tooltip tooltip-accent"
                     data-tip={`${getOrdinal(index + 1)} Offense`}
                   >
                     <span>{highlightText(action)}</span>

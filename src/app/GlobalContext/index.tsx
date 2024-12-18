@@ -510,7 +510,7 @@ export default function ContextProvider({
         className={
           part.toLowerCase() === search.toLowerCase() &&
           search.toLowerCase() !== " "
-            ? "bg-warning font-bold"
+            ? "bg-accent text-accent-content font-bold"
             : ""
         }
       >
@@ -530,10 +530,10 @@ export default function ContextProvider({
     return `${number}${suffixes[number % 10] || "th"}`;
   };
 
-  interface SelectStyle {
-    control: (base: Record<string, unknown>) => unknown;
-    singleValue: (base: Record<string, unknown>) => unknown;
-  }
+  // interface SelectStyle {
+  //   control: (base: Record<string, unknown>) => unknown;
+  //   singleValue: (base: Record<string, unknown>) => unknown;
+  // }
 
   // const selectStyle: SelectStyle = {
   //   control: (base: Record<string, unknown>) => ({ ...base, height: '3rem', backgroundColor: "transparent", borderRadius: "10px" }),

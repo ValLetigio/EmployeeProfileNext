@@ -162,7 +162,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
       <Select styles={selectStyle}
         options={offenseList}
         placeholder="Select Offense"
-        getOptionLabel={(option) => option.title || ""}
+        getOptionLabel={(option) => `(${option.number}) - ${option.title}` || ""}
         isClearable
         onChange={(selectedOption) => {
           setFormData(selectedOption as Offense);
