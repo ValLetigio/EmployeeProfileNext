@@ -87,9 +87,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({confirmation = tru
         : remedialActions.filter((action) => action !== value)
       };
     });
-  }; 
-
-  console.log(formData.remedialActions)
+  };  
  
 
   return (

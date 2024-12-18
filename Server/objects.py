@@ -6,7 +6,8 @@ import re
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Union, List
 
-db = mongoDb("EmployeeManagementBackup")
+# db = mongoDb("EmployeeManagementBackup")
+db = mongoDb()
 
 
 class Roles:

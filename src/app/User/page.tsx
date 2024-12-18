@@ -24,27 +24,21 @@ const page = async () => {
 
   const userRes = await serverRequests.getAllUsers();   
 
-  return (
-    <> 
-        
+  return ( 
       <div
-        className={`relative md:min-h-[90vh] flex flex-col md:justify-center md:items-center px-4 overflow-clip `}
+        className={`relative h-screen flex flex-col md:justify-center md:items-center px-4 overflow-clip `}
       >
-        <div className="h-[10vh] md:hidden " />
+        <div className="h-[10vh] md:hidden " /> 
 
-        <h2 className="text-3xl tracking-wider font-semibold mb-4">
-          Users
-        </h2>  
-
-        <div className="rounded-box md:max-h-[60vh] w-full md:w-[80vw] 2xl:w-[70vw] overflow-auto border shadow-2xl backdrop-blur-md " >
-          <table className="w-full table table-pin-rows ">
+        <div className="rounded-box h-[80vh] w-full md:w-[80vw] 2xl:w-[70vw] overflow-auto border shadow-2xl backdrop-blur-md " >
+          <table className="w-full table h-full ">
             <thead>
-              <tr className=" bg-base-200 ">
-                <th className=" "></th>
-                <th className="border p-2 text-[1.02rem] " colSpan={4}>Roles</th>
+              <tr className=" bg-base-300   ">
+                <th className=" border p-2 text-[1.02rem] text-center ">Users</th>
+                <th className="border p-2 text-[1.02rem] text-start  " colSpan={4}>Roles</th>
               </tr>
               <tr className=" bg-base-200 ">
-                <th className="border p-2">Name</th>
+                <th className="border p-2 ">Name</th>
                 {Object.keys(res.data).map((key) => (
                   <th key={key} className="border p-2">
                     {key}
@@ -64,12 +58,15 @@ const page = async () => {
                   </th>
                 ))}
               </tr> 
+              <tr className=" bg-base-300  ">
+                <th className=" border p-2 text-[1.02rem] text-center ">Users</th>
+                <th className="border p-2 text-[1.02rem] text-start " colSpan={4}>Roles</th>
+              </tr>
             </tfoot>
           </table>
         </div>
-        <div className="h-[15vh] md:hidden " />
-      </div>
-    </>
+        <div className="h-[5vh] md:hidden " />
+      </div> 
   );
 };
 

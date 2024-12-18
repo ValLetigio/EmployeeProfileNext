@@ -109,8 +109,8 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
               </div>
             </div>
           </td>
-          {Object?.keys(res?.data || {}).map((key: string) => (
-            <td key={key} className="border px-4">
+          {Object?.keys(res?.data || {}).map((key: string, index) => (
+            <td key={key} className={"border px-4" }>
               {checkRole(
                 user.roles[key] as string[],
                 res.data[key] as string[],

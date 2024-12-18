@@ -34,7 +34,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
   }, [search]);
 
   return (
-    <table className="w-full table table-pin-rows h-max">
+    <table className="w-full table table-pin-rows h-full">
       <thead>
         <tr className=" bg-base-200 divide-x">
           <th className=" p-2">Code</th>
@@ -62,7 +62,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
               </div>
             </td>
             <td className="border px-4 ">
-              <div className="flex flex-wrap max-w-max md:max-w-[100%] gap-2 ">
+              <div className="flex flex-wrap min-w-[50vw] md:min-w-[100%] gap-2 ">
                 {offense?.remedialActions?.map((action, index) => (
                   <div
                     key={action + index}
