@@ -42,7 +42,7 @@ const Confirmation = () => {
             <span className='text-start px-10 py-4'>{confirmationOptions?.consequence}</span>
 
             <div className='flex flex-col md:flex-row-reverse gap-2 justify-evenly w-full pt-4 pb-6 px-2'>
-                <button className="btn bg-info text-white border-none" id='confirm-button' onClick={handleConfirm}>Confirm</button>
+                <button className={`btn bg-${confirmationOptions.type} `} id='confirm-button' onClick={handleConfirm}>Confirm</button>
                 <button className={`btn btn-ghost`} id='cancel-button' onClick={handleCancel}>Cancel</button>
             </div>
         </div>

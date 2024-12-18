@@ -22,7 +22,7 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
     roleToAdd: string,
     checked: boolean
   ) => {
-    const confirmed = await handleConfirmation(`Confirm Action?`, `Add ${roleToAdd} to ${user.displayName}?`, `${checked ? "error" : "success"}`);
+    const confirmed = await handleConfirmation(`Confirm Action?`, `${checked ? "Remove" : "Add"} ${roleToAdd} to ${user.displayName}?`, `${checked ? "error" : "success"}`);
 
     if(confirmed){
       try{
@@ -44,7 +44,7 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
           );
           router.refresh();
         }
-        console.log(res);
+        console.log(res.message);
         setToastOptions({open: true, message: res?.message, type: "success", timer: 5})
       }catch (e) {
         console.error(e)
@@ -109,7 +109,7 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
               </div>
             </div>
           </td>
-          {Object?.keys(res?.data || {}).map((key: string, index) => (
+          {Object?.keys(res?.data || {}).map((key: string) => (
             <td key={key} className={"border px-4" }>
               {checkRole(
                 user.roles[key] as string[],

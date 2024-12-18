@@ -170,8 +170,7 @@ const PrintMemorandumModal = () => {
             data-tip={`Quality`}
           >
             <input
-              type="range"
-              defaultValue={3}
+              type="range" 
               min={1}
               max="3"
               step="1"
