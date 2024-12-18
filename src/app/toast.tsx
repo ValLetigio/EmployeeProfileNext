@@ -56,11 +56,11 @@ const Toast = () => {
   
     return (
         <div 
-            className={` flex items-center justify-center cursor-cell
-                ${toastOptions?.open ? 'toast-top toast-center lg:toast-start lg:toast-bottom' : 'hidden'} toast z-[100]
+            className={` flex items-center justify-center cursor-cell z-[100000]
+                ${toastOptions?.open ? 'toast-top toast-center lg:toast-start lg:toast-bottom' : 'hidden'} toast 
             `}  
                 key={toastOptions?.message}
-                
+            
         >
             <div className={`min-w-[50vw] md:min-w-max md:max-w-[20vw] alert text-white text-wrap px-5 rounded ${getToastType()[0]}`}
                 onClick={() => {
@@ -69,6 +69,7 @@ const Toast = () => {
                 }} 
                 onMouseEnter={() => setTimer(50)} 
                 onMouseLeave={() => setTimer(toastOptions?.timer)}
+                role='alert'
             >
                 <span 
                     className={` text-start break-words tooltip tooltip-top ${getToastType()[2]} whitespace-pre-line`} 

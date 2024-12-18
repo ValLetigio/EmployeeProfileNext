@@ -151,14 +151,7 @@ const CreateEmployeeForm = () => {
       onSubmit={(e) => handleSubmit(e)}
     >
       <h2
-        className="font-semibold"
-        onClick={async () =>
-          await handleConfirmation(
-            "U Serious Bro?",
-            "Your Aim is Terrible.",
-            ""
-          )
-        }
+        className="font-semibold w-max" 
       >
         Employee Registry
       </h2>

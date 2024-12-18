@@ -24,7 +24,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
 
   useEffect(() => {
     setSearch(search);
-    const cleanedList = offenseList.map(({ _id, _version, ...rest }) => rest);
+    const cleanedList = offenseList.map(({ _id, _version, ...rest }) => rest); 
     const filteredList = cleanedList.filter((offense) =>
       JSON.stringify(offense)
         .toLowerCase()

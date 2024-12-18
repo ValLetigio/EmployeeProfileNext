@@ -41,7 +41,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ controlled = false }) => {
       if (!controlled) {
         setLoading(false);
       }
-    }, 1000);
+    }, 2000);
 
     setDebounceTimeout(timeout);
   };
