@@ -42,7 +42,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
   }, [search]);
 
   return (
-    <table className="table w-full table-pin-rows ">
+    <table className={`table w-full table-pin-rows ${!employeeList.length ? " h-[88%] " : " h-max "} `}>
       {/* head */}
       <thead>
         <tr>
@@ -112,6 +112,13 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
             </td>
           </tr>
         ))}
+        {!filteredEmployeeList.length && (
+          <tr>
+            <td colSpan={3} className="text-center p-4">
+              No results found
+            </td>
+          </tr>
+        )}
       </tbody>
       {/* foot */}
       <tfoot>
