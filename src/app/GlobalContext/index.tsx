@@ -510,7 +510,7 @@ export default function ContextProvider({
         className={
           part.toLowerCase() === search.toLowerCase() &&
           search.toLowerCase() !== " "
-            ? "bg-accent text-accent-content font-bold"
+            ? "bg-error text-white font-semibold"
             : ""
         }
       >

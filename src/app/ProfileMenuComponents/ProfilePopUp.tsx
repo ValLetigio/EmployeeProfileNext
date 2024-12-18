@@ -36,15 +36,15 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
     <div
       // transition-all duration-300 ease-in
       className={` 
-        ${showMenu ? " top-[80px] " : " hidden "} right-0
+        ${showMenu ? " top-[71px] md:top-[80px] " : " hidden "} right-0
         absolute shadow-lg border backdrop-blur-lg bg-base-100/70 duration-300 transition-all
-        w-[96vw] md:w-[330px] h-[80vh] md:max-h-[73vh] rounded-2xl z-50 
+        w-[96vw] md:w-[330px] h-[83vh] md:max-h-[73vh] rounded-2xl z-50 
         flex flex-col justify-between pb-3 border-info 
       `}
     >
       <UserListButton userData={userData} pathname={pathname||""}/>
 
-      <div className="-z-10 right-[.89rem] -top-3 absolute w-0 h-0 border-l-[16px] border-r-[16px] border-b-[20.5px] border-transparent border-b-info border-opacity-60" />
+      <div className="-z-10 right-[.70rem] md:right-[.89rem] -top-3 absolute w-0 h-0 border-l-[16px] border-r-[16px] border-b-[20.5px] border-transparent border-b-info border-opacity-60" />
 
       <div className="flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-base-300 border-b border-info">
         <Image

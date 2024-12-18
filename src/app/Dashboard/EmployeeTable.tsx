@@ -31,19 +31,29 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
   const search = searchParams.get("search") || "";
 
   useEffect(() => {
+    setLoading(true);
+
     setSearch(search);
-    const cleanedList = employeeList.map(({ address, name, email, company, phoneNumber, _id }) => ({ address, name, email, company, phoneNumber, _id })); 
-    const filteredEmployeeList = cleanedList.filter((employee) =>
-      JSON.stringify(employee)
-        .toLowerCase()
-        .includes(search?.toLowerCase() || "")
+
+    const searchQuery = search?.toLowerCase() || "";
+
+    const filteredListForTable = employeeList.filter(
+      ({ address, name, email, company, phoneNumber }) =>
+        [address, name, email, company, phoneNumber].some((field) =>
+          field?.toLowerCase().includes(searchQuery)
+        )
     );
-    setFilteredEmployeeList(filteredEmployeeList as Employee[]);
+
+    setFilteredEmployeeList(filteredListForTable as Employee[]);
     setLoading(false);
-  }, [search]);
+  }, [search, employeeList]);
 
   return (
-    <table className={`table w-full table-pin-rows ${!employeeList.length ? " h-[88%] " : " h-max "} `}>
+    <table
+      className={`table w-full table-pin-rows ${
+        !employeeList.length ? " h-[88%] " : " h-max "
+      } `}
+    >
       {/* head */}
       <thead>
         <tr>
