@@ -6,7 +6,7 @@ import re
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Union, List
 
-db = mongoDb()
+db = mongoDb("EmployeeManagementBackup")
 
 
 class Roles:
@@ -348,7 +348,7 @@ class UserActions(User):
 
         employee = db.read({'_id': employeeId}, 'Employee')
         return employee[0]
-    
+
     def getRemedialActionForEmployeeMemoAction(self, employeeId, offenseId):
         employeeMemos = db.read(
             {
@@ -372,7 +372,6 @@ class UserActions(User):
             'remedialAction': remedialActions[offenseCount],
             'offenseCount': offenseCount
         }
-
 
 
 class Memo(BaseModel):
@@ -428,8 +427,9 @@ class Memo(BaseModel):
         employeeId = self.Employee.id
         offenseId = self.MemoCode.id
 
-        getRemedialAction = UserActions(user).getRemedialActionForEmployeeMemoAction(
-            employeeId, offenseId)
+        getRemedialAction = UserActions(
+            user).getRemedialActionForEmployeeMemoAction(
+                employeeId, offenseId)
 
         remedialActionToString = getRemedialAction['remedialAction']
 

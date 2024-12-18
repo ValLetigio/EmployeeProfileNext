@@ -9,11 +9,11 @@ import os
 
 class mongoDb:
 
-    def __init__(self):
-    
+    def __init__(self, databaseName='testEmployeeProfile'):
+
         if AppConfig().getEnvironment() == 'cloudprod':
             uri = os.getenv('MONGO_URI_ACCOUNTING')
-            
+
             if uri is None:
                 raise Exception(
                     'MONGO_URI_ACCOUNTING environment variable is not set')
@@ -21,24 +21,22 @@ class mongoDb:
             self.client = MongoClient(uri,
                                       server_api=ServerApi('1'),
                                       tz_aware=True)
-            databaseName = ''
+
         if AppConfig().getEnvironment() == 'clouddev':
             uri = "mongodb+srv://ladia123:Bigreddog12.@cluster0.pgvpdb1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
             self.client = MongoClient(uri,
                                       server_api=ServerApi('1'),
                                       tz_aware=True)
-            databaseName = ''
 
         # testEnvironment is used for automated testing while the actual is used for production / development
         if AppConfig().getEnvironment() == 'localdev':
             self.client = MongoClient('localhost', 27017, tz_aware=True)
-            databaseName = 'testEmployeeProfile'
+
         if AppConfig().getEnvironment() == 'localTest':
             self.client = MongoClient('localhost', 27017, tz_aware=True)
-            databaseName = 'testEmployeeProfile'
+
         if AppConfig().getEnvironment() == 'localprod':
             self.client = MongoClient('localhost', 27017, tz_aware=True)
-            databaseName = 'testEmployeeProfile'
 
         self.db = self.client[databaseName]
 
@@ -73,16 +71,24 @@ class mongoDb:
         return self.db[collection_name].find_one({"_id": result.inserted_id},
                                                  session=session)
 
-    def read(self, query, collection_name, projection={}, session=None,findOne=False, count=False):
+    def read(self,
+             query,
+             collection_name,
+             projection={},
+             session=None,
+             findOne=False,
+             count=False):
         """Read documents from the collection."""
         start_time = time.time()  # get current time
 
         if findOne:
-            data = self.db[collection_name].find_one(query, projection, session=session)
+            data = self.db[collection_name].find_one(query,
+                                                     projection,
+                                                     session=session)
         else:
             data = list(self.db[collection_name].find(query,
-                                                    projection,
-                                                    session=session))
+                                                      projection,
+                                                      session=session))
         end_time = time.time()  # get current time after ping
 
         elapsed_time = end_time - start_time  # calculate elapsed time
