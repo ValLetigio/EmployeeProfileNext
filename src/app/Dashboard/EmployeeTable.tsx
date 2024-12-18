@@ -32,12 +32,13 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
 
   useEffect(() => {
     setSearch(search);
-    const filteredEmployeeList = employeeList.filter((employee) =>
+    const cleanedList = employeeList.map(({ address, name, email, company, phoneNumber, _id }) => ({ address, name, email, company, phoneNumber, _id })); 
+    const filteredEmployeeList = cleanedList.filter((employee) =>
       JSON.stringify(employee)
         .toLowerCase()
         .includes(search?.toLowerCase() || "")
     );
-    setFilteredEmployeeList(filteredEmployeeList);
+    setFilteredEmployeeList(filteredEmployeeList as Employee[]);
     setLoading(false);
   }, [search]);
 
@@ -54,10 +55,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
       <tbody>
         {filteredEmployeeList.map((employee) => (
           <tr
-            key={employee._id}
+            key={employee.name}
             className={`
                     ${
-                      selectedEmployee?._id == employee?._id
+                      selectedEmployee?.name == employee?.name
                         ? "bg-base-300 "
                         : "hover:bg-base-200 "
                     } 
