@@ -11,8 +11,9 @@ const BackButton = () => {
     localStorage.setItem("lastPath", "/");
     localStorage.setItem("isBacked", "true");
 
-    router.push(lastPath !== "/" && lastPath !== pathname ? lastPath || "" : "/")
- 
+    router.push(
+      lastPath !== "/" && lastPath !== pathname ? lastPath || "" : "/"
+    );
   };
 
   const lastPath = localStorage.getItem("lastPath");
@@ -24,9 +25,24 @@ const BackButton = () => {
 
   const transitionStyle = ` md:duration-100 md:transition-all md:ease-linear`;
 
+  const toDisplay =
+    lastPath !== "/" && lastPath !== pathname
+      ? lastPath?.substring(1)
+      : "Dashboard";
+
+  let backPath;
+
+  if (toDisplay != "Dashboard") {
+    const pathstr = toDisplay?.split("/");
+    backPath = `${pathstr?.[1]}-${pathstr?.[0]}`;
+  } else {
+    backPath = toDisplay;
+  }
+
   return (
     <button
-      className={` absolute left-2 top-2 rounded-full flex justify-center items-center overflow-clip  
+      className={` ${pathname === "/" && lastPath === "/" ? "hidden" : ""} z-20
+        absolute left-2 top-2 rounded-full flex justify-center items-center overflow-clip  
           p-1 hover:pr-2 hover:text-info-content group `}
       onClick={goBack}
     >
@@ -50,7 +66,7 @@ const BackButton = () => {
           transitionStyle
         }
       >
-        {lastPath !== "/" && lastPath !== pathname ? lastPath : "Dashboard"}
+        {backPath}
       </div>
       <span
         className={

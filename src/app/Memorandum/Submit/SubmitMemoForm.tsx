@@ -201,6 +201,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         styles={selectStyle}
         options={filteredMemos}
         placeholder="Select Memo"
+        value={formData?._id ? formData : null}
         getOptionLabel={(option) =>
           `${option.Employee?.name}, ${
             option?.MemoCode?.title

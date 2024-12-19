@@ -127,6 +127,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
         styles={selectStyle}
         options={filteredMemos}
         placeholder="Select Memo"
+        value={formData?._id ? formData : null}
         getOptionLabel={(option) =>
           `${option.Employee?.name}, ${
             option?.MemoCode?.title

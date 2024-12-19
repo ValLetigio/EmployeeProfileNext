@@ -233,6 +233,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       <Select
         styles={selectStyle}
         options={employeeList}
+        value={formData?.Employee ? formData.Employee : null}
         placeholder="Select Employee"
         getOptionLabel={(option) => option.name || ""}
         isClearable
@@ -262,6 +263,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         styles={selectStyle}
         options={offenseList}
         placeholder="Select Offense"
+        value={formData?.MemoCode ? formData.MemoCode : null}
         getOptionLabel={(option) => `(${option.number}) - ${option.title}` || ""}
         isClearable
         onChange={(selectedOption) => {

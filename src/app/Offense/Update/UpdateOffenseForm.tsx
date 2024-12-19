@@ -162,6 +162,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
       <Select styles={selectStyle}
         options={offenseList}
         placeholder="Select Offense"
+        value={formData?.title ? formData : null}
         getOptionLabel={(option) => `(${option.number}) - ${option.title}` || ""}
         isClearable
         onChange={(selectedOption) => {
@@ -180,7 +181,7 @@ const UpdateOffenseForm: React.FC<UpdateOffenseFormProps> = ({
             placeholder="Code"
             id="number"
             required
-            value={formData?.number}
+            value={formData?.number || ""}
             disabled={!formData?.description}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               handleInputChange(e);

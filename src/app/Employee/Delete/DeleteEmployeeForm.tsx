@@ -134,6 +134,7 @@ const DeleteEmployeeForm: FC<CreateEmployeeFormProps> = ({ employeeList }) => {
         options={employeeList}
         placeholder="Select Employee"
         getOptionLabel={(option) => option.name}
+        value={formData?._id ? formData : null}
         isClearable
         onChange={(selectedOption) => {
           setFormData(selectedOption as Employee);
