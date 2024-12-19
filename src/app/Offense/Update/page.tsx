@@ -20,7 +20,7 @@ const page = async () => {
   const offenseList: Offense[] = res.data;  
 
   const remedialActions = [
-    "Written Reprimand",
+    "Written-Reprimand",
     "Verbal Reprimand",
     "Verbal And Written Reprimand",
     "1 Day Suspension",

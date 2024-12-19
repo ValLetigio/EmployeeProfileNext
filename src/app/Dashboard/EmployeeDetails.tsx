@@ -44,7 +44,7 @@ const EmployeeDetails = () => {
   `;
 
   const skeletonStyle = `
-    ${selectedEmployeeDetails._id && !loading ? " hidden " : " block "} 
+    ${selectedEmployeeDetails.name && !loading ? " hidden " : " block "} 
     ${loading ? " skeleton block" : " bg-base-300 rounded-xl "} shrink-0 
   `;
 

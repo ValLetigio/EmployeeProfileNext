@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
+# db = mongoDb("EmployeeManagementBackup")
 db = mongoDb()
 
 # Configure logging

@@ -5,10 +5,9 @@ import React from "react";
 const ThemeControl = () => {
 
   const themes = [
-    "light", "dark", "cupcake",  
-    "synthwave", "luxury", "black", "dim", 
-    "garden", "wireframe", "pastel", "lemonade", "winter",
-    "retro", "cyberpunk", "aqua", "lofi", "valentine", 
+    "light", "dark", "cupcake", "winter", "wireframe",
+    "synthwave", "luxury", "dim",  
+    "retro", "cyberpunk", "aqua", "valentine", 
   ];
 
   const [ selectedTheme, setSelectedTheme ] = React.useState<string>(localStorage.getItem("theme") || "light");  

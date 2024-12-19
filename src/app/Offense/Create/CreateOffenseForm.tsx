@@ -6,6 +6,8 @@ import { useAppContext } from '@/app/GlobalContext';
 
 import { Offense } from '@/app/schemas/OffenseSchema';
 
+import CreateButton from '../CreateButton';
+
 interface CreateOffenseFormProps {
   confirmation?: boolean
 }
@@ -77,6 +79,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({confirmation = tru
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value; 
+    console.log(value)
     setFormData((prevData) => {
       const remedialActions = prevData.remedialActions || []
       return {
@@ -86,8 +89,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({confirmation = tru
         : remedialActions.filter((action) => action !== value)
       };
     });
-  }; 
- 
+  };
 
   return (
     <form className='form-style' onSubmit={handleSubmit} ref={formRef}>
@@ -154,7 +156,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({confirmation = tru
               <div key={index} className={` indicator ${position&&"tooltip tooltip-accent"}`} data-tip={`Action on ${getOrdinal(position)} Offense`}>
                 <input className=" flex join-item hyphens-auto h-max btn btn-sm btn-neutral " 
                   onChange={handleCheckboxChange} 
-                  type="checkbox" name="options" value={action} aria-label={action} key={index} id={action}/>
+                  type="checkbox" name={action + index} checked={formData?.remedialActions?.includes(action)} value={action} aria-label={action} key={index} id={action + index}/>
                 <span className={`${!position&&"hidden"} indicator-item badge badge-accent `}>{getOrdinal(position)}</span>
               </div>
             )

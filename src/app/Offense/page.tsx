@@ -12,6 +12,10 @@ import CreateOffenseModal from "./Create/CreateOffenseModal";
 import DeleteOffenseModal from "./Delete/DeleteOffenseModal";
 import UpdateOffenseModal from "./Update/UpdateOffenseModal";
 
+import SearchBar from "../Dashboard/SearchBar";
+
+import OffenseTable from "./OffenseTable";
+
 
 const page = async () => {
   
@@ -30,70 +34,26 @@ const page = async () => {
       <DeleteOffenseModal />
         
       <div
-        className={`relative md:min-h-[90vh] flex flex-col md:justify-center md:items-center px-4 overflow-clip `}
+        className={`relative h-screen flex flex-col justify-center items-center px-4 overflow-clip `}
       >
-        <div className="h-[10vh] md:hidden " />
-
-        <h2 className="text-3xl tracking-wider font-semibold mb-4">
-          Offenses and Remedial Actions
-        </h2>
+        <div className="h-[10vh] md:hidden " /> 
 
         {/* action buttons */}
-        <div className="w-full md:w-[80vw] 2xl:w-[70vw] flex justify-end gap-4 mb-2 ">
-          <CreateButton />
-          <UpdateButton />
-          <DeleteButton />
+        <div className="w-full md:w-[80vw] 2xl:w-[70vw] flex flex-col md:flex-row justify-between bg-base-200 rounded-t-box px-2 border border-b-none">
+          <div className="flex justify-evenly md:justify-start items-center gap-4 px-2 py-2 ">
+            <CreateButton />
+            <UpdateButton />
+            <DeleteButton />
+          </div>
+          <div className="py-2 ">
+            <SearchBar></SearchBar>
+          </div>
         </div>
 
-        <div className="rounded-box md:max-h-[60vh] w-full md:w-[80vw] 2xl:w-[70vw] overflow-auto border shadow-2xl backdrop-blur-md " >
-          <table className="w-full table table-pin-rows ">
-            <thead>
-              <tr className=" bg-base-200 ">
-                <th className="border p-2">Code</th>
-                <th className="border p-2">Offense</th>
-                <th className="border p-2 min-w-[80vw] md:min-w-[50vw] xl:min-w-max">
-                  Description
-                </th>
-                <th className="border p-2 min-w-[70vw] md:min-w-[25vw] xl:min-w-max">
-                  Remedial Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {offenseList?.map((offense) => (
-                <tr className=" hover:bg-base-200 " key={offense._id}>
-                  <td className="border p-2 text-center font-bold">{offense.number}</td>
-                  <td className="border p-2">{offense.title}</td>
-                  <td className="border whitespace-pre-line max-h-[60vh] md:max-h-[30vh] p-4">
-                    <div className="max-h-[55vh] md:max-h-[30vh] md:overscroll-contain overflow-y-auto bg-base-300 rounded-box p-4"> 
-                      {offense.description}
-                    </div>
-                  </td>
-                  <td className="border p-4"> 
-                    {offense.remedialActions.map((action) => (
-                      <p key={action} className="w-max my-1 md:my-2">
-                        • {action}
-                      </p>
-                    ))} 
-                  </td>
-                </tr>
-              ))}
-            </tbody> 
-            <tfoot>
-              <tr className=" bg-base-200 ">
-                <th className="border p-2">Code</th>
-                <th className="border p-2">Violation</th>
-                <th className="border p-2 min-w-[80vw] md:min-w-[50vw] xl:min-w-max">
-                  Description
-                </th>
-                <th className="border p-2 min-w-[70vw] md:min-w-[25vw] xl:min-w-max">
-                  Remedial Actions
-                </th>
-              </tr>
-            </tfoot>
-          </table>
+        <div className=" rounded-box rounded-t-none h-[75vh] w-full md:w-[80vw] 2xl:w-[70vw] overflow-auto border shadow-2xl backdrop-blur-md border-t-none" >
+          <OffenseTable offenseList={offenseList}/>
         </div>
-        <div className="h-[15vh] md:hidden " />
+        <div className="h-[5vh] md:hidden " />
       </div>
     </>
   );
