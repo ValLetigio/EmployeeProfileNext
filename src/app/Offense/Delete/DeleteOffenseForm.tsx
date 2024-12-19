@@ -114,8 +114,8 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
 
       <Select styles={selectStyle}
         options={offenseList}
-        placeholder="Select Employee"
-        getOptionLabel={(option) => option.title || ""}
+        placeholder="Select Offense" 
+        getOptionLabel={(option) => `(${option.number}) - ${option.title}` || ""}
         isClearable
         onChange={(selectedOption) => {
           setFormData(selectedOption as Offense);

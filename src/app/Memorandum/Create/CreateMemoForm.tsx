@@ -262,7 +262,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         styles={selectStyle}
         options={offenseList}
         placeholder="Select Offense"
-        getOptionLabel={(option) => option.title || ""}
+        getOptionLabel={(option) => `(${option.number}) - ${option.title}` || ""}
         isClearable
         onChange={(selectedOption) => {
           setFormData({ ...formData, MemoCode: selectedOption as Offense });

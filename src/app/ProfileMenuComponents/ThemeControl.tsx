@@ -7,7 +7,7 @@ const ThemeControl = () => {
   const themes = [
     "light", "dark", "cupcake", "winter", "wireframe",
     "synthwave", "luxury", "dim",  
-    "retro", "cyberpunk", "aqua", "valentine", 
+    "retro", "cyberpunk", "aqua", "valentine"
   ];
 
   const [ selectedTheme, setSelectedTheme ] = React.useState<string>(localStorage.getItem("theme") || "light");  
