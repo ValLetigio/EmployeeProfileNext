@@ -6,6 +6,8 @@ import { useAppContext } from '@/app/GlobalContext';
 
 import { Offense } from '@/app/schemas/OffenseSchema';
 
+import CreateButton from '../CreateButton';
+
 interface CreateOffenseFormProps {
   confirmation?: boolean
 }
@@ -87,8 +89,7 @@ const CreateOffenseForm: React.FC<CreateOffenseFormProps> = ({confirmation = tru
         : remedialActions.filter((action) => action !== value)
       };
     });
-  };  
- 
+  };
 
   return (
     <form className='form-style' onSubmit={handleSubmit} ref={formRef}>

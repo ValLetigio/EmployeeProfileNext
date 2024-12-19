@@ -24,7 +24,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
 
   useEffect(() => {
     setSearch(search);
-    const cleanedList = offenseList.map(({ _id, _version, ...rest }) => rest);
+    const cleanedList = offenseList.map(({ _id, _version, ...rest }) => rest); 
     const filteredList = cleanedList.filter((offense) =>
       JSON.stringify(offense)
         .toLowerCase()
@@ -35,7 +35,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
   }, [search]);
 
   return (
-    <table className="w-full table table-pin-rows h-full">
+    <table className={`w-full table table-pin-rows h-full`}>
       <thead>
         <tr className=" bg-base-200 divide-x">
           <th className=" p-2">Code</th>
@@ -77,6 +77,13 @@ const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
             </td>
           </tr>
         ))}
+        {!filteredOffenseList.length && (
+          <tr>
+            <td colSpan={4} className="text-center p-4">
+              No results found
+            </td>
+          </tr>
+        )}
       </tbody>
       <tfoot>
         <tr className=" bg-base-200 divide-x ">

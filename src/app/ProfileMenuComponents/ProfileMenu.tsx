@@ -35,7 +35,7 @@ const ProfileMenu = () => {
   return (
     <div 
       className={` ${pathname == "/Dashboard"&&"hidden"}
-        fixed top-2 right-2 md:top-4 md:right-4 h-16 w-16 duration-300 z-50
+        fixed top-2 right-2 md:top-4 md:right-4 h-14 md:h-16 w-14 md:w-16 duration-300 z-50
       `} 
     >   
       {userData?._id ?

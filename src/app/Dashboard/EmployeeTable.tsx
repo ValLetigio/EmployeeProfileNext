@@ -31,18 +31,29 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
   const search = searchParams.get("search") || "";
 
   useEffect(() => {
+    setLoading(true);
+
     setSearch(search);
-    const filteredEmployeeList = employeeList.filter((employee) =>
-      JSON.stringify(employee)
-        .toLowerCase()
-        .includes(search?.toLowerCase() || "")
+
+    const searchQuery = search?.toLowerCase() || "";
+
+    const filteredListForTable = employeeList.filter(
+      ({ address, name, email, company, phoneNumber }) =>
+        [address, name, email, company, phoneNumber].some((field) =>
+          field?.toLowerCase().includes(searchQuery)
+        )
     );
-    setFilteredEmployeeList(filteredEmployeeList);
+
+    setFilteredEmployeeList(filteredListForTable as Employee[]);
     setLoading(false);
-  }, [search]);
+  }, [search, employeeList]);
 
   return (
-    <table className="table w-full table-pin-rows ">
+    <table
+      className={`table w-full table-pin-rows ${
+        !employeeList.length ? " h-[88%] " : " h-max "
+      } `}
+    >
       {/* head */}
       <thead>
         <tr>
@@ -54,10 +65,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
       <tbody>
         {filteredEmployeeList.map((employee) => (
           <tr
-            key={employee._id}
+            key={employee.name}
             className={`
                     ${
-                      selectedEmployee?._id == employee?._id
+                      selectedEmployee?.name == employee?.name
                         ? "bg-base-300 "
                         : "hover:bg-base-200 "
                     } 
@@ -112,6 +123,13 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
             </td>
           </tr>
         ))}
+        {!filteredEmployeeList.length && (
+          <tr>
+            <td colSpan={3} className="text-center p-4">
+              No results found
+            </td>
+          </tr>
+        )}
       </tbody>
       {/* foot */}
       <tfoot>
