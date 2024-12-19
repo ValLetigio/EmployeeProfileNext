@@ -287,7 +287,7 @@ def create_memo():
         try:
             res = UserActions(userData).createMemoAction(
                 userData, {
-                    'date': datetime.now(timezone.utc),
+                    'date': memo['date'] ,
                     'mediaList': memo['mediaList'] or None,
                     'Employee': memo['Employee'],
                     'memoPhotosList': memo['memoPhotosList'] or None,
