@@ -10,7 +10,7 @@ import DeleteButton from "./DeleteButton";
 
 import CreateOffenseModal from "./Create/CreateOffenseModal"; 
 import DeleteOffenseModal from "./Delete/DeleteOffenseModal";
-import UpdateOffenseModal from "./Update/UpdateOffenseModal";
+import UpdateOffenseModal from "./Update/UpdateOffenseModal"; 
 
 import SearchBar from "../Dashboard/SearchBar";
 
@@ -43,7 +43,7 @@ const page = async () => {
           <div className="flex justify-evenly md:justify-start items-center gap-4 px-2 py-2 ">
             <CreateButton />
             <UpdateButton />
-            <DeleteButton />
+            <DeleteButton /> 
           </div>
           <div className="py-2 ">
             <SearchBar></SearchBar>

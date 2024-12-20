@@ -34,7 +34,7 @@ const BackButton = () => {
 
   if (toDisplay != "Dashboard") {
     const pathstr = toDisplay?.split("/");
-    backPath = `${pathstr?.[1]}-${pathstr?.[0]}`;
+    backPath = `${pathstr?.[1] ? pathstr?.[1]+"-" : ""}${pathstr?.[0]}`;
   } else {
     backPath = toDisplay;
   }
@@ -43,7 +43,7 @@ const BackButton = () => {
     <button
       className={` ${pathname === "/" && lastPath === "/" ? "hidden" : ""} z-20
         absolute left-2 top-2 rounded-full flex justify-center items-center overflow-clip  
-          p-1 hover:pr-2 hover:text-info-content group `}
+          p-1 hover:pr-3 hover:text-info-content group `}
       onClick={goBack}
     >
       <svg
