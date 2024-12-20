@@ -9,8 +9,8 @@ class firebaseAuthenticator:
         print('user', userObject)
 
         self.firebaseUserObject = userObject['profile']
-        self.db = mongoDb("EmployeeManagementBackup")
-        # self.db = mongoDb()
+        # self.db = mongoDb("EmployeeManagementBackup")
+        self.db = mongoDb()
 
         print('Firebase User Object : ' + str(self.firebaseUserObject))
 

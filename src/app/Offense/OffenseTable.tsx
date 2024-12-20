@@ -10,9 +10,10 @@ import { useSearchParams } from "next/navigation";
 
 interface OffenseTableProps {
   offenseList: Offense[];
+  hideFooter?: boolean
 }
 
-const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
+const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList, hideFooter = false }) => {
   const { setLoading, highlightText, setSearch, getOrdinal } = useAppContext();
 
   const [filteredOffenseList, setFilteredOffenseList] =
@@ -41,7 +42,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
   }, [search]);
 
   return (
-    <table className={`w-full table table-pin-rows h-full`}>
+    <table className={`w-full table ${!hideFooter&&"table-pin-rows "} h-full`}>
       <thead>
         <tr className=" bg-base-200 divide-x">
           <th className=" p-2">Code</th>
@@ -91,14 +92,14 @@ const OffenseTable: React.FC<OffenseTableProps> = ({ offenseList }) => {
           </tr>
         )}
       </tbody>
-      <tfoot>
+      {!hideFooter&&<tfoot>
         <tr className=" bg-base-200 divide-x ">
           <th className="  p-2">Code</th>
           <th className="  p-2">Violation</th>
           <th className="  p-2  ">Description</th>
           <th className="  p-2  ">Remedial Actions</th>
         </tr>
-      </tfoot>
+      </tfoot>}
     </table>
   );
 };

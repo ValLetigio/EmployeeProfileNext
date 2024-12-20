@@ -7,14 +7,17 @@ import { Offense } from "@/app/schemas/OffenseSchema";
 import CreateButton from "./CreateButton"; 
 import UpdateButton from "./UpdateButton";
 import DeleteButton from "./DeleteButton";
+import OffenseDownloadButton from "./OffenseDownloadButton";
 
 import CreateOffenseModal from "./Create/CreateOffenseModal"; 
 import DeleteOffenseModal from "./Delete/DeleteOffenseModal";
-import UpdateOffenseModal from "./Update/UpdateOffenseModal"; 
+import UpdateOffenseModal from "./Update/UpdateOffenseModal";  
+import OffenseTableModal from "./OffenseTableModal";
+
+import OffenseTable from "./OffenseTable";
 
 import SearchBar from "../Dashboard/SearchBar";
 
-import OffenseTable from "./OffenseTable";
 
 
 const page = async () => {
@@ -32,6 +35,7 @@ const page = async () => {
       <CreateOffenseModal />
       <UpdateOffenseModal />
       <DeleteOffenseModal />
+      <OffenseTableModal offenseList={offenseList}/>
         
       <div
         className={`relative h-screen flex flex-col justify-center items-center px-4 overflow-clip `}
@@ -44,6 +48,7 @@ const page = async () => {
             <CreateButton />
             <UpdateButton />
             <DeleteButton /> 
+            <OffenseDownloadButton />
           </div>
           <div className="py-2 ">
             <SearchBar></SearchBar>
