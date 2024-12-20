@@ -3,9 +3,8 @@
 @tailwind utilities; 
 
 * { 
-  font-family: var(--font-poppins);
-  opacity: 1;
-  transition: opacity 0.5s ease-in-out; 
+  font-family: var(--font-poppins); 
+  transition: transform 0.2s ; 
   scrollbar-width: thin; 
 }
   
