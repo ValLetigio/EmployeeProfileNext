@@ -285,6 +285,10 @@ def create_memo():
         memo = data['memo']
 
         try:
+
+            if memo['date']:
+                memo['date'] = datetime.strptime(memo['date'], "%Y-%m-%d")
+
             res = UserActions(userData).createMemoAction(
                 userData, {
                     'date': memo['date'] ,

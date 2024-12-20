@@ -45,6 +45,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     memoPhotosList: null,
   } as Memo);
 
+  console.log("formData", formData);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
