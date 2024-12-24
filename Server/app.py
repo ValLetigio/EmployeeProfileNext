@@ -10,8 +10,8 @@ from datetime import datetime, timezone
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
-db = mongoDb("EmployeeManagementBackup")
-# db = mongoDb()
+# db = mongoDb("EmployeeManagementBackup")
+db = mongoDb()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -291,7 +291,7 @@ def create_memo():
 
             res = UserActions(userData).createMemoAction(
                 userData, {
-                    'date': memo['date'] ,
+                    'date': memo['date'],
                     'mediaList': memo['mediaList'] or None,
                     'Employee': memo['Employee'],
                     'memoPhotosList': memo['memoPhotosList'] or None,
