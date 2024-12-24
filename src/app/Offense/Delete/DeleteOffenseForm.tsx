@@ -114,8 +114,9 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
 
       <Select styles={selectStyle}
         options={offenseList}
-        placeholder="Select Employee"
-        getOptionLabel={(option) => option.title || ""}
+        placeholder="Select Offense" 
+        getOptionLabel={(option) => `(${option.number}) - ${option.title}` || ""}
+        value={formData?.title ? formData : null}
         isClearable
         onChange={(selectedOption) => {
           setFormData(selectedOption as Offense);
@@ -132,7 +133,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
             type="number"
             placeholder="Code"
             id="number"
-            value={formData?.number}
+            value={formData?.number || ""}
             onClick={(e) => e.currentTarget.blur()}
           ></input>
           <input

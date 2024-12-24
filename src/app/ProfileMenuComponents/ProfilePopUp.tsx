@@ -13,7 +13,8 @@ import Link from "next/link";
 
 import ThemeControl from "./ThemeControl";
 
-import UserListButton from "./UserListButton"; 
+import UserListButton from "./UserListButton";
+import BackButton from "./BackButton";
 
 export interface ProfilePopUpProps {
   userData: User;
@@ -42,11 +43,13 @@ const ProfilePopUp: FC<ProfilePopUpProps> = ({
         flex flex-col justify-between pb-3 border-info 
       `}
     >
+      <BackButton />
       <UserListButton userData={userData} pathname={pathname||""}/>
 
+      {/* arrow */}
       <div className="-z-10 right-[.70rem] md:right-[.89rem] -top-3 absolute w-0 h-0 border-l-[16px] border-r-[16px] border-b-[20.5px] border-transparent border-b-info border-opacity-60" />
 
-      <div className="flex flex-col items-center justify-center pt-8 pb-6 rounded-t-2xl bg-base-300 border-b border-info">
+      <div className="flex flex-col items-center justify-center pt-12 pb-6 rounded-t-2xl bg-base-300 border-b border-info">
         <Image
           src={userData?.image}
           width={100}

@@ -45,6 +45,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     memoPhotosList: null,
   } as Memo);
 
+  console.log("formData", formData);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -233,6 +235,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       <Select
         styles={selectStyle}
         options={employeeList}
+        value={formData?.Employee ? formData.Employee : null}
         placeholder="Select Employee"
         getOptionLabel={(option) => option.name || ""}
         isClearable
@@ -262,7 +265,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         styles={selectStyle}
         options={offenseList}
         placeholder="Select Offense"
-        getOptionLabel={(option) => option.title || ""}
+        value={formData?.MemoCode ? formData.MemoCode : null}
+        getOptionLabel={(option) => `(${option.number}) - ${option.title}` || ""}
         isClearable
         onChange={(selectedOption) => {
           setFormData({ ...formData, MemoCode: selectedOption as Offense });

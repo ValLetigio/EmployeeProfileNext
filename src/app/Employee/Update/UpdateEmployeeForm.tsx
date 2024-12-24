@@ -228,7 +228,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       ...(base || {}),
       color: "inherit",
     }),
-  };
+  }; 
 
   return (
     <form
@@ -261,7 +261,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
         options={employeeList}
         placeholder="Select Employee"
         getOptionLabel={(option) => option.name}
-        isClearable
+        isClearable 
+        value={selectedEmployee?._id ? selectedEmployee : null}
         onChange={(selectedOption) => {
           setSelectedEmployee(selectedOption as Employee);
           setFormData(selectedOption as Employee);

@@ -38,8 +38,8 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employeeList }) => {
     const searchQuery = search?.toLowerCase() || "";
 
     const filteredListForTable = employeeList.filter(
-      ({ address, name, email, company, phoneNumber }) =>
-        [address, name, email, company, phoneNumber].some((field) =>
+      ({ address, name, email, company, phoneNumber, dateJoined }) =>
+        [address, name, email, company, phoneNumber, dateJoined].some((field) =>
           field?.toLowerCase().includes(searchQuery)
         )
     );

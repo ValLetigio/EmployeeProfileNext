@@ -4,9 +4,7 @@ import React, { useState } from 'react'
 
 import { useAppContext } from '@/app/GlobalContext';
 
-import { Offense } from '@/app/schemas/OffenseSchema';
-
-import CreateButton from '../CreateButton';
+import { Offense } from '@/app/schemas/OffenseSchema'; 
 
 interface CreateOffenseFormProps {
   confirmation?: boolean
