@@ -16,17 +16,14 @@ import html2canvas from "html2canvas-pro";
 
 import jsPDF from "jspdf";
 
-import { Offense } from "../schemas/OffenseSchema";
-
-import OffenseTable from "./OffenseTable"; 
+import { Offense } from "../schemas/OffenseSchema"; 
 
 
 interface OffenseTableModalProps {
   offenseList: Offense[];
 }
 
-const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
-  offenseList,
+const OffenseTableModal: React.FC<OffenseTableModalProps> = ({ 
 }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
