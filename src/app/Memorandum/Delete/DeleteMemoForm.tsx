@@ -36,7 +36,7 @@ const DeleteMemoForm: React.FC<DeleteMemoFormProps> = ({ memoList }) => {
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
-      `${formData?.description} for ${formData?.Employee?.name} will be deleted FOREVER!`,
+      `${formData?.subject} for ${formData?.Employee?.name} will be deleted FOREVER!`,
       "error"
     );
 
