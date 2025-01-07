@@ -12,13 +12,14 @@ const style: React.CSSProperties = {
   overflow: "clip",
 };
 
-// import html2canvas from "html2canvas-pro";
+import html2canvas from "html2canvas-pro";
 
-// import jsPDF from "jspdf";
+import jsPDF from "jspdf";
 
 import { Offense } from "../schemas/OffenseSchema";
 
-import OffenseTable from "./OffenseTable";
+import OffenseTable from "./OffenseTable"; 
+
 
 interface OffenseTableModalProps {
   offenseList: Offense[];
@@ -30,63 +31,6 @@ const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
   const contentRef = React.useRef<HTMLDivElement>(null);
 
   const [loading, setLoading] = React.useState(false);
-
-  // const convertToPdf = async () => {
-  //   setLoading(true);
-  //   const element = contentRef.current;
-  //   if (!element) {
-  //     console.error("Element not found");
-  //     return;
-  //   }
-
-  //   try {
-  //     const canvas = await html2canvas(element, {
-  //       scale: resolution,
-  //       useCORS: true,
-  //       windowWidth: element?.scrollWidth,
-  //       windowHeight: element?.scrollHeight,
-  //     });
-
-  //     const imgData = canvas.toDataURL("image/png");
-  //     const pdf = new jsPDF({
-  //       orientation: "portrait",
-  //       unit: "pt",
-  //     });
-
-  //     const pageWidth = pdf.internal.pageSize.getWidth();
-  //     const pageHeight = pdf.internal.pageSize.getHeight();
-
-  //     // Define margins (e.g., 20pt)
-  //     const margin = 20;
-  //     const contentWidth = pageWidth - margin * 2;
-  //     const contentHeight = pageHeight - margin * 2;
-
-  //     const imgWidth = canvas.width;
-  //     const imgHeight = canvas.height;
-  //     const scaleFactor = Math.min(contentWidth / imgWidth, 1);
-
-  //     const scaledWidth = imgWidth * scaleFactor;
-  //     const scaledHeight = imgHeight * scaleFactor;
-
-  //     let yOffset = 0;
-  //     let pageIndex = 0;
-
-  //     pdf.addImage(imgData, "PNG", margin, margin + yOffset, scaledWidth, scaledHeight);
-
-  //     while (scaledHeight + yOffset > contentHeight) {
-  //       pageIndex++;
-  //       pdf.addPage();
-  //       yOffset = -(contentHeight * pageIndex);
-  //       pdf.addImage(imgData, "PNG", margin, margin + yOffset, scaledWidth, scaledHeight);
-  //     }
-
-  //     pdf.save("house-rules.pdf");
-  //   } catch (error) {
-  //     console.error("Error generating PDF:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   function convertToPdf() {
     setLoading(true);
@@ -146,9 +90,47 @@ const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
 
     document.body.removeChild(downloadLink);
     setLoading(false);
-  }
+  } 
 
   const [year] = React.useState(new Date().getFullYear());
+
+// image pdf
+  // const convertToPdf = async () => {
+  //   const element = contentRef.current;
+  
+  //   if (!element) {
+  //     console.error("Element not found");
+  //     return;
+  //   }
+  
+  //   try {
+  //     const canvas = await html2canvas(element);
+  //     const imgData = canvas.toDataURL('image/png');
+  //     const pdf = new jsPDF();
+  
+  //     const imgWidth = 210; // Width in mm (A4 size)
+  //     const pageHeight = 297; // Height in mm (A4 size)
+  //     const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //     let heightLeft = imgHeight;
+  
+  //     let position = 0;
+  
+  //     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  //     heightLeft -= pageHeight;
+  
+  //     while (heightLeft >= 0) {
+  //       position = heightLeft - imgHeight;
+  //       pdf.addPage();
+  //       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  //       heightLeft -= pageHeight;
+  //     }
+  
+  //     pdf.save('download.pdf');
+  //   } catch (error) {
+  //     console.error("Error generating PDF", error);
+  //   }
+  // };
+ 
 
   return (
     <dialog className=" modal " id="OffenseDownloadModal">
