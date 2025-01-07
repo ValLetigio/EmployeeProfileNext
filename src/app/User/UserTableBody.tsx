@@ -59,7 +59,7 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
     category: string,
     user: User
   ) => {
-    return Object.keys(userRoles).map((key, index) => (
+    return Object.keys(userRoles).map((key) => (
       <div className="flex gap-2 my-2" key={key + user.displayName}>
         <input
           onChange={() =>
