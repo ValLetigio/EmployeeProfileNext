@@ -43,8 +43,7 @@ const UserTableBody: React.FC<UserTableBodyProps> = ({ userRes, res }) => {
             roleToAdd
           );
           router.refresh();
-        }
-        console.log(res.message);
+        } 
         setToastOptions({open: true, message: res?.message, type: "success", timer: 5})
       }catch (e) {
         console.error(e)

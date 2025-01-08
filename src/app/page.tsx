@@ -54,7 +54,7 @@ const Page = async () => {
         (new Date().getTime() - new Date(employee.dateJoined || "").getTime()) /
         (1000 * 60 * 60 * 24);
       return daysSinceJoined <= 30;
-    })?.length;
+    })?.length; 
   } else if (employeeResponse?.error){  
     fetchingError = employeeResponse.error; 
   } 

@@ -114,7 +114,7 @@ const OffenseTable: React.FC<OffenseTableProps> = ({
                 <div className="p-1 text-xl" id="offenseTitle">
                 ({offense?.number?.toString()}) {offense?.title}
                 </div>
-                <div className="p-1 whitespace-pre-wrap">
+                <div className="p-1  ">
                   {wrapText(offense?.description || "")}
                 </div>
               </td>

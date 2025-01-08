@@ -43,9 +43,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     reason: null,
     mediaList: null,
     memoPhotosList: null,
-  } as Memo);
-
-  console.log("formData", formData);
+  } as Memo); 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,7 +51,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     const confirmed = await handleConfirmation(
       "Confirm Action?",
       `Create ${formData?.subject} for ${formData?.Employee?.name}`,
-      ""
+      "success"
     );
 
     setLoading(true);
@@ -385,7 +383,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         disabled={loading}
         id="create-memo-btn"
       >
-        Create
+        {!loading ? "Create" : <span className="animate-spin text-xl">C</span>}
       </button>
     </form>
   );

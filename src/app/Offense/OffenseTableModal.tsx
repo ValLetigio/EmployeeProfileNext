@@ -12,9 +12,9 @@ const style: React.CSSProperties = {
   overflow: "clip",
 };
 
-import html2canvas from "html2canvas-pro";
+// import html2canvas from "html2canvas-pro";
 
-import jsPDF from "jspdf";
+// import jsPDF from "jspdf";
 
 import { Offense } from "../schemas/OffenseSchema";
 
@@ -30,7 +30,7 @@ const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
 }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false); 
 
   function convertToPdf() {
     setLoading(true);
@@ -44,13 +44,15 @@ const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
           body {
             text-align: center;
           }
-          th, td {
+          td {
             padding: 15px;
             text-align: left;
           }  
           th {
+            padding: 5px;
+            text-align: left;
             background-color: #f2f2f2;
-          }  
+          }
           #violation { 
             width: 55%;
           }
@@ -96,6 +98,23 @@ const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
 
 // image pdf
   // const convertToPdf = async () => {
+
+  //   setLoading(true)
+
+  //   const desktopWidth = 1200; // Adjust as needed for desktop
+  //   const desktopHeight = 800; // Adjust as needed for desktop
+
+  //   // Store the original dimensions of the window
+  //   const originalWidth = window.innerWidth;
+  //   const originalHeight = window.innerHeight;
+
+  //   // Resize the window to simulate a desktop view
+  //   window.innerWidth = desktopWidth;
+  //   window.innerHeight = desktopHeight;
+
+  //   // Trigger resize event to adjust the layout (if necessary)
+  //   window.dispatchEvent(new Event("resize"));
+
   //   const element = contentRef.current;
   
   //   if (!element) {
@@ -128,6 +147,11 @@ const OffenseTableModal: React.FC<OffenseTableModalProps> = ({
   //     pdf.save('download.pdf');
   //   } catch (error) {
   //     console.error("Error generating PDF", error);
+  //   } finally {
+  //     window.innerWidth = originalWidth;
+  //     window.innerHeight = originalHeight;
+  //     window.dispatchEvent(new Event("resize"));
+  //     setLoading(false)
   //   }
   // };
  

@@ -119,9 +119,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     } else {
       setLoading(false);
     }
-  };
-
-  console.log(loading)
+  }; 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -368,7 +366,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         disabled={loading? true: formData?.subject ? false :  true}
         id="submit-memo-btn"
       >
-        Submit
+        {!loading ? "Submit" : <span className="animate-spin text-xl">C</span>}
       </button>
     </form>
   );
