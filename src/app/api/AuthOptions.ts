@@ -31,14 +31,9 @@ export const authOption: NextAuthOptions = {
                 throw new Error('No Profile Found');
             }  
             if(account){
-                
+
             }
             return true;
-        },
-        async redirect({ url, baseUrl }) {
-            console.log("url", url)
-            console.log("baseUrl", baseUrl)
-            return baseUrl
         },
         async jwt({ token, account, profile }) { 
             if(profile){
