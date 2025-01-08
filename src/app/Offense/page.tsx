@@ -49,9 +49,9 @@ const page = async () => {
           <div className="swap flex gap-3 items-center pl-2">
             <input 
               type="checkbox"
-              data-tip="Show Menu"
+              data-tip="Menu"
               defaultChecked 
-              id="" className=" radio rounded tooltip "  
+              id="" className=" radio radio-xl rounded tooltip "  
             />
             <div className="flex  swap-on justify-evenly md:justify-start items-center gap-4 px-2 py-2 rounded-box ">
               <CreateButton />
