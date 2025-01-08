@@ -30,6 +30,9 @@ export const authOption: NextAuthOptions = {
             if (!profile?.email) {
                 throw new Error('No Profile Found');
             }  
+            if(account){
+                
+            }
             return true;
         },
         async redirect({ url, baseUrl }) {
