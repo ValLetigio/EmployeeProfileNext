@@ -24,7 +24,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
     userData,
     handleConfirmation,
     getOrdinal, 
-    setLoading, loading
+    setLoading, loading, router
   } = useAppContext();
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -79,6 +79,7 @@ const DeleteOffenseForm: React.FC<DeleteOffenseFormProps> = ({
         });
       } finally {
         setLoading(false);
+        router.refresh();
       }
     }
   };
