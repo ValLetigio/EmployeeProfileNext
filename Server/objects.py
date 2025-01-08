@@ -345,7 +345,7 @@ class UserActions(User):
     def getEmployeeDetailsAction(self, user, employeeId):
         if 'canViewEmployeeDetails' not in user['roles']['User']:
             raise ValueError(
-                'User does not have permission to get employee for dashboard')
+                'User does not have permission to view Employee Details')
 
         employee = db.read({'_id': employeeId}, 'Employee')
         return employee[0]
