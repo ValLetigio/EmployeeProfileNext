@@ -17,7 +17,7 @@ class Environment:
 
     def __init__(self):
         super().__init__()
-        self.environment = os.getenv('ENVIRONMENT', 'clouddev')
+        self.environment = os.getenv('ENVIRONMENT', 'localdev')
         if self.environment not in [
                 'localdev', 'localprod', 'clouddev', 'cloudprod', 'localTest',
                 'cloudTest'
@@ -57,7 +57,7 @@ class PubSubConfig:
         # a request to another local server that the user specified in the function to
         # mock the pubsub. If set to false the pubsub will skip this step.
         # THIS IS USED FOR TESTING PURPOSES
-        runLocalPubSub = os.getenv('runLocalPubSub', "true").lower()
+        runLocalPubSub = os.getenv('runLocalPubSub', "false").lower()
         if runLocalPubSub not in ['true', 'false']:
             raise ValueError(
                 "Invalid value for runLocalPubSub. Must be 'true' or 'false'.")
