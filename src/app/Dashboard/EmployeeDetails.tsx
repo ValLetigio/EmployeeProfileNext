@@ -65,8 +65,7 @@ const EmployeeDetails = () => {
       const res = await serverRequests.getEmployeeDetailsAction(
         userData,
         selectedEmployee?._id || ""
-      );
-      console.log(res)
+      ); 
       if (res?.data) {
         setSelectedEmployeeDetails(res.data);
       } 
