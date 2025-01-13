@@ -4,6 +4,7 @@ class Server {
     constructor( ) { 
 
       const next_env = process.env.NODE_ENV; 
+      console.error('next_env', next_env);
 
       const urls = {
         local: 'http://127.0.0.1:5000',
@@ -12,6 +13,7 @@ class Server {
       };  
 
       this.url = next_env === 'production' ? urls.server : urls.local;
+      console.error('this.url', this.url);
       // this.url = next_env === 'production' ? urls.local : urls.local; 
     }
   }
