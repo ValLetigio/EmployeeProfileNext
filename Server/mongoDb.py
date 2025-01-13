@@ -304,7 +304,7 @@ class mongoDb:
                         if pubSubMessage is not None:
                             topic = pubSubMessage['topic']
                             message = pubSubMessage['message']
-                            PubSub().publishMessage(topic, message)
+                            # PubSub().publishMessage(topic, message)
 
                         session.commit_transaction()
                         print("Transaction committed successfully.")
