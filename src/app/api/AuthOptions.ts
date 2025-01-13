@@ -7,14 +7,10 @@ import dotenv from 'dotenv';
 dotenv.config(); 
 
 
-// const SECRET = process.env.SECRET !;
-// const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID !;
-// const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET !;
+const SECRET = process.env.SECRET !;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID !;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET !;
 
-const SECRET = "SECRET"
-const GOOGLE_CLIENT_ID = "461642110506-kg29ub68i80jtremtbvt899otcagmg33.apps.googleusercontent.com"
-const GOOGLE_CLIENT_SECRET = "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"
-console.log(SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);    
 
 const serverRequests = new ServerRequests( );
 
@@ -33,10 +29,8 @@ export const authOption: NextAuthOptions = {
         async signIn({account, profile}){
             if (!profile?.email) {
                 throw new Error('No Profile Found');
-            }  
-            if(account){
-
-            }
+            } 
+            console.log(account)
             return true;
         },
         async jwt({ token, account, profile }) { 
