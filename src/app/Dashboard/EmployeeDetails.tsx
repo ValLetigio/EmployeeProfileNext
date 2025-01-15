@@ -112,18 +112,7 @@ const EmployeeDetails = () => {
       if (selectedEmployee._id) {
         getSelectedEmployeeDetails();
 
-        dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-
-        // let days = 0;
-
-        // if (selectedEmployeeDetails.dateJoined) {
-        //   days =
-        //     (new Date().getTime() -
-        //       new Date(selectedEmployee.dateJoined || "").getTime()) /
-        //     (1000 * 60 * 60 * 24);
-
-        //   // setDaysWithUs(Math.floor(days));
-        // }
+        dummy.current?.scrollIntoView({ behavior: "smooth", block: "end" }); 
       }
 
       if (!selectedEmployee._id) {
