@@ -40,14 +40,14 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
   const inputClassname = `${toggle ? " w-[90%] " : " w-[80%] "} h-full `;
   const buttonStyle = `btn btn-circle btn-xs tooltip tooltip-left grid place-items-center z-40 bg-base-300`; 
 
-  React.useEffect(() => { 
-    setSelectedOption(defaultValue);
-  }, [ defaultValue ]);
+  React.useEffect(() => {    
+    setSelectedOption(defaultValue); 
+  }, [ defaultValue ]); 
 
   React.useEffect(() => {
-    if (!options) return;
+    if (!options) return; 
     setFinalOptions(options);
-  }, [options]);
+  }, [ options ]);
 
   const handleCancel = () => {
     handleToggle();
@@ -55,7 +55,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
   };
 
   const handleSave = () => {
-    setFinalOptions([...finalOptions, addedOption]);
+    setFinalOptions([...finalOptions, addedOption]); 
     setAddedOption("");
     handleToggle();
   };
@@ -64,7 +64,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
     setToggle(!toggle);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => { 
     setSelectedOption(e.target.value);
 
     const selectedIndex = e.target.options.selectedIndex - 1;
@@ -88,24 +88,35 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
 
   const getOptionLabel = (option: Option | string | number) => {
     if (typeof option === "object" && "label" in option) {
-      return option.label;
+      return option.label? option?.label:"";
     }
     return option;
   };
 
+  const getOptionValue = (option: Option | string | number) => {
+    if (typeof option === "object" && "value" in option) {
+      return option.value?.toString();
+    }
+    return option as {};
+  };
+
   return (
     <div
+      id="select-plus"
       className={`${className} ${disabled&&" input-disabled "} input input-bordered w-full p-0 m-0 flex items-center justify-evenly gap-3 pl-1 overflow-clip z-30`} 
     >
       {/*  */}
       <input
         className={`
-          ${inputClassname} ${toggle ? " input " : " text-primary focus:text-primary"}
+          ${inputClassname} ${toggle ? " input " : "  "}
           input p-0 pl-1 input-ghost outline-none border-none
         `}
         type="text"
+        autoComplete="off"
         placeholder="Enter Option"
         value={addedOption}
+        id="company"
+        onKeyDown={(e) => {e.key === "Enter" && handleSave()}}
         onChange={(e) => {
           setAddedOption(e.target.value);
         }}
@@ -115,9 +126,10 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
       <select
         className={`${inputClassname} ${disabled? " bg-transparent " : " bg-base-100 "} h-[90%] outline-none `}
         hidden={!toggle}
-        defaultValue={defaultValue}
-        value={selectedOption?.toString() || ""} 
+        // defaultValue={defaultValue}
+        value={selectedOption?.toString()} 
         onChange={(e) => handleChange(e)}
+        id="company"
         disabled={disabled}
       >
         <option selected disabled value={""}>
@@ -127,7 +139,8 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
           finalOptions.map((option, index) => (
             <option
               key={index}
-              value={getOptionLabel(option as Option | string | number)}
+              id={index.toString()}
+              value={getOptionValue(option as Option | string | number) as string | number | readonly string[] | undefined}
             >
               {getOptionLabel(option as Option | string | number)}
             </option>
@@ -147,6 +160,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
             onClick={() => handleToggle()}
             data-tip="Add Option"
             disabled={disabled}
+            id="add-option"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -192,10 +206,11 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
         {!toggle && (
           // save
           <button
-            className={buttonStyle + " tooltip-primary "}
+            className={buttonStyle + " tooltip-success bg-green-200 disabled:bg-gray-300 "}
             disabled={disabled ? true : addedOption ? false : true}
             onClick={() => handleSave()}
-            data-tip="Save" 
+            data-tip="Save"
+            id= "save-option"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

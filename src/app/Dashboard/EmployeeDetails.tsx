@@ -94,6 +94,7 @@ const EmployeeDetails = () => {
         selectedEmployee?._id || ""
       );
       if (res?.data) {
+        console.log(res.data, "res.data");
         setSelectedEmployeeMemos(res.data);
       }
     } catch (e) {

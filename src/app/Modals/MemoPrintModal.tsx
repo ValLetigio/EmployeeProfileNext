@@ -157,7 +157,6 @@ const PrintMemorandumModal = () => {
   // };
 
   const headerTextStyle = ` col-span-1 lg:col-span-4 indent-4 lg:indent-0 mb-4 lg:mb-0 text-sm md:text-base `;
-
   return (
     <dialog className=" modal " id="MemoPrintModal">
       <div
@@ -224,8 +223,8 @@ const PrintMemorandumModal = () => {
 
               <div className="col-span-1 font-semibold">Code:</div>
               <div className={headerTextStyle}>
-                {`( ${memoForPrintModal?.MemoCode?.number} ) - `}
-                {memoForPrintModal?.MemoCode?.title}
+                {/* {`( ${memoForPrintModal?.MemoCode?.number} ) - `} */}
+                {memoForPrintModal?.Code}
               </div>
             </div>
 

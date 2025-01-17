@@ -43,6 +43,7 @@ employeeObject = {
     'company': 'Pustanan',
     'isRegular': True,
     'isProductionEmployee': True,
+    'isOJT': False,
     'dailyWage': None,
     '_version': 0
 }
@@ -54,6 +55,7 @@ memoObject = {
     'memoPhotosList': ['memoPhotosList'],
     'subject': 'subject',
     'MemoCode': offenseObject,
+    'Code': None,
     'submitted': False,
     'description': 'description',
     'date': datetime.datetime.now(),
@@ -396,6 +398,11 @@ def test_getRemedialActionForEmployeeMemoAction():
 
         memo = user.createMemoAction(userCreated, memoObject)
 
+        remedialAction = user.getRemedialActionForEmployeeMemoAction(memo['Employee']['_id'], memo['MemoCode']['_id'], memo['MemoCode']['_version'])
+
+        assert remedialAction['remedialAction'] == 'Written Warning'
+
+
         assert memo['remedialAction'] == 'Verbal Warning'
 
         memo2 = user.createMemoAction(userCreated, memoObject)
@@ -433,6 +440,7 @@ def test_create_employee_with_name_only():
             'company': None,
             'isRegular': None,
             'isProductionEmployee': None,
+            'isOJT': None,
             'dailyWage': None,
             '_version': 0
         }
