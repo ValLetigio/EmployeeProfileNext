@@ -26,6 +26,8 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     handleConfirmation,
     loading,
     setLoading,
+    imageListForModal,
+    imageModalId,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -58,21 +60,29 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         };
 
         if (filesChanged.includes("mediaList")) {
-          const res = await upload.Images(
-            formData?.mediaList || [],
-            `employees/${formData?.Employee?.name}`,
-            "mediaList"
-          );
-          finalFormData.mediaList = res || [];
+          try{
+            const res = await upload.Images(
+              formData?.mediaList || [],
+              `employees/${formData?.Employee?.name}`,
+              "mediaList"
+            );
+            finalFormData.mediaList = res || [];
+          }catch(e){
+            console.error(e)
+          }
         }
 
         if (filesChanged.includes("memoPhotosList")) {
-          const res = await upload.Images(
-            formData?.memoPhotosList || [],
-            `employees/${formData?.Employee?.name}`,
-            "memoPhotosList"
-          );
-          finalFormData.memoPhotosList = res || [];
+          try{
+            const res = await upload.Images(
+              formData?.memoPhotosList || [],
+              `employees/${formData?.Employee?.name}`,
+              "memoPhotosList"
+            );
+            finalFormData.memoPhotosList = res || [];
+          }catch(e){
+            console.error(e)
+          }
         }
 
         const form = e.target as HTMLFormElement;
@@ -177,6 +187,13 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
       color: "inherit",
     }),
   };
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      [imageModalId]: imageListForModal.length ? imageListForModal : null,
+    }); 
+  }, [imageListForModal]);
 
   return (
     <form className={` form-style ${ loading && " cursor-wait " } `} ref={formRef} onSubmit={handleSubmit}>
@@ -310,7 +327,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
           className="textarea textarea-bordered mt-1 min-h-[20vh] whitespace-pre-line"
           placeholder="Reason"
           id="reason"
-          required
+          required = { !formData?.memoPhotosList?.length }
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             setFormData({ ...formData, reason: e.target.value });
           }}

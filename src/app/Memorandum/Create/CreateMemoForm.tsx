@@ -31,6 +31,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     router,
     loading,
     setLoading,
+    imageModalId,
+    imageListForModal,
   } = useAppContext();
 
   const [remedialAction, setRemedialAction] = useState<string>("");
@@ -43,7 +45,7 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     reason: null,
     mediaList: null,
     memoPhotosList: null,
-  } as Memo); 
+  } as Memo);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -93,7 +95,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
           });
 
           form.reset();
-          setFormData({} as Memo);
+          setFormData({
+            reason: null,
+            mediaList: null,
+            memoPhotosList: null,
+          } as Memo);
 
           router.refresh();
 
@@ -160,7 +166,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
     }
   };
 
-  const getRemedialAction = async (employeeId: string, offenseId: string, offenseVersion: number) => {
+  const getRemedialAction = async (
+    employeeId: string,
+    offenseId: string,
+    offenseVersion: number
+  ) => {
     const res = await serverRequests.getRemedialActionForEmployeeMemoAction(
       userData,
       employeeId,
@@ -174,7 +184,11 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
 
   React.useEffect(() => {
     if (formData?.Employee?._id && formData?.MemoCode?.number) {
-      getRemedialAction(formData?.Employee?._id, formData?.MemoCode?._id || "", formData?.MemoCode?._version || 0);
+      getRemedialAction(
+        formData?.Employee?._id,
+        formData?.MemoCode?._id || "",
+        formData?.MemoCode?._version || 0
+      );
     } else {
       setRemedialAction("");
     }
@@ -192,6 +206,13 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
       color: "inherit",
     }),
   };
+
+  React.useEffect(() => {
+    setFormData({
+      ...formData,
+      [imageModalId]: imageListForModal.length ? imageListForModal : null,
+    }); 
+  }, [imageListForModal, imageModalId]);
 
   return (
     <form
@@ -214,23 +235,6 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         />
       </label>
 
-      {/* employee */}
-      {/* <div className='flex flex-col text-sm gap-2 '>Employee 
-        <select className="select select-bordered w-full " id='select-employee' required
-          value={formData?.Employee?._id || ''}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
-              const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData({...formData, Employee: employeeList[selectedIndex]})
-          }} 
-        >
-          <option disabled selected value={""}>Select Employee</option>
-          {employeeList&&employeeList.map((employee, index) => (
-            <option key={index} value={employee?._id?.toString()}>{employee?.name}</option>
-          ))}
-          <option value="null">None</option>
-        </select>
-      </div> */}
-
       <Select
         styles={selectStyle}
         options={employeeList}
@@ -244,31 +248,17 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
         id="select-employee"
       />
 
-      {/* Memo Code */}
-      {/* <div className='flex flex-col text-sm gap-2 '>Memo Code
-        <select className="select select-bordered w-full " id='MemoCode' required
-          value={formData?.MemoCode?.title || ''}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
-              const selectedIndex = e.target.options.selectedIndex - 1
-            setFormData({...formData, MemoCode: offenseList[selectedIndex]})
-          }} 
-        >
-          <option disabled selected value={""}>Select Offense</option>
-          {offenseList&&offenseList.map((code, index) => (
-            <option key={index} value={code?.title || ""}>{code?.title}</option>
-          ))}
-          <option value="null">None</option>
-        </select>
-      </div> */}
       <Select
         styles={selectStyle}
         options={offenseList}
         placeholder="Select Offense"
         value={formData?.MemoCode ? formData.MemoCode : null}
-        getOptionLabel={(option) => `(${option.number}) - ${option.title}` || ""}
+        getOptionLabel={(option) =>
+          `(${option.number}) - ${option.title}` || ""
+        }
         isClearable
         onChange={(selectedOption) => {
-          setFormData({ ...formData, MemoCode: selectedOption as Offense });
+          setFormData({ ...formData, MemoCode: selectedOption as Offense, subject: selectedOption?.title || "" });
         }}
         id="MemoCode"
       />
@@ -307,7 +297,8 @@ const CreateMemoForm: React.FC<CreateMemoFormProps> = ({
             placeholder="Subject"
             id="subject"
             required
-            onChange={handleInputChange}
+            value={formData?.MemoCode?.title || ""}
+            // onChange={handleInputChange}
           />
         </label>
         {/* description */}

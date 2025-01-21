@@ -15,6 +15,8 @@ import ImageInput from "@/app/InputComponents/ImageInput";
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 import Select from "react-select";
 
+import SelectPlus from "@/app/InputComponents/SelectPlus";
+
 interface UpdateEmployeeForm {
   employeeList: Employee[];
 }
@@ -28,6 +30,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     router,
     loading,
     setLoading,
+    imageListForModal,
+    imageModalId,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -53,7 +57,8 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     isRegular: null,
     isProductionEmployee: null,
     dailyWage: null,
-  }; 
+    isOJT: null
+  };
 
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>(
     defaultFormData as Employee
@@ -75,31 +80,46 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
 
     if (confirmed) {
       try {
-        if (dataToUpdate?.photoOfPerson) {
-          const res = await upload.Images(
-            [formData.photoOfPerson || ""],
-            `employees/${formData.name}`,
-            "photoOfPerson"
-          );
-          dataToUpdate.photoOfPerson = res[0] || "";
+        if (
+          dataToUpdate?.photoOfPerson &&
+          typeof dataToUpdate.photoOfPerson != "string"
+        ) {
+          try {
+            const res = await upload.Images(
+              [formData.photoOfPerson || ""],
+              `employees/${formData.name}`,
+              "photoOfPerson"
+            );
+            dataToUpdate.photoOfPerson = res[0] || "";
+          } catch (e) {
+            console.error(e);
+          }
         }
 
         if (dataToUpdate?.biodataPhotosList) {
-          const res = await upload.Images(
-            formData.biodataPhotosList || [],
-            `employees/${formData.name}`,
-            "biodataPhotosList"
-          );
-          dataToUpdate.biodataPhotosList = res || [];
+          try {
+            const res = await upload.Images(
+              formData.biodataPhotosList || [],
+              `employees/${formData.name}`,
+              "biodataPhotosList"
+            );
+            dataToUpdate.biodataPhotosList = res || [];
+          } catch (e) {
+            console.error(e);
+          }
         }
 
         if (dataToUpdate?.resumePhotosList) {
-          const res = await upload.Images(
-            formData.resumePhotosList || [],
-            `employees/${formData.name}`,
-            "resumePhotosList"
-          );
-          dataToUpdate.resumePhotosList = res || [];
+          try {
+            const res = await upload.Images(
+              formData.resumePhotosList || [],
+              `employees/${formData.name}`,
+              "resumePhotosList"
+            );
+            dataToUpdate.resumePhotosList = res || [];
+          } catch (e) {
+            console.error(e);
+          }
         }
 
         const form = e.target as HTMLFormElement;
@@ -108,7 +128,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           selectedEmployee,
           dataToUpdate,
           userData
-        );
+        );  
 
         if (res && res.message) {
           form.reset();
@@ -123,7 +143,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           });
           formRef.current?.scrollIntoView({ behavior: "smooth" });
           router.refresh();
-        } else {
+        } else { 
           setToastOptions({
             open: true,
             message: res.error,
@@ -228,7 +248,42 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       ...(base || {}),
       color: "inherit",
     }),
-  }; 
+  };
+
+  const [companyOptions, setCompanyOptions] = useState([
+    { label: "Paper Boy", value: "PPB" },
+    { label: "Pustanan", value: "PPC" },
+    { label: "Best Bags", value: "BB" },
+    { label: "Starpack", value: "SP" },
+  ] as { label: string; value: string }[]);
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      [imageModalId]: imageListForModal.length ? imageListForModal : null,
+    });
+    setDataToUpdate({
+      ...dataToUpdate,
+      [imageModalId]: imageListForModal.length ? imageListForModal : null,
+    });
+  }, [imageListForModal, imageModalId]);
+
+  useEffect(() => {
+    if (selectedEmployee?._id) {
+      const res = companyOptions.find(
+        (company) => company.value == selectedEmployee.company
+      ); 
+      if((res == undefined || !res) && selectedEmployee?.company){  
+        setCompanyOptions([
+          ...companyOptions,
+          {
+            label: selectedEmployee?.company || "",
+            value: selectedEmployee?.company || "",
+          }
+        ])
+      }
+    }
+  }, [selectedEmployee]); 
 
   return (
     <form
@@ -238,30 +293,12 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
     >
       <h2 className="font-semibold">Update Employee</h2>
 
-      {/* employee */}
-      {/* <div className='flex flex-col text-sm gap-2 '>Employee to Edit
-            <select className="select select-bordered w-full " id='Employee' required
-                value={formData?._id || ''}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
-                    const selectedIndex = e.target.options.selectedIndex - 1
-                    setSelectedEmployee(employeeList[selectedIndex])
-                    setFormData(employeeList[selectedIndex])
-                }} 
-            >
-                <option disabled selected value={""}>Select Employee</option>
-                {employeeList&&employeeList.map((employee, index) => (
-                    <option key={index} value={employee?._id || ""} >{employee?.name}</option>
-                ))}
-                <option value="null">None</option>
-            </select>
-        </div> */}
-
       <Select
         styles={selectStyle}
         options={employeeList}
         placeholder="Select Employee"
         getOptionLabel={(option) => option.name}
-        isClearable 
+        isClearable
         value={selectedEmployee?._id ? selectedEmployee : null}
         onChange={(selectedOption) => {
           setSelectedEmployee(selectedOption as Employee);
@@ -369,17 +406,10 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           width="w-full"
           inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
           imgDimensions={{ height: 60, width: 60 }}
-          mediaList={[formData?.photoOfPerson || ""]}
+          mediaList={formData?.photoOfPerson ? [formData?.photoOfPerson] : []}
           onChangeHandler={handleFileChange}
           disable={disable}
-        />
-        {/* <label htmlFor="photoOfPerson" className='text-sm flex flex-col w-full'>
-                <div className='flex justify-between items-center mb-1 gap-1 relative'>Photo Of Person  
-                    <Image src={formData?.photoOfPerson } className='h-[60px]' height={60} width={60} alt="photoOfPerson" /> 
-                </div>
-                <input type="file" className="file-input file-input-bordered sw-full max-w-full file-input-xs h-10" id='photoOfPerson' accept='image/*' 
-                    onChange={handleFileChange} disabled={disable}/>
-            </label> */}
+        /> 
 
         {/* resumePhotosList */}
         <ImageInput
@@ -392,14 +422,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           onChangeHandler={handleFileChange}
           disable={disable}
           multiple={true}
-        />
-        {/* <label htmlFor="resumePhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex justify-between items-center mb-1 gap-1 relative '>Resume  
-                    <Image src={formData?.resumePhotosList[0] } className='h-[60px]' height={60} width={60} alt="resumePhotosList" /> 
-                </div>
-                <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='resumePhotosList' accept='image/*' 
-                    onChange={handleFileChange} disabled={disable} multiple/>
-            </label> */}
+        /> 
 
         {/* biodataPhotosList */}
         <ImageInput
@@ -412,14 +435,7 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
           onChangeHandler={handleFileChange}
           disable={disable}
           multiple={true}
-        />
-        {/* <label htmlFor="biodataPhotosList" className='text-sm flex flex-col w-full md:w-[48%]'>
-                <div className='flex justify-between items-center mb-1 gap-1  '>Bio Data  
-                    <Image src={formData?.biodataPhotosList[0] } className='h-[60px]' height={60} width={60} alt="biodataPhotosList" />  
-                </div>
-                <input type="file" className="file-input file-input-bordered w-full max-w-full file-input-xs h-10" id='biodataPhotosList' accept='image/*' 
-                    onChange={handleFileChange} disabled={disable} multiple/>
-            </label> */}
+        /> 
       </div>
 
       {/* E-mail */}
@@ -466,73 +482,74 @@ const UpdateEmployeeForm: FC<UpdateEmployeeForm> = ({ employeeList }) => {
       </label>
 
       {/* company */}
-      <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
-        Company
-        <label className="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-4 text-gray-500"
-          >
-            <path
-              fillRule="evenodd"
-              d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <input
-            type="text"
-            className="grow"
-            placeholder="Company"
-            id="company"
-            value={formData?.company || ""}
-            onChange={handleInputChange}
+      <div className="flex flex-wrap justify-between text-sm gap-2 ">
+        <div className="flex flex-col text-sm gap-2 w-full">
+          Company
+          <SelectPlus
+            options={companyOptions}
             disabled={disable}
+            defaultValue={formData?.company?.toString() || undefined}
+            onChange={(e, newValue) => {
+              const valueToPass =
+                typeof newValue == "object" && newValue !== null
+                  ? (newValue as { value: string }).value?.toString()
+                  : newValue
+                  ? newValue.toString()
+                  : null;
+              setFormData({ ...formData, company: valueToPass });
+              setDataToUpdate({ ...dataToUpdate, company: valueToPass });
+            }}
           />
-        </label>
-      </div>
+        </div>
+      </div> 
 
-      <div className={"grid grid-cols-1 md:grid-cols-2 gap-2 "}>
-        {/* isRegular */}
-        <label className="label cursor-pointer flex justify-start gap-2 w-max">
-          <p className={"label-text text-base " + labelStyle}>Is Regular?</p>
-          <input
-            type="checkbox"
-            className="checkbox"
-            id="isRegular"
-            disabled={disable}
-            checked={formData?.isRegular || false}
-            onChange={(e) => {
-              setFormData({ ...formData, isRegular: e.target.checked });
-              setDataToUpdate({ ...dataToUpdate, isRegular: e.target.checked });
-            }}
-          />
-        </label>
-        {/* isProductionEmployee */}
-        <label className="label cursor-pointer flex justify-start gap-2 w-max">
-          <p className={"label-text text-base " + labelStyle}>
-            Is Production Employee?
-          </p>
-          <input
-            type="checkbox"
-            className="checkbox"
-            id="isProductionEmployee"
-            disabled={disable}
-            checked={formData?.isProductionEmployee || false}
-            onChange={(e) => {
-              setFormData({
-                ...formData,
-                isProductionEmployee: e.target.checked,
-              });
-              setDataToUpdate({
-                ...dataToUpdate,
-                isProductionEmployee: e.target.checked,
-              });
-            }}
-          />
-        </label>
-      </div>
+      <div className="flex flex-wrap w-full justify-between">
+          {/* isRegular */}
+          <label className="label cursor-pointer flex justify-start gap-2 w-max">
+            <p className="label-text text-base">Is Regular?</p>
+            <input
+              type="checkbox"
+              className="checkbox"
+              id="isRegular" 
+              disabled={disable}
+              checked={formData?.isRegular || false}
+              onChange={(e) => {
+                setFormData({ ...formData, isRegular: e.target.checked });
+                setDataToUpdate({ ...dataToUpdate, isRegular: e.target.checked });
+              }}
+            />
+          </label>
+          {/* isProductionEmployee */}
+          <label className="label cursor-pointer flex justify-start gap-2 w-max">
+            <p className="label-text text-base">Is Production Employee?</p>
+            <input
+              type="checkbox"
+              className="checkbox"
+              id="isProductionEmployee" 
+              checked={formData?.isProductionEmployee || false}
+              disabled={disable}
+              onChange={(e) => {
+                setFormData({ ...formData, isProductionEmployee: e.target.checked });
+                setDataToUpdate({ ...dataToUpdate, isProductionEmployee: e.target.checked });
+              }}
+            />
+          </label>
+          {/* isOJT */}
+          <label className="label cursor-pointer flex justify-start gap-2 w-max">
+            <p className="label-text text-base">Is OJT?</p>
+            <input
+              type="checkbox"
+              className="checkbox"
+              id="isOJT" 
+              disabled={disable}
+              checked={formData?.isOJT || false}
+              onChange={(e) => {
+                setFormData({ ...formData, isOJT: e.target.checked });
+                setDataToUpdate({ ...dataToUpdate, isOJT: e.target.checked });
+              }}
+            />
+          </label>
+        </div> 
 
       {/* Daily wage */}
       <div className={`flex flex-col text-sm gap-2 ${labelStyle}`}>
