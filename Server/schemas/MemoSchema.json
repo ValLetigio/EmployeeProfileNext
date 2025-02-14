@@ -12,10 +12,14 @@
                         }
                     ],
                     "default": null,
-                    "title": "Id"
+                    "title": " Id"
                 },
-                "name": {
-                    "title": "Name",
+                "firstName": {
+                    "title": "Firstname",
+                    "type": "string"
+                },
+                "lastName": {
+                    "title": "Lastname",
                     "type": "string"
                 },
                 "address": {
@@ -124,7 +128,18 @@
                     ],
                     "title": "Isregular"
                 },
-                "isProductionEmployee": {
+                "companyRole": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "title": "Companyrole"
+                },
+                "isOJT": {
                     "anyOf": [
                         {
                             "type": "boolean"
@@ -133,7 +148,7 @@
                             "type": "null"
                         }
                     ],
-                    "title": "Isproductionemployee"
+                    "title": "Isojt"
                 },
                 "dailyWage": {
                     "anyOf": [
@@ -149,13 +164,38 @@
                     ],
                     "title": "Dailywage"
                 },
+                "isDeleted": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": false,
+                    "title": "Isdeleted"
+                },
+                "employeeSignature": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Employeesignature"
+                },
                 "_version": {
-                    "title": "Version",
+                    "title": " Version",
                     "type": "integer"
                 }
             },
             "required": [
-                "name",
+                "firstName",
+                "lastName",
                 "address",
                 "phoneNumber",
                 "photoOfPerson",
@@ -165,7 +205,8 @@
                 "dateJoined",
                 "company",
                 "isRegular",
-                "isProductionEmployee",
+                "companyRole",
+                "isOJT",
                 "dailyWage",
                 "_version"
             ],
@@ -184,15 +225,7 @@
                         }
                     ],
                     "default": null,
-                    "title": "Id"
-                },
-                "number": {
-                    "title": "Number",
-                    "type": "integer"
-                },
-                "description": {
-                    "title": "Description",
-                    "type": "string"
+                    "title": " Id"
                 },
                 "remedialActions": {
                     "items": {
@@ -202,27 +235,18 @@
                     "type": "array"
                 },
                 "_version": {
-                    "title": "Version",
+                    "title": " Version",
                     "type": "integer"
                 },
                 "title": {
-                    "anyOf": [
-                        {
-                            "type": "string"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null,
-                    "title": "Title"
+                    "title": "Title",
+                    "type": "string"
                 }
             },
             "required": [
-                "number",
-                "description",
                 "remedialActions",
-                "_version"
+                "_version",
+                "title"
             ],
             "title": "Offense",
             "type": "object"
@@ -239,7 +263,7 @@
                 }
             ],
             "default": null,
-            "title": "Id"
+            "title": " Id"
         },
         "date": {
             "format": "date-time",
@@ -328,7 +352,7 @@
             "title": "Remedialaction"
         },
         "_version": {
-            "title": "Version",
+            "title": " Version",
             "type": "integer"
         }
     },

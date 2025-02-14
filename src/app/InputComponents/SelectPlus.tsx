@@ -103,7 +103,7 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
   return (
     <div
       id="select-plus"
-      className={`${className} ${disabled&&" input-disabled "} input input-bordered w-full p-0 m-0 flex items-center justify-evenly gap-3 pl-1 overflow-clip z-30`} 
+      className={`${className} ${disabled&&" input-disabled "} input input-bordered w-full p-0 m-0 flex items-center justify-evenly gap-3 pr-2 pl-1 overflow-clip z-30 `} 
     >
       {/*  */}
       <input
@@ -124,21 +124,22 @@ const SelectPlus: React.FC<SelectPlusProps> = ({
       />
       {/*  */}
       <select
-        className={`${inputClassname} ${disabled? " bg-transparent " : " bg-base-100 "} h-[90%] outline-none `}
+        className={`${inputClassname} ${disabled? " bg-transparent " : " bg-base-100 "} h-[90%] outline-none indent-2`}
         hidden={!toggle}
-        // defaultValue={defaultValue}
+        // defaultValue={selectedOption?.toString()}
+        defaultValue={""}
         value={selectedOption?.toString()} 
         onChange={(e) => handleChange(e)}
         id="company"
         disabled={disabled}
       >
-        <option selected disabled value={""}>
+        <option  disabled value={""}>
           Select Option
         </option>
         {!!finalOptions.length &&
           finalOptions.map((option, index) => (
             <option
-              key={index}
+              key={index} className="indent-3"
               id={index.toString()}
               value={getOptionValue(option as Option | string | number) as string | number | readonly string[] | undefined}
             >

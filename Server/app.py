@@ -7,6 +7,7 @@ from AppConfig import AppConfig
 import logging
 from firebaseAuthenticator import firebaseAuthenticator
 from datetime import datetime, timezone
+import generateEmployeeID
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -121,7 +122,8 @@ def create_employee():
             res = UserActions(userData).createEmployeeAction(
                 userData, {
                     '_id': None,
-                    'name': data['name'],
+                    'firstName': data['firstName'],
+                    'lastName': data['lastName'],
                     'address': data['address'],
                     'phoneNumber': data['phoneNumber'],
                     'photoOfPerson': data['photoOfPerson'],
@@ -131,9 +133,11 @@ def create_employee():
                     'dateJoined': data['dateJoined'],
                     'company': data['company'],
                     'isRegular': data['isRegular'],
-                    'isProductionEmployee': data['isProductionEmployee'],
+                    'companyRole': data['companyRole'],
                     'isOJT': data['isOJT'],
                     'dailyWage': data['dailyWage'],
+                    'isDeleted': False,
+                    'employeeSignature': data['employeeSignature'] or None,
                     '_version': 0
                 })
 
@@ -212,8 +216,6 @@ def create_offense():
             res = UserActions(userData).createOffenseAction(
                 userData, {
                     '_id': None,
-                    'number': offense['number'],
-                    'description': offense['description'],
                     'remedialActions': offense['remedialActions'],
                     'title': offense['title'],
                     '_version': 0
@@ -413,8 +415,11 @@ def get_employee_for_dashboard_action():
     if request.is_json:
         data = request.get_json()
         userData = data['userData']
+        page = data['page']
+        sort = data['sort']
+
         try:
-            res = UserActions(userData).getEmployeeForDashboardAction(userData)
+            res = UserActions(userData).getEmployeeForDashboardAction(userData, page, sort)
             return jsonify({
                 'message': 'Employee read successfully!',
                 'data': res
@@ -554,6 +559,117 @@ def removeRolefromUser():
             logging.exception("Error removing Role: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
+@app.route('/updateEmployeeProfilePicture', methods=['POST'])
+def update_employee_profile_picture():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        employeeID = data['employeeID']
+        picture = data['picture']
+        try:
+            res = UserActions(userData).updateEmployeeProfilePictureAction(
+                userData, employeeID, picture)
+            return jsonify({
+                'message': 'Profile Picture updated successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error updating Profile Picture: %s", e)
+            return jsonify({'error': e.args[0]}), 400
+
+@app.route('/fetchEmployeeList', methods=['POST'])
+def fetch_employee_list():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+
+        page = data['page']
+        limit = data['limit']
+        sort = data['sort']
+
+        try:
+            res = UserActions(userData).fetchEmployeeListAction(userData, page, limit, sort)
+            return jsonify({
+                'message': 'Employee read successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error processing Employee: %s", e)
+            return jsonify({'error': e.args[0]}), 400
+
+@app.route('/getAllRecentMemo', methods=['POST'])
+def get_all_recent_memo():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        try:
+            res = UserActions(userData).getAllRecentMemoAction(userData)
+            return jsonify({
+                'message': 'Memo read successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error processing Memo: %s", e)
+            return jsonify({'error': e.args[0]}), 400
+        
+@app.route('/updateUrlPhotoOfSignature', methods=['POST'])
+def update_url_photo_of_signature():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        employeeID = data['employeeID']
+        signatureUrl = data['signatureUrl']
+        try:
+            res = UserActions(userData).updateUrlPhotoOfSignatureAction(
+                userData, employeeID, signatureUrl)
+            return jsonify({
+                'message': 'Photo of Signature updated successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error updating Photo of Signature: %s", e)
+            return jsonify({'error': e.args[0]}), 400
+
+@app.route('/generateEmployeeID', methods=['POST'])
+def generate_employee_id():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        employee_data = data['employee']
+
+        if employee_data['dateJoined']:
+            employee_data['dateJoined'] = datetime.strptime(
+                employee_data['dateJoined'], "%a, %d %b %Y %H:%M:%S %Z")
+
+        try:
+            res = UserActions(userData).createEmployeeIDAction(
+                userData, employee_data)
+            return jsonify({
+                'message': 'Employee ID generated successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error generating Employee ID: %s", e)
+            return jsonify({'error': e.args[0]}), 400
+    else:
+        return jsonify({"error": "Request must be JSON"}), 400
+
+@app.route('/updateEmployeeID', methods=['POST'])
+def update_employee_id():
+    if request.is_json:
+        data = request.get_json()
+        userData = data['userData']
+        employeeID = data['employeeID']
+        try:
+            res = UserActions(userData).updateEmployeeIDAction(
+                userData, employeeID)
+            return jsonify({
+                'message': 'Employee ID updated successfully!',
+                'data': res
+            }), 200
+        except Exception as e:
+            logging.exception("Error updating Employee ID: %s", e)
+            return jsonify({'error': e.args[0]}), 400
 
 if __name__ == '__main__':
     if (AppConfig().getIsDevEnvironment()):
@@ -571,3 +687,4 @@ if __name__ == '__main__':
     else:
         # production
         app.run(host='0.0.0.0', port=8080)
+        # 

@@ -5,6 +5,7 @@ from utils import *
 import re
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Union, List
+from generateEmployeeID import EmployeeIDCard
 
 # db = mongoDb("EmployeeManagementBackup")
 db = mongoDb()
@@ -26,7 +27,7 @@ class Roles:
                 },
                 'canViewEmployeeDetails': {
                     'description': 'can view employee details'
-                },
+                }
             },
             'Memo': {
                 'canDeleteMemo': {
@@ -48,6 +49,9 @@ class Roles:
                 },
                 'canDeleteEmployee': {
                     'description': 'can delete an employee'
+                },
+                'canGenerateEmployeeID': {
+                    'description': 'can generate employee ID'
                 },
             },
             'Offense': {
@@ -259,9 +263,14 @@ class UserActions(User):
     def deleteEmployeeAction(self, user, data):
         employee = Employee(**data)
         res = employee.deleteEmployee(user)
-        return db.delete(res, 'Employee')
+        return db.update({'_id': res['_id']}, res, 'Employee')
 
     def createOffenseAction(self, user, data):
+        if 'title' in data:
+            offense = db.read({'title': data['title']}, 'Offense')
+            if len(offense) > 0:
+                raise ValueError('Offense title already exists')
+
         offense = Offense(**data)
         res = offense.createOffense(user)
         return db.create(res, 'Offense')
@@ -340,25 +349,61 @@ class UserActions(User):
 
         return memos
 
-    def getEmployeeForDashboardAction(self, user):
+    def getEmployeeForDashboardAction(
+        self,
+        user,
+        page=1,
+        sort={
+            'keyToSort': None,
+            'sortOrder': None
+        },
+    ):
         if 'canGetEmployeeForDashboard' not in user['roles']['User']:
             raise ValueError(
                 'User does not have permission to get employee for dashboard')
 
-        employees = db.read({},
-                            'Employee',
-                            projection={
-                                '_id': 1,
-                                'name': 1,
-                                'address': 1,
-                                'phoneNumber': 1,
-                                'company': 1,
-                                'photoOfPerson': 1,
-                                'dateJoined': 1,
-                                'isProductionEmployee': 1,
-                                'isOJT': 1,
-                                'isRegular': 1,
-                            })
+        if page == None:
+            page = 1
+        if sort == None:
+            sort = {'keyToSort': None, 'sortOrder': None}
+
+        # employees = db.read({'isDeleted': False},
+        #                     'Employee',
+        #                     projection={
+        #                         '_id': 1,
+        #                         'firstName': 1,
+        #                         'lastName': 1,
+        #                         'address': 1,
+        #                         'phoneNumber': 1,
+        #                         'company': 1,
+        #                         'photoOfPerson': 1,
+        #                         'dateJoined': 1,
+        #                         'companyRole': 1,
+        #                         'isOJT': 1,
+        #                         'isRegular': 1,
+        #                         'isDeleted': 1,
+        #                     })
+
+        employees = db.readWithPagination({'isDeleted': False},
+                                          'Employee',
+                                          projection={
+                                              '_id': 1,
+                                              'firstName': 1,
+                                              'lastName': 1,
+                                              'address': 1,
+                                              'phoneNumber': 1,
+                                              'company': 1,
+                                              'photoOfPerson': 1,
+                                              'dateJoined': 1,
+                                              'companyRole': 1,
+                                              'isOJT': 1,
+                                              'isRegular': 1,
+                                              'isDeleted': 1,
+                                          },
+                                          page=1,
+                                          limit=99999,
+                                          sort=sort)
+
         return employees
 
     def getAllMemoThatsNotSubmittedAction(self, user):
@@ -401,6 +446,97 @@ class UserActions(User):
             'remedialAction': remedialActions[offenseCount],
             'offenseCount': offenseCount + 1
         }
+    
+    def createEmployeeIDAction(self, user, employee):
+        if 'canGenerateEmployeeID' not in user['roles']['Employee']:
+            raise ValueError('User does not have permission to generate Employee ID')
+
+        employeeID = db.read({'_id': employee['_id']}, 'EmployeeID')
+        if len(employeeID) > 0:
+            return employeeID[0]['IDCardURL']
+
+        idGenerated = EmployeeIDCard(**employee).generate_id_card()
+        print(idGenerated)
+        db.create(idGenerated, 'EmployeeID')
+        return idGenerated['IDCardURL']
+
+    def updateEmployeeIDAction(self, user, employeeId):
+        if 'canGenerateEmployeeID' not in user['roles']['Employee']:
+            raise ValueError('User does not have permission to generate Employee ID')
+
+        employeeID = db.read({'_id': employeeId}, 'EmployeeID')
+        if len(employeeID) == 0:
+            raise ValueError('Employee ID does not exist')
+
+        employee = db.read({'_id': employeeId}, 'Employee')
+
+        idGenerated = EmployeeIDCard(**employee[0]).generate_id_card()
+        db.update({'_id': employeeId}, idGenerated, 'EmployeeID')
+
+        return idGenerated['IDCardURL']
+
+    def updateEmployeeProfilePictureAction(self, user, employeeId, photo):
+        if 'canUpdateEmployee' not in user['roles']['Employee']:
+            raise ValueError(
+                'User does not have permission to update an employee')
+        employee = db.read({'_id': employeeId}, 'Employee')
+        if len(employee) == 0:
+            raise ValueError('Employee does not exist')
+
+        employee[0]['photoOfPerson'] = photo
+        return db.update({'_id': employeeId}, employee[0], 'Employee')
+
+    def fetchEmployeeListAction(self,
+                                user,
+                                page=1,
+                                limit=10,
+                                sort={
+                                    'keyToSort': None,
+                                    'sortOrder': None
+                                }):
+        if 'canGetEmployeeForDashboard' not in user['roles']['User']:
+            raise ValueError(
+                'User does not have permission to get employee for dashboard')
+
+        if page == None:
+            page = 1
+        if limit == None:
+            limit = 10
+        if sort == None:
+            sort = {'keyToSort': None, 'sortOrder': None}
+
+        employees = db.readWithPagination({'isDeleted': False},
+                                          'Employee',
+                                          page=page,
+                                          limit=limit,
+                                          sort=sort)
+        return employees
+
+    def getAllRecentMemoAction(self, user):
+        if 'canGetMemoList' not in user['roles']['User']:
+            raise ValueError('User does not have permission to get memo list')
+
+        memos = db.readWithPagination({},
+                                      'Memo',
+                                      page=1,
+                                      limit=20,
+                                      sort={
+                                          'keyToSort': 'date',
+                                          'sortOrder': -1
+                                      })
+
+        return memos['data']
+
+    def updateUrlPhotoOfSignatureAction(self, user, employeeId, photo):
+        if 'canUpdateEmployee' not in user['roles']['Employee']:
+            raise ValueError(
+                'User does not have permission to update an employee')
+        employee = db.read({'_id': employeeId}, 'Employee')
+        if len(employee) == 0:
+            raise ValueError('Employee does not exist')
+
+        employee[0]['employeeSignature'] = photo
+        return db.update({'_id': employeeId}, employee[0], 'Employee')
 
 
 class Memo(BaseModel):
@@ -499,7 +635,8 @@ class Memo(BaseModel):
 
 class Employee(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
-    name: str
+    firstName: str
+    lastName: str
     address: Optional[str]
     phoneNumber: Optional[str]
     photoOfPerson: Optional[str]
@@ -509,9 +646,11 @@ class Employee(BaseModel):
     dateJoined: Optional[datetime.datetime]
     company: Optional[str]
     isRegular: Optional[bool]
-    isProductionEmployee: Optional[bool]
+    companyRole: Optional[str]
     isOJT: Optional[bool]
     dailyWage: Optional[Union[float, int]]
+    isDeleted: Optional[bool] = False
+    employeeSignature: Optional[str] = None
     version: int = Field(..., alias='_version')
 
     @field_validator("dateJoined", mode='before', check_fields=True)
@@ -536,7 +675,8 @@ class Employee(BaseModel):
     def to_dict(self):
         return {
             '_id': self.id,
-            'name': self.name,
+            'firstName': self.firstName,
+            'lastName': self.lastName,
             'address': self.address,
             'phoneNumber': self.phoneNumber,
             'photoOfPerson': self.photoOfPerson,
@@ -546,9 +686,11 @@ class Employee(BaseModel):
             'dateJoined': self.dateJoined,
             'company': self.company,
             'isRegular': self.isRegular,
-            'isProductionEmployee': self.isProductionEmployee,
+            'companyRole': self.companyRole,
             'isOJT': self.isOJT,
             'dailyWage': self.dailyWage,
+            'isDeleted': self.isDeleted,
+            'employeeSignature': self.employeeSignature,
             '_version': self.version
         }
 
@@ -577,6 +719,7 @@ class Employee(BaseModel):
         employee = db.read({'_id': self.id}, 'Employee')
         if len(employee) == 0:
             raise ValueError('Employee does not exist')
+        self.isDeleted = True
 
         return self.to_dict()
 
@@ -585,17 +728,13 @@ class Employee(BaseModel):
 
 class Offense(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
-    number: int
-    description: str
     remedialActions: List[str]
     version: int = Field(..., alias='_version')
-    title: Optional[str] = Field(None, alias='title')
+    title: str
 
     def to_dict(self):
         return {
             '_id': self.id,
-            'number': self.number,
-            'description': self.description,
             'remedialActions': self.remedialActions,
             '_version': self.version,
             'title': self.title

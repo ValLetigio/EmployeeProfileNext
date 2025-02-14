@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useAppContext } from "../GlobalContext";
 
@@ -12,9 +12,28 @@ const EmployeeMemoTableModal = () => {
     setMemoForTableModal,
     handleImageModalClick,
     handleMemoPrintModalClick,
+    handleVideoModalClick,
   } = useAppContext();
 
   const memoTableModalRef = React.useRef<HTMLDialogElement>(null);
+
+  const [isForSingleEmployee, setIsForSingleEmployee] = React.useState(false);
+
+  // const [isVideo, setIsVideo] = React.useState(false);
+
+  useEffect(() => {
+    if (memoForTableModal.length > 0) {
+      const res = memoForTableModal.map((memo) => memo.Employee._id);
+
+      const uniqueArray = [...new Set(res)];
+
+      if (uniqueArray.length > 1) {
+        setIsForSingleEmployee(false);
+      } else {
+        setIsForSingleEmployee(true);
+      }
+    }
+  }, [memoForTableModal]);
 
   const handleClose = () => {
     setMemoForTableModal([] as Memo[]);
@@ -32,7 +51,7 @@ const EmployeeMemoTableModal = () => {
     return () => {
       memoTableModalRef.current?.removeEventListener("keydown", handleKeyDown);
     };
-  }, []); 
+  }, []);
 
   return (
     <dialog id="EmployeeMemoModal" className="modal " ref={memoTableModalRef}>
@@ -40,15 +59,17 @@ const EmployeeMemoTableModal = () => {
         <div className=" max-h-[80vh] w-[98vw] md:w-[80vw] rounded-box py-8 bg-base-200 px-6 flex justify-center items-center flex-col gap-2 relative ">
           {/*  */}
           <form className="absolute top-2 right-2" method="dialog">
-            <button onClick={() => handleClose()} className=" close-button ">
-              
-            </button>
+            <button
+              onClick={() => handleClose()}
+              className=" close-button "
+            ></button>
           </form>
 
           <h3 className="text-xl font-semibold w-full text-start ">
-            Memos{" "}
             <span className="text-base">
-              ( {memoForTableModal?.[0]?.Employee?.name} )
+              {isForSingleEmployee
+                ? `Memos ( ${memoForTableModal?.[0]?.Employee?.firstName} ${memoForTableModal?.[0]?.Employee?.lastName} )`
+                : `Recent Memos `}
             </span>{" "}
           </h3>
           <div className="w-full h-full overflow-auto rounded-box ">
@@ -58,10 +79,13 @@ const EmployeeMemoTableModal = () => {
                 <tr className="bg-gray-500 text-white">
                   <th></th>
                   <th className="min-w-[150px]">Date</th>
+                  {!isForSingleEmployee && (
+                    <th className="min-w-[150px]">Employee</th>
+                  )}
                   <th className="min-w-[200px]">Memo</th>
                   <th className="min-w-[20vw]">Offense</th>
-                  <th className="min-w-[150px]">Photos</th>
-                  <th className="min-w-[150px]">Memo Photos</th>
+                  <th className="min-w-[150px]">Media</th>
+                  <th className="min-w-[150px]">Memo Photo</th>
                   <th className="min-w-[200px]">Reason</th>
                   <th>isSubmitted</th>
                 </tr>
@@ -95,6 +119,14 @@ const EmployeeMemoTableModal = () => {
 
                     {/* Date */}
                     <td className="w-max "> {memo?.date?.substring(0, 16)} </td>
+
+                    {/* Employee */}
+                    {!isForSingleEmployee && (
+                      <td className="w-max font-bold ">
+                        {memo?.Employee?.firstName} {memo?.Employee?.lastName}
+                      </td>
+                    )}
+
                     {/* Memo */}
                     <td
                       className=" "
@@ -121,7 +153,7 @@ const EmployeeMemoTableModal = () => {
                           {/* <p className='btn btn-xs text-[.70rem] btn-neutral truncate' >{"remedialAction"}</p> */}
                           <div className="collapse-content flex flex-wrap gap-1 ">
                             <p className="btn btn-xs text-[.70rem] btn-neutral truncate">
-                              {memo?.remedialAction || " "} 
+                              {memo?.remedialAction || " "}
                             </p>
                             {/* {memo?.remedialAction?.map((action: string, index: number) => (
                                 <p className='btn btn-xs text-[.70rem] btn-neutral truncate' key={index}>{action}</p>
@@ -132,33 +164,51 @@ const EmployeeMemoTableModal = () => {
                     </td>
                     {/* Photos */}
                     <td>
-                      {" "}
-                      <Image
-                        className={` w-[150px] h-[150px] ${memo?.mediaList?.[0] && "hover:border"} cursor-pointer `}
-                        src={memo?.mediaList?.[0] || ""}
-                        width={100}
-                        height={100}
-                        alt="mediaList"
-                        onClick={() =>
-                          memo?.mediaList?.[0] &&
-                          handleImageModalClick(memo?.mediaList)
-                        }
-                      ></Image>{" "}
+                      <div className="overflow-clip w-[150px] h-[150px] border cursor-pointer border-neutral text-neutral-content group flex justify-center items-center rounded-box">
+                        {memo?.mediaList?.[0]
+                          ?.toLocaleLowerCase()
+                          .includes("video") ? (
+                          <div
+                            className={` indent-0.5 text-4xl group-hover:text-3xl w-full h-full flex justify-center items-center bg-neutral group-hover:bg-neutral/50  `}
+                            onClick={() =>
+                              handleVideoModalClick(memo?.mediaList?.[0] || "")
+                            }
+                            title="Play Video"
+                          >
+                            ▶
+                          </div>
+                        ) : memo?.mediaList?.[0] ? (
+                          <Image
+                            className={` w-full h-full hover:p-1 `}
+                            src={memo?.mediaList?.[0] || ""}
+                            width={100}
+                            height={100}
+                            alt="mediaList"
+                            onClick={() =>
+                              memo?.mediaList?.[0] &&
+                              handleImageModalClick(memo?.mediaList)
+                            }
+                          />
+                        ) : (
+                          <span className="text-neutral">?</span>
+                        )}
+                      </div>
                     </td>
                     {/* Memo Photos */}
                     <td>
-                      {" "}
-                      <Image
-                        className={` w-[150px] h-[150px] ${memo?.memoPhotosList?.[0] && "hover:border"} cursor-pointer `}
-                        src={memo?.memoPhotosList?.[0] || ""}
-                        width={100}
-                        height={100}
-                        alt="memoPhotosList"
-                        onClick={() =>
-                          memo?.memoPhotosList?.[0] &&
-                          handleImageModalClick(memo?.memoPhotosList)
-                        }
-                      ></Image>{" "}
+                      <div className="w-[150px] h-[150px] border border-neutral group rounded-box overflow-clip">
+                        <Image
+                          className={` group-hover:p-1 cursor-pointer w-full h-full `}
+                          src={memo?.memoPhotosList?.[0] || ""}
+                          width={100}
+                          height={100}
+                          alt="memoPhotosList"
+                          onClick={() =>
+                            memo?.memoPhotosList?.[0] &&
+                            handleImageModalClick(memo?.memoPhotosList)
+                          }
+                        />
+                      </div>
                     </td>
                     {/* Reason */}
                     <td>
@@ -186,6 +236,9 @@ const EmployeeMemoTableModal = () => {
                 <tr className="bg-gray-500 text-white">
                   <th></th>
                   <th>Date</th>
+                  {!isForSingleEmployee && (
+                    <th className="min-w-[150px]">Employee</th>
+                  )}
                   <th>Memo</th>
                   <th>Offense</th>
                   <th>Photos</th>

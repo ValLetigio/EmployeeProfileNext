@@ -10,15 +10,7 @@
                 }
             ],
             "default": null,
-            "title": "Id"
-        },
-        "number": {
-            "title": "Number",
-            "type": "integer"
-        },
-        "description": {
-            "title": "Description",
-            "type": "string"
+            "title": " Id"
         },
         "remedialActions": {
             "items": {
@@ -28,27 +20,18 @@
             "type": "array"
         },
         "_version": {
-            "title": "Version",
+            "title": " Version",
             "type": "integer"
         },
         "title": {
-            "anyOf": [
-                {
-                    "type": "string"
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "default": null,
-            "title": "Title"
+            "title": "Title",
+            "type": "string"
         }
     },
     "required": [
-        "number",
-        "description",
         "remedialActions",
-        "_version"
+        "_version",
+        "title"
     ],
     "title": "Offense",
     "type": "object",

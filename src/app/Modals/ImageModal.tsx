@@ -5,7 +5,8 @@ import { useAppContext } from "../GlobalContext";
 import Image from "next/image";
 
 const ImageModal = () => {
-  const { imageListForModal, setImageListForModal, router, imageModalId } = useAppContext(); 
+  const { imageListForModal, setImageListForModal, router, imageModalId } =
+    useAppContext();
 
   const imageModalRef = React.useRef<HTMLDialogElement>(null);
 
@@ -13,13 +14,19 @@ const ImageModal = () => {
 
   const handleClose = () => {
     setHash("#item0");
-    router.replace(window.location.pathname, undefined);  
+    router.replace(window.location.pathname, undefined);
   };
 
-  const handleDelete = (index: number) => { 
+  const handleDelete = (index: number) => {
     const filtered = imageListForModal.filter((_, i) => i !== index);
-    setImageListForModal(filtered); 
+    setImageListForModal(filtered);
   };
+
+  React.useEffect(()=>{
+    if(imageListForModal.length === 0){
+      setHash("#item0");
+    }
+  },[imageListForModal])
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -33,27 +40,25 @@ const ImageModal = () => {
     return () => {
       imageModalRef.current?.removeEventListener("keydown", handleKeyDown);
     };
-  }, []); 
+  }, []);
 
   return (
     <dialog id="imageModal" className="modal w-full " ref={imageModalRef}>
-      <div className="modal-box bg-transparent shadow-none gap-2 flex flex-col w-full h-full justify-center items-center relative ">
-        <form className="absolute top-2 right-2" method="dialog">
-          <button onClick={handleClose} className="close-button"></button>
-        </form>
-
-        <div className="carousel h-[90%] w-full ">
+      <div className=" shadow-none gap-2 flex flex-col w-[98%] md:w-[50%] h-full justify-center items-center relative ">
+        <div className="carousel h-max w-full bg-base-100/10 ">
           {imageListForModal.map((item, index) => (
             <div
               key={`item${index}`}
               id={`item${index}`}
-              className="carousel-item w-full h-full relative "
+              className="carousel-item w-full h-full relative items-center justify-center "
             >
-              {/* delete image */}
+              {/* delete image button */}
               <div
                 key={`item${index}`}
-                className={`${!imageModalId?" hidden ":" "} absolute top-2 left-2 btn btn-outline btn-error btn-sm btn-circle z-40 duration-0 `}
-                onClick={() => handleDelete(index)} 
+                className={`${
+                  !imageModalId ? " hidden " : " "
+                } absolute top-2 left-2 btn btn-outline btn-accent btn-sm btn-circle z-40 duration-0 `}
+                onClick={() => handleDelete(index)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +66,7 @@ const ImageModal = () => {
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="size-5"
+                  className="size-5 " 
                 >
                   <path
                     strokeLinecap="round"
@@ -71,14 +76,19 @@ const ImageModal = () => {
                 </svg>
               </div>
 
+              <form className="absolute top-2 right-2" method="dialog">
+                <button onClick={handleClose} className="close-button"></button>
+              </form>
+
               {/* Image */}
               <Image
                 src={item}
                 loading="eager"
-                className="h-full w-full"
-                // width={1000} height={1000}
-                fill
-                sizes="(max-width: 768px) 100vw, 700px"
+                className="h-max w-full"
+                width={1000}
+                height={1000}
+                // fill
+                // sizes="(max-width: 768px) 100vw, 700px"
                 alt={`#item${index}`}
               />
             </div>
@@ -86,7 +96,7 @@ const ImageModal = () => {
           {/* <span className='absolute top-2 left-3 font-bold bg-white rounded-full w-8 h-8 grid place-content-center'>{index + 1}</span> */}
         </div>
 
-        <div className="flex absolute bottom-0 z-50 gap-2">
+        <div className="flex absolute bottom-2 md:bottom-8 z-50 gap-2">
           {imageListForModal.map((item, index) => (
             <a
               key={`item${index}`}

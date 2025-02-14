@@ -14,17 +14,14 @@ import {
 import { Employee } from "../schemas/EmployeeSchema";
 import { User, Roles } from "../schemas/UserSchema";
 import { Memo } from "../schemas/MemoSchema";
+import { Offense } from "../schemas/OffenseSchema";
 
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 
 import ServerRequests from "../api/ServerRequests";
 
-// import firebaseConfig from '../api/firebase';
-// import { initializeApp } from "firebase/app";
-
 import { getStorage } from "firebase/storage";
-// import { getAuth } from "firebase/auth";
 
 import { storage } from "../api/firebase";
 
@@ -57,13 +54,20 @@ interface AppContextProps {
   memoForPrintModal: Memo;
   setMemoForPrintModal: (data: Memo) => void;
   handleMemoPrintModalClick: (data: Memo) => void;
+  handleOffenseListClick: (data: Offense[]) => void;
   loading: boolean;
   setLoading: (data: boolean) => void;
   storage: ReturnType<typeof getStorage>;
   highlightText: (text: string) => JSX.Element[];
   setSearch: (data: string) => void;
   getOrdinal: (n: number) => string;
-  imageModalId: string, setImageModalId: (data: string) => void;
+  imageModalId: string;
+  setImageModalId: (data: string) => void;
+  offenseListForModal: Offense[];
+  setOffenseListForModal: (data: Offense[]) => void;
+  handleVideoModalClick: (video: string) => void;
+  videoForModal: string;
+  setVideoForModal: (data: string) => void;
 }
 
 // Create the default context with proper types and default values
@@ -98,13 +102,20 @@ const AppContext = createContext<AppContextProps>({
   memoForPrintModal: {} as Memo,
   setMemoForPrintModal: () => {},
   handleMemoPrintModalClick: () => {},
+  handleOffenseListClick: () => {},
   loading: false,
   setLoading: () => {},
   storage: {} as ReturnType<typeof getStorage>,
   highlightText: () => [],
   setSearch: () => {},
   getOrdinal: () => "",
-  imageModalId: "", setImageModalId: () => {}
+  imageModalId: "",
+  setImageModalId: () => {},
+  offenseListForModal: [] as Offense[],
+  setOffenseListForModal: () => {},
+  handleVideoModalClick: () => {},
+  videoForModal: "",
+  setVideoForModal: () => {},
 });
 
 export default function ContextProvider({
@@ -133,7 +144,7 @@ export default function ContextProvider({
 
   const [search, setSearch] = useState<string>("");
 
-  const cards = {
+  const [cards, setCards] = useState<CardsSchema>({
     Employee: [
       {
         path: "/Employee/Create",
@@ -156,7 +167,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canCreateEmployee"],
       },
       {
         path: "/Employee/Update",
@@ -184,7 +195,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canUpdateEmployee"],
       },
       {
         path: "/Employee/Delete",
@@ -207,7 +218,30 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canDeleteEmployee"],
+      },
+      {
+        path: "/Employee/GenerateID",
+        id: "generateID-employee",
+        title: "Generate ID",
+        description: "Generate ID for Employee",
+        icon: (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z"
+            />
+          </svg>
+        ),
+        roles: ["canGenerateEmployeeID"],
       },
     ],
     Offense: [
@@ -232,7 +266,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canCreateOffense"],
       },
       {
         path: "/Offense/Update",
@@ -255,7 +289,7 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canUpdateOffense"],
       },
       {
         path: "/Offense/Delete",
@@ -278,12 +312,12 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canDeleteOffense"],
       },
     ],
-    Memorandum: [
+    Memo: [
       {
-        path: "/Memorandum/Create",
+        path: "/Memo/Create",
         id: "create-memorandum",
         title: "Create Memorandum",
         description: "Create a Memorandum",
@@ -303,10 +337,10 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canCreateMemo"],
       },
       {
-        path: "/Memorandum/Submit",
+        path: "/Memo/Submit",
         id: "submit-memorandum",
         title: "Submit Memorandum",
         description: "Submit a Memorandum",
@@ -326,10 +360,10 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canSubmitMemo"],
       },
       {
-        path: "/Memorandum/Delete",
+        path: "/Memo/Delete",
         id: "delete-memorandum",
         title: "Delete Memorandum",
         description: "Delete a Memorandum",
@@ -349,10 +383,10 @@ export default function ContextProvider({
             />
           </svg>
         ),
-        roles: [],
+        roles: ["canDeleteMemo"],
       },
     ],
-  };
+  });
 
   const [toastOptions, setToastOptions] = useState({
     open: false,
@@ -360,6 +394,7 @@ export default function ContextProvider({
     type: "",
     timer: 0,
   });
+
   const [confirmationOptions, setConfirmationOptions] = useState({
     open: false,
     question: "",
@@ -379,7 +414,13 @@ export default function ContextProvider({
 
   const [memoForPrintModal, setMemoForPrintModal] = useState<Memo>({} as Memo);
 
+  const [offenseListForModal, setOffenseListForModal] = useState<Offense[]>(
+    [] as Offense[]
+  );
+
   const [imageModalId, setImageModalId] = useState<string>("");
+
+  const [videoForModal, setVideoForModal] = useState<string>("");
 
   useEffect(() => {
     serverRequests
@@ -439,10 +480,33 @@ export default function ContextProvider({
       // serverRequests.deleteAllDataInCollection('User')
       serverRequests.getUserForTesting().then((res) => {
         setUserData(res.data);
-        console.log(res.data);
       });
     }
   }, [session, status, router, isTestEnv]);
+
+  // filter cards
+  useEffect(() => {
+    if (userData?._id) {
+      const userRoles = userData.roles;
+
+      const filteredCards: { [key: string]: unknown[] } = {};
+
+      Object.entries(userRoles).map(([key, value]) => {
+        if (Array.isArray(value) && value.length) {
+          if (cards[key]) {
+            cards[key].map((item) => {
+              const isAuthorized = value.includes(item.roles[0]);
+              if (isAuthorized) {
+                filteredCards[key] = [...(filteredCards?.[key] || []), item];
+              }
+            });
+          }
+        }
+      });
+
+      setCards(filteredCards as CardsSchema);
+    }
+  }, [userData]);
 
   const handleConfirmation = (
     question: string,
@@ -501,6 +565,22 @@ export default function ContextProvider({
     setMemoForPrintModal(selectedMemo);
   };
 
+  const handleOffenseListClick = (offenseList: Offense[]) => {
+    const modal = document.getElementById("OffenseDownloadModal");
+    if (modal) {
+      (modal as HTMLDialogElement).showModal();
+    }
+    setOffenseListForModal(offenseList);
+  };
+
+  const handleVideoModalClick = (video: string) => {
+    const modal = document.getElementById("videoModal");
+    if (modal) {
+      (modal as HTMLDialogElement).showModal();
+    }
+    setVideoForModal(video);
+  }
+
   const highlightText = (text: string): JSX.Element[] => {
     if (!search) return [<span key="0">{text}</span>];
     const parts = text.split(new RegExp(`(${search})`, "gi"));
@@ -530,11 +610,11 @@ export default function ContextProvider({
     return `${number}${suffixes[number % 10] || "th"}`;
   };
 
-  useEffect(()=>{ 
-    setImageModalId("")
-    setImageListForModal([])
-    setSelectedEmployee({} as Employee)
-  },[pathname])
+  useEffect(() => {
+    setImageModalId("");
+    setImageListForModal([]);
+    setSelectedEmployee({} as Employee);
+  }, [pathname]);
 
   // Define the global values to be shared across the context
   const globals = {
@@ -569,6 +649,12 @@ export default function ContextProvider({
     getOrdinal,
     imageModalId,
     setImageModalId,
+    handleOffenseListClick,
+    offenseListForModal,
+    setOffenseListForModal,
+    handleVideoModalClick,
+    videoForModal,
+    setVideoForModal
   };
 
   return <AppContext.Provider value={globals}>{children}</AppContext.Provider>;
