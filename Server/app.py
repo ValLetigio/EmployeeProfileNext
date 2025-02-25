@@ -7,13 +7,14 @@ from AppConfig import AppConfig
 import logging
 from firebaseAuthenticator import firebaseAuthenticator
 from datetime import datetime, timezone
-import generateEmployeeID
+import requests
+from downloadServer import DownloadServer
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 # db = mongoDb("EmployeeManagementBackup")
 db = mongoDb()
-
+downloadServer = DownloadServer()
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
@@ -129,9 +130,11 @@ def create_employee():
                     'photoOfPerson': data['photoOfPerson'],
                     'resumePhotosList': data['resumePhotosList'],
                     'biodataPhotosList': data['biodataPhotosList'],
+                    'employeeHouseRulesSignatureList': data['employeeHouseRulesSignatureList'],
                     'email': data['email'],
                     'dateJoined': data['dateJoined'],
                     'company': data['company'],
+                    'agency': data['agency'],
                     'isRegular': data['isRegular'],
                     'companyRole': data['companyRole'],
                     'isOJT': data['isOJT'],
@@ -304,6 +307,7 @@ def create_memo():
                     'MemoCode': memo['MemoCode'],
                     'Code': None,
                     'submitted': False,
+                    'isWithOffense': memo['isWithOffense'],
                     'reason': memo['reason'] or None,
                     'remedialActions': None,
                     '_version': 0
@@ -630,46 +634,44 @@ def update_url_photo_of_signature():
             logging.exception("Error updating Photo of Signature: %s", e)
             return jsonify({'error': e.args[0]}), 400
 
-@app.route('/generateEmployeeID', methods=['POST'])
-def generate_employee_id():
+@app.route('/downloadIDServer', methods=['POST'])
+def downloadIDServer():
     if request.is_json:
         data = request.get_json()
-        userData = data['userData']
-        employee_data = data['employee']
-
-        if employee_data['dateJoined']:
-            employee_data['dateJoined'] = datetime.strptime(
-                employee_data['dateJoined'], "%a, %d %b %Y %H:%M:%S %Z")
-
-        try:
-            res = UserActions(userData).createEmployeeIDAction(
-                userData, employee_data)
-            return jsonify({
-                'message': 'Employee ID generated successfully!',
-                'data': res
-            }), 200
-        except Exception as e:
-            logging.exception("Error generating Employee ID: %s", e)
-            return jsonify({'error': e.args[0]}), 400
-    else:
-        return jsonify({"error": "Request must be JSON"}), 400
-
-@app.route('/updateEmployeeID', methods=['POST'])
-def update_employee_id():
-    if request.is_json:
-        data = request.get_json()
-        userData = data['userData']
         employeeID = data['employeeID']
+        userData = data['userData']
+
         try:
-            res = UserActions(userData).updateEmployeeIDAction(
-                userData, employeeID)
-            return jsonify({
-                'message': 'Employee ID updated successfully!',
-                'data': res
-            }), 200
+            employee = UserActions(userData).getEmployeeBy_ID(employeeID)
+            if not employee:
+                return jsonify({"error": "Employee not found"}), 404
+
+            if 'dateJoined' in employee:
+                employee['dateJoined'] = employee['dateJoined'].isoformat()
+
+            payload = {'employee':employee}
+            urls = downloadServer.downloadEmployeeID(payload)
+
+            print(urls, 'urls')
+
+            resID ={
+                "_id": employee['_id'],
+                "name": employee['firstName'] + " " + employee['lastName'],
+                "companyRole": employee['companyRole'],
+                "IDCardURL": {"front":urls[0], "back":urls[1]},
+                '_version': employee['_version']
+            }
+
+            idGenerated = UserActions(userData).createEmployeeIDAction(userData, employee, resID)
+
         except Exception as e:
-            logging.exception("Error updating Employee ID: %s", e)
-            return jsonify({'error': e.args[0]}), 400
+            return jsonify({"error": str(e)}), 400
+
+        return jsonify({
+            "employeeID": idGenerated,
+            "message": "Employee ID Card generated successfully"
+            }), 200
+
 
 if __name__ == '__main__':
     if (AppConfig().getIsDevEnvironment()):
@@ -687,4 +689,4 @@ if __name__ == '__main__':
     else:
         # production
         app.run(host='0.0.0.0', port=8080)
-        # 
+        #

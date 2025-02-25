@@ -5,7 +5,6 @@ from utils import *
 import re
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional, Union, List
-from generateEmployeeID import EmployeeIDCard
 
 # db = mongoDb("EmployeeManagementBackup")
 db = mongoDb()
@@ -116,18 +115,6 @@ class User(BaseModel):
             return datetime.datetime.fromtimestamp(value)
         raise ValueError(
             "createdAt must be a valid datetime, string, or timestamp")
-
-    def to_dict(self):
-        return {
-            '_id': self.id,
-            'createdAt': self.createdAt,
-            'isApproved': self.isApproved,
-            'displayName': self.displayName,
-            'image': self.image,
-            'email': self.email,
-            'roles': self.roles,
-            '_version': self._version
-        }
 
     def createFirstUser(self, firebaseUserUid):
         if self.id != None:
@@ -310,7 +297,7 @@ class UserActions(User):
 
         for index, memo in enumerate(employeeMemos):
             offenseCount = index + 1
-            formattedDate = memo['date'].strftime('%y%m%d')
+            formattedDate = memo['date']
             company = memo['Employee']['company']
             newCode = f'{company}-{formattedDate}-{offenseCount}'
             memo['Code'] = newCode
@@ -427,6 +414,7 @@ class UserActions(User):
             {
                 'Employee._id': employeeId,
                 'MemoCode._id': offenseId,
+                'isWithOffense': True,
                 'MemoCode._version': offenseVersion
             }, 'Memo')
 
@@ -447,33 +435,26 @@ class UserActions(User):
             'offenseCount': offenseCount + 1
         }
     
-    def createEmployeeIDAction(self, user, employee):
+    def createEmployeeIDAction(self, user, employee, idGenerated):
         if 'canGenerateEmployeeID' not in user['roles']['Employee']:
             raise ValueError('User does not have permission to generate Employee ID')
 
         employeeID = db.read({'_id': employee['_id']}, 'EmployeeID')
         if len(employeeID) > 0:
-            return employeeID[0]['IDCardURL']
+            generatedID = db.update({'_id': employee['_id']}, idGenerated, 'EmployeeID')
+            print(generatedID, 'generatedID')
+            return generatedID[0]['IDCardURL']
 
-        idGenerated = EmployeeIDCard(**employee).generate_id_card()
         print(idGenerated)
-        db.create(idGenerated, 'EmployeeID')
-        return idGenerated['IDCardURL']
-
-    def updateEmployeeIDAction(self, user, employeeId):
-        if 'canGenerateEmployeeID' not in user['roles']['Employee']:
-            raise ValueError('User does not have permission to generate Employee ID')
-
-        employeeID = db.read({'_id': employeeId}, 'EmployeeID')
-        if len(employeeID) == 0:
-            raise ValueError('Employee ID does not exist')
-
+        generatedID = db.create(idGenerated, 'EmployeeID')
+        print(generatedID, 'generatedID')
+        return generatedID['IDCardURL']
+    
+    def getEmployeeBy_ID(self, employeeId):
         employee = db.read({'_id': employeeId}, 'Employee')
-
-        idGenerated = EmployeeIDCard(**employee[0]).generate_id_card()
-        db.update({'_id': employeeId}, idGenerated, 'EmployeeID')
-
-        return idGenerated['IDCardURL']
+        if len(employee) == 0:
+            raise ValueError('Employee does not exist')
+        return employee[0]
 
     def updateEmployeeProfilePictureAction(self, user, employeeId, photo):
         if 'canUpdateEmployee' not in user['roles']['Employee']:
@@ -550,6 +531,7 @@ class Memo(BaseModel):
     MemoCode: 'Offense'
     Code: Optional[str]
     submitted: bool
+    isWithOffense: Optional[bool] = False
     reason: Optional[str] = None
     remedialAction: Optional[str] = None
     version: int = Field(..., alias='_version')
@@ -570,45 +552,44 @@ class Memo(BaseModel):
             return datetime.datetime.fromtimestamp(value)
         raise ValueError("date must be a valid datetime, string, or timestamp")
 
-    def to_dict(self):
-        return {
-            '_id': self.id,
-            'date': self.date,
-            'mediaList': self.mediaList,
-            'Employee': self.Employee.to_dict(),
-            'memoPhotosList': self.memoPhotosList,
-            'subject': self.subject,
-            'description': self.description,
-            'MemoCode': self.MemoCode.to_dict(),
-            'Code': self.Code,
-            'submitted': self.submitted,
-            'reason': self.reason,
-            'remedialAction': self.remedialAction,
-            '_version': self.version
-        }
+    def model_dump_dict(self):
+        return self.model_dump(by_alias=True, mode='json', exclude_none=True, warnings='error')
 
     def createMemo(self, user):
         if 'canCreateMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to create a memo')
+    
+        employeeHouseRulesSignatureList = self.Employee.employeeHouseRulesSignatureList
+        if len(employeeHouseRulesSignatureList) == 0:
+            raise ValueError(
+                'Employee must have proof of signature in the house rules')
+        
+        if not self.Employee.agency and not self.Employee.isRegular:
+            raise ValueError(
+                'Employee must have an agency or be a regular employee')
 
         employeeId = self.Employee.id
         offenseId = self.MemoCode.id
         offenseVersion = self.MemoCode.version
-
-        getRemedialAction = UserActions(
-            user).getRemedialActionForEmployeeMemoAction(
-                employeeId, offenseId, offenseVersion)
-
-        remedialActionToString = getRemedialAction['remedialAction']
-
-        self.remedialAction = remedialActionToString
-
         formattedDate = self.date.strftime('%y%m%d')
 
+        if self.isWithOffense == True:
+            getRemedialAction = UserActions(
+                user).getRemedialActionForEmployeeMemoAction(
+                    employeeId, offenseId, offenseVersion)
+
+            remedialActionToString = getRemedialAction['remedialAction']
+
+            self.remedialAction = remedialActionToString
+            self.Code = f'{self.Employee.company}-{formattedDate}-{getRemedialAction["offenseCount"]}'
+
+        else :
+            self.Code = f'{self.Employee.company}-{formattedDate}'
+            self.remedialAction = None
+
         self.id = generateRandomString()
-        self.Code = f'{self.Employee.company}-{formattedDate}-{getRemedialAction["offenseCount"]}'
         self.submitted = False
-        return self.to_dict()
+        return self.model_dump_dict()
 
     def deleteMemo(self, user):
         if 'canDeleteMemo' not in user['roles']['Memo']:
@@ -616,7 +597,7 @@ class Memo(BaseModel):
         if self.submitted:
             raise ValueError('Memo has already been submitted')
 
-        return self.to_dict()
+        return self.model_dump_dict()
 
     def submitMemo(self, user, reason):
         if 'canSubmitMemo' not in user['roles']['Memo']:
@@ -630,7 +611,7 @@ class Memo(BaseModel):
 
         self.reason = reason
         self.submitted = True
-        return self.to_dict()
+        return self.model_dump_dict()
 
 
 class Employee(BaseModel):
@@ -642,9 +623,11 @@ class Employee(BaseModel):
     photoOfPerson: Optional[str]
     resumePhotosList: Optional[List[str]]
     biodataPhotosList: Optional[List[str]]
+    employeeHouseRulesSignatureList: Optional[List[str]]
     email: Optional[str]
     dateJoined: Optional[datetime.datetime]
     company: Optional[str]
+    agency: Optional[str]
     isRegular: Optional[bool]
     companyRole: Optional[str]
     isOJT: Optional[bool]
@@ -672,43 +655,22 @@ class Employee(BaseModel):
         raise ValueError(
             "dateJoined must be a valid datetime, string, or timestamp")
 
-    def to_dict(self):
-        return {
-            '_id': self.id,
-            'firstName': self.firstName,
-            'lastName': self.lastName,
-            'address': self.address,
-            'phoneNumber': self.phoneNumber,
-            'photoOfPerson': self.photoOfPerson,
-            'resumePhotosList': self.resumePhotosList,
-            'biodataPhotosList': self.biodataPhotosList,
-            'email': self.email,
-            'dateJoined': self.dateJoined,
-            'company': self.company,
-            'isRegular': self.isRegular,
-            'companyRole': self.companyRole,
-            'isOJT': self.isOJT,
-            'dailyWage': self.dailyWage,
-            'isDeleted': self.isDeleted,
-            'employeeSignature': self.employeeSignature,
-            '_version': self.version
-        }
-
     def createEmployee(self, user):
         if 'canCreateEmployee' not in user['roles']['Employee']:
             raise ValueError(
                 'User does not have permission to create an employee')
         if self.id != None:
             raise ValueError('Cannot create Employee with an existing _id')
+
         self.id = generateRandomString()
-        return self.to_dict()
+        return self.model_dump(by_alias=True, warnings='error')
 
     def updateEmployee(self, user, dataToUpdate):
         if 'canUpdateEmployee' not in user['roles']['Employee']:
             raise ValueError(
                 'User does not have permission to update an employee')
 
-        newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
+        newData = updateData(self.model_dump(by_alias=True, warnings='error'), dataToUpdate, ['_id'])
         return newData
 
     def deleteEmployee(self, user):
@@ -721,7 +683,7 @@ class Employee(BaseModel):
             raise ValueError('Employee does not exist')
         self.isDeleted = True
 
-        return self.to_dict()
+        return self.model_dump(by_alias=True, warnings='error')
 
     pass
 
@@ -732,27 +694,19 @@ class Offense(BaseModel):
     version: int = Field(..., alias='_version')
     title: str
 
-    def to_dict(self):
-        return {
-            '_id': self.id,
-            'remedialActions': self.remedialActions,
-            '_version': self.version,
-            'title': self.title
-        }
-
     def createOffense(self, user):
         if 'canCreateOffense' not in user['roles']['Offense']:
             raise ValueError(
                 'User does not have permission to create an offense')
         self.id = generateRandomString()
-        return self.to_dict()
+        return self.model_dump(by_alias=True, warnings='error')
 
     def updateOffense(self, user, dataToUpdate):
         if 'canUpdateOffense' not in user['roles']['Offense']:
             raise ValueError(
                 'User does not have permission to update an offense')
 
-        newData = updateData(self.to_dict(), dataToUpdate, ['_id'])
+        newData = updateData(self.model_dump(by_alias=True, warnings='error'), dataToUpdate, ['_id'])
 
         return newData
 
@@ -765,7 +719,7 @@ class Offense(BaseModel):
         if len(offense) == 0:
             raise ValueError('Offense does not exist')
 
-        return self.to_dict()
+        return self.model_dump(by_alias=True, warnings='error')
 
 
 if __name__ == "__main__":
@@ -777,6 +731,6 @@ if __name__ == "__main__":
                 roles=['test'],
                 _version=1,
                 image='test')
-    userDict = user.dict()
+    userDict = user.model_dump()
     x = user.json()
     schema = user.schema()

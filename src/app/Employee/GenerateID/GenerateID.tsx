@@ -35,19 +35,18 @@ const GenerateIDForm: React.FC<GenerateIDFormProps> = ({ employeeList }) => {
       let res;
       
       if(idURL.front && idURL.back){
-        res = await serverRequests.updateEmployeeID(userData, formData?._id || ""); 
+        // res = await serverRequests.updateEmployeeID(userData, formData?._id || ""); 
+        res = await serverRequests.generateEmployeeID(userData, formData?._id || "");
       }else{
-        res = await serverRequests.generateEmployeeID(userData, formData);
+        res = await serverRequests.generateEmployeeID(userData, formData?._id || "");
       }
-
-      console.log(res);
 
       if (res?.error) {
         console.error(res.error);
       }
 
-      if (res?.data) {
-        setIdURL(res.data);
+      if (res?.employeeID) {
+        setIdURL(res.employeeID);
       }
     } catch (e) {
       console.error(e);

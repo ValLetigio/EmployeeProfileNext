@@ -43,12 +43,14 @@ employeeObject = {
     'photoOfPerson': 'photoOfPerson',
     'resumePhotosList': ['resumePhotosList'],
     'biodataPhotosList': ['biodataPhotosList'],
-    'dateJoined': datetime.datetime.now(),
+    'employeeHouseRulesSignatureList': ['employeeHouseRulesSignatureList'],
+    'dateJoined': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
     'company': 'Pustanan',
+    'agency': 'agency',
     'isRegular': True,
     'companyRole': "Software Engineer",
     'isOJT': False,
-    'dailyWage': None,
+    'dailyWage': 200,
     'isDeleted': False,
     'employeeSignature': 'employeeSignature',
     '_version': 0
@@ -64,7 +66,9 @@ memoObject = {
     'Code': None,
     'submitted': False,
     'description': 'description',
-    'date': datetime.datetime.now(),
+    'remedialAction': 'Verbal Warning',
+    'isWithOffense': True,
+    'date': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
     'reason': None,
     '_version': 0
 }
@@ -181,6 +185,8 @@ def test_create_offense_employee_memo():
 
         memoObject['Employee'] = getEmployee
         memoObject['MemoCode'] = getOffense
+
+        memoObject['Employee']['dateJoined'] = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
 
         # create memo
         memo = user.createMemoAction(userCreated, memoObject)
@@ -338,6 +344,8 @@ def test_submit_and_delete_memo():
         memoObject['Employee'] = employee
         memoObject['MemoCode'] = offense
 
+        memoObject['Employee']['dateJoined'] = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+
         memo = user.createMemoAction(userCreated, memoObject)
 
         getMemo = db.read({'_id': memo['_id']}, 'Memo', findOne=True)
@@ -394,6 +402,8 @@ def test_submit_memo_without_reason():
 
         memoObject['Employee'] = employee
         memoObject['MemoCode'] = offense
+
+        memoObject['Employee']['dateJoined'] = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
 
         memo = user.createMemoAction(userCreated, memoObject)
 
@@ -478,9 +488,11 @@ def test_create_employee_with_name_only():
             'photoOfPerson': None,
             'resumePhotosList': None,
             'biodataPhotosList': None,
+            'employeeHouseRulesSignatureList': None,
             'dateJoined': None,
             'company': None,
-            'isRegular': None,
+            'agency': None,
+            'isRegular': True,
             'companyRole': None,
             'isOJT': None,
             'dailyWage': None,
@@ -534,8 +546,10 @@ def test_create_employee_without_photoOfPerson_then_update():
             'photoOfPerson': None,
             'resumePhotosList': None,
             'biodataPhotosList': None,
+            'employeeHouseRulesSignatureList': None,
             'dateJoined': None,
             'company': None,
+            'agency': 'Multi',
             'isRegular': None,
             'companyRole': None,
             'isOJT': None,
@@ -576,9 +590,11 @@ def test_create_employee_then_fetch_employee_list_with_pagination():
             'photoOfPerson': None,
             'resumePhotosList': None,
             'biodataPhotosList': None,
+            'employeeHouseRulesSignatureList': None,
             'dateJoined': None,
             'company': None,
-            'isRegular': None,
+            'agency': None,
+            'isRegular': True,
             'companyRole': None,
             'isOJT': None,
             'dailyWage': None,
@@ -597,8 +613,10 @@ def test_create_employee_then_fetch_employee_list_with_pagination():
             'photoOfPerson': None,
             'resumePhotosList': None,
             'biodataPhotosList': None,
+            'employeeHouseRulesSignatureList': None,
             'dateJoined': None,
             'company': None,
+            'agency': "Multi",
             'isRegular': None,
             'companyRole': None,
             'isOJT': None,
@@ -660,6 +678,8 @@ def test_create_employee_create_employee_id_and_update_employee_id():
         user = UserActions(userObject)
         userCreated = user.createFirstUserAction('id1')
 
+        # user.model_dump()
+
         employeeObject = {
             '_id': None,
             'firstName': 'firstName',
@@ -670,8 +690,10 @@ def test_create_employee_create_employee_id_and_update_employee_id():
             'photoOfPerson': 'server/test_assets/minor.png',
             'resumePhotosList': None,
             'biodataPhotosList': None,
+            'employeeHouseRulesSignatureList': None,
             'dateJoined': datetime.datetime.now(),
             'company': 'PPC',
+            'agency': 'agency',
             'isRegular': None,
             'companyRole': 'Software Engineer',
             'isOJT': None,
@@ -686,7 +708,15 @@ def test_create_employee_create_employee_id_and_update_employee_id():
 
         assert len(employeeList) == 1
 
-        createEmployeeID = user.createEmployeeIDAction(userCreated, employee)
+        idGenerated = {
+                "_id": employee['_id'],
+                "name": employee['firstName'] + " " + employee['lastName'],
+                "companyRole": employee['companyRole'],
+                "IDCardURL": {"front":'front', "back":'back'},
+                '_version': employee['_version']
+            }
+
+        createEmployeeID = user.createEmployeeIDAction(userCreated, employee, idGenerated )
 
         employeeList = user.readCollection('EmployeeID')
 
@@ -695,10 +725,6 @@ def test_create_employee_create_employee_id_and_update_employee_id():
         assert employeeList[0]['_id'] == employee['_id']
 
         employeeID = employeeList[0]['_id']
-
-        updatedEmployee = user.updateEmployeeIDAction(userCreated, employeeID)
-
-        assert updatedEmployee['front'] != createEmployeeID['front']
     finally:
         db.delete({}, 'User')
         db.delete({}, 'Employee')
