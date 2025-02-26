@@ -524,7 +524,7 @@ class Memo(BaseModel):
     id: Optional[str] = Field(None, alias='_id')
     date: datetime.datetime
     mediaList: Optional[List[str]]
-    Employee: 'Employee'
+    Employee: Optional['Employee']
     memoPhotosList: Optional[List[str]]
     subject: str
     description: str
@@ -553,20 +553,23 @@ class Memo(BaseModel):
         raise ValueError("date must be a valid datetime, string, or timestamp")
 
     def model_dump_dict(self):
-        return self.model_dump(by_alias=True, mode='json', exclude_none=True, warnings='error')
+        return self.model_dump(by_alias=True, mode='json')
 
     def createMemo(self, user):
         if 'canCreateMemo' not in user['roles']['Memo']:
             raise ValueError('User does not have permission to create a memo')
-    
+
         employeeHouseRulesSignatureList = self.Employee.employeeHouseRulesSignatureList
         if len(employeeHouseRulesSignatureList) == 0:
             raise ValueError(
                 'Employee must have proof of signature in the house rules')
-        
+
         if not self.Employee.agency and not self.Employee.isRegular:
             raise ValueError(
                 'Employee must have an agency or be a regular employee')
+
+        if not self.Employee.company:
+            raise ValueError('Employee must have a company')
 
         employeeId = self.Employee.id
         offenseId = self.MemoCode.id
@@ -663,14 +666,14 @@ class Employee(BaseModel):
             raise ValueError('Cannot create Employee with an existing _id')
 
         self.id = generateRandomString()
-        return self.model_dump(by_alias=True, warnings='error')
+        return self.model_dump(by_alias=True)
 
     def updateEmployee(self, user, dataToUpdate):
         if 'canUpdateEmployee' not in user['roles']['Employee']:
             raise ValueError(
                 'User does not have permission to update an employee')
 
-        newData = updateData(self.model_dump(by_alias=True, warnings='error'), dataToUpdate, ['_id'])
+        newData = updateData(self.model_dump(by_alias=True), dataToUpdate, ['_id'])
         return newData
 
     def deleteEmployee(self, user):
@@ -683,7 +686,7 @@ class Employee(BaseModel):
             raise ValueError('Employee does not exist')
         self.isDeleted = True
 
-        return self.model_dump(by_alias=True, warnings='error')
+        return self.model_dump(by_alias=True)
 
     pass
 
@@ -699,14 +702,14 @@ class Offense(BaseModel):
             raise ValueError(
                 'User does not have permission to create an offense')
         self.id = generateRandomString()
-        return self.model_dump(by_alias=True, warnings='error')
+        return self.model_dump(by_alias=True)
 
     def updateOffense(self, user, dataToUpdate):
         if 'canUpdateOffense' not in user['roles']['Offense']:
             raise ValueError(
                 'User does not have permission to update an offense')
 
-        newData = updateData(self.model_dump(by_alias=True, warnings='error'), dataToUpdate, ['_id'])
+        newData = updateData(self.model_dump(by_alias=True), dataToUpdate, ['_id'])
 
         return newData
 
@@ -719,7 +722,7 @@ class Offense(BaseModel):
         if len(offense) == 0:
             raise ValueError('Offense does not exist')
 
-        return self.model_dump(by_alias=True, warnings='error')
+        return self.model_dump(by_alias=True)
 
 
 if __name__ == "__main__":
