@@ -74,7 +74,7 @@ const MediaInput: FC<MediaInputProps> = ({
           [id]:
             id === "photoOfPerson" || id === "employeeSignature"
               ? imageListForModal[0]
-              : imageListForModal,
+              : imageListForModal
         }));
       }
     }
@@ -113,6 +113,7 @@ const MediaInput: FC<MediaInputProps> = ({
 
   const settingFunction = (value: string | string[], id: string) => {
     if (setFunction) {
+      // const toPass = id === "photoOfPerson" || id === "employeeSignature" ? value : (Array.isArray(value) ? value.concat(mediaList || []) : value);
       setFunction((prev: Employee) => ({
         ...prev,
         [id]: value,
@@ -136,7 +137,7 @@ const MediaInput: FC<MediaInputProps> = ({
     if (videoInputRef?.current) {
       videoInputRef.current.click();
     }
-  };
+  }; 
 
   return (
     <div className={`flex flex-col ${width}`}>

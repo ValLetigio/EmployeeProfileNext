@@ -18,6 +18,7 @@ const EmployeeDetails = () => {
     setSelectedEmployee,
     handleImageModalClick,
     handleMemoTableModalClick,
+    handleGalleryModalClick,
     serverRequests,
     userData,
     loading,
@@ -156,7 +157,8 @@ const EmployeeDetails = () => {
       "lastName",
       "isDeleted",
       "employeeSignature",
-      "employeeHouseRulesSignatureList"
+      "employeeHouseRulesSignatureList",
+      "employeeImageGallery",
     ];
 
     return (
@@ -274,7 +276,7 @@ const EmployeeDetails = () => {
           }
         >
           <div className=" indicator  ">
-            {/* indicator */}
+            {/* memo indicator */}
             <span
               className={`
               ${loading && "hidden"} 
@@ -296,8 +298,8 @@ const EmployeeDetails = () => {
             >
               {fetchingMemos ? "..." : selectedEmployeeMemos?.length}
             </span>
-            {/* avatar Image */}
 
+            {/* avatar Image */}
             <div
               className={` ${loading && "hidden"}
               w-20 2xl:w-28 h-20 2xl:h-28 relative`}
@@ -334,13 +336,36 @@ const EmployeeDetails = () => {
             !selectedEmployeeDetails?.address && "hidden"
           } text-center capitalize w-full px-3`}
         >
-          <h3 className="  ">
-            {selectedEmployeeDetails?.address || ""}
-          </h3>
+          <h3 className="  ">{selectedEmployeeDetails?.address || ""}</h3>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-3 h-max w-full text-xs pb-2 ">
+        {/* employee gallery */}
+        <div
+          className={
+            `${detailStyle()} !flex-row w-full justify-evenly items-center group cursor-pointer` +
+            ` ${!selectedEmployeeDetails._id && "hidden"}`
+          }
+          onClick={() => handleGalleryModalClick(selectedEmployeeDetails)}
+        >
+          Gallery
+          {selectedEmployeeDetails?.employeeImageGallery?.[0] ? (
+            <Image
+              className={`w-8 h-8 border `}
+              src={selectedEmployeeDetails?.employeeImageGallery?.[0] || ""}
+              alt={"employeeImageGallery"}
+              width={100}
+              height={100}
+              loading="lazy"
+            ></Image>
+          ) : (
+            <div className="w-8 h-8 bg-base-300 group-hover:bg-base-100 border grid place-items-center">
+              +
+            </div>
+          )}
+        </div>
+
         {detailSkeleton()}
 
         {detailComponent()}
@@ -376,7 +401,7 @@ const EmployeeDetails = () => {
         {/* employee Signature */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -400,7 +425,7 @@ const EmployeeDetails = () => {
         {/* Resume */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -424,7 +449,7 @@ const EmployeeDetails = () => {
         {/* Bio-data */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -448,7 +473,7 @@ const EmployeeDetails = () => {
         {/* employeeHouseRulesSignatureList */}
         <div
           className={
-            `${detailStyle()} !flex-row w-full justify-evenly items-center` +
+            `${detailStyle()} !flex-row w-[45%] justify-evenly items-center` +
             ` ${!selectedEmployeeDetails._id && "hidden"}`
           }
           onClick={() =>
@@ -461,14 +486,16 @@ const EmployeeDetails = () => {
           House Rules
           <Image
             className={`w-8 h-8`}
-            src={selectedEmployeeDetails?.employeeHouseRulesSignatureList?.[0] || ""}
+            src={
+              selectedEmployeeDetails?.employeeHouseRulesSignatureList?.[0] ||
+              ""
+            }
             alt={"House Rules"}
             width={100}
             height={100}
             loading="lazy"
           ></Image>
         </div>
-        
       </div>
     </div>
   );

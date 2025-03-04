@@ -23,7 +23,7 @@ const EmployeeMemoTableModal = () => {
 
   useEffect(() => {
     if (memoForTableModal.length > 0) {
-      const res = memoForTableModal.map((memo) => memo.Employee._id);
+      const res = memoForTableModal.map((memo) => memo?.Employee?._id);
 
       const uniqueArray = [...new Set(res)];
 
@@ -43,21 +43,7 @@ const EmployeeMemoTableModal = () => {
 
   const handleClose = () => {
     setMemoForTableModal([] as Memo[]);
-  };
-
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleClose();
-      }
-    };
-
-    memoTableModalRef.current?.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      memoTableModalRef.current?.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  }; 
 
   return (
     <dialog id="EmployeeMemoModal" className="modal " ref={memoTableModalRef}>

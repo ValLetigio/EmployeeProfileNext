@@ -24,13 +24,13 @@ const Confirmation = () => {
   return (
     <form 
         className={` ${confirmationOptions.open ? ' fixed !z-[9999] ' : ' hidden '}
-            w-[99vw] h-[99vh] z-[999] top-[0%] left-1/2 right-1/2 translate-x-[-50%]  
+            w-full h-full z-[999] top-[0%] left-1/2 right-1/2 translate-x-[-50%]  
             flex justify-center items-center backdrop-blur-sm bg-inherit alert
         `}
         role="alert" 
     > 
         <div 
-            className={`${confirmationOptions.open ? ' scale-100 ' : ' scale-0 '}  selection:
+            className={`${confirmationOptions.open ? ' scale-100 ' : ' scale-0 '}
             gap-5 w-max rounded-box shadow-2xl !z-[9999]
             flex flex-col justify-center items-center overflow-clip bg-base-100
         `}

@@ -5,15 +5,23 @@ import { useAppContext } from "../GlobalContext";
 import Image from "next/image";
 
 const ImageModal = () => {
-  const { imageListForModal, setImageListForModal, router, imageModalId, setImageModalId } =
-    useAppContext();
+  const {
+    imageListForModal,
+    setImageListForModal,
+    router,
+    imageModalId,
+    setImageModalId,
+  } = useAppContext();
 
   const imageModalRef = React.useRef<HTMLDialogElement>(null);
 
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+
   const handleClose = () => {
     // router.replace(window.location.pathname, undefined);
-    setImageListForModal([])
-    setImageModalId("")
+    setImageListForModal([]);
+    setImageModalId("");
+    setSelectedIndex(0);
   };
 
   const handleDelete = (index: number) => {
@@ -41,38 +49,99 @@ const ImageModal = () => {
     };
   }, []);
 
+  const handleViewImage = (index: number) => {
+    setSelectedIndex(index);
+  };
+
+  const [fullHeight, setFullHeight] = React.useState(false);
+
   return (
-    <dialog id="imageModal" className="modal w-full " ref={imageModalRef}>
-      <div className="modal-box !p-0 shadow-none gap-2 flex flex-col !md:max-w-[60%] h-full justify-center items-center relative bg-base-100/10 ">
-        <form
-          className="absolute bottom-2 md:top-2 md:left-[92.5%] right-1/2 left-1/2 z-30 "
-          method="dialog"
+    <dialog
+      id="imageModal"
+      className="modal backdrop-blur-md !p-0 "
+      ref={imageModalRef}
+    >
+      <form
+        className={`${
+          !imageListForModal.length
+            ? " !w-full !h-full items-center justify-center "
+            : " right-2 md:right-4 top-2 "
+        } absolute z-50 flex gap-4`}
+        method="dialog"
+      >
+        <div
+          className={`${!imageListForModal.length &&"hidden"} btn btn-sm h-8 w-max px-4 btn-circle text-xs`}
+          onClick={() => setFullHeight(!fullHeight)} 
+          title="Toggle"
         >
-          <button onClick={handleClose} className="close-button"></button>
-        </form>
-        <div className="carousel w-full ">
-          {imageListForModal.map((item, index) => (
+          {fullHeight?"Contain Height":"Max Height"}
+          {/* <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24" 
+            fill="currentColor"
+            className="size-5"
+          >
+            <line
+              x1="12"
+              y1="5"
+              x2="12"
+              y2="19"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <polygon points="6,8 12,2 18,8" fill="currentColor" />
+            <polygon points="6,16 12,22 18,16" fill="currentColor" />
+            <line
+              x1="4"
+              y1="0"
+              x2="20"
+              y2="0"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <line
+              x1="4"
+              y1="24"
+              x2="20"
+              y2="24"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>  */}
+        </div>
+
+        <button
+          onClick={handleClose}
+          className={`${
+            !imageListForModal.length &&
+            " !size-32 !text-3xl !font-[300] !text-white "
+          } close-button`}
+        >
+          {!imageListForModal.length && "X"}
+        </button>
+      </form>
+      <div className=" h-[90vh] w-[90vw] relative pt-4">
+        <div className="carousel w-full h-full gap-1  overflow-hidden">
+          {imageListForModal.map((image, index) => (
             <div
+              className="carousel-item relative w-full grid place-items-center group overflow-y-auto"
               key={`item${index}`}
               id={`item${index}`}
-              className="carousel-item w-full !flex items-start relative "
             >
-              <div className="min-h-full w-full flex items-center relative ">
-                {/* delete image button */}
-                <div
-                  key={`item${index}`}
-                  className={`${
-                    !imageModalId ? " hidden " : " "
-                  } absolute top-2 left-2 btn btn-sm btn-error btn-circle z-40 duration-0 `}
-                  onClick={() => handleDelete(index)}
-                >
+              {/*  */}
+              <div
+                className={`${!imageModalId && " hidden "}
+                absolute top-1/2 bottom-1/2 translate-y-[-50%] bg-neutral p-24 rounded-full flex items-center text-neutral-content bg-opacity-0 group-hover:bg-opacity-50`}
+              >
+                <span className="hover:text-error">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    strokeWidth={2}
+                    strokeWidth={1.5}
                     stroke="currentColor"
-                    className="size-5 "
+                    className="size-6 cursor-pointer opacity-0 group-hover:opacity-100"
+                    onClick={() => handleDelete(index)}
                   >
                     <path
                       strokeLinecap="round"
@@ -80,30 +149,31 @@ const ImageModal = () => {
                       d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
                     />
                   </svg>
-                </div>
-
-                {/*  */}
-                <Image
-                  src={item}
-                  loading="lazy"
-                  className=" h-max w-full "
-                  width={500}
-                  height={500}
-                  // fill
-                  // sizes="(max-width: 768px) 100vw, 700px"
-                  alt={`#item${index}`}
-                />
+                </span>
               </div>
 
+              {/*  */}
+              <Image
+                className={`${
+                  fullHeight ? "  h-[80vh] " : "  "
+                } w-full md:w-max md:max-w-[80vw] select-none `}
+                width={800}
+                height={800}
+                src={image}
+                alt=""
+              />
+
+              {/*  */}
               {imageListForModal.length > 1 && (
                 <>
                   {/*  */}
                   <a
                     className={`${
                       imageListForModal.length == index + 1 && " hidden"
-                    } top-[45%] right-2 absolute text-xl z-50 btn btn-sm btn-circle glass`}
+                    } top-[48%] right-2 absolute text-xl z-50 btn btn-sm btn-circle shadow-md shadow-gray-500 `}
                     key={`item${index + 1}`}
                     href={`#item${index + 1}`}
+                    onClick={() => handleViewImage(index + 1)}
                   >
                     {`>`}
                   </a>
@@ -111,38 +181,43 @@ const ImageModal = () => {
                   <a
                     className={`${
                       index == 0 && " hidden"
-                    } top-[45%] left-2 absolute text-xl z-50 btn btn-sm btn-circle glass`}
+                    } top-[48%] left-2 absolute text-xl z-50 btn btn-sm btn-circle shadow-md shadow-gray-500`}
                     key={`item${index - 1}`}
                     href={`#item${index - 1}`}
+                    onClick={() => handleViewImage(index - 1)}
                   >
                     {`<`}
                   </a>
-
-                  {/* <div className="absolute top-2 w-full flex justify-center z-10 "> */}
-                  <span className="absolute left-1/2 right-1/2 translate-x-[-50%] bottom-3.5 w-max badge glass">
+                  {/* <span className="absolute left-1/2 right-1/2 translate-x-[-50%] bottom-3.5 w-max badge z-20  ">
                     {index + 1} of {imageListForModal.length}
-                  </span>
-                  {/* </div> */}
+                  </span> */}
                 </>
               )}
             </div>
           ))}
         </div>
+      </div>
 
-        {/* <div className="flex absolute bottom-2 md:bottom-8 z-50 gap-2">
-          {imageListForModal.map((item, index) => (
-            <a
-              key={`item${index}`}
-              href={`#item${index}`}
-              onClick={() => setHash(`#item${index}`)}
-              className={`${
-                hash == `#item${index}` && " border-info bg-info text-white"
-              } btn btn-sm `}
-            >
-              {index + 1}
-            </a>
-          ))}
-        </div> */}
+      <div className="w-[90vw] lg:w-[75vw] overflow-x-auto grid grid-flow-col place-items-center place-content-center gap-3">
+        {imageListForModal.map((item, index) => (
+          <a
+            key={`item${index}`}
+            href={`#item${index}`}
+            className={`${
+              selectedIndex == index ? " border-info " : " border-transparent "
+            } rounded-box h-12 w-12 border-2`}
+            onClick={() => handleViewImage(index)}
+          >
+            <Image
+              className="h-full w-full rounded-box"
+              src={item}
+              quality={10}
+              width={64}
+              height={64}
+              alt={"img" + index}
+            />
+          </a>
+        ))}
       </div>
     </dialog>
   );
