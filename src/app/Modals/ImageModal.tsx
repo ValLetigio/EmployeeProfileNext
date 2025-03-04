@@ -90,7 +90,7 @@ const ImageModal = () => {
       </form>
 
       {/*  */}
-      <div className={`${!imageListForModal.length && " hidden "} h-[87svh] w-[90vw] relative `}>
+      <div className={`${!imageListForModal.length && " hidden "} my-2 h-[87svh] w-[90vw] relative `}>
         <div className="carousel w-full h-full gap-1  overflow-hidden">
           {imageListForModal.map((image, index) => (
             <div
