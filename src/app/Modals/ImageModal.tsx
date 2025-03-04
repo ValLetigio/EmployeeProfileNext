@@ -58,7 +58,7 @@ const ImageModal = () => {
   return (
     <dialog
       id="imageModal"
-      className="modal backdrop-blur-md !p-0 "
+      className="modal backdrop-blur-md !p-0 h-[100svh]"
       ref={imageModalRef}
     >
       <form
