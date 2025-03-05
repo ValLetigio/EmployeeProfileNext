@@ -14,8 +14,7 @@ import FirebaseUpload from "@/app/api/FirebaseUpload";
 
 import Select from "react-select";
 
-import Image from "next/image";
-import { Employee } from "@/app/schemas/EmployeeSchema";
+import Image from "next/image"; 
 
 interface CreateMemoFormProps {
   memoList: Memo[];

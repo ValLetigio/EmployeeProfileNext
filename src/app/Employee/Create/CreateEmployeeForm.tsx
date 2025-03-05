@@ -7,18 +7,14 @@ import { useAppContext } from "@/app/GlobalContext";
 
 import MediaInput from "@/app/InputComponents/MediaInput";
 
-import { Employee } from "@/app/schemas/EmployeeSchema";
-
-import FirebaseUpload from "@/app/api/FirebaseUpload";
+import { Employee } from "@/app/schemas/EmployeeSchema"; 
 
 import SelectPlus from "@/app/InputComponents/SelectPlus";
 
 import SignatureComponent from "../Signature/SignatureComponent";
 
 const CreateEmployeeForm = () => {
-  const [show, setShow] = useState(true);
-
-  const upload = new FirebaseUpload();
+  const [show, setShow] = useState(true); 
 
   const {
     setToastOptions,
