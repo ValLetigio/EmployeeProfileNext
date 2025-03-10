@@ -8,13 +8,13 @@ import { Memo } from "@/app/schemas/MemoSchema.ts";
 
 // import Image from 'next/image';
 
-import MediaInput from "@/app/InputComponents/MediaInput";
+import MediaInput from "../../InputComponents/MediaInput";
 
 import FirebaseUpload from "@/app/api/FirebaseUpload";
 
 import Select from "react-select";
 
-import Image from "next/image"; 
+import Image from "next/image";
 
 interface CreateMemoFormProps {
   memoList: Memo[];
@@ -32,7 +32,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
     imageListForModal,
     imageModalId,
     handleVideoModalClick,
-    setImageModalId
+    setImageModalId,
   } = useAppContext();
 
   const upload = new FirebaseUpload();
@@ -43,10 +43,22 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
 
   const [filteredMemos, setFilteredMemos] = useState<Memo[]>([]);
 
-  const [submittedMemos, setSubmittedMemos] = useState<string[]>([]); 
+  const [submittedMemos, setSubmittedMemos] = useState<string[]>([]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    console.log("ran")
+
+    if (!formData?.reason && !formData?.memoPhotosList?.length) {
+      setToastOptions({
+        open: true,
+        message: "Provide a Reason or Memo Photo",
+        type: "error",
+        timer: 10,
+      });
+      return;
+    }
 
     const confirmed = await handleConfirmation(
       "Confirm Action?",
@@ -61,32 +73,6 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         const finalFormData = {
           ...formData,
         };
-
-        // if (filesChanged.includes("mediaList")) {
-        //   try {
-        //     const res = await upload.Images(
-        //       formData?.mediaList || [],
-        //       `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
-        //       "mediaList"
-        //     );
-        //     finalFormData.mediaList = res || [];
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
-
-        // if (filesChanged.includes("memoPhotosList")) {
-        //   try {
-        //     const res = await upload.Images(
-        //       formData?.memoPhotosList || [],
-        //       `employees/${formData?.Employee?.firstName} ${formData?.Employee?.lastName}`,
-        //       "memoPhotosList"
-        //     );
-        //     finalFormData.memoPhotosList = res || [];
-        //   } catch (e) {
-        //     console.error(e);
-        //   }
-        // }
 
         const form = e.target as HTMLFormElement;
 
@@ -135,49 +121,42 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files; 
-  
-      const id = e.target.id as keyof Memo;
-  
-      if (files && files.length > 0) {
-        const isVideo = files[0].type.includes("video") ? true : false;
-  
-        const fileReaders = [];
-        const fileDataUrls: string[] = [];
-  
-        for (let i = 0; i < files.length; i++) {
-          const reader = new FileReader();
-          fileReaders.push(reader);
-  
-          reader.readAsDataURL(files[i]);
-  
-          reader.onloadend = async () => {
-            fileDataUrls.push(reader.result as string);
-  
-            if (fileDataUrls.length === files.length) {
-              setLoading(true);
-              setImageModalId(id);
-              const res = await upload.Images(fileDataUrls, `${id}${isVideo&&"video"}${i}`, "id");
-  
-              const finalResult =
-                formData?.[id] == null
-                  ? res
-                  : res.concat(
-                      Array.isArray(formData?.[id]) ? formData?.[id] : []
-                    );
-  
-              setFormData({
-                ...formData,
-                [id]: finalResult,
-              }); 
+    const files = e.target.files;
+    const id = e.target.id as keyof Memo;
 
-              setImageModalId("");
-              setLoading(false);
-            } 
-          };
-        }
+    if (files && files.length > 0) {
+      const fileReaders = [];
+      const fileDataUrls: string[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        fileReaders.push(reader);
+
+        reader.readAsDataURL(files[i]);
+
+        reader.onloadend = async () => {
+          fileDataUrls.push(reader.result as string);
+
+          if (fileDataUrls.length === files.length) {
+            setImageModalId(id);
+            setLoading(true);
+            const res = await upload.Images(fileDataUrls, `${id}`, id);
+            const oldData =
+              Array.isArray(formData[id]) && formData[id].length
+                ? formData[id]
+                : [];
+            const finalData = res.concat(oldData);
+
+            setFormData({
+              ...formData,
+              [id]: finalData,
+            });
+            setLoading(false);
+          }
+        };
       }
-    }; 
+    }
+  };
 
   const filterMemos = (memoList: Memo[]) => {
     const filteredMemos = memoList.filter(
@@ -210,6 +189,13 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
       [imageModalId]: imageListForModal.length ? imageListForModal : null,
     });
   }, [imageListForModal]);
+
+  useEffect(() => {
+    const res = memoList?.find(
+      (memo) => memo._id == window.location.hash.split("#")[1]
+    );
+    setFormData(res || ({} as Memo));
+  }, []); 
 
   return (
     <form
@@ -363,8 +349,7 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         <textarea
           className="textarea textarea-bordered mt-1 min-h-[15vh] whitespace-pre-line"
           placeholder="Reason"
-          id="reason"
-          required={!formData?.memoPhotosList?.length}
+          id="reason" 
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             setFormData({ ...formData, reason: e.target.value });
           }}
@@ -415,30 +400,14 @@ const SubmitMemoForm: React.FC<CreateMemoFormProps> = ({ memoList }) => {
         )}
       </div>
 
-      {/* medialist */}
-      {/* <MediaInput
-        id="mediaList"
-        title="Photo"
-        width="w-full"
-        inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
-        imgDimensions={{ height: 60, width: 60 }}
-        mediaList={formData?.mediaList || []}
-        onChangeHandler={handleFileChange}
-        required={false}
-        multiple={true}
-      />  */}
-
       {/* memoPhotosList */}
       <MediaInput
         id="memoPhotosList"
         title="Memo Photo"
         width="w-full"
-        inputStyle="file-input file-input-bordered sw-full max-w-full file-input-xs h-10"
-        imgDimensions={{ height: 60, width: 60 }}
-        mediaList={formData?.memoPhotosList || []}
-        // setFunction={setFormData}
-        onChangeHandler={handleFileChange}
-        required={!formData?.memoPhotosList?.length}
+        value={formData?.memoPhotosList || []}
+        onChange={handleFileChange}
+        required={true}
         multiple={true}
       />
 
